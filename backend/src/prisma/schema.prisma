@@ -1,0 +1,79 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  ADMIN
+  OPERATOR
+}
+
+enum StationStatus {
+  ACTIVE
+  MAINTENANCE
+  INACTIVE
+}
+
+enum ScheduleStatus {
+  ACTIVE
+  CANCELLED
+  DELAYED
+}
+
+enum DayType {
+  WEEKDAY
+  WEEKEND
+  HOLIDAY
+}
+
+model User {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  password  String
+  role      UserRole @default(OPERATOR)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("users")
+}
+
+model Station {
+  id        String        @id @default(uuid())
+  name      String
+  code      String        @unique
+  location  String
+  latitude  Float?
+  longitude Float?
+  status    StationStatus @default(ACTIVE)
+  order     Int
+  createdAt DateTime      @default(now()) @map("created_at")
+  updatedAt DateTime      @updatedAt @map("updated_at")
+
+  departureSchedules Schedule[] @relation("DepartureStation")
+  arrivalSchedules   Schedule[] @relation("ArrivalStation")
+
+  @@map("stations")
+}
+
+model Schedule {
+  id                 String         @id @default(uuid())
+  trainNumber        String         @map("train_number")
+  departureStationId String         @map("departure_station_id")
+  arrivalStationId   String         @map("arrival_station_id")
+  departureTime      String         @map("departure_time")
+  arrivalTime        String         @map("arrival_time")
+  dayType            DayType        @default(WEEKDAY) @map("day_type")
+  status             ScheduleStatus @default(ACTIVE)
+  createdAt          DateTime       @default(now()) @map("created_at")
+  updatedAt          DateTime       @updatedAt @map("updated_at")
+
+  departureStation Station @relation("DepartureStation", fields: [departureStationId], references: [id])
+  arrivalStation   Station @relation("ArrivalStation", fields: [arrivalStationId], references: [id])
+
+  @@map("schedules")
+}
