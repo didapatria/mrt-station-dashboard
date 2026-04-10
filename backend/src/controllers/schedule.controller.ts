@@ -1,0 +1,78 @@
+import { Request, Response } from "express";
+import { scheduleService } from "../services/schedule.service";
+
+export const scheduleController = {
+  async getAll(req: Request, res: Response): Promise<void> {
+    try {
+      const { page, limit, search, dayType, status, stationId } = req.query;
+      const result = await scheduleService.getAll({
+        page: page ? Number(page) : undefined,
+        limit: limit ? Number(limit) : undefined,
+        search: search as string,
+        dayType: dayType as string,
+        status: status as string,
+        stationId: stationId as string,
+      });
+      res.json({ success: true, data: result.schedules, meta: result.meta });
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Failed to fetch schedules";
+      res.status(500).json({ success: false, error: message });
+    }
+  },
+
+  async getById(req: Request, res: Response): Promise<void> {
+    try {
+      const schedule = await scheduleService.getById(req.params.id);
+      res.json({ success: true, data: schedule });
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Failed to fetch schedule";
+      const status = message === "Schedule not found" ? 404 : 500;
+      res.status(status).json({ success: false, error: message });
+    }
+  },
+
+  async create(req: Request, res: Response): Promise<void> {
+    try {
+      const schedule = await scheduleService.create(req.body);
+      res.status(201).json({
+        success: true,
+        message: "Schedule created successfully",
+        data: schedule,
+      });
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Failed to create schedule";
+      res.status(400).json({ success: false, error: message });
+    }
+  },
+
+  async update(req: Request, res: Response): Promise<void> {
+    try {
+      const schedule = await scheduleService.update(req.params.id, req.body);
+      res.json({
+        success: true,
+        message: "Schedule updated successfully",
+        data: schedule,
+      });
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Failed to update schedule";
+      const status = message === "Schedule not found" ? 404 : 500;
+      res.status(status).json({ success: false, error: message });
+    }
+  },
+
+  async delete(req: Request, res: Response): Promise<void> {
+    try {
+      await scheduleService.delete(req.params.id);
+      res.json({ success: true, message: "Schedule deleted successfully" });
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Failed to delete schedule";
+      const status = message === "Schedule not found" ? 404 : 500;
+      res.status(status).json({ success: false, error: message });
+    }
+  },
+};
