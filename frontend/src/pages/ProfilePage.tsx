@@ -92,6 +92,7 @@ export default function ProfilePage() {
                 "TypeScript",
                 "Vite",
                 "Zustand",
+                "TanStack Query",
                 "Tailwind CSS",
                 "Shadcn UI",
                 "React Hook Form",

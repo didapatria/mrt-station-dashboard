@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import {
   MapPin,
@@ -14,13 +13,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useStationStore } from "@/store/station.store";
-import { useScheduleStore } from "@/store/schedule.store";
-import {
-  dashboardService,
-  type DashboardStats,
-  type HourlySchedule,
-} from "@/services/dashboard.service";
+import { useStations } from "@/hooks/use-stations";
+import { useSchedules } from "@/hooks/use-schedules";
+import { useDashboardStats, useSchedulesByHour } from "@/hooks/use-dashboard";
+import { dashboardService } from "@/services/dashboard.service";
 
 const container = {
   hidden: { opacity: 0 },
@@ -36,32 +32,14 @@ const item = {
 };
 
 export default function DashboardPage() {
-  const { stations, fetchStations } = useStationStore();
-  const { schedules, fetchSchedules } = useScheduleStore();
-  const [stats, setStats] = useState<DashboardStats | null>(null);
-  const [hourlyData, setHourlyData] = useState<HourlySchedule[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const { data: stationsData } = useStations({ limit: 100 });
+  const { data: schedulesData } = useSchedules({ limit: 10 });
+  const { data: stats, isLoading: statsLoading } = useDashboardStats();
+  const { data: hourlyData = [] } = useSchedulesByHour();
 
-  useEffect(() => {
-    const loadData = async () => {
-      setIsLoading(true);
-      try {
-        const [statsRes, hourlyRes] = await Promise.all([
-          dashboardService.getStats(),
-          dashboardService.getSchedulesByHour(),
-          fetchStations({ limit: 100 }),
-          fetchSchedules({ limit: 10 }),
-        ]);
-        if (statsRes.success && statsRes.data) setStats(statsRes.data);
-        if (hourlyRes.success && hourlyRes.data) setHourlyData(hourlyRes.data);
-      } catch {
-        toast.error("Failed to load dashboard data");
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    loadData();
-  }, [fetchStations, fetchSchedules]);
+  const stations = stationsData?.stations ?? [];
+  const schedules = schedulesData?.schedules ?? [];
+  const isLoading = statsLoading;
 
   const handleExportStations = async () => {
     try {

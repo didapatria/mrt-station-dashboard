@@ -2,11 +2,17 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuthStore } from "@/store/auth.store";
+import { useRegister } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
 import { Train } from "lucide-react";
 
 const registerSchema = z.object({
@@ -18,7 +24,7 @@ const registerSchema = z.object({
 type RegisterFormData = z.infer<typeof registerSchema>;
 
 export default function RegisterPage() {
-  const { register: registerUser, isLoading, error, clearError } = useAuthStore();
+  const registerMutation = useRegister();
   const navigate = useNavigate();
 
   const {
@@ -31,12 +37,22 @@ export default function RegisterPage() {
 
   const onSubmit = async (data: RegisterFormData) => {
     try {
-      await registerUser(data.name, data.email, data.password);
+      await registerMutation.mutateAsync({
+        name: data.name,
+        email: data.email,
+        password: data.password,
+      });
       navigate("/dashboard");
     } catch {
-      // Error handled by store
+      // Error handled by mutation
     }
   };
+
+  const errorMessage = registerMutation.error
+    ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (registerMutation.error as any)?.response?.data?.error ||
+      registerMutation.error.message
+    : null;
 
   return (
     <>
@@ -54,12 +70,12 @@ export default function RegisterPage() {
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            {error && (
+            {errorMessage && (
               <div
                 className="bg-destructive/10 text-destructive text-sm p-3 rounded-md"
-                onClick={clearError}
+                onClick={() => registerMutation.reset()}
               >
-                {error}
+                {errorMessage}
               </div>
             )}
 
@@ -71,7 +87,9 @@ export default function RegisterPage() {
                 {...register("name")}
               />
               {errors.name && (
-                <p className="text-sm text-destructive">{errors.name.message}</p>
+                <p className="text-sm text-destructive">
+                  {errors.name.message}
+                </p>
               )}
             </div>
 
@@ -84,7 +102,9 @@ export default function RegisterPage() {
                 {...register("email")}
               />
               {errors.email && (
-                <p className="text-sm text-destructive">{errors.email.message}</p>
+                <p className="text-sm text-destructive">
+                  {errors.email.message}
+                </p>
               )}
             </div>
 
@@ -103,8 +123,14 @@ export default function RegisterPage() {
               )}
             </div>
 
-            <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? "Creating account..." : "Create Account"}
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={registerMutation.isPending}
+            >
+              {registerMutation.isPending
+                ? "Creating account..."
+                : "Create Account"}
             </Button>
 
             <p className="text-center text-sm text-muted-foreground">

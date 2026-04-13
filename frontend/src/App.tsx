@@ -1,5 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useEffect } from "react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { useAuthStore } from "@/store/auth.store";
 import { useThemeStore } from "@/store/theme.store";
 import { Toaster } from "@/components/ui/toaster";
@@ -12,6 +14,16 @@ import StationsPage from "@/pages/StationsPage";
 import SchedulesPage from "@/pages/SchedulesPage";
 import ProfilePage from "@/pages/ProfilePage";
 
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 5,
+      retry: 1,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
+
 function App() {
   const { initFromStorage } = useAuthStore();
   const { initTheme } = useThemeStore();
@@ -22,27 +34,30 @@ function App() {
   }, [initFromStorage, initTheme]);
 
   return (
-    <BrowserRouter>
-      <Routes>
-        {/* Auth routes */}
-        <Route element={<AuthLayout />}>
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-        </Route>
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+        <Routes>
+          {/* Auth routes */}
+          <Route element={<AuthLayout />}>
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+          </Route>
 
-        {/* Dashboard routes */}
-        <Route element={<DashboardLayout />}>
-          <Route path="/dashboard" element={<DashboardPage />} />
-          <Route path="/stations" element={<StationsPage />} />
-          <Route path="/schedules" element={<SchedulesPage />} />
-          <Route path="/profile" element={<ProfilePage />} />
-        </Route>
+          {/* Dashboard routes */}
+          <Route element={<DashboardLayout />}>
+            <Route path="/dashboard" element={<DashboardPage />} />
+            <Route path="/stations" element={<StationsPage />} />
+            <Route path="/schedules" element={<SchedulesPage />} />
+            <Route path="/profile" element={<ProfilePage />} />
+          </Route>
 
-        {/* Default redirect */}
-        <Route path="*" element={<Navigate to="/dashboard" replace />} />
-      </Routes>
-      <Toaster />
-    </BrowserRouter>
+          {/* Default redirect */}
+          <Route path="*" element={<Navigate to="/dashboard" replace />} />
+        </Routes>
+        <Toaster />
+      </BrowserRouter>
+      <ReactQueryDevtools initialIsOpen={false} />
+    </QueryClientProvider>
   );
 }
 

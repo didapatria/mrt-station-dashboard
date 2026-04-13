@@ -2,11 +2,17 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuthStore } from "@/store/auth.store";
+import { useLogin } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
 import { Train } from "lucide-react";
 
 const loginSchema = z.object({
@@ -17,7 +23,7 @@ const loginSchema = z.object({
 type LoginFormData = z.infer<typeof loginSchema>;
 
 export default function LoginPage() {
-  const { login, isLoading, error, clearError } = useAuthStore();
+  const loginMutation = useLogin();
   const navigate = useNavigate();
 
   const {
@@ -30,12 +36,21 @@ export default function LoginPage() {
 
   const onSubmit = async (data: LoginFormData) => {
     try {
-      await login(data.email, data.password);
+      await loginMutation.mutateAsync({
+        email: data.email,
+        password: data.password,
+      });
       navigate("/dashboard");
     } catch {
-      // Error handled by store
+      // Error handled by mutation
     }
   };
+
+  const errorMessage = loginMutation.error
+    ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (loginMutation.error as any)?.response?.data?.error ||
+      loginMutation.error.message
+    : null;
 
   return (
     <>
@@ -53,12 +68,12 @@ export default function LoginPage() {
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            {error && (
+            {errorMessage && (
               <div
                 className="bg-destructive/10 text-destructive text-sm p-3 rounded-md"
-                onClick={clearError}
+                onClick={() => loginMutation.reset()}
               >
-                {error}
+                {errorMessage}
               </div>
             )}
 
@@ -71,7 +86,9 @@ export default function LoginPage() {
                 {...register("email")}
               />
               {errors.email && (
-                <p className="text-sm text-destructive">{errors.email.message}</p>
+                <p className="text-sm text-destructive">
+                  {errors.email.message}
+                </p>
               )}
             </div>
 
@@ -90,8 +107,12 @@ export default function LoginPage() {
               )}
             </div>
 
-            <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? "Signing in..." : "Sign In"}
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={loginMutation.isPending}
+            >
+              {loginMutation.isPending ? "Signing in..." : "Sign In"}
             </Button>
 
             <p className="text-center text-sm text-muted-foreground">

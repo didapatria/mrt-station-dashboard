@@ -1,5 +1,6 @@
 import { Outlet, Navigate, NavLink, useNavigate } from "react-router-dom";
 import { useAuthStore } from "@/store/auth.store";
+import { useLogout } from "@/hooks/use-auth";
 import { motion } from "framer-motion";
 import {
   Train,
@@ -24,7 +25,8 @@ const navItems = [
 ];
 
 export default function DashboardLayout() {
-  const { token, user, logout } = useAuthStore();
+  const { token, user } = useAuthStore();
+  const logout = useLogout();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 

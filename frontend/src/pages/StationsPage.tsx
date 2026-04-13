@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useState } from "react";
+import { useForm, type Resolver } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { motion, AnimatePresence } from "framer-motion";
@@ -25,7 +25,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Pagination } from "@/components/ui/pagination";
-import { useStationStore } from "@/store/station.store";
+import {
+  useStations,
+  useCreateStation,
+  useUpdateStation,
+  useDeleteStation,
+} from "@/hooks/use-stations";
 import { dashboardService } from "@/services/dashboard.service";
 import type { Station } from "@/types";
 
@@ -42,22 +47,31 @@ const stationSchema = z.object({
 type StationFormData = z.infer<typeof stationSchema>;
 
 export default function StationsPage() {
-  const {
-    stations,
-    isLoading,
-    meta,
-    fetchStations,
-    createStation,
-    updateStation,
-    deleteStation,
-  } = useStationStore();
-
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
   const [statusFilter, setStatusFilter] = useState<string>("ALL");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingStation, setEditingStation] = useState<Station | null>(null);
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
+
+  const { data, isLoading } = useStations({
+    page,
+    search: search || undefined,
+    status: statusFilter !== "ALL" ? statusFilter : undefined,
+    limit: 12,
+  });
+
+  const stations = data?.stations ?? [];
+  const meta = data?.meta ?? null;
+
+  const createMutation = useCreateStation();
+  const updateMutation = useUpdateStation();
+  const deleteMutation = useDeleteStation();
+
+  const isMutating =
+    createMutation.isPending ||
+    updateMutation.isPending ||
+    deleteMutation.isPending;
 
   const {
     register,
@@ -66,22 +80,19 @@ export default function StationsPage() {
     setValue,
     formState: { errors },
   } = useForm<StationFormData>({
-    resolver: zodResolver(stationSchema),
+    resolver: zodResolver(stationSchema) as Resolver<StationFormData>,
     defaultValues: { status: "ACTIVE", order: 1 },
   });
 
-  useEffect(() => {
-    fetchStations({
-      page,
-      search: search || undefined,
-      status: statusFilter !== "ALL" ? statusFilter : undefined,
-      limit: 12,
-    });
-  }, [fetchStations, search, statusFilter, page]);
-
   const openCreate = () => {
     setEditingStation(null);
-    reset({ name: "", code: "", location: "", status: "ACTIVE", order: stations.length + 1 });
+    reset({
+      name: "",
+      code: "",
+      location: "",
+      status: "ACTIVE",
+      order: stations.length + 1,
+    });
     setDialogOpen(true);
   };
 
@@ -104,19 +115,22 @@ export default function StationsPage() {
       ...data,
       code: data.code.toUpperCase(),
       latitude: typeof data.latitude === "number" ? data.latitude : undefined,
-      longitude: typeof data.longitude === "number" ? data.longitude : undefined,
+      longitude:
+        typeof data.longitude === "number" ? data.longitude : undefined,
     };
 
     try {
       if (editingStation) {
-        await updateStation(editingStation.id, payload);
+        await updateMutation.mutateAsync({
+          id: editingStation.id,
+          data: payload,
+        });
         toast.success("Station updated successfully");
       } else {
-        await createStation(payload);
+        await createMutation.mutateAsync(payload);
         toast.success("Station created successfully");
       }
       setDialogOpen(false);
-      fetchStations({ page, limit: 12 });
     } catch {
       toast.error("Failed to save station");
     }
@@ -133,7 +147,7 @@ export default function StationsPage() {
 
   const handleDelete = async (id: string) => {
     try {
-      await deleteStation(id);
+      await deleteMutation.mutateAsync(id);
       setDeleteConfirm(null);
       toast.success("Station deleted successfully");
     } catch {
@@ -209,7 +223,9 @@ export default function StationsPage() {
                         {station.code}
                       </div>
                       <div>
-                        <CardTitle className="text-base">{station.name}</CardTitle>
+                        <CardTitle className="text-base">
+                          {station.name}
+                        </CardTitle>
                         <p className="text-xs text-muted-foreground mt-0.5">
                           {station.location}
                         </p>
@@ -233,7 +249,11 @@ export default function StationsPage() {
                     <p className="text-xs text-muted-foreground">
                       Order: {station.order}
                       {station.latitude && station.longitude && (
-                        <> | {station.latitude.toFixed(4)}, {station.longitude.toFixed(4)}</>
+                        <>
+                          {" "}
+                          | {station.latitude.toFixed(4)},{" "}
+                          {station.longitude.toFixed(4)}
+                        </>
                       )}
                     </p>
                     <div className="flex gap-1">
@@ -295,14 +315,22 @@ export default function StationsPage() {
                 <Label htmlFor="name">Station Name</Label>
                 <Input id="name" {...register("name")} />
                 {errors.name && (
-                  <p className="text-xs text-destructive">{errors.name.message}</p>
+                  <p className="text-xs text-destructive">
+                    {errors.name.message}
+                  </p>
                 )}
               </div>
               <div className="space-y-2">
                 <Label htmlFor="code">Code</Label>
-                <Input id="code" {...register("code")} className="uppercase" />
+                <Input
+                  id="code"
+                  {...register("code")}
+                  className="uppercase"
+                />
                 {errors.code && (
-                  <p className="text-xs text-destructive">{errors.code.message}</p>
+                  <p className="text-xs text-destructive">
+                    {errors.code.message}
+                  </p>
                 )}
               </div>
             </div>
@@ -311,24 +339,38 @@ export default function StationsPage() {
               <Label htmlFor="location">Location</Label>
               <Input id="location" {...register("location")} />
               {errors.location && (
-                <p className="text-xs text-destructive">{errors.location.message}</p>
+                <p className="text-xs text-destructive">
+                  {errors.location.message}
+                </p>
               )}
             </div>
 
             <div className="grid grid-cols-3 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="latitude">Latitude</Label>
-                <Input id="latitude" type="number" step="any" {...register("latitude")} />
+                <Input
+                  id="latitude"
+                  type="number"
+                  step="any"
+                  {...register("latitude")}
+                />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="longitude">Longitude</Label>
-                <Input id="longitude" type="number" step="any" {...register("longitude")} />
+                <Input
+                  id="longitude"
+                  type="number"
+                  step="any"
+                  {...register("longitude")}
+                />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="order">Order</Label>
                 <Input id="order" type="number" {...register("order")} />
                 {errors.order && (
-                  <p className="text-xs text-destructive">{errors.order.message}</p>
+                  <p className="text-xs text-destructive">
+                    {errors.order.message}
+                  </p>
                 )}
               </div>
             </div>
@@ -338,7 +380,10 @@ export default function StationsPage() {
               <Select
                 defaultValue={editingStation?.status || "ACTIVE"}
                 onValueChange={(val) =>
-                  setValue("status", val as "ACTIVE" | "MAINTENANCE" | "INACTIVE")
+                  setValue(
+                    "status",
+                    val as "ACTIVE" | "MAINTENANCE" | "INACTIVE"
+                  )
                 }
               >
                 <SelectTrigger>
@@ -360,8 +405,12 @@ export default function StationsPage() {
               >
                 Cancel
               </Button>
-              <Button type="submit" disabled={isLoading}>
-                {isLoading ? "Saving..." : editingStation ? "Update" : "Create"}
+              <Button type="submit" disabled={isMutating}>
+                {isMutating
+                  ? "Saving..."
+                  : editingStation
+                    ? "Update"
+                    : "Create"}
               </Button>
             </div>
           </form>
@@ -388,9 +437,9 @@ export default function StationsPage() {
             <Button
               variant="destructive"
               onClick={() => deleteConfirm && handleDelete(deleteConfirm)}
-              disabled={isLoading}
+              disabled={deleteMutation.isPending}
             >
-              {isLoading ? "Deleting..." : "Delete"}
+              {deleteMutation.isPending ? "Deleting..." : "Delete"}
             </Button>
           </div>
         </DialogContent>

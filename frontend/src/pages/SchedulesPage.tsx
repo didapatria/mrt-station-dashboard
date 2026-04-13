@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -25,8 +25,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Pagination } from "@/components/ui/pagination";
-import { useScheduleStore } from "@/store/schedule.store";
-import { useStationStore } from "@/store/station.store";
+import {
+  useSchedules,
+  useCreateSchedule,
+  useUpdateSchedule,
+  useDeleteSchedule,
+} from "@/hooks/use-schedules";
+import { useStations } from "@/hooks/use-stations";
 import { dashboardService } from "@/services/dashboard.service";
 import type { Schedule } from "@/types";
 
@@ -43,17 +48,6 @@ const scheduleSchema = z.object({
 type ScheduleFormData = z.infer<typeof scheduleSchema>;
 
 export default function SchedulesPage() {
-  const {
-    schedules,
-    isLoading,
-    meta,
-    fetchSchedules,
-    createSchedule,
-    updateSchedule,
-    deleteSchedule,
-  } = useScheduleStore();
-  const { stations, fetchStations } = useStationStore();
-
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
   const [dayTypeFilter, setDayTypeFilter] = useState<string>("ALL");
@@ -61,6 +55,29 @@ export default function SchedulesPage() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingSchedule, setEditingSchedule] = useState<Schedule | null>(null);
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
+
+  const { data, isLoading } = useSchedules({
+    page,
+    search: search || undefined,
+    dayType: dayTypeFilter !== "ALL" ? dayTypeFilter : undefined,
+    status: statusFilter !== "ALL" ? statusFilter : undefined,
+    limit: 15,
+  });
+
+  const schedules = data?.schedules ?? [];
+  const meta = data?.meta ?? null;
+
+  const { data: stationsData } = useStations({ limit: 100 });
+  const stations = stationsData?.stations ?? [];
+
+  const createMutation = useCreateSchedule();
+  const updateMutation = useUpdateSchedule();
+  const deleteMutation = useDeleteSchedule();
+
+  const isMutating =
+    createMutation.isPending ||
+    updateMutation.isPending ||
+    deleteMutation.isPending;
 
   const {
     register,
@@ -72,20 +89,6 @@ export default function SchedulesPage() {
     resolver: zodResolver(scheduleSchema),
     defaultValues: { dayType: "WEEKDAY", status: "ACTIVE" },
   });
-
-  useEffect(() => {
-    fetchStations({ limit: 100 });
-  }, [fetchStations]);
-
-  useEffect(() => {
-    fetchSchedules({
-      page,
-      search: search || undefined,
-      dayType: dayTypeFilter !== "ALL" ? dayTypeFilter : undefined,
-      status: statusFilter !== "ALL" ? statusFilter : undefined,
-      limit: 15,
-    });
-  }, [fetchSchedules, search, dayTypeFilter, statusFilter, page]);
 
   const openCreate = () => {
     setEditingSchedule(null);
@@ -118,14 +121,16 @@ export default function SchedulesPage() {
   const onSubmit = async (data: ScheduleFormData) => {
     try {
       if (editingSchedule) {
-        await updateSchedule(editingSchedule.id, data);
+        await updateMutation.mutateAsync({
+          id: editingSchedule.id,
+          data,
+        });
         toast.success("Schedule updated successfully");
       } else {
-        await createSchedule(data);
+        await createMutation.mutateAsync(data);
         toast.success("Schedule created successfully");
       }
       setDialogOpen(false);
-      fetchSchedules({ page, limit: 15 });
     } catch {
       toast.error("Failed to save schedule");
     }
@@ -144,7 +149,7 @@ export default function SchedulesPage() {
 
   const handleDelete = async (id: string) => {
     try {
-      await deleteSchedule(id);
+      await deleteMutation.mutateAsync(id);
       setDeleteConfirm(null);
       toast.success("Schedule deleted successfully");
     } catch {
@@ -253,7 +258,8 @@ export default function SchedulesPage() {
                           {schedule.trainNumber}
                         </p>
                         <p className="text-xs text-muted-foreground">
-                          {schedule.departureStation?.name} → {schedule.arrivalStation?.name}
+                          {schedule.departureStation?.name} →{" "}
+                          {schedule.arrivalStation?.name}
                         </p>
                       </div>
                     </div>
@@ -326,9 +332,15 @@ export default function SchedulesPage() {
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="trainNumber">Train Number</Label>
-              <Input id="trainNumber" {...register("trainNumber")} placeholder="MRT-0600-NS" />
+              <Input
+                id="trainNumber"
+                {...register("trainNumber")}
+                placeholder="MRT-0600-NS"
+              />
               {errors.trainNumber && (
-                <p className="text-xs text-destructive">{errors.trainNumber.message}</p>
+                <p className="text-xs text-destructive">
+                  {errors.trainNumber.message}
+                </p>
               )}
             </div>
 
@@ -351,7 +363,9 @@ export default function SchedulesPage() {
                   </SelectContent>
                 </Select>
                 {errors.departureStationId && (
-                  <p className="text-xs text-destructive">{errors.departureStationId.message}</p>
+                  <p className="text-xs text-destructive">
+                    {errors.departureStationId.message}
+                  </p>
                 )}
               </div>
               <div className="space-y-2">
@@ -372,7 +386,9 @@ export default function SchedulesPage() {
                   </SelectContent>
                 </Select>
                 {errors.arrivalStationId && (
-                  <p className="text-xs text-destructive">{errors.arrivalStationId.message}</p>
+                  <p className="text-xs text-destructive">
+                    {errors.arrivalStationId.message}
+                  </p>
                 )}
               </div>
             </div>
@@ -380,16 +396,28 @@ export default function SchedulesPage() {
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="departureTime">Departure Time</Label>
-                <Input id="departureTime" {...register("departureTime")} placeholder="06:00" />
+                <Input
+                  id="departureTime"
+                  {...register("departureTime")}
+                  placeholder="06:00"
+                />
                 {errors.departureTime && (
-                  <p className="text-xs text-destructive">{errors.departureTime.message}</p>
+                  <p className="text-xs text-destructive">
+                    {errors.departureTime.message}
+                  </p>
                 )}
               </div>
               <div className="space-y-2">
                 <Label htmlFor="arrivalTime">Arrival Time</Label>
-                <Input id="arrivalTime" {...register("arrivalTime")} placeholder="06:30" />
+                <Input
+                  id="arrivalTime"
+                  {...register("arrivalTime")}
+                  placeholder="06:30"
+                />
                 {errors.arrivalTime && (
-                  <p className="text-xs text-destructive">{errors.arrivalTime.message}</p>
+                  <p className="text-xs text-destructive">
+                    {errors.arrivalTime.message}
+                  </p>
                 )}
               </div>
             </div>
@@ -400,7 +428,10 @@ export default function SchedulesPage() {
                 <Select
                   defaultValue={editingSchedule?.dayType || "WEEKDAY"}
                   onValueChange={(val) =>
-                    setValue("dayType", val as "WEEKDAY" | "WEEKEND" | "HOLIDAY")
+                    setValue(
+                      "dayType",
+                      val as "WEEKDAY" | "WEEKEND" | "HOLIDAY"
+                    )
                   }
                 >
                   <SelectTrigger>
@@ -418,7 +449,10 @@ export default function SchedulesPage() {
                 <Select
                   defaultValue={editingSchedule?.status || "ACTIVE"}
                   onValueChange={(val) =>
-                    setValue("status", val as "ACTIVE" | "CANCELLED" | "DELAYED")
+                    setValue(
+                      "status",
+                      val as "ACTIVE" | "CANCELLED" | "DELAYED"
+                    )
                   }
                 >
                   <SelectTrigger>
@@ -441,8 +475,8 @@ export default function SchedulesPage() {
               >
                 Cancel
               </Button>
-              <Button type="submit" disabled={isLoading}>
-                {isLoading
+              <Button type="submit" disabled={isMutating}>
+                {isMutating
                   ? "Saving..."
                   : editingSchedule
                     ? "Update"
@@ -473,9 +507,9 @@ export default function SchedulesPage() {
             <Button
               variant="destructive"
               onClick={() => deleteConfirm && handleDelete(deleteConfirm)}
-              disabled={isLoading}
+              disabled={deleteMutation.isPending}
             >
-              {isLoading ? "Deleting..." : "Delete"}
+              {deleteMutation.isPending ? "Deleting..." : "Delete"}
             </Button>
           </div>
         </DialogContent>
