@@ -110,6 +110,21 @@
     "userDeleted": "User deleted successfully",
     "deleteConfirm": "Are you sure you want to delete this user? This action cannot be undone."
   },
+  "map": {
+    "title": "Station Map",
+    "subtitle": "Interactive map of MRT Jakarta stations",
+    "mapped": "stations mapped",
+    "active": "Active",
+    "maintenance": "Maintenance",
+    "inactive": "Inactive",
+    "routeOrder": "Route Order"
+  },
+  "notFound": {
+    "title": "Page Not Found",
+    "description": "The page you're looking for doesn't exist or has been moved.",
+    "goBack": "Go Back",
+    "dashboard": "Dashboard"
+  },
   "activity": {
     "title": "Activity Log",
     "subtitle": "Track all changes made to stations and schedules",

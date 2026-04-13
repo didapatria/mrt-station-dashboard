@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { motion } from "framer-motion";
 import { MapPin, Train, Navigation } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -10,6 +11,7 @@ import { useStations } from "@/hooks/use-stations";
 import type { Station } from "@/types";
 
 export default function MapPage() {
+  const { t } = useTranslation();
   const { data, isLoading } = useStations({ limit: 100 });
   const stations = data?.stations ?? [];
   const [selectedStation, setSelectedStation] = useState<Station | null>(null);
@@ -25,24 +27,24 @@ export default function MapPage() {
     <div>
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div>
-          <h2 className="text-2xl font-bold">Station Map</h2>
+          <h2 className="text-2xl font-bold">{t("map.title")}</h2>
           <p className="text-muted-foreground">
-            Interactive map of MRT Jakarta stations ({withCoords.length} stations
-            mapped)
+            {t("map.subtitle")} ({withCoords.length}{" "}
+            {t("map.mapped")})
           </p>
         </div>
         <div className="flex gap-2">
           <Badge variant="success" className="gap-1">
             <span className="h-2 w-2 rounded-full bg-success" />
-            {statusCounts.active} Active
+            {statusCounts.active} {t("map.active")}
           </Badge>
           <Badge variant="warning" className="gap-1">
             <span className="h-2 w-2 rounded-full bg-warning" />
-            {statusCounts.maintenance} Maintenance
+            {statusCounts.maintenance} {t("map.maintenance")}
           </Badge>
           <Badge variant="destructive" className="gap-1">
             <span className="h-2 w-2 rounded-full bg-destructive" />
-            {statusCounts.inactive} Inactive
+            {statusCounts.inactive} {t("map.inactive")}
           </Badge>
         </div>
       </div>
@@ -57,9 +59,9 @@ export default function MapPage() {
           <Card className="overflow-hidden">
             <CardContent className="p-0">
               {isLoading ? (
-                <Skeleton className="h-[500px] w-full" />
+                <Skeleton className="h-125 w-full" />
               ) : (
-                <div className="h-[500px]">
+                <div className="h-125">
                   <StationMap
                     stations={stations}
                     selectedStationId={selectedStation?.id}
@@ -77,11 +79,11 @@ export default function MapPage() {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.3, delay: 0.1 }}
         >
-          <Card className="h-[500px] flex flex-col">
+          <Card className="h-125 flex flex-col">
             <CardHeader className="pb-3">
               <CardTitle className="text-base flex items-center gap-2">
                 <Train className="h-4 w-4" />
-                Route Order
+                {t("map.routeOrder")}
               </CardTitle>
             </CardHeader>
             <Separator />
@@ -95,7 +97,9 @@ export default function MapPage() {
                       key={station.id}
                       onClick={() => setSelectedStation(station)}
                       className={`w-full text-left px-4 py-3 transition-colors hover:bg-muted/50 ${
-                        selectedStation?.id === station.id ? "bg-primary/5 border-l-2 border-primary" : ""
+                        selectedStation?.id === station.id
+                          ? "bg-primary/5 border-l-2 border-primary"
+                          : ""
                       }`}
                     >
                       <div className="flex items-center gap-3">
@@ -112,9 +116,7 @@ export default function MapPage() {
                           {index <
                             stations.filter((s) => s.latitude && s.longitude)
                               .length -
-                              1 && (
-                            <div className="w-px h-4 bg-border mt-1" />
-                          )}
+                              1 && <div className="w-px h-4 bg-border mt-1" />}
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2">

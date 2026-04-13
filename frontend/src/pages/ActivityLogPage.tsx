@@ -60,9 +60,10 @@ export default function ActivityLogPage() {
     setSearchParams(params, { replace: true });
   }, [entityFilter, page, setSearchParams]);
 
-  useEffect(() => {
+  const handleEntityFilterChange = (value: string) => {
+    setEntityFilter(value);
     setPage(1);
-  }, [entityFilter]);
+  };
 
   const { data, isLoading } = useActivityLogs({
     page,
@@ -103,7 +104,7 @@ export default function ActivityLogPage() {
           </h2>
           <p className="text-muted-foreground">{t("activity.subtitle")}</p>
         </div>
-        <Select value={entityFilter} onValueChange={setEntityFilter}>
+        <Select value={entityFilter} onValueChange={handleEntityFilterChange}>
           <SelectTrigger className="w-40">
             <SelectValue placeholder="Filter by type" />
           </SelectTrigger>

@@ -71,9 +71,15 @@ export default function UsersPage() {
     setSearchParams(params, { replace: true });
   }, [debouncedSearch, roleFilter, page, setSearchParams]);
 
-  useEffect(() => {
+  const handleSearchChange = (value: string) => {
+    setSearch(value);
     setPage(1);
-  }, [debouncedSearch, roleFilter]);
+  };
+
+  const handleRoleFilterChange = (value: string) => {
+    setRoleFilter(value);
+    setPage(1);
+  };
 
   const { data, isLoading } = useUsers({
     page,
@@ -135,11 +141,11 @@ export default function UsersPage() {
           <Input
             placeholder={t("common.search")}
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={(e) => handleSearchChange(e.target.value)}
             className="pl-9"
           />
         </div>
-        <Select value={roleFilter} onValueChange={setRoleFilter}>
+        <Select value={roleFilter} onValueChange={handleRoleFilterChange}>
           <SelectTrigger className="w-35">
             <SelectValue placeholder="Role" />
           </SelectTrigger>

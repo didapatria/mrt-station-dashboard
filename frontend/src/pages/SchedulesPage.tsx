@@ -114,9 +114,20 @@ export default function SchedulesPage() {
     setSearchParams(params, { replace: true });
   }, [debouncedSearch, dayTypeFilter, statusFilter, page, setSearchParams]);
 
-  useEffect(() => {
+  const handleSearchChange = (value: string) => {
+    setSearch(value);
     setPage(1);
-  }, [debouncedSearch, dayTypeFilter, statusFilter]);
+  };
+
+  const handleDayTypeChange = (value: string) => {
+    setDayTypeFilter(value);
+    setPage(1);
+  };
+
+  const handleStatusChange = (value: string) => {
+    setStatusFilter(value);
+    setPage(1);
+  };
 
   const { data, isLoading } = useSchedules({
     page,
@@ -254,11 +265,11 @@ export default function SchedulesPage() {
           <Input
             placeholder={t("common.search")}
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={(e) => handleSearchChange(e.target.value)}
             className="pl-9"
           />
         </div>
-        <Select value={dayTypeFilter} onValueChange={setDayTypeFilter}>
+        <Select value={dayTypeFilter} onValueChange={handleDayTypeChange}>
           <SelectTrigger className="w-35">
             <SelectValue placeholder="Day Type" />
           </SelectTrigger>
@@ -269,7 +280,7 @@ export default function SchedulesPage() {
             <SelectItem value="HOLIDAY">Holiday</SelectItem>
           </SelectContent>
         </Select>
-        <Select value={statusFilter} onValueChange={setStatusFilter}>
+        <Select value={statusFilter} onValueChange={handleStatusChange}>
           <SelectTrigger className="w-35">
             <SelectValue placeholder="Status" />
           </SelectTrigger>

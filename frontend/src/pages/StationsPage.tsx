@@ -109,9 +109,15 @@ export default function StationsPage() {
     setSearchParams(params, { replace: true });
   }, [debouncedSearch, statusFilter, page, setSearchParams]);
 
-  useEffect(() => {
+  const handleSearchChange = (value: string) => {
+    setSearch(value);
     setPage(1);
-  }, [debouncedSearch, statusFilter]);
+  };
+
+  const handleStatusChange = (value: string) => {
+    setStatusFilter(value);
+    setPage(1);
+  };
 
   const { data, isLoading } = useStations({
     page,
@@ -249,11 +255,11 @@ export default function StationsPage() {
           <Input
             placeholder={t("common.search")}
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={(e) => handleSearchChange(e.target.value)}
             className="pl-9"
           />
         </div>
-        <Select value={statusFilter} onValueChange={setStatusFilter}>
+        <Select value={statusFilter} onValueChange={handleStatusChange}>
           <SelectTrigger className="w-40">
             <SelectValue placeholder="Status" />
           </SelectTrigger>

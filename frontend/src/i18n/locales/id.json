@@ -110,6 +110,21 @@
     "userDeleted": "Pengguna berhasil dihapus",
     "deleteConfirm": "Apakah Anda yakin ingin menghapus pengguna ini? Tindakan ini tidak dapat dibatalkan."
   },
+  "map": {
+    "title": "Peta Stasiun",
+    "subtitle": "Peta interaktif stasiun MRT Jakarta",
+    "mapped": "stasiun dipetakan",
+    "active": "Aktif",
+    "maintenance": "Pemeliharaan",
+    "inactive": "Nonaktif",
+    "routeOrder": "Urutan Rute"
+  },
+  "notFound": {
+    "title": "Halaman Tidak Ditemukan",
+    "description": "Halaman yang Anda cari tidak ada atau telah dipindahkan.",
+    "goBack": "Kembali",
+    "dashboard": "Dasbor"
+  },
   "activity": {
     "title": "Log Aktivitas",
     "subtitle": "Lacak semua perubahan pada stasiun dan jadwal",
