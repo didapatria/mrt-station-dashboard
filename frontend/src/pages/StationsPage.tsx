@@ -71,6 +71,7 @@ import { SortableTableHead } from "@/components/SortableTableHead";
 import { useSortable } from "@/hooks/use-sortable";
 import { useDebounce } from "@/hooks/use-debounce";
 import { dashboardService } from "@/services/dashboard.service";
+import { CSVImportDialog } from "@/components/CSVImport";
 import { useRole } from "@/hooks/use-role";
 import type { Station } from "@/types";
 
@@ -99,6 +100,7 @@ export default function StationsPage() {
   const [editingStation, setEditingStation] = useState<Station | null>(null);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [bulkDeleteOpen, setBulkDeleteOpen] = useState(false);
+  const [csvImportOpen, setCsvImportOpen] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
 
   const debouncedSearch = useDebounce(search, 300);
@@ -274,6 +276,11 @@ export default function StationsPage() {
             <Download className="h-4 w-4 mr-2" />
             CSV
           </Button>
+          {isAdmin && (
+            <Button variant="outline" onClick={() => setCsvImportOpen(true)}>
+              Import CSV
+            </Button>
+          )}
           {isAdmin && (
             <Button onClick={openCreate}>
               <Plus className="h-4 w-4 mr-2" />
@@ -692,6 +699,8 @@ export default function StationsPage() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      <CSVImportDialog open={csvImportOpen} onOpenChange={setCsvImportOpen} />
     </div>
   );
 }
