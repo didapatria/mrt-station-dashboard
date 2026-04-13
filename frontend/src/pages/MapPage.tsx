@@ -1,11 +1,12 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { motion } from "framer-motion";
-import { MapPin, Train, Navigation } from "lucide-react";
+import { MapPin, Train, Navigation, Search } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Input } from "@/components/ui/input";
 import { StationMap } from "@/components/StationMap";
 import { useStations } from "@/hooks/use-stations";
 import type { Station } from "@/types";
@@ -15,12 +16,21 @@ export default function MapPage() {
   const { data, isLoading } = useStations({ limit: 100 });
   const stations = data?.stations ?? [];
   const [selectedStation, setSelectedStation] = useState<Station | null>(null);
+  const [mapSearch, setMapSearch] = useState("");
 
-  const withCoords = stations.filter((s) => s.latitude && s.longitude);
+  const filteredStations = useMemo(() => {
+    if (!mapSearch.trim()) return stations;
+    const q = mapSearch.toLowerCase();
+    return stations.filter(
+      (s) => s.name.toLowerCase().includes(q) || s.code.toLowerCase().includes(q) || s.location.toLowerCase().includes(q)
+    );
+  }, [stations, mapSearch]);
+
+  const withCoords = filteredStations.filter((s) => s.latitude && s.longitude);
   const statusCounts = {
-    active: stations.filter((s) => s.status === "ACTIVE").length,
-    maintenance: stations.filter((s) => s.status === "MAINTENANCE").length,
-    inactive: stations.filter((s) => s.status === "INACTIVE").length,
+    active: filteredStations.filter((s) => s.status === "ACTIVE").length,
+    maintenance: filteredStations.filter((s) => s.status === "MAINTENANCE").length,
+    inactive: filteredStations.filter((s) => s.status === "INACTIVE").length,
   };
 
   return (
@@ -86,10 +96,15 @@ export default function MapPage() {
                 {t("map.routeOrder")}
               </CardTitle>
             </CardHeader>
-            <Separator />
+            <div className="px-3 py-2 border-b">
+              <div className="relative">
+                <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
+                <Input placeholder={t("common.search")} value={mapSearch} onChange={(e) => setMapSearch(e.target.value)} className="h-8 pl-8 text-sm" />
+              </div>
+            </div>
             <CardContent className="flex-1 overflow-y-auto p-0">
               <div className="divide-y">
-                {stations
+                {filteredStations
                   .filter((s) => s.latitude && s.longitude)
                   .sort((a, b) => a.order - b.order)
                   .map((station, index) => (
@@ -114,7 +129,7 @@ export default function MapPage() {
                             }`}
                           />
                           {index <
-                            stations.filter((s) => s.latitude && s.longitude)
+                            filteredStations.filter((s) => s.latitude && s.longitude)
                               .length -
                               1 && <div className="w-px h-4 bg-border mt-1" />}
                         </div>
