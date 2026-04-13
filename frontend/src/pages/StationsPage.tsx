@@ -57,6 +57,7 @@ import {
   useDeleteStation,
 } from "@/hooks/use-stations";
 import { dashboardService } from "@/services/dashboard.service";
+import { useRole } from "@/hooks/use-role";
 import type { Station } from "@/types";
 
 const stationSchema = z.object({
@@ -72,6 +73,7 @@ const stationSchema = z.object({
 type StationFormData = z.infer<typeof stationSchema>;
 
 export default function StationsPage() {
+  const { isAdmin } = useRole();
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
   const [statusFilter, setStatusFilter] = useState<string>("ALL");
@@ -194,10 +196,12 @@ export default function StationsPage() {
             <Download className="h-4 w-4 mr-2" />
             CSV
           </Button>
-          <Button onClick={openCreate}>
-            <Plus className="h-4 w-4 mr-2" />
-            Add Station
-          </Button>
+          {isAdmin && (
+            <Button onClick={openCreate}>
+              <Plus className="h-4 w-4 mr-2" />
+              Add Station
+            </Button>
+          )}
         </div>
       </div>
 
@@ -245,9 +249,11 @@ export default function StationsPage() {
                     Coordinates
                   </TableHead>
                   <TableHead>Status</TableHead>
-                  <TableHead className="text-right w-[100px]">
-                    Actions
-                  </TableHead>
+                  {isAdmin && (
+                    <TableHead className="text-right w-[100px]">
+                      Actions
+                    </TableHead>
+                  )}
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -272,9 +278,11 @@ export default function StationsPage() {
                         <TableCell>
                           <Skeleton className="h-5 w-16 rounded-full" />
                         </TableCell>
-                        <TableCell>
-                          <Skeleton className="h-8 w-16 ml-auto" />
-                        </TableCell>
+                        {isAdmin && (
+                          <TableCell>
+                            <Skeleton className="h-8 w-16 ml-auto" />
+                          </TableCell>
+                        )}
                       </TableRow>
                     ))
                   : stations.map((station) => (
@@ -336,42 +344,46 @@ export default function StationsPage() {
                             {station.status}
                           </Badge>
                         </TableCell>
-                        <TableCell className="text-right">
-                          <div className="flex justify-end gap-1">
-                            <TooltipProvider>
-                              <Tooltip>
-                                <TooltipTrigger asChild>
-                                  <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    className="h-8 w-8"
-                                    onClick={() => openEdit(station)}
-                                  >
-                                    <Pencil className="h-3.5 w-3.5" />
-                                  </Button>
-                                </TooltipTrigger>
-                                <TooltipContent>Edit station</TooltipContent>
-                              </Tooltip>
-                            </TooltipProvider>
-                            <TooltipProvider>
-                              <Tooltip>
-                                <TooltipTrigger asChild>
-                                  <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    className="h-8 w-8 text-destructive hover:text-destructive"
-                                    onClick={() =>
-                                      setDeleteConfirm(station.id)
-                                    }
-                                  >
-                                    <Trash2 className="h-3.5 w-3.5" />
-                                  </Button>
-                                </TooltipTrigger>
-                                <TooltipContent>Delete station</TooltipContent>
-                              </Tooltip>
-                            </TooltipProvider>
-                          </div>
-                        </TableCell>
+                        {isAdmin && (
+                          <TableCell className="text-right">
+                            <div className="flex justify-end gap-1">
+                              <TooltipProvider>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <Button
+                                      variant="ghost"
+                                      size="icon"
+                                      className="h-8 w-8"
+                                      onClick={() => openEdit(station)}
+                                    >
+                                      <Pencil className="h-3.5 w-3.5" />
+                                    </Button>
+                                  </TooltipTrigger>
+                                  <TooltipContent>Edit station</TooltipContent>
+                                </Tooltip>
+                              </TooltipProvider>
+                              <TooltipProvider>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <Button
+                                      variant="ghost"
+                                      size="icon"
+                                      className="h-8 w-8 text-destructive hover:text-destructive"
+                                      onClick={() =>
+                                        setDeleteConfirm(station.id)
+                                      }
+                                    >
+                                      <Trash2 className="h-3.5 w-3.5" />
+                                    </Button>
+                                  </TooltipTrigger>
+                                  <TooltipContent>
+                                    Delete station
+                                  </TooltipContent>
+                                </Tooltip>
+                              </TooltipProvider>
+                            </div>
+                          </TableCell>
+                        )}
                       </TableRow>
                     ))}
               </TableBody>
