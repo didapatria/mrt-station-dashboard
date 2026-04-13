@@ -19,6 +19,7 @@ import {
   Activity,
   PanelLeftClose,
   PanelLeft,
+  History,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -44,6 +45,8 @@ import { CommandSearch } from "@/components/CommandSearch";
 import { useRole } from "@/hooks/use-role";
 import { PageBreadcrumb } from "@/components/PageBreadcrumb";
 import { useRealtimeNotifications } from "@/hooks/use-sse";
+import { NotificationCenter } from "@/components/NotificationCenter";
+import { KeyboardShortcuts } from "@/components/KeyboardShortcuts";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 
@@ -61,6 +64,7 @@ const navItems: NavItem[] = [
   { to: "/map", icon: Map, labelKey: "nav.stationMap" },
   { to: "/users", icon: Users, labelKey: "nav.users", adminOnly: true },
   { to: "/activity", icon: Activity, labelKey: "nav.activityLog" },
+  { to: "/changelog", icon: History, labelKey: "nav.changelog" },
   { to: "/profile", icon: User, labelKey: "nav.profile" },
 ];
 
@@ -250,6 +254,8 @@ export default function DashboardLayout() {
           </Button>
 
           <CommandSearch />
+          <KeyboardShortcuts />
+          <NotificationCenter />
           <LanguageToggle />
           <ThemeToggle />
           <Separator orientation="vertical" className="h-5" />

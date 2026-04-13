@@ -19,6 +19,7 @@ const ProfilePage = lazy(() => import("@/pages/ProfilePage"));
 const MapPage = lazy(() => import("@/pages/MapPage"));
 const UsersPage = lazy(() => import("@/pages/UsersPage"));
 const ActivityLogPage = lazy(() => import("@/pages/ActivityLogPage"));
+const ChangelogPage = lazy(() => import("@/pages/ChangelogPage"));
 const NotFoundPage = lazy(() => import("@/pages/NotFoundPage"));
 
 const queryClient = new QueryClient({
@@ -74,6 +75,7 @@ function App() {
                 <Route path="/map" element={<MapPage />} />
                 <Route path="/users" element={<UsersPage />} />
                 <Route path="/activity" element={<ActivityLogPage />} />
+            <Route path="/changelog" element={<ChangelogPage />} />
                 <Route path="/profile" element={<ProfilePage />} />
               </Route>
 

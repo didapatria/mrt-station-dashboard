@@ -19,6 +19,9 @@ import {
   CartesianGrid,
   Tooltip as RechartsTooltip,
   ResponsiveContainer,
+  PieChart,
+  Pie,
+  Cell,
 } from "recharts";
 import {
   Card,
@@ -208,6 +211,44 @@ export default function DashboardPage() {
             </motion.div>
           ))}
         </motion.div>
+      )}
+
+      {/* Pie Charts */}
+      {stats && (
+        <div className="grid gap-6 lg:grid-cols-2 mb-8">
+          <Card className="shadow-sm">
+            <CardHeader><CardTitle className="text-lg">{t("dashboard.totalStations")} Breakdown</CardTitle></CardHeader>
+            <Separator />
+            <CardContent className="pt-6">
+              <ResponsiveContainer width="100%" height={220}>
+                <PieChart>
+                  <Pie data={[{ name: "Active", value: stats.activeStations }, { name: "Maintenance", value: stats.maintenanceStations }, { name: "Inactive", value: stats.inactiveStations }].filter(d => d.value > 0)} cx="50%" cy="50%" innerRadius={50} outerRadius={80} paddingAngle={4} dataKey="value" label={({ name, value }) => `${name}: ${value}`}>
+                    <Cell fill="#22c55e" />
+                    <Cell fill="#f59e0b" />
+                    <Cell fill="#ef4444" />
+                  </Pie>
+                  <RechartsTooltip />
+                </PieChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
+          <Card className="shadow-sm">
+            <CardHeader><CardTitle className="text-lg">{t("dashboard.totalSchedules")} Breakdown</CardTitle></CardHeader>
+            <Separator />
+            <CardContent className="pt-6">
+              <ResponsiveContainer width="100%" height={220}>
+                <PieChart>
+                  <Pie data={[{ name: "Active", value: stats.activeSchedules }, { name: "Delayed", value: stats.delayedSchedules }, { name: "Cancelled", value: stats.cancelledSchedules }].filter(d => d.value > 0)} cx="50%" cy="50%" innerRadius={50} outerRadius={80} paddingAngle={4} dataKey="value" label={({ name, value }) => `${name}: ${value}`}>
+                    <Cell fill="#22c55e" />
+                    <Cell fill="#f59e0b" />
+                    <Cell fill="#ef4444" />
+                  </Pie>
+                  <RechartsTooltip />
+                </PieChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
+        </div>
       )}
 
       {/* Hourly Schedule Chart with Recharts */}

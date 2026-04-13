@@ -1,0 +1,113 @@
+import { motion } from "framer-motion";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+
+const changelog = [
+  {
+    version: "2.1.0",
+    date: "April 2026",
+    items: [
+      "Dashboard analytics with pie charts",
+      "Notification center with real-time bell icon",
+      "Keyboard shortcuts help modal (?)",
+      "Changelog page",
+      "Profile page two-column layout with preferences",
+    ],
+  },
+  {
+    version: "2.0.0",
+    date: "April 2026",
+    items: [
+      "Real-time notifications via Server-Sent Events (SSE)",
+      "Internationalization (English/Indonesian)",
+      "PWA support — installable, offline map tiles",
+      "PDF dashboard report export",
+      "Bulk select and delete for stations",
+      "Breadcrumb navigation",
+      "Map search filter",
+      "Swagger API documentation update",
+      "E2E testing with Playwright",
+    ],
+  },
+  {
+    version: "1.5.0",
+    date: "April 2026",
+    items: [
+      "Interactive station map with Leaflet",
+      "Role-based UI (Admin vs Operator)",
+      "Activity/audit log tracking",
+      "User management page (Admin CRUD)",
+      "Command search (Cmd+K)",
+      "Change password feature",
+      "Rate limiting on API",
+    ],
+  },
+  {
+    version: "1.0.0",
+    date: "April 2026",
+    items: [
+      "TanStack Query for server state management",
+      "Shadcn UI component library with 19+ components",
+      "Sortable tables with asc/desc toggle",
+      "Debounced search with URL-synced filters",
+      "Empty states with contextual messages",
+      "Error boundary and 404 page",
+      "Lazy loading with code splitting",
+      "GitHub Actions CI/CD pipeline",
+      "Vitest + React Testing Library (frontend tests)",
+      "Vitest + Supertest (backend API tests)",
+    ],
+  },
+  {
+    version: "0.1.0",
+    date: "April 2026",
+    items: [
+      "Initial release",
+      "Authentication (JWT login/register)",
+      "Station CRUD with search, filter, pagination",
+      "Schedule CRUD with station relations",
+      "Dashboard with stats and hourly chart",
+      "Dark mode toggle",
+      "CSV export (stations & schedules)",
+      "Docker containerization",
+      "Swagger API documentation",
+    ],
+  },
+];
+
+export default function ChangelogPage() {
+  return (
+    <div>
+      <div className="mb-6">
+        <h2 className="text-2xl font-bold tracking-tight">Changelog</h2>
+        <p className="text-muted-foreground">Version history and release notes</p>
+      </div>
+
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="max-w-3xl space-y-6">
+        {changelog.map((release, i) => (
+          <Card key={release.version} className="shadow-sm">
+            <CardContent className="p-6">
+              <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "0.75rem", marginBottom: "1rem" }}>
+                <Badge variant={i === 0 ? "default" : "outline"} className="text-sm px-3 py-1">
+                  v{release.version}
+                </Badge>
+                <span className="text-sm text-muted-foreground">{release.date}</span>
+                {i === 0 && <Badge variant="success" className="text-[10px]">Latest</Badge>}
+              </div>
+              <Separator className="mb-4" />
+              <ul className="space-y-2">
+                {release.items.map((item) => (
+                  <li key={item} style={{ display: "flex", flexDirection: "row", alignItems: "flex-start", gap: "0.5rem" }} className="text-sm">
+                    <span className="text-primary mt-1.5 shrink-0">•</span>
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </CardContent>
+          </Card>
+        ))}
+      </motion.div>
+    </div>
+  );
+}
