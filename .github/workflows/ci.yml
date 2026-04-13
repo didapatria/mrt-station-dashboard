@@ -61,6 +61,10 @@ jobs:
         working-directory: backend
         run: npx prisma generate --schema=src/prisma/schema.prisma
 
+      - name: Test
+        working-directory: backend
+        run: NODE_ENV=test npm run test:run
+
       - name: Build
         working-directory: backend
         run: npm run build
