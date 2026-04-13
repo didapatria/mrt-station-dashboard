@@ -13,6 +13,7 @@ import DashboardPage from "@/pages/DashboardPage";
 import StationsPage from "@/pages/StationsPage";
 import SchedulesPage from "@/pages/SchedulesPage";
 import ProfilePage from "@/pages/ProfilePage";
+import MapPage from "@/pages/MapPage";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -48,6 +49,7 @@ function App() {
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/stations" element={<StationsPage />} />
             <Route path="/schedules" element={<SchedulesPage />} />
+            <Route path="/map" element={<MapPage />} />
             <Route path="/profile" element={<ProfilePage />} />
           </Route>
 

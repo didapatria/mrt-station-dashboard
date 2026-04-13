@@ -11,6 +11,7 @@ import {
   Menu,
   User,
   Settings,
+  Map,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -44,6 +45,7 @@ const navItems = [
   { to: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
   { to: "/stations", icon: MapPin, label: "Stations" },
   { to: "/schedules", icon: Clock, label: "Schedules" },
+  { to: "/map", icon: Map, label: "Station Map" },
   { to: "/profile", icon: User, label: "Profile" },
 ];
 
