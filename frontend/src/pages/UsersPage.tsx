@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Search, Trash2, Shield, ShieldCheck, UserCog } from "lucide-react";
@@ -50,12 +51,13 @@ import { useAuthStore } from "@/store/auth.store";
 import type { User } from "@/types";
 
 export default function UsersPage() {
+  const { t } = useTranslation();
   const currentUser = useAuthStore((s) => s.user);
   const [searchParams, setSearchParams] = useSearchParams();
   const [search, setSearch] = useState(searchParams.get("q") ?? "");
   const [page, setPage] = useState(Number(searchParams.get("page")) || 1);
   const [roleFilter, setRoleFilter] = useState<string>(
-    searchParams.get("role") ?? "ALL"
+    searchParams.get("role") ?? "ALL",
   );
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
 
@@ -82,14 +84,18 @@ export default function UsersPage() {
 
   const users = data?.users ?? [];
   const meta = data?.meta ?? null;
-  const { sorted: sortedUsers, sortConfig, requestSort } = useSortable<User>(users, "name");
+  const {
+    sorted: sortedUsers,
+    sortConfig,
+    requestSort,
+  } = useSortable<User>(users, "name");
 
   const updateRoleMutation = useUpdateUserRole();
   const deleteMutation = useDeleteUser();
 
   const handleRoleChange = async (
     userId: string,
-    newRole: "ADMIN" | "OPERATOR"
+    newRole: "ADMIN" | "OPERATOR",
   ) => {
     try {
       await updateRoleMutation.mutateAsync({ id: userId, role: newRole });
@@ -113,9 +119,11 @@ export default function UsersPage() {
     <div>
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight">Users</h2>
+          <h2 className="text-2xl font-bold tracking-tight">
+            {t("users.title")}
+          </h2>
           <p className="text-muted-foreground">
-            Manage user accounts and roles ({meta?.total ?? users.length} total)
+            {t("users.manage")} ({meta?.total ?? users.length} total)
           </p>
         </div>
       </div>
@@ -125,14 +133,14 @@ export default function UsersPage() {
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
-            placeholder="Search by name or email..."
+            placeholder={t("common.search")}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="pl-9"
           />
         </div>
         <Select value={roleFilter} onValueChange={setRoleFilter}>
-          <SelectTrigger className="w-[140px]">
+          <SelectTrigger className="w-35">
             <SelectValue placeholder="Role" />
           </SelectTrigger>
           <SelectContent>
@@ -180,8 +188,8 @@ export default function UsersPage() {
                     onSort={requestSort}
                     className="hidden md:table-cell"
                   />
-                  <TableHead className="text-right w-[100px]">
-                    Actions
+                  <TableHead className="text-right w-25">
+                    {t("common.actions")}
                   </TableHead>
                 </TableRow>
               </TableHeader>
@@ -235,12 +243,12 @@ export default function UsersPage() {
                             onValueChange={(val) =>
                               handleRoleChange(
                                 user.id,
-                                val as "ADMIN" | "OPERATOR"
+                                val as "ADMIN" | "OPERATOR",
                               )
                             }
                             disabled={user.id === currentUser?.id}
                           >
-                            <SelectTrigger className="w-[130px] h-8">
+                            <SelectTrigger className="w-32.5 h-8">
                               <SelectValue />
                             </SelectTrigger>
                             <SelectContent>
@@ -266,7 +274,7 @@ export default function UsersPage() {
                               year: "numeric",
                               month: "short",
                               day: "numeric",
-                            }
+                            },
                           )}
                         </TableCell>
                         <TableCell className="text-right">
@@ -283,7 +291,9 @@ export default function UsersPage() {
                                     <Trash2 className="h-3.5 w-3.5" />
                                   </Button>
                                 </TooltipTrigger>
-                                <TooltipContent>Delete user</TooltipContent>
+                                <TooltipContent>
+                                  {t("common.delete")}
+                                </TooltipContent>
                               </Tooltip>
                             </TooltipProvider>
                           ) : (
@@ -327,20 +337,21 @@ export default function UsersPage() {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete User</AlertDialogTitle>
+            <AlertDialogTitle>{t("common.delete")}</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete this user? This action cannot be
-              undone.
+              {t("users.deleteConfirm")}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>{t("common.cancel")}</AlertDialogCancel>
             <AlertDialogAction
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
               onClick={() => deleteConfirm && handleDelete(deleteConfirm)}
               disabled={deleteMutation.isPending}
             >
-              {deleteMutation.isPending ? "Deleting..." : "Delete"}
+              {deleteMutation.isPending
+                ? t("common.loading")
+                : t("common.delete")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

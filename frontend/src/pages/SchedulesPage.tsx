@@ -1,10 +1,19 @@
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { useSearchParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { motion } from "framer-motion";
-import { Plus, Pencil, Trash2, Search, ArrowRight, Download, Clock } from "lucide-react";
+import {
+  Plus,
+  Pencil,
+  Trash2,
+  Search,
+  ArrowRight,
+  Download,
+  Clock,
+} from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -79,15 +88,16 @@ const scheduleSchema = z.object({
 type ScheduleFormData = z.infer<typeof scheduleSchema>;
 
 export default function SchedulesPage() {
+  const { t } = useTranslation();
   const { isAdmin } = useRole();
   const [searchParams, setSearchParams] = useSearchParams();
   const [search, setSearch] = useState(searchParams.get("q") ?? "");
   const [page, setPage] = useState(Number(searchParams.get("page")) || 1);
   const [dayTypeFilter, setDayTypeFilter] = useState<string>(
-    searchParams.get("dayType") ?? "ALL"
+    searchParams.get("dayType") ?? "ALL",
   );
   const [statusFilter, setStatusFilter] = useState<string>(
-    searchParams.get("status") ?? "ALL"
+    searchParams.get("status") ?? "ALL",
   );
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingSchedule, setEditingSchedule] = useState<Schedule | null>(null);
@@ -118,7 +128,11 @@ export default function SchedulesPage() {
 
   const schedules = data?.schedules ?? [];
   const meta = data?.meta ?? null;
-  const { sorted: sortedSchedules, sortConfig, requestSort } = useSortable<Schedule>(schedules, "trainNumber");
+  const {
+    sorted: sortedSchedules,
+    sortConfig,
+    requestSort,
+  } = useSortable<Schedule>(schedules, "trainNumber");
 
   const { data: stationsData } = useStations({ limit: 100 });
   const stations = stationsData?.stations ?? [];
@@ -192,7 +206,7 @@ export default function SchedulesPage() {
   const handleExport = async () => {
     try {
       await dashboardService.exportSchedulesCSV(
-        dayTypeFilter !== "ALL" ? dayTypeFilter : undefined
+        dayTypeFilter !== "ALL" ? dayTypeFilter : undefined,
       );
       toast.success("Schedules exported to CSV");
     } catch {
@@ -214,9 +228,9 @@ export default function SchedulesPage() {
     <div>
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div>
-          <h2 className="text-2xl font-bold">Schedules</h2>
+          <h2 className="text-2xl font-bold">{t("schedules.title")}</h2>
           <p className="text-muted-foreground">
-            Manage train schedules ({meta?.total ?? schedules.length} total)
+            {t("schedules.manage")} ({meta?.total ?? schedules.length} total)
           </p>
         </div>
         <div className="flex gap-2">
@@ -227,7 +241,7 @@ export default function SchedulesPage() {
           {isAdmin && (
             <Button onClick={openCreate}>
               <Plus className="h-4 w-4 mr-2" />
-              Add Schedule
+              {t("schedules.addSchedule")}
             </Button>
           )}
         </div>
@@ -238,14 +252,14 @@ export default function SchedulesPage() {
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
-            placeholder="Search by train number..."
+            placeholder={t("common.search")}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="pl-9"
           />
         </div>
         <Select value={dayTypeFilter} onValueChange={setDayTypeFilter}>
-          <SelectTrigger className="w-[140px]">
+          <SelectTrigger className="w-35">
             <SelectValue placeholder="Day Type" />
           </SelectTrigger>
           <SelectContent>
@@ -256,11 +270,11 @@ export default function SchedulesPage() {
           </SelectContent>
         </Select>
         <Select value={statusFilter} onValueChange={setStatusFilter}>
-          <SelectTrigger className="w-[140px]">
+          <SelectTrigger className="w-35">
             <SelectValue placeholder="Status" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="ALL">All Status</SelectItem>
+            <SelectItem value="ALL">{t("common.allStatus")}</SelectItem>
             <SelectItem value="ACTIVE">Active</SelectItem>
             <SelectItem value="CANCELLED">Cancelled</SelectItem>
             <SelectItem value="DELAYED">Delayed</SelectItem>
@@ -280,34 +294,34 @@ export default function SchedulesPage() {
               <TableHeader>
                 <TableRow className="bg-muted/50">
                   <SortableTableHead<Schedule>
-                    label="Train"
+                    label={t("schedules.trainNumber")}
                     sortKey="trainNumber"
                     sortConfig={sortConfig}
                     onSort={requestSort}
                   />
-                  <TableHead>Route</TableHead>
+                  <TableHead>{t("schedules.route")}</TableHead>
                   <SortableTableHead<Schedule>
-                    label="Time"
+                    label={t("schedules.time")}
                     sortKey="departureTime"
                     sortConfig={sortConfig}
                     onSort={requestSort}
                     className="hidden sm:table-cell"
                   />
                   <SortableTableHead<Schedule>
-                    label="Day"
+                    label={t("schedules.dayType")}
                     sortKey="dayType"
                     sortConfig={sortConfig}
                     onSort={requestSort}
                   />
                   <SortableTableHead<Schedule>
-                    label="Status"
+                    label={t("stations.status")}
                     sortKey="status"
                     sortConfig={sortConfig}
                     onSort={requestSort}
                   />
                   {isAdmin && (
-                    <TableHead className="text-right w-[100px]">
-                      Actions
+                    <TableHead className="text-right w-25">
+                      {t("common.actions")}
                     </TableHead>
                   )}
                 </TableRow>
@@ -376,9 +390,7 @@ export default function SchedulesPage() {
                           </p>
                         </TableCell>
                         <TableCell>
-                          <Badge variant="secondary">
-                            {schedule.dayType}
-                          </Badge>
+                          <Badge variant="secondary">{schedule.dayType}</Badge>
                         </TableCell>
                         <TableCell>
                           <Badge
@@ -409,7 +421,7 @@ export default function SchedulesPage() {
                                     </Button>
                                   </TooltipTrigger>
                                   <TooltipContent>
-                                    Edit schedule
+                                    {t("schedules.editSchedule")}
                                   </TooltipContent>
                                 </Tooltip>
                               </TooltipProvider>
@@ -428,7 +440,7 @@ export default function SchedulesPage() {
                                     </Button>
                                   </TooltipTrigger>
                                   <TooltipContent>
-                                    Delete schedule
+                                    {t("schedules.deleteSchedule")}
                                   </TooltipContent>
                                 </Tooltip>
                               </TooltipProvider>
@@ -446,15 +458,17 @@ export default function SchedulesPage() {
       {sortedSchedules.length === 0 && !isLoading && (
         <EmptyState
           icon={Clock}
-          title={debouncedSearch ? "No schedules found" : "No schedules yet"}
+          title={
+            debouncedSearch ? t("common.noResults") : t("schedules.noSchedules")
+          }
           description={
             debouncedSearch
-              ? `No schedules match "${debouncedSearch}". Try a different search term.`
-              : "Get started by adding your first train schedule."
+              ? t("schedules.noSchedulesSearch", { query: debouncedSearch })
+              : t("schedules.getStarted")
           }
           action={
             isAdmin && !debouncedSearch
-              ? { label: "Add Schedule", onClick: openCreate }
+              ? { label: t("schedules.addSchedule"), onClick: openCreate }
               : undefined
           }
         />
@@ -473,7 +487,9 @@ export default function SchedulesPage() {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>
-              {editingSchedule ? "Edit Schedule" : "Add New Schedule"}
+              {editingSchedule
+                ? t("schedules.editSchedule")
+                : t("schedules.addSchedule")}
             </DialogTitle>
             <DialogDescription>
               {editingSchedule
@@ -483,7 +499,7 @@ export default function SchedulesPage() {
           </DialogHeader>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="trainNumber">Train Number</Label>
+              <Label htmlFor="trainNumber">{t("schedules.trainNumber")}</Label>
               <Input
                 id="trainNumber"
                 {...register("trainNumber")}
@@ -498,7 +514,7 @@ export default function SchedulesPage() {
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label>Departure Station</Label>
+                <Label>{t("schedules.departureStation")}</Label>
                 <Select
                   defaultValue={editingSchedule?.departureStationId}
                   onValueChange={(val) => setValue("departureStationId", val)}
@@ -521,7 +537,7 @@ export default function SchedulesPage() {
                 )}
               </div>
               <div className="space-y-2">
-                <Label>Arrival Station</Label>
+                <Label>{t("schedules.arrivalStation")}</Label>
                 <Select
                   defaultValue={editingSchedule?.arrivalStationId}
                   onValueChange={(val) => setValue("arrivalStationId", val)}
@@ -547,7 +563,9 @@ export default function SchedulesPage() {
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="departureTime">Departure Time</Label>
+                <Label htmlFor="departureTime">
+                  {t("schedules.departureTime")}
+                </Label>
                 <Input
                   id="departureTime"
                   {...register("departureTime")}
@@ -560,7 +578,9 @@ export default function SchedulesPage() {
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="arrivalTime">Arrival Time</Label>
+                <Label htmlFor="arrivalTime">
+                  {t("schedules.arrivalTime")}
+                </Label>
                 <Input
                   id="arrivalTime"
                   {...register("arrivalTime")}
@@ -576,13 +596,13 @@ export default function SchedulesPage() {
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label>Day Type</Label>
+                <Label>{t("schedules.dayType")}</Label>
                 <Select
                   defaultValue={editingSchedule?.dayType || "WEEKDAY"}
                   onValueChange={(val) =>
                     setValue(
                       "dayType",
-                      val as "WEEKDAY" | "WEEKEND" | "HOLIDAY"
+                      val as "WEEKDAY" | "WEEKEND" | "HOLIDAY",
                     )
                   }
                 >
@@ -597,13 +617,13 @@ export default function SchedulesPage() {
                 </Select>
               </div>
               <div className="space-y-2">
-                <Label>Status</Label>
+                <Label>{t("stations.status")}</Label>
                 <Select
                   defaultValue={editingSchedule?.status || "ACTIVE"}
                   onValueChange={(val) =>
                     setValue(
                       "status",
-                      val as "ACTIVE" | "CANCELLED" | "DELAYED"
+                      val as "ACTIVE" | "CANCELLED" | "DELAYED",
                     )
                   }
                 >
@@ -625,14 +645,14 @@ export default function SchedulesPage() {
                 variant="outline"
                 onClick={() => setDialogOpen(false)}
               >
-                Cancel
+                {t("common.cancel")}
               </Button>
               <Button type="submit" disabled={isMutating}>
                 {isMutating
-                  ? "Saving..."
+                  ? t("common.loading")
                   : editingSchedule
-                    ? "Update"
-                    : "Create"}
+                    ? t("common.update")
+                    : t("common.create")}
               </Button>
             </div>
           </form>
@@ -646,20 +666,21 @@ export default function SchedulesPage() {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete Schedule</AlertDialogTitle>
+            <AlertDialogTitle>{t("schedules.deleteSchedule")}</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete this schedule? This action cannot
-              be undone.
+              {t("schedules.deleteConfirm")}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>{t("common.cancel")}</AlertDialogCancel>
             <AlertDialogAction
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
               onClick={() => deleteConfirm && handleDelete(deleteConfirm)}
               disabled={deleteMutation.isPending}
             >
-              {deleteMutation.isPending ? "Deleting..." : "Delete"}
+              {deleteMutation.isPending
+                ? t("common.loading")
+                : t("common.delete")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

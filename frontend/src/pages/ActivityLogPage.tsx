@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
@@ -32,7 +33,8 @@ const actionIcons = {
 };
 
 const actionColors = {
-  CREATE: "text-emerald-600 bg-emerald-100 dark:text-emerald-400 dark:bg-emerald-950",
+  CREATE:
+    "text-emerald-600 bg-emerald-100 dark:text-emerald-400 dark:bg-emerald-950",
   UPDATE: "text-blue-600 bg-blue-100 dark:text-blue-400 dark:bg-blue-950",
   DELETE: "text-red-600 bg-red-100 dark:text-red-400 dark:bg-red-950",
 };
@@ -44,10 +46,11 @@ const entityIcons = {
 };
 
 export default function ActivityLogPage() {
+  const { t } = useTranslation();
   const [searchParams, setSearchParams] = useSearchParams();
   const [page, setPage] = useState(Number(searchParams.get("page")) || 1);
   const [entityFilter, setEntityFilter] = useState<string>(
-    searchParams.get("entity") ?? "ALL"
+    searchParams.get("entity") ?? "ALL",
   );
 
   useEffect(() => {
@@ -95,17 +98,17 @@ export default function ActivityLogPage() {
     <div>
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight">Activity Log</h2>
-          <p className="text-muted-foreground">
-            Track all changes made to stations and schedules
-          </p>
+          <h2 className="text-2xl font-bold tracking-tight">
+            {t("activity.title")}
+          </h2>
+          <p className="text-muted-foreground">{t("activity.subtitle")}</p>
         </div>
         <Select value={entityFilter} onValueChange={setEntityFilter}>
-          <SelectTrigger className="w-[160px]">
+          <SelectTrigger className="w-40">
             <SelectValue placeholder="Filter by type" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="ALL">All Types</SelectItem>
+            <SelectItem value="ALL">{t("activity.allTypes")}</SelectItem>
             <SelectItem value="Station">Stations</SelectItem>
             <SelectItem value="Schedule">Schedules</SelectItem>
           </SelectContent>
@@ -168,10 +171,7 @@ export default function ActivityLogPage() {
                           <span className="text-sm text-muted-foreground">
                             {log.action.toLowerCase()}d a
                           </span>
-                          <Badge
-                            variant="secondary"
-                            className="gap-1 text-xs"
-                          >
+                          <Badge variant="secondary" className="gap-1 text-xs">
                             <EntityIcon className="h-3 w-3" />
                             {log.entity}
                           </Badge>
@@ -196,8 +196,8 @@ export default function ActivityLogPage() {
       {logs.length === 0 && !isLoading && (
         <EmptyState
           icon={Activity}
-          title="No activity yet"
-          description="Activity will appear here when stations or schedules are created, updated, or deleted."
+          title={t("activity.noActivity")}
+          description={t("activity.noActivityDesc")}
         />
       )}
 

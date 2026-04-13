@@ -1,10 +1,19 @@
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { useSearchParams } from "react-router-dom";
 import { useForm, type Resolver } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { motion } from "framer-motion";
-import { Plus, Pencil, Trash2, Search, Download, MapPin, TrainFront } from "lucide-react";
+import {
+  Plus,
+  Pencil,
+  Trash2,
+  Search,
+  Download,
+  MapPin,
+  TrainFront,
+} from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -78,12 +87,13 @@ const stationSchema = z.object({
 type StationFormData = z.infer<typeof stationSchema>;
 
 export default function StationsPage() {
+  const { t } = useTranslation();
   const { isAdmin } = useRole();
   const [searchParams, setSearchParams] = useSearchParams();
   const [search, setSearch] = useState(searchParams.get("q") ?? "");
   const [page, setPage] = useState(Number(searchParams.get("page")) || 1);
   const [statusFilter, setStatusFilter] = useState<string>(
-    searchParams.get("status") ?? "ALL"
+    searchParams.get("status") ?? "ALL",
   );
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingStation, setEditingStation] = useState<Station | null>(null);
@@ -112,7 +122,11 @@ export default function StationsPage() {
 
   const stations = data?.stations ?? [];
   const meta = data?.meta ?? null;
-  const { sorted: sortedStations, sortConfig, requestSort } = useSortable<Station>(stations, "order");
+  const {
+    sorted: sortedStations,
+    sortConfig,
+    requestSort,
+  } = useSortable<Station>(stations, "order");
 
   const createMutation = useCreateStation();
   const updateMutation = useUpdateStation();
@@ -209,9 +223,9 @@ export default function StationsPage() {
     <div>
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div>
-          <h2 className="text-2xl font-bold">Stations</h2>
+          <h2 className="text-2xl font-bold">{t("stations.title")}</h2>
           <p className="text-muted-foreground">
-            Manage MRT Jakarta stations ({meta?.total ?? stations.length} total)
+            {t("stations.manage")} ({meta?.total ?? stations.length} total)
           </p>
         </div>
         <div className="flex gap-2">
@@ -222,7 +236,7 @@ export default function StationsPage() {
           {isAdmin && (
             <Button onClick={openCreate}>
               <Plus className="h-4 w-4 mr-2" />
-              Add Station
+              {t("stations.addStation")}
             </Button>
           )}
         </div>
@@ -233,18 +247,18 @@ export default function StationsPage() {
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
-            placeholder="Search stations..."
+            placeholder={t("common.search")}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="pl-9"
           />
         </div>
         <Select value={statusFilter} onValueChange={setStatusFilter}>
-          <SelectTrigger className="w-[160px]">
+          <SelectTrigger className="w-40">
             <SelectValue placeholder="Status" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="ALL">All Status</SelectItem>
+            <SelectItem value="ALL">{t("common.allStatus")}</SelectItem>
             <SelectItem value="ACTIVE">Active</SelectItem>
             <SelectItem value="MAINTENANCE">Maintenance</SelectItem>
             <SelectItem value="INACTIVE">Inactive</SelectItem>
@@ -264,37 +278,37 @@ export default function StationsPage() {
               <TableHeader>
                 <TableRow className="bg-muted/50">
                   <SortableTableHead<Station>
-                    label="Order"
+                    label={t("stations.order")}
                     sortKey="order"
                     sortConfig={sortConfig}
                     onSort={requestSort}
-                    className="w-[60px]"
+                    className="w-15"
                   />
                   <SortableTableHead<Station>
-                    label="Station"
+                    label={t("stations.stationName")}
                     sortKey="name"
                     sortConfig={sortConfig}
                     onSort={requestSort}
                   />
                   <SortableTableHead<Station>
-                    label="Location"
+                    label={t("stations.location")}
                     sortKey="location"
                     sortConfig={sortConfig}
                     onSort={requestSort}
                     className="hidden md:table-cell"
                   />
                   <TableHead className="hidden lg:table-cell">
-                    Coordinates
+                    {t("stations.coordinates")}
                   </TableHead>
                   <SortableTableHead<Station>
-                    label="Status"
+                    label={t("stations.status")}
                     sortKey="status"
                     sortConfig={sortConfig}
                     onSort={requestSort}
                   />
                   {isAdmin && (
-                    <TableHead className="text-right w-[100px]">
-                      Actions
+                    <TableHead className="text-right w-25">
+                      {t("common.actions")}
                     </TableHead>
                   )}
                 </TableRow>
@@ -402,7 +416,9 @@ export default function StationsPage() {
                                       <Pencil className="h-3.5 w-3.5" />
                                     </Button>
                                   </TooltipTrigger>
-                                  <TooltipContent>Edit station</TooltipContent>
+                                  <TooltipContent>
+                                    {t("stations.editStation")}
+                                  </TooltipContent>
                                 </Tooltip>
                               </TooltipProvider>
                               <TooltipProvider>
@@ -420,7 +436,7 @@ export default function StationsPage() {
                                     </Button>
                                   </TooltipTrigger>
                                   <TooltipContent>
-                                    Delete station
+                                    {t("stations.deleteStation")}
                                   </TooltipContent>
                                 </Tooltip>
                               </TooltipProvider>
@@ -438,15 +454,17 @@ export default function StationsPage() {
       {sortedStations.length === 0 && !isLoading && (
         <EmptyState
           icon={TrainFront}
-          title={debouncedSearch ? "No stations found" : "No stations yet"}
+          title={
+            debouncedSearch ? t("common.noResults") : t("stations.noStations")
+          }
           description={
             debouncedSearch
-              ? `No stations match "${debouncedSearch}". Try a different search term.`
-              : "Get started by adding your first MRT station."
+              ? t("stations.noStationsSearch", { query: debouncedSearch })
+              : t("stations.getStarted")
           }
           action={
             isAdmin && !debouncedSearch
-              ? { label: "Add Station", onClick: openCreate }
+              ? { label: t("stations.addStation"), onClick: openCreate }
               : undefined
           }
         />
@@ -465,7 +483,9 @@ export default function StationsPage() {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>
-              {editingStation ? "Edit Station" : "Add New Station"}
+              {editingStation
+                ? t("stations.editStation")
+                : t("stations.addStation")}
             </DialogTitle>
             <DialogDescription>
               {editingStation
@@ -476,7 +496,7 @@ export default function StationsPage() {
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="name">Station Name</Label>
+                <Label htmlFor="name">{t("stations.stationName")}</Label>
                 <Input id="name" {...register("name")} />
                 {errors.name && (
                   <p className="text-xs text-destructive">
@@ -485,12 +505,8 @@ export default function StationsPage() {
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="code">Code</Label>
-                <Input
-                  id="code"
-                  {...register("code")}
-                  className="uppercase"
-                />
+                <Label htmlFor="code">{t("stations.code")}</Label>
+                <Input id="code" {...register("code")} className="uppercase" />
                 {errors.code && (
                   <p className="text-xs text-destructive">
                     {errors.code.message}
@@ -500,7 +516,7 @@ export default function StationsPage() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="location">Location</Label>
+              <Label htmlFor="location">{t("stations.location")}</Label>
               <Input id="location" {...register("location")} />
               {errors.location && (
                 <p className="text-xs text-destructive">
@@ -511,7 +527,7 @@ export default function StationsPage() {
 
             <div className="grid grid-cols-3 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="latitude">Latitude</Label>
+                <Label htmlFor="latitude">{t("stations.latitude")}</Label>
                 <Input
                   id="latitude"
                   type="number"
@@ -520,7 +536,7 @@ export default function StationsPage() {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="longitude">Longitude</Label>
+                <Label htmlFor="longitude">{t("stations.longitude")}</Label>
                 <Input
                   id="longitude"
                   type="number"
@@ -529,7 +545,7 @@ export default function StationsPage() {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="order">Order</Label>
+                <Label htmlFor="order">{t("stations.order")}</Label>
                 <Input id="order" type="number" {...register("order")} />
                 {errors.order && (
                   <p className="text-xs text-destructive">
@@ -540,13 +556,13 @@ export default function StationsPage() {
             </div>
 
             <div className="space-y-2">
-              <Label>Status</Label>
+              <Label>{t("stations.status")}</Label>
               <Select
                 defaultValue={editingStation?.status || "ACTIVE"}
                 onValueChange={(val) =>
                   setValue(
                     "status",
-                    val as "ACTIVE" | "MAINTENANCE" | "INACTIVE"
+                    val as "ACTIVE" | "MAINTENANCE" | "INACTIVE",
                   )
                 }
               >
@@ -567,14 +583,14 @@ export default function StationsPage() {
                 variant="outline"
                 onClick={() => setDialogOpen(false)}
               >
-                Cancel
+                {t("common.cancel")}
               </Button>
               <Button type="submit" disabled={isMutating}>
                 {isMutating
-                  ? "Saving..."
+                  ? t("common.loading")
                   : editingStation
-                    ? "Update"
-                    : "Create"}
+                    ? t("common.update")
+                    : t("common.create")}
               </Button>
             </div>
           </form>
@@ -588,20 +604,21 @@ export default function StationsPage() {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete Station</AlertDialogTitle>
+            <AlertDialogTitle>{t("stations.deleteStation")}</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete this station? This action cannot be
-              undone.
+              {t("stations.deleteConfirm")}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>{t("common.cancel")}</AlertDialogCancel>
             <AlertDialogAction
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
               onClick={() => deleteConfirm && handleDelete(deleteConfirm)}
               disabled={deleteMutation.isPending}
             >
-              {deleteMutation.isPending ? "Deleting..." : "Delete"}
+              {deleteMutation.isPending
+                ? t("common.loading")
+                : t("common.delete")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

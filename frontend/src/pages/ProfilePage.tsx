@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { motion } from "framer-motion";
 import { User, Mail, Shield, Calendar, Lock, Eye, EyeOff } from "lucide-react";
 import { useForm } from "react-hook-form";
@@ -30,6 +31,7 @@ const passwordSchema = z
 type PasswordFormData = z.infer<typeof passwordSchema>;
 
 export default function ProfilePage() {
+  const { t } = useTranslation();
   const { user } = useAuthStore();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showCurrent, setShowCurrent] = useState(false);
@@ -70,7 +72,7 @@ export default function ProfilePage() {
     { icon: Shield, label: "Role", value: user.role },
     {
       icon: Calendar,
-      label: "Member Since",
+      label: t("profile.memberSince"),
       value: new Date(user.createdAt).toLocaleDateString("id-ID", {
         year: "numeric",
         month: "long",
@@ -93,8 +95,8 @@ export default function ProfilePage() {
   return (
     <div>
       <div className="mb-6">
-        <h2 className="text-2xl font-bold tracking-tight">Profile</h2>
-        <p className="text-muted-foreground">Your account information</p>
+        <h2 className="text-2xl font-bold tracking-tight">{t("profile.title")}</h2>
+        <p className="text-muted-foreground">{t("profile.subtitle")}</p>
       </div>
 
       <motion.div
@@ -145,15 +147,15 @@ export default function ProfilePage() {
           <CardHeader>
             <CardTitle className="text-lg flex items-center gap-2">
               <Lock className="h-4 w-4" />
-              Change Password
+              {t("profile.changePassword")}
             </CardTitle>
-            <CardDescription>Update your account password</CardDescription>
+            <CardDescription>{t("profile.updatePassword")}</CardDescription>
           </CardHeader>
           <Separator />
           <CardContent className="pt-6">
             <form onSubmit={handleSubmit(onPasswordChange)} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="currentPassword">Current Password</Label>
+                <Label htmlFor="currentPassword">{t("profile.currentPassword")}</Label>
                 <div className="relative">
                   <Input
                     id="currentPassword"
@@ -176,7 +178,7 @@ export default function ProfilePage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="newPassword">New Password</Label>
+                <Label htmlFor="newPassword">{t("profile.newPassword")}</Label>
                 <div className="relative">
                   <Input
                     id="newPassword"
@@ -199,7 +201,7 @@ export default function ProfilePage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="confirmPassword">Confirm New Password</Label>
+                <Label htmlFor="confirmPassword">{t("profile.confirmPassword")}</Label>
                 <Input
                   id="confirmPassword"
                   type="password"
@@ -211,7 +213,7 @@ export default function ProfilePage() {
               </div>
 
               <Button type="submit" disabled={isSubmitting} size="sm">
-                {isSubmitting ? "Changing..." : "Change Password"}
+                {isSubmitting ? t("profile.changing") : t("profile.changePassword")}
               </Button>
             </form>
           </CardContent>
@@ -220,7 +222,7 @@ export default function ProfilePage() {
         {/* Tech Stack */}
         <Card>
           <CardHeader>
-            <CardTitle className="text-lg">Tech Stack</CardTitle>
+            <CardTitle className="text-lg">{t("profile.techStack")}</CardTitle>
           </CardHeader>
           <CardContent>
             <Tabs defaultValue="frontend">
