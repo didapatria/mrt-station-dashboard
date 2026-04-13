@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { motion } from "framer-motion";
-import { Plus, Pencil, Trash2, Search, ArrowRight, Download } from "lucide-react";
+import { Plus, Pencil, Trash2, Search, ArrowRight, Download, Clock } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -50,6 +50,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
+import { EmptyState } from "@/components/EmptyState";
 import { Pagination } from "@/components/ui/pagination";
 import {
   useSchedules,
@@ -443,9 +444,20 @@ export default function SchedulesPage() {
       </motion.div>
 
       {sortedSchedules.length === 0 && !isLoading && (
-        <div className="text-center py-12 text-muted-foreground">
-          No schedules found. Create your first schedule.
-        </div>
+        <EmptyState
+          icon={Clock}
+          title={debouncedSearch ? "No schedules found" : "No schedules yet"}
+          description={
+            debouncedSearch
+              ? `No schedules match "${debouncedSearch}". Try a different search term.`
+              : "Get started by adding your first train schedule."
+          }
+          action={
+            isAdmin && !debouncedSearch
+              ? { label: "Add Schedule", onClick: openCreate }
+              : undefined
+          }
+        />
       )}
 
       {meta && meta.totalPages > 1 && (

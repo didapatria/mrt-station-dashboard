@@ -4,7 +4,7 @@ import { useForm, type Resolver } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { motion } from "framer-motion";
-import { Plus, Pencil, Trash2, Search, Download, MapPin } from "lucide-react";
+import { Plus, Pencil, Trash2, Search, Download, MapPin, TrainFront } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -50,6 +50,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
+import { EmptyState } from "@/components/EmptyState";
 import { Pagination } from "@/components/ui/pagination";
 import {
   useStations,
@@ -435,9 +436,20 @@ export default function StationsPage() {
       </motion.div>
 
       {sortedStations.length === 0 && !isLoading && (
-        <div className="text-center py-12 text-muted-foreground">
-          No stations found. Create your first station.
-        </div>
+        <EmptyState
+          icon={TrainFront}
+          title={debouncedSearch ? "No stations found" : "No stations yet"}
+          description={
+            debouncedSearch
+              ? `No stations match "${debouncedSearch}". Try a different search term.`
+              : "Get started by adding your first MRT station."
+          }
+          action={
+            isAdmin && !debouncedSearch
+              ? { label: "Add Station", onClick: openCreate }
+              : undefined
+          }
+        />
       )}
 
       {meta && meta.totalPages > 1 && (
