@@ -97,6 +97,18 @@ export const scheduleService = {
       throw new Error("Departure and arrival stations must be different");
     }
 
+    // Conflict detection: same train, same day, overlapping time
+    const conflict = await prisma.schedule.findFirst({
+      where: {
+        trainNumber: input.trainNumber,
+        dayType: input.dayType,
+        departureTime: input.departureTime,
+      },
+    });
+    if (conflict) {
+      throw new Error(`Schedule conflict: ${input.trainNumber} already departs at ${input.departureTime} on ${input.dayType}`);
+    }
+
     return prisma.schedule.create({
       data: input,
       include: {

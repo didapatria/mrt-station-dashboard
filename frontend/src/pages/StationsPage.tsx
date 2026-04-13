@@ -404,7 +404,7 @@ export default function StationsPage() {
                               {station.code}
                             </div>
                             <div>
-                              <p className="font-medium">{station.name}</p>
+                              <a href={`/stations/${station.id}`} className="font-medium hover:text-primary hover:underline">{station.name}</a>
                               <p className="text-xs text-muted-foreground md:hidden">
                                 {station.location}
                               </p>

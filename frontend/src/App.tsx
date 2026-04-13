@@ -19,6 +19,7 @@ const ProfilePage = lazy(() => import("@/pages/ProfilePage"));
 const MapPage = lazy(() => import("@/pages/MapPage"));
 const UsersPage = lazy(() => import("@/pages/UsersPage"));
 const ActivityLogPage = lazy(() => import("@/pages/ActivityLogPage"));
+const StationDetailPage = lazy(() => import("@/pages/StationDetailPage"));
 const ChangelogPage = lazy(() => import("@/pages/ChangelogPage"));
 const NotFoundPage = lazy(() => import("@/pages/NotFoundPage"));
 
@@ -71,6 +72,7 @@ function App() {
               <Route element={<DashboardLayout />}>
                 <Route path="/dashboard" element={<DashboardPage />} />
                 <Route path="/stations" element={<StationsPage />} />
+                <Route path="/stations/:id" element={<StationDetailPage />} />
                 <Route path="/schedules" element={<SchedulesPage />} />
                 <Route path="/map" element={<MapPage />} />
                 <Route path="/users" element={<UsersPage />} />
