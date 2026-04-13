@@ -10,9 +10,11 @@ Full-stack web application for managing MRT Jakarta stations and train schedules
 - **Zustand** - Client state management
 - **TanStack Query** - Server state management
 - **React Hook Form** + **Zod** - Form handling & validation
+- **Leaflet** + **React-Leaflet** - Interactive maps
 - **Framer Motion** - Smooth animations
 - **React Router v7** - Client-side routing
 - **Axios** - HTTP client
+- **Vitest** + **React Testing Library** - Testing
 
 ### Backend
 - **Node.js** + **Express.js** + TypeScript
@@ -51,9 +53,9 @@ Framer Motion is a popular open-source motion library for React that allows deve
 
 ```
 ┌──────────────┐     ┌──────────────┐     ┌──────────────┐
-│   Frontend   │────▶│   Backend    │────▶│  PostgreSQL   │
-│  React+Vite  │     │  Express.js  │     │   Database    │
-│  Port: 5173  │     │  Port: 3000  │     │  Port: 5432   │
+│   Frontend   │────▶│   Backend    │────▶│  PostgreSQL  │
+│  React+Vite  │     │  Express.js  │     │   Database   │
+│  Port: 5173  │     │  Port: 3000  │     │  Port: 5432  │
 └──────────────┘     └──────────────┘     └──────────────┘
 ```
 
@@ -75,7 +77,7 @@ src/
 src/
 ├── controllers/    # Request handlers (thin layer)
 ├── services/       # Business logic & database operations
-├── middlewares/     # Auth, validation, error handling
+├── middlewares/    # Auth, validation, error handling
 ├── routes/         # Express route definitions
 ├── validators/     # Zod schemas for request validation
 ├── types/          # TypeScript type definitions
@@ -102,6 +104,10 @@ React Page → TanStack Query Hook → API Service (axios) → Express Route →
 - **Animations** - Smooth page transitions and list animations (Framer Motion)
 - **Form Validation** - Client & server-side with Zod schemas
 - **Server State Caching** - Automatic caching and background refetching (TanStack Query)
+- **Interactive Station Map** - Leaflet-powered map with route visualization and station markers
+- **Role-Based Access** - Admin vs Operator UI with conditional CRUD actions
+- **CI/CD** - GitHub Actions pipeline with lint, type check, test, and build
+- **Testing** - Vitest + React Testing Library with 13+ tests
 - **Docker** - Full containerization with docker-compose
 
 ## Getting Started

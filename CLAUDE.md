@@ -18,6 +18,8 @@ Full-stack web application for managing MRT Jakarta stations and schedules. Buil
 - Build: `npm run build`
 - Preview: `npm run preview`
 - Lint: `npm run lint`
+- Test: `npm run test:run`
+- Test watch: `npm test`
 
 ### Docker
 - Start all services: `docker-compose up -d`
@@ -32,9 +34,11 @@ Full-stack web application for managing MRT Jakarta stations and schedules. Buil
 - Zustand (client state management: auth token, theme)
 - TanStack Query (server state: data fetching, caching, mutations)
 - React Hook Form + Zod (form handling & validation)
+- Leaflet + React-Leaflet (interactive maps)
 - Framer Motion (animations)
 - React Router v7 (routing)
 - Axios (HTTP client)
+- Vitest + React Testing Library (testing)
 
 ### Backend
 - Node.js + Express.js + TypeScript
@@ -44,6 +48,7 @@ Full-stack web application for managing MRT Jakarta stations and schedules. Buil
 
 ### Infrastructure
 - Docker + docker-compose (PostgreSQL, backend, frontend)
+- GitHub Actions CI/CD (lint, type check, test, build)
 
 ## Architecture
 
@@ -90,3 +95,5 @@ React Page → TanStack Query Hook → API Service (axios) → Express Route →
 - Environment variables via `.env` files (never commit secrets)
 - Server state uses TanStack Query hooks in `hooks/` directory, not Zustand
 - Mutations use `useMutation` with `queryClient.invalidateQueries` for cache sync
+- RBAC: use `useRole()` hook to check `isAdmin`/`isOperator` for conditional UI
+- Tests: co-locate test files with source (`foo.ts` → `foo.test.ts`), use Vitest + RTL
