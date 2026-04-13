@@ -61,7 +61,7 @@ function SidebarContent({
   return (
     <>
       <div className="flex items-center gap-3 p-6 border-b border-sidebar-border">
-        <Train className="h-8 w-8 text-sidebar-accent" />
+        <Train className="h-8 w-8 text-sidebar-primary" />
         <div>
           <h1 className="font-bold text-sidebar-foreground">MRT Jakarta</h1>
           <p className="text-xs text-muted-foreground">Station Dashboard</p>
@@ -80,7 +80,7 @@ function SidebarContent({
                     cn(
                       "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors",
                       isActive
-                        ? "bg-sidebar-accent text-white"
+                        ? "bg-sidebar-primary text-sidebar-primary-foreground"
                         : "text-sidebar-foreground hover:bg-muted"
                     )
                   }
