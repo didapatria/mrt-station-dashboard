@@ -11,6 +11,7 @@ import { scheduleRouter } from "./routes/schedule.routes";
 import { dashboardRouter } from "./routes/dashboard.routes";
 import { exportRouter } from "./routes/export.routes";
 import { userRouter } from "./routes/user.routes";
+import { activityLogRouter } from "./routes/activity-log.routes";
 import { errorHandler } from "./middlewares/error.middleware";
 
 dotenv.config();
@@ -57,6 +58,7 @@ app.use("/api/schedules", scheduleRouter);
 app.use("/api/dashboard", dashboardRouter);
 app.use("/api/export", exportRouter);
 app.use("/api/users", userRouter);
+app.use("/api/activity-logs", activityLogRouter);
 
 // Error handler
 app.use(errorHandler);

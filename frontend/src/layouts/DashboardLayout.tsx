@@ -15,6 +15,7 @@ import {
   ChevronRight,
   Search,
   Users,
+  Activity,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -47,6 +48,7 @@ const navItems = [
   { to: "/schedules", icon: Clock, label: "Schedules" },
   { to: "/map", icon: Map, label: "Station Map" },
   { to: "/users", icon: Users, label: "Users", adminOnly: true },
+  { to: "/activity", icon: Activity, label: "Activity Log" },
   { to: "/profile", icon: User, label: "Profile" },
 ] as const;
 

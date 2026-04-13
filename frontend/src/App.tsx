@@ -15,6 +15,7 @@ import SchedulesPage from "@/pages/SchedulesPage";
 import ProfilePage from "@/pages/ProfilePage";
 import MapPage from "@/pages/MapPage";
 import UsersPage from "@/pages/UsersPage";
+import ActivityLogPage from "@/pages/ActivityLogPage";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -52,6 +53,7 @@ function App() {
             <Route path="/schedules" element={<SchedulesPage />} />
             <Route path="/map" element={<MapPage />} />
             <Route path="/users" element={<UsersPage />} />
+            <Route path="/activity" element={<ActivityLogPage />} />
             <Route path="/profile" element={<ProfilePage />} />
           </Route>
 

@@ -1,5 +1,7 @@
 import { Request, Response } from "express";
 import { stationService } from "../services/station.service";
+import { activityLogService } from "../services/activity-log.service";
+import { AuthRequest } from "../types";
 
 export const stationController = {
   async getAll(req: Request, res: Response): Promise<void> {
@@ -31,9 +33,16 @@ export const stationController = {
     }
   },
 
-  async create(req: Request, res: Response): Promise<void> {
+  async create(req: AuthRequest, res: Response): Promise<void> {
     try {
       const station = await stationService.create(req.body);
+      await activityLogService.log(
+        req.user!.userId,
+        "CREATE",
+        "Station",
+        station.id,
+        `Created station ${station.name} (${station.code})`
+      );
       res.status(201).json({
         success: true,
         message: "Station created successfully",
@@ -47,9 +56,16 @@ export const stationController = {
     }
   },
 
-  async update(req: Request, res: Response): Promise<void> {
+  async update(req: AuthRequest, res: Response): Promise<void> {
     try {
       const station = await stationService.update(req.params.id as string, req.body);
+      await activityLogService.log(
+        req.user!.userId,
+        "UPDATE",
+        "Station",
+        station.id,
+        `Updated station ${station.name} (${station.code})`
+      );
       res.json({
         success: true,
         message: "Station updated successfully",
@@ -63,9 +79,18 @@ export const stationController = {
     }
   },
 
-  async delete(req: Request, res: Response): Promise<void> {
+  async delete(req: AuthRequest, res: Response): Promise<void> {
     try {
-      await stationService.delete(req.params.id as string);
+      const id = req.params.id as string;
+      const station = await stationService.getById(id);
+      await stationService.delete(id);
+      await activityLogService.log(
+        req.user!.userId,
+        "DELETE",
+        "Station",
+        id,
+        `Deleted station ${station.name} (${station.code})`
+      );
       res.json({ success: true, message: "Station deleted successfully" });
     } catch (error) {
       const message =

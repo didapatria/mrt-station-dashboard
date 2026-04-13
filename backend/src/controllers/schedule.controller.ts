@@ -1,5 +1,7 @@
 import { Request, Response } from "express";
 import { scheduleService } from "../services/schedule.service";
+import { activityLogService } from "../services/activity-log.service";
+import { AuthRequest } from "../types";
 
 export const scheduleController = {
   async getAll(req: Request, res: Response): Promise<void> {
@@ -33,9 +35,16 @@ export const scheduleController = {
     }
   },
 
-  async create(req: Request, res: Response): Promise<void> {
+  async create(req: AuthRequest, res: Response): Promise<void> {
     try {
       const schedule = await scheduleService.create(req.body);
+      await activityLogService.log(
+        req.user!.userId,
+        "CREATE",
+        "Schedule",
+        schedule.id,
+        `Created schedule ${schedule.trainNumber}`
+      );
       res.status(201).json({
         success: true,
         message: "Schedule created successfully",
@@ -48,9 +57,19 @@ export const scheduleController = {
     }
   },
 
-  async update(req: Request, res: Response): Promise<void> {
+  async update(req: AuthRequest, res: Response): Promise<void> {
     try {
-      const schedule = await scheduleService.update(req.params.id as string, req.body);
+      const schedule = await scheduleService.update(
+        req.params.id as string,
+        req.body
+      );
+      await activityLogService.log(
+        req.user!.userId,
+        "UPDATE",
+        "Schedule",
+        schedule.id,
+        `Updated schedule ${schedule.trainNumber}`
+      );
       res.json({
         success: true,
         message: "Schedule updated successfully",
@@ -64,9 +83,18 @@ export const scheduleController = {
     }
   },
 
-  async delete(req: Request, res: Response): Promise<void> {
+  async delete(req: AuthRequest, res: Response): Promise<void> {
     try {
-      await scheduleService.delete(req.params.id as string);
+      const id = req.params.id as string;
+      const schedule = await scheduleService.getById(id);
+      await scheduleService.delete(id);
+      await activityLogService.log(
+        req.user!.userId,
+        "DELETE",
+        "Schedule",
+        id,
+        `Deleted schedule ${schedule.trainNumber}`
+      );
       res.json({ success: true, message: "Schedule deleted successfully" });
     } catch (error) {
       const message =
