@@ -8,8 +8,10 @@ paths:
 
 ## Frontend
 - Pages are lazy-loaded via React Router
-- Zustand stores are per-domain (authStore, stationStore, scheduleStore)
+- Server state (API data) managed by TanStack Query hooks in `hooks/` directory
+- Client state (auth token, theme) managed by Zustand stores in `store/` directory
 - API calls go through services/ layer, never directly in components
+- TanStack Query hooks wrap service calls and handle caching/invalidation
 - Forms use React Hook Form + Zod resolver pattern
 - Shadcn UI for base components, custom components extend them
 

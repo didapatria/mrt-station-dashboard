@@ -28,8 +28,9 @@ Full-stack web application for managing MRT Jakarta stations and schedules. Buil
 
 ### Frontend
 - React 19 + TypeScript (Vite)
-- Zustand (state management)
-- Tailwind CSS 4 + Shadcn UI (styling)
+- Tailwind CSS 4 + Shadcn UI (styling & UI components)
+- Zustand (client state management: auth token, theme)
+- TanStack Query (server state: data fetching, caching, mutations)
 - React Hook Form + Zod (form handling & validation)
 - Framer Motion (animations)
 - React Router v7 (routing)
@@ -51,9 +52,9 @@ Full-stack web application for managing MRT Jakarta stations and schedules. Buil
 src/
 ├── components/     # Reusable UI components (Shadcn + custom)
 ├── pages/          # Route page components
-├── store/          # Zustand stores
+├── hooks/          # TanStack Query hooks (use-stations, use-schedules, use-dashboard, use-auth)
+├── store/          # Zustand stores (auth, theme — client state only)
 ├── services/       # API service layer (axios)
-├── hooks/          # Custom React hooks
 ├── lib/            # Utility functions
 ├── types/          # TypeScript type definitions
 └── layouts/        # Layout components (auth, dashboard)
@@ -72,8 +73,12 @@ src/
 
 ## Data Flow
 ```
-React Page → Zustand Store → API Service (axios) → Express Route → Controller → Service → Prisma → PostgreSQL
+React Page → TanStack Query Hook → API Service (axios) → Express Route → Controller → Service → Prisma → PostgreSQL
 ```
+
+## State Management Strategy
+- **Server state** (stations, schedules, dashboard stats, user profile): Managed by TanStack Query with automatic caching (5min staleTime), background refetching, and mutation invalidation
+- **Client state** (auth token, theme preference): Managed by Zustand with localStorage persistence
 
 ## Rules
 - Use TypeScript strict mode in both frontend and backend
@@ -83,3 +88,5 @@ React Page → Zustand Store → API Service (axios) → Express Route → Contr
 - Backend controllers are thin — business logic goes in services
 - Frontend components are functional components with hooks only
 - Environment variables via `.env` files (never commit secrets)
+- Server state uses TanStack Query hooks in `hooks/` directory, not Zustand
+- Mutations use `useMutation` with `queryClient.invalidateQueries` for cache sync

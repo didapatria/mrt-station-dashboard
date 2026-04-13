@@ -6,8 +6,9 @@ Full-stack web application for managing MRT Jakarta stations and train schedules
 
 ### Frontend
 - **React 19** + TypeScript (Vite)
-- **Zustand** - Lightweight state management
 - **Tailwind CSS** + **Shadcn UI** - Styling & UI components
+- **Zustand** - Client state management
+- **TanStack Query** - Server state management
 - **React Hook Form** + **Zod** - Form handling & validation
 - **Framer Motion** - Smooth animations
 - **React Router v7** - Client-side routing
@@ -22,6 +23,29 @@ Full-stack web application for managing MRT Jakarta stations and train schedules
 
 ### Infrastructure
 - **Docker** + **docker-compose** - Containerization
+
+## Key Libraries
+
+### Shadcn UI
+Shadcn is an open-source framework providing pre-built, accessible, and customizable UI components for rapid web application development. It offers a streamlined approach to construct modern user interfaces.
+
+### Tailwind CSS
+CSS Framework that provides atomic CSS classes to help you style components e.g. flex, pt-4, text-center and rotate-90 that can be composed to build any design, directly in your markup.
+
+### Zustand
+Zustand is a small, fast and scalable bearbones state-management solution using simplified flux principles. Has a comfy api based on hooks, isn't boilerplatey or opinionated. Zustand is often used as an alternative to other state management libraries, such as Redux and MobX, because of its simplicity and small size. It is particularly well-suited for small to medium-sized applications, where the complexity of larger state management libraries is not required.
+
+### TanStack Query
+TanStack Query, previously known as React Query, is a powerful library for fetching, caching, synchronizing, and updating server state in your React applications. It simplifies the process of handling asynchronous data, reducing boilerplate code and improving the user experience by providing features like automatic retries, background updates, and optimistic updates. It essentially helps you manage data fetching and caching in a declarative and efficient way.
+
+### Zod
+Zod is a TypeScript-first schema declaration and validation library. I'm using the term "schema" to broadly refer to any data type, from a simple string to a complex nested object. Zod is designed to be as developer-friendly as possible. The goal is to eliminate duplicate type declarations. With Zod, you declare a validator once and Zod will automatically infer the static TypeScript type. It's easy to compose simpler types into complex data structures.
+
+### React Hook Form
+React hook form is an opensource form library for react. Performant, flexible and extensible forms with easy-to-use validation.
+
+### Framer Motion
+Framer Motion is a popular open-source motion library for React that allows developers to create sophisticated animations and interactions with ease. It is designed to be simple to use yet powerful, providing a rich set of tools to animate elements in a declarative way. It powers the amazing animations and interactions in Framer, the web builder for creative pros. Zero code, maximum speed.
 
 ## Architecture
 
@@ -38,9 +62,9 @@ Full-stack web application for managing MRT Jakarta stations and train schedules
 src/
 ├── components/ui/  # Reusable UI components (Shadcn-style)
 ├── pages/          # Route page components
-├── store/          # Zustand stores (auth, station, schedule)
+├── hooks/          # TanStack Query hooks (server state)
+├── store/          # Zustand stores (client state: auth, theme)
 ├── services/       # API service layer (axios)
-├── hooks/          # Custom React hooks
 ├── layouts/        # Auth & Dashboard layouts
 ├── lib/            # Utility functions
 └── types/          # TypeScript type definitions
@@ -58,6 +82,11 @@ src/
 └── prisma/         # Schema, migrations, seed data
 ```
 
+### Data Flow
+```
+React Page → TanStack Query Hook → API Service (axios) → Express Route → Controller → Service → Prisma → PostgreSQL
+```
+
 ## Features
 
 - **Authentication** - Register/Login with JWT tokens
@@ -72,6 +101,7 @@ src/
 - **Responsive Design** - Mobile-first with sidebar navigation
 - **Animations** - Smooth page transitions and list animations (Framer Motion)
 - **Form Validation** - Client & server-side with Zod schemas
+- **Server State Caching** - Automatic caching and background refetching (TanStack Query)
 - **Docker** - Full containerization with docker-compose
 
 ## Getting Started
