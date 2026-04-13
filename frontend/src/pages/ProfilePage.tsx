@@ -2,6 +2,9 @@ import { motion } from "framer-motion";
 import { User, Mail, Shield, Calendar } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Separator } from "@/components/ui/separator";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuthStore } from "@/store/auth.store";
 
 export default function ProfilePage() {
@@ -24,6 +27,34 @@ export default function ProfilePage() {
     },
   ];
 
+  const frontendStack = [
+    "React 19",
+    "TypeScript",
+    "Vite",
+    "TanStack Query",
+    "Zustand",
+    "Tailwind CSS 4",
+    "Shadcn UI",
+    "React Hook Form",
+    "Zod",
+    "Framer Motion",
+    "React Router v7",
+    "Axios",
+  ];
+
+  const backendStack = [
+    "Node.js",
+    "Express.js 5",
+    "TypeScript",
+    "Prisma ORM",
+    "PostgreSQL",
+    "JWT",
+    "Zod",
+    "Swagger/OpenAPI",
+  ];
+
+  const infraStack = ["Docker", "docker-compose", "Nginx"];
+
   return (
     <div>
       <div className="mb-6">
@@ -39,9 +70,11 @@ export default function ProfilePage() {
         <Card>
           <CardHeader>
             <div className="flex items-center gap-4">
-              <div className="h-16 w-16 rounded-full bg-primary flex items-center justify-center text-white text-2xl font-bold">
-                {user.name.charAt(0).toUpperCase()}
-              </div>
+              <Avatar className="h-16 w-16">
+                <AvatarFallback className="bg-primary text-primary-foreground text-2xl font-bold">
+                  {user.name.charAt(0).toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
               <div>
                 <CardTitle>{user.name}</CardTitle>
                 <div className="flex items-center gap-2 mt-1">
@@ -59,7 +92,8 @@ export default function ProfilePage() {
               </div>
             </div>
           </CardHeader>
-          <CardContent>
+          <Separator />
+          <CardContent className="pt-6">
             <div className="space-y-4">
               {profileItems.map((item) => (
                 <div
@@ -86,29 +120,40 @@ export default function ProfilePage() {
             <CardTitle className="text-lg">Tech Stack</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="flex flex-wrap gap-2">
-              {[
-                "React 19",
-                "TypeScript",
-                "Vite",
-                "Zustand",
-                "TanStack Query",
-                "Tailwind CSS",
-                "Shadcn UI",
-                "React Hook Form",
-                "Zod",
-                "Framer Motion",
-                "Express.js",
-                "Prisma",
-                "PostgreSQL",
-                "JWT",
-                "Docker",
-              ].map((tech) => (
-                <Badge key={tech} variant="outline">
-                  {tech}
-                </Badge>
-              ))}
-            </div>
+            <Tabs defaultValue="frontend">
+              <TabsList className="mb-4">
+                <TabsTrigger value="frontend">Frontend</TabsTrigger>
+                <TabsTrigger value="backend">Backend</TabsTrigger>
+                <TabsTrigger value="infra">Infrastructure</TabsTrigger>
+              </TabsList>
+              <TabsContent value="frontend">
+                <div className="flex flex-wrap gap-2">
+                  {frontendStack.map((tech) => (
+                    <Badge key={tech} variant="outline">
+                      {tech}
+                    </Badge>
+                  ))}
+                </div>
+              </TabsContent>
+              <TabsContent value="backend">
+                <div className="flex flex-wrap gap-2">
+                  {backendStack.map((tech) => (
+                    <Badge key={tech} variant="outline">
+                      {tech}
+                    </Badge>
+                  ))}
+                </div>
+              </TabsContent>
+              <TabsContent value="infra">
+                <div className="flex flex-wrap gap-2">
+                  {infraStack.map((tech) => (
+                    <Badge key={tech} variant="outline">
+                      {tech}
+                    </Badge>
+                  ))}
+                </div>
+              </TabsContent>
+            </Tabs>
           </CardContent>
         </Card>
       </motion.div>

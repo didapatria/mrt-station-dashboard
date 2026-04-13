@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { Plus, Pencil, Trash2, Search, ArrowRight, Download } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -18,12 +18,37 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Pagination } from "@/components/ui/pagination";
 import {
   useSchedules,
@@ -213,94 +238,151 @@ export default function SchedulesPage() {
         </Select>
       </div>
 
-      {/* Schedules List */}
-      <div className="space-y-3">
-        <AnimatePresence mode="popLayout">
-          {schedules.map((schedule) => (
-            <motion.div
-              key={schedule.id}
-              layout
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.2 }}
-            >
-              <Card className="hover:shadow-md transition-shadow">
-                <CardContent className="p-4">
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                    <div className="flex items-center gap-4 flex-1">
-                      <div className="text-center min-w-[80px]">
-                        <p className="text-lg font-bold font-mono">
-                          {schedule.departureTime}
-                        </p>
-                        <p className="text-xs text-muted-foreground">
-                          {schedule.departureStation?.code}
-                        </p>
-                      </div>
-
-                      <div className="flex items-center gap-2 text-muted-foreground">
-                        <div className="h-px w-8 bg-border" />
-                        <ArrowRight className="h-4 w-4" />
-                        <div className="h-px w-8 bg-border" />
-                      </div>
-
-                      <div className="text-center min-w-[80px]">
-                        <p className="text-lg font-bold font-mono">
-                          {schedule.arrivalTime}
-                        </p>
-                        <p className="text-xs text-muted-foreground">
-                          {schedule.arrivalStation?.code}
-                        </p>
-                      </div>
-
-                      <div className="ml-4">
-                        <p className="text-sm font-medium">
-                          {schedule.trainNumber}
-                        </p>
-                        <p className="text-xs text-muted-foreground">
-                          {schedule.departureStation?.name} →{" "}
-                          {schedule.arrivalStation?.name}
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center gap-2">
-                      <Badge variant="secondary">{schedule.dayType}</Badge>
-                      <Badge
-                        variant={
-                          schedule.status === "ACTIVE"
-                            ? "success"
-                            : schedule.status === "DELAYED"
-                              ? "warning"
-                              : "destructive"
-                        }
-                      >
-                        {schedule.status}
-                      </Badge>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-8 w-8"
-                        onClick={() => openEdit(schedule)}
-                      >
-                        <Pencil className="h-3.5 w-3.5" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-8 w-8 text-destructive hover:text-destructive"
-                        onClick={() => setDeleteConfirm(schedule.id)}
-                      >
-                        <Trash2 className="h-3.5 w-3.5" />
-                      </Button>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
-          ))}
-        </AnimatePresence>
-      </div>
+      {/* Schedules Table */}
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3 }}
+      >
+        <Card>
+          <CardContent className="p-0">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Train</TableHead>
+                  <TableHead>Route</TableHead>
+                  <TableHead className="hidden sm:table-cell">Time</TableHead>
+                  <TableHead>Day</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead className="text-right w-[100px]">
+                    Actions
+                  </TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {isLoading
+                  ? Array.from({ length: 5 }).map((_, i) => (
+                      <TableRow key={i}>
+                        <TableCell>
+                          <Skeleton className="h-4 w-24" />
+                        </TableCell>
+                        <TableCell>
+                          <Skeleton className="h-4 w-40" />
+                        </TableCell>
+                        <TableCell className="hidden sm:table-cell">
+                          <Skeleton className="h-4 w-28" />
+                        </TableCell>
+                        <TableCell>
+                          <Skeleton className="h-5 w-16 rounded-full" />
+                        </TableCell>
+                        <TableCell>
+                          <Skeleton className="h-5 w-16 rounded-full" />
+                        </TableCell>
+                        <TableCell>
+                          <Skeleton className="h-8 w-16 ml-auto" />
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  : schedules.map((schedule) => (
+                      <TableRow key={schedule.id}>
+                        <TableCell>
+                          <p className="font-medium font-mono">
+                            {schedule.trainNumber}
+                          </p>
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex items-center gap-2">
+                            <div>
+                              <p className="text-sm font-medium">
+                                {schedule.departureStation?.code}
+                              </p>
+                              <p className="text-xs text-muted-foreground sm:hidden">
+                                {schedule.departureTime}
+                              </p>
+                            </div>
+                            <ArrowRight className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+                            <div>
+                              <p className="text-sm font-medium">
+                                {schedule.arrivalStation?.code}
+                              </p>
+                              <p className="text-xs text-muted-foreground sm:hidden">
+                                {schedule.arrivalTime}
+                              </p>
+                            </div>
+                          </div>
+                          <p className="text-xs text-muted-foreground mt-0.5">
+                            {schedule.departureStation?.name} →{" "}
+                            {schedule.arrivalStation?.name}
+                          </p>
+                        </TableCell>
+                        <TableCell className="hidden sm:table-cell">
+                          <p className="font-mono text-sm">
+                            {schedule.departureTime} — {schedule.arrivalTime}
+                          </p>
+                        </TableCell>
+                        <TableCell>
+                          <Badge variant="secondary">
+                            {schedule.dayType}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>
+                          <Badge
+                            variant={
+                              schedule.status === "ACTIVE"
+                                ? "success"
+                                : schedule.status === "DELAYED"
+                                  ? "warning"
+                                  : "destructive"
+                            }
+                          >
+                            {schedule.status}
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <div className="flex justify-end gap-1">
+                            <TooltipProvider>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    className="h-8 w-8"
+                                    onClick={() => openEdit(schedule)}
+                                  >
+                                    <Pencil className="h-3.5 w-3.5" />
+                                  </Button>
+                                </TooltipTrigger>
+                                <TooltipContent>Edit schedule</TooltipContent>
+                              </Tooltip>
+                            </TooltipProvider>
+                            <TooltipProvider>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    className="h-8 w-8 text-destructive hover:text-destructive"
+                                    onClick={() =>
+                                      setDeleteConfirm(schedule.id)
+                                    }
+                                  >
+                                    <Trash2 className="h-3.5 w-3.5" />
+                                  </Button>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                  Delete schedule
+                                </TooltipContent>
+                              </Tooltip>
+                            </TooltipProvider>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
+      </motion.div>
 
       {schedules.length === 0 && !isLoading && (
         <div className="text-center py-12 text-muted-foreground">
@@ -488,32 +570,30 @@ export default function SchedulesPage() {
       </Dialog>
 
       {/* Delete Confirmation */}
-      <Dialog
+      <AlertDialog
         open={deleteConfirm !== null}
         onOpenChange={() => setDeleteConfirm(null)}
       >
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Delete Schedule</DialogTitle>
-            <DialogDescription>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Schedule</AlertDialogTitle>
+            <AlertDialogDescription>
               Are you sure you want to delete this schedule? This action cannot
               be undone.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="flex justify-end gap-3">
-            <Button variant="outline" onClick={() => setDeleteConfirm(null)}>
-              Cancel
-            </Button>
-            <Button
-              variant="destructive"
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
               onClick={() => deleteConfirm && handleDelete(deleteConfirm)}
               disabled={deleteMutation.isPending}
             >
               {deleteMutation.isPending ? "Deleting..." : "Delete"}
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

@@ -2,14 +2,14 @@ import { useState } from "react";
 import { useForm, type Resolver } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { motion, AnimatePresence } from "framer-motion";
-import { Plus, Pencil, Trash2, Search, Download } from "lucide-react";
+import { motion } from "framer-motion";
+import { Plus, Pencil, Trash2, Search, Download, MapPin } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -18,12 +18,37 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Pagination } from "@/components/ui/pagination";
 import {
   useStations,
@@ -200,86 +225,159 @@ export default function StationsPage() {
         </Select>
       </div>
 
-      {/* Stations Grid */}
+      {/* Stations Table */}
       <motion.div
-        layout
-        className="grid gap-4 md:grid-cols-2 lg:grid-cols-3"
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3 }}
       >
-        <AnimatePresence mode="popLayout">
-          {stations.map((station) => (
-            <motion.div
-              key={station.id}
-              layout
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              transition={{ duration: 0.2 }}
-            >
-              <Card className="hover:shadow-md transition-shadow">
-                <CardHeader className="pb-3">
-                  <div className="flex items-start justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center text-sm font-bold text-primary">
-                        {station.code}
-                      </div>
-                      <div>
-                        <CardTitle className="text-base">
-                          {station.name}
-                        </CardTitle>
-                        <p className="text-xs text-muted-foreground mt-0.5">
+        <Card>
+          <CardContent className="p-0">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="w-[60px]">Order</TableHead>
+                  <TableHead>Station</TableHead>
+                  <TableHead className="hidden md:table-cell">
+                    Location
+                  </TableHead>
+                  <TableHead className="hidden lg:table-cell">
+                    Coordinates
+                  </TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead className="text-right w-[100px]">
+                    Actions
+                  </TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {isLoading
+                  ? Array.from({ length: 5 }).map((_, i) => (
+                      <TableRow key={i}>
+                        <TableCell>
+                          <Skeleton className="h-4 w-6" />
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex items-center gap-3">
+                            <Skeleton className="h-9 w-9 rounded-lg" />
+                            <Skeleton className="h-4 w-32" />
+                          </div>
+                        </TableCell>
+                        <TableCell className="hidden md:table-cell">
+                          <Skeleton className="h-4 w-24" />
+                        </TableCell>
+                        <TableCell className="hidden lg:table-cell">
+                          <Skeleton className="h-4 w-28" />
+                        </TableCell>
+                        <TableCell>
+                          <Skeleton className="h-5 w-16 rounded-full" />
+                        </TableCell>
+                        <TableCell>
+                          <Skeleton className="h-8 w-16 ml-auto" />
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  : stations.map((station) => (
+                      <TableRow key={station.id}>
+                        <TableCell className="font-mono text-muted-foreground">
+                          {station.order}
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex items-center gap-3">
+                            <div className="h-9 w-9 rounded-lg bg-primary/10 flex items-center justify-center text-xs font-bold text-primary shrink-0">
+                              {station.code}
+                            </div>
+                            <div>
+                              <p className="font-medium">{station.name}</p>
+                              <p className="text-xs text-muted-foreground md:hidden">
+                                {station.location}
+                              </p>
+                            </div>
+                          </div>
+                        </TableCell>
+                        <TableCell className="hidden md:table-cell text-muted-foreground">
                           {station.location}
-                        </p>
-                      </div>
-                    </div>
-                    <Badge
-                      variant={
-                        station.status === "ACTIVE"
-                          ? "success"
-                          : station.status === "MAINTENANCE"
-                            ? "warning"
-                            : "destructive"
-                      }
-                    >
-                      {station.status}
-                    </Badge>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex items-center justify-between">
-                    <p className="text-xs text-muted-foreground">
-                      Order: {station.order}
-                      {station.latitude && station.longitude && (
-                        <>
-                          {" "}
-                          | {station.latitude.toFixed(4)},{" "}
-                          {station.longitude.toFixed(4)}
-                        </>
-                      )}
-                    </p>
-                    <div className="flex gap-1">
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-8 w-8"
-                        onClick={() => openEdit(station)}
-                      >
-                        <Pencil className="h-3.5 w-3.5" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-8 w-8 text-destructive hover:text-destructive"
-                        onClick={() => setDeleteConfirm(station.id)}
-                      >
-                        <Trash2 className="h-3.5 w-3.5" />
-                      </Button>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
-          ))}
-        </AnimatePresence>
+                        </TableCell>
+                        <TableCell className="hidden lg:table-cell">
+                          {station.latitude && station.longitude ? (
+                            <TooltipProvider>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <span className="text-xs text-muted-foreground inline-flex items-center gap-1 cursor-help">
+                                    <MapPin className="h-3 w-3" />
+                                    {station.latitude.toFixed(4)},{" "}
+                                    {station.longitude.toFixed(4)}
+                                  </span>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                  <p>
+                                    Lat: {station.latitude}, Lng:{" "}
+                                    {station.longitude}
+                                  </p>
+                                </TooltipContent>
+                              </Tooltip>
+                            </TooltipProvider>
+                          ) : (
+                            <span className="text-xs text-muted-foreground">
+                              —
+                            </span>
+                          )}
+                        </TableCell>
+                        <TableCell>
+                          <Badge
+                            variant={
+                              station.status === "ACTIVE"
+                                ? "success"
+                                : station.status === "MAINTENANCE"
+                                  ? "warning"
+                                  : "destructive"
+                            }
+                          >
+                            {station.status}
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <div className="flex justify-end gap-1">
+                            <TooltipProvider>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    className="h-8 w-8"
+                                    onClick={() => openEdit(station)}
+                                  >
+                                    <Pencil className="h-3.5 w-3.5" />
+                                  </Button>
+                                </TooltipTrigger>
+                                <TooltipContent>Edit station</TooltipContent>
+                              </Tooltip>
+                            </TooltipProvider>
+                            <TooltipProvider>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    className="h-8 w-8 text-destructive hover:text-destructive"
+                                    onClick={() =>
+                                      setDeleteConfirm(station.id)
+                                    }
+                                  >
+                                    <Trash2 className="h-3.5 w-3.5" />
+                                  </Button>
+                                </TooltipTrigger>
+                                <TooltipContent>Delete station</TooltipContent>
+                              </Tooltip>
+                            </TooltipProvider>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
       </motion.div>
 
       {stations.length === 0 && !isLoading && (
@@ -418,32 +516,30 @@ export default function StationsPage() {
       </Dialog>
 
       {/* Delete Confirmation */}
-      <Dialog
+      <AlertDialog
         open={deleteConfirm !== null}
         onOpenChange={() => setDeleteConfirm(null)}
       >
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Delete Station</DialogTitle>
-            <DialogDescription>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Station</AlertDialogTitle>
+            <AlertDialogDescription>
               Are you sure you want to delete this station? This action cannot be
               undone.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="flex justify-end gap-3">
-            <Button variant="outline" onClick={() => setDeleteConfirm(null)}>
-              Cancel
-            </Button>
-            <Button
-              variant="destructive"
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
               onClick={() => deleteConfirm && handleDelete(deleteConfirm)}
               disabled={deleteMutation.isPending}
             >
               {deleteMutation.isPending ? "Deleting..." : "Delete"}
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

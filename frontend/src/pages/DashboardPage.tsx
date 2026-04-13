@@ -13,6 +13,16 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Separator } from "@/components/ui/separator";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { useStations } from "@/hooks/use-stations";
 import { useSchedules } from "@/hooks/use-schedules";
 import { useDashboardStats, useSchedulesByHour } from "@/hooks/use-dashboard";
@@ -184,7 +194,8 @@ export default function DashboardPage() {
                 Weekday Schedule Distribution
               </CardTitle>
             </CardHeader>
-            <CardContent>
+            <Separator />
+            <CardContent className="pt-6">
               <div className="flex items-end gap-1 h-40">
                 {hourlyData.map((d) => (
                   <div
@@ -211,94 +222,114 @@ export default function DashboardPage() {
         </motion.div>
       )}
 
-      {/* Station & Schedule Lists */}
-      <div className="grid gap-6 lg:grid-cols-2">
-        <motion.div variants={item} initial="hidden" animate="show">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">Stations</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                {stations.slice(0, 8).map((station) => (
-                  <div
-                    key={station.id}
-                    className="flex items-center justify-between py-2 border-b last:border-0"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-xs font-bold text-primary">
-                        {station.code}
-                      </div>
-                      <div>
-                        <p className="text-sm font-medium">{station.name}</p>
-                        <p className="text-xs text-muted-foreground">
-                          {station.location}
-                        </p>
-                      </div>
-                    </div>
-                    <Badge
-                      variant={
-                        station.status === "ACTIVE"
-                          ? "success"
-                          : station.status === "MAINTENANCE"
-                            ? "warning"
-                            : "destructive"
-                      }
-                    >
-                      {station.status}
-                    </Badge>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
+      {/* Station & Schedule Data */}
+      <motion.div variants={item} initial="hidden" animate="show">
+        <Tabs defaultValue="stations">
+          <TabsList className="mb-4">
+            <TabsTrigger value="stations">Stations</TabsTrigger>
+            <TabsTrigger value="schedules">Recent Schedules</TabsTrigger>
+          </TabsList>
 
-        <motion.div variants={item} initial="hidden" animate="show">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">Recent Schedules</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                {schedules.slice(0, 8).map((schedule) => (
-                  <div
-                    key={schedule.id}
-                    className="flex items-center justify-between py-2 border-b last:border-0"
-                  >
-                    <div>
-                      <p className="text-sm font-medium">
-                        {schedule.trainNumber}
-                      </p>
-                      <p className="text-xs text-muted-foreground">
-                        {schedule.departureStation?.name} →{" "}
-                        {schedule.arrivalStation?.name}
-                      </p>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-sm font-mono">
-                        {schedule.departureTime} - {schedule.arrivalTime}
-                      </p>
-                      <Badge
-                        variant={
-                          schedule.status === "ACTIVE"
-                            ? "success"
-                            : schedule.status === "DELAYED"
-                              ? "warning"
-                              : "destructive"
-                        }
-                        className="mt-1"
-                      >
-                        {schedule.status}
-                      </Badge>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
-      </div>
+          <TabsContent value="stations">
+            <Card>
+              <CardContent className="p-0">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="w-[60px]">Code</TableHead>
+                      <TableHead>Name</TableHead>
+                      <TableHead className="hidden sm:table-cell">
+                        Location
+                      </TableHead>
+                      <TableHead className="text-right">Status</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {stations.slice(0, 10).map((station) => (
+                      <TableRow key={station.id}>
+                        <TableCell>
+                          <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-xs font-bold text-primary">
+                            {station.code}
+                          </div>
+                        </TableCell>
+                        <TableCell className="font-medium">
+                          {station.name}
+                        </TableCell>
+                        <TableCell className="hidden sm:table-cell text-muted-foreground">
+                          {station.location}
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <Badge
+                            variant={
+                              station.status === "ACTIVE"
+                                ? "success"
+                                : station.status === "MAINTENANCE"
+                                  ? "warning"
+                                  : "destructive"
+                            }
+                          >
+                            {station.status}
+                          </Badge>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="schedules">
+            <Card>
+              <CardContent className="p-0">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Train</TableHead>
+                      <TableHead>Route</TableHead>
+                      <TableHead className="hidden sm:table-cell">
+                        Time
+                      </TableHead>
+                      <TableHead className="text-right">Status</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {schedules.slice(0, 10).map((schedule) => (
+                      <TableRow key={schedule.id}>
+                        <TableCell className="font-medium font-mono">
+                          {schedule.trainNumber}
+                        </TableCell>
+                        <TableCell>
+                          <p className="text-sm">
+                            {schedule.departureStation?.name} →{" "}
+                            {schedule.arrivalStation?.name}
+                          </p>
+                        </TableCell>
+                        <TableCell className="hidden sm:table-cell font-mono text-sm">
+                          {schedule.departureTime} — {schedule.arrivalTime}
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <Badge
+                            variant={
+                              schedule.status === "ACTIVE"
+                                ? "success"
+                                : schedule.status === "DELAYED"
+                                  ? "warning"
+                                  : "destructive"
+                            }
+                          >
+                            {schedule.status}
+                          </Badge>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
+      </motion.div>
     </div>
   );
 }
