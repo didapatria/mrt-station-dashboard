@@ -88,7 +88,7 @@ export const authService = {
 };
 
 function generateToken(payload: JwtPayload): string {
-  return jwt.sign(payload, process.env.JWT_SECRET || "fallback-secret", {
-    expiresIn: (process.env.JWT_EXPIRES_IN as string) || "7d",
-  });
+  const secret = process.env.JWT_SECRET || "fallback-secret";
+  const expiresIn = process.env.JWT_EXPIRES_IN || "7d";
+  return jwt.sign(payload, secret, { expiresIn } as jwt.SignOptions);
 }

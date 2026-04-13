@@ -11,12 +11,18 @@
     "db:generate": "npx prisma generate",
     "db:studio": "npx prisma studio"
   },
-  "keywords": ["mrt", "station", "dashboard", "express", "prisma"],
+  "keywords": [
+    "mrt",
+    "station",
+    "dashboard",
+    "express",
+    "prisma"
+  ],
   "author": "Dida",
   "license": "MIT",
   "description": "Backend API for MRT Station Management Dashboard",
   "dependencies": {
-    "@prisma/client": "^7.7.0",
+    "@prisma/client": "^6.19.3",
     "bcryptjs": "^3.0.3",
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
@@ -34,7 +40,7 @@
     "@types/morgan": "^1.9.10",
     "@types/node": "^25.6.0",
     "nodemon": "^3.1.14",
-    "prisma": "^7.7.0",
+    "prisma": "^6.19.3",
     "tsx": "^4.21.0",
     "typescript": "^6.0.2"
   }

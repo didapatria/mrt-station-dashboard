@@ -23,7 +23,7 @@ export const scheduleController = {
 
   async getById(req: Request, res: Response): Promise<void> {
     try {
-      const schedule = await scheduleService.getById(req.params.id);
+      const schedule = await scheduleService.getById(req.params.id as string);
       res.json({ success: true, data: schedule });
     } catch (error) {
       const message =
@@ -50,7 +50,7 @@ export const scheduleController = {
 
   async update(req: Request, res: Response): Promise<void> {
     try {
-      const schedule = await scheduleService.update(req.params.id, req.body);
+      const schedule = await scheduleService.update(req.params.id as string, req.body);
       res.json({
         success: true,
         message: "Schedule updated successfully",
@@ -66,7 +66,7 @@ export const scheduleController = {
 
   async delete(req: Request, res: Response): Promise<void> {
     try {
-      await scheduleService.delete(req.params.id);
+      await scheduleService.delete(req.params.id as string);
       res.json({ success: true, message: "Schedule deleted successfully" });
     } catch (error) {
       const message =

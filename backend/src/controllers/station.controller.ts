@@ -21,7 +21,7 @@ export const stationController = {
 
   async getById(req: Request, res: Response): Promise<void> {
     try {
-      const station = await stationService.getById(req.params.id);
+      const station = await stationService.getById(req.params.id as string);
       res.json({ success: true, data: station });
     } catch (error) {
       const message =
@@ -49,7 +49,7 @@ export const stationController = {
 
   async update(req: Request, res: Response): Promise<void> {
     try {
-      const station = await stationService.update(req.params.id, req.body);
+      const station = await stationService.update(req.params.id as string, req.body);
       res.json({
         success: true,
         message: "Station updated successfully",
@@ -65,7 +65,7 @@ export const stationController = {
 
   async delete(req: Request, res: Response): Promise<void> {
     try {
-      await stationService.delete(req.params.id);
+      await stationService.delete(req.params.id as string);
       res.json({ success: true, message: "Station deleted successfully" });
     } catch (error) {
       const message =
