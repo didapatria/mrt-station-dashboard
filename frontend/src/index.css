@@ -145,3 +145,14 @@
       sans-serif;
   }
 }
+
+/* Leaflet z-index fix: keep map below sidebar and header */
+.leaflet-pane,
+.leaflet-control,
+.leaflet-top,
+.leaflet-bottom {
+  z-index: 10 !important;
+}
+.leaflet-popup-pane {
+  z-index: 20 !important;
+}
