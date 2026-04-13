@@ -97,6 +97,8 @@ export default function StationsPage() {
   );
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingStation, setEditingStation] = useState<Station | null>(null);
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [bulkDeleteOpen, setBulkDeleteOpen] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
 
   const debouncedSearch = useDebounce(search, 300);
@@ -225,6 +227,33 @@ export default function StationsPage() {
     }
   };
 
+  const toggleSelect = (id: string) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      next.has(id) ? next.delete(id) : next.add(id);
+      return next;
+    });
+  };
+
+  const toggleSelectAll = () => {
+    if (selectedIds.size === sortedStations.length) {
+      setSelectedIds(new Set());
+    } else {
+      setSelectedIds(new Set(sortedStations.map((s) => s.id)));
+    }
+  };
+
+  const handleBulkDelete = async () => {
+    try {
+      await Promise.all([...selectedIds].map((id) => deleteMutation.mutateAsync(id)));
+      setSelectedIds(new Set());
+      setBulkDeleteOpen(false);
+      toast.success(`${selectedIds.size} stations deleted`);
+    } catch {
+      toast.error("Failed to delete some stations");
+    }
+  };
+
   return (
     <div>
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
@@ -235,6 +264,12 @@ export default function StationsPage() {
           </p>
         </div>
         <div className="flex gap-2">
+          {isAdmin && selectedIds.size > 0 && (
+            <Button variant="destructive" size="sm" onClick={() => setBulkDeleteOpen(true)}>
+              <Trash2 className="h-4 w-4 mr-2" />
+              {t("common.delete")} ({selectedIds.size})
+            </Button>
+          )}
           <Button variant="outline" onClick={handleExport}>
             <Download className="h-4 w-4 mr-2" />
             CSV
@@ -283,6 +318,11 @@ export default function StationsPage() {
             <Table>
               <TableHeader>
                 <TableRow className="bg-muted/50">
+                  {isAdmin && (
+                    <TableHead className="w-10">
+                      <input type="checkbox" checked={selectedIds.size === sortedStations.length && sortedStations.length > 0} onChange={toggleSelectAll} className="rounded border-border" />
+                    </TableHead>
+                  )}
                   <SortableTableHead<Station>
                     label={t("stations.order")}
                     sortKey="order"
@@ -349,7 +389,12 @@ export default function StationsPage() {
                       </TableRow>
                     ))
                   : sortedStations.map((station) => (
-                      <TableRow key={station.id}>
+                      <TableRow key={station.id} className={selectedIds.has(station.id) ? "bg-primary/5" : ""}>
+                        {isAdmin && (
+                          <TableCell>
+                            <input type="checkbox" checked={selectedIds.has(station.id)} onChange={() => toggleSelect(station.id)} className="rounded border-border" />
+                          </TableCell>
+                        )}
                         <TableCell className="font-mono text-muted-foreground">
                           {station.order}
                         </TableCell>
@@ -625,6 +670,24 @@ export default function StationsPage() {
               {deleteMutation.isPending
                 ? t("common.loading")
                 : t("common.delete")}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Bulk Delete */}
+      <AlertDialog open={bulkDeleteOpen} onOpenChange={setBulkDeleteOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{t("common.delete")} ({selectedIds.size})</AlertDialogTitle>
+            <AlertDialogDescription>
+              {t("stations.deleteConfirm")}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>{t("common.cancel")}</AlertDialogCancel>
+            <AlertDialogAction className="bg-destructive text-destructive-foreground hover:bg-destructive/90" onClick={handleBulkDelete} disabled={deleteMutation.isPending}>
+              {deleteMutation.isPending ? t("common.loading") : `${t("common.delete")} (${selectedIds.size})`}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
