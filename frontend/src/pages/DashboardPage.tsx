@@ -20,7 +20,13 @@ import {
   Tooltip as RechartsTooltip,
   ResponsiveContainer,
 } from "recharts";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -38,6 +44,7 @@ import { useStations } from "@/hooks/use-stations";
 import { useSchedules } from "@/hooks/use-schedules";
 import { useDashboardStats, useSchedulesByHour } from "@/hooks/use-dashboard";
 import { dashboardService } from "@/services/dashboard.service";
+import { exportDashboardPDF } from "@/lib/export-pdf";
 
 const container = {
   hidden: { opacity: 0 },
@@ -132,12 +139,18 @@ export default function DashboardPage() {
     <div>
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight">{t("dashboard.title")}</h2>
-          <p className="text-muted-foreground">
-            {t("dashboard.subtitle")}
-          </p>
+          <h2 className="text-2xl font-bold tracking-tight">
+            {t("dashboard.title")}
+          </h2>
+          <p className="text-muted-foreground">{t("dashboard.subtitle")}</p>
         </div>
         <div className="flex gap-2">
+          {stats && (
+            <Button variant="outline" size="sm" onClick={() => exportDashboardPDF(stats, stations, schedules)}>
+              <Download className="h-4 w-4 mr-2" />
+              PDF Report
+            </Button>
+          )}
           <Button variant="outline" size="sm" onClick={handleExportStations}>
             <Download className="h-4 w-4 mr-2" />
             {t("dashboard.exportStations")}
@@ -186,9 +199,7 @@ export default function DashboardPage() {
                         {stat.value}
                       </p>
                     </div>
-                    <div
-                      className={`${stat.bg} p-3 rounded-xl shadow-sm`}
-                    >
+                    <div className={`${stat.bg} p-3 rounded-xl shadow-sm`}>
                       <stat.icon className={`h-6 w-6 ${stat.color}`} />
                     </div>
                   </div>
@@ -215,15 +226,23 @@ export default function DashboardPage() {
                 </div>
                 <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
                   <TrendingUp className="h-4 w-4" />
-                  <span>{hourlyData.reduce((a, b) => a + b.count, 0)} total</span>
+                  <span>
+                    {hourlyData.reduce((a, b) => a + b.count, 0)} total
+                  </span>
                 </div>
               </div>
             </CardHeader>
             <Separator />
             <CardContent className="pt-6">
               <ResponsiveContainer width="100%" height={280}>
-                <BarChart data={hourlyData} margin={{ top: 5, right: 5, left: -20, bottom: 5 }}>
-                  <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
+                <BarChart
+                  data={hourlyData}
+                  margin={{ top: 5, right: 5, left: -20, bottom: 5 }}
+                >
+                  <CartesianGrid
+                    strokeDasharray="3 3"
+                    className="stroke-border"
+                  />
                   <XAxis
                     dataKey="hour"
                     tickFormatter={(v) => v.replace(":00", "")}
@@ -271,7 +290,7 @@ export default function DashboardPage() {
                 <Table>
                   <TableHeader>
                     <TableRow className="bg-muted/50">
-                      <TableHead className="w-[60px]">Code</TableHead>
+                      <TableHead className="w-15">Code</TableHead>
                       <TableHead>Name</TableHead>
                       <TableHead className="hidden sm:table-cell">
                         Location
@@ -281,10 +300,7 @@ export default function DashboardPage() {
                   </TableHeader>
                   <TableBody>
                     {stations.slice(0, 10).map((station) => (
-                      <TableRow
-                        key={station.id}
-                        className="hover:bg-muted/30"
-                      >
+                      <TableRow key={station.id} className="hover:bg-muted/30">
                         <TableCell>
                           <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center text-xs font-bold text-primary">
                             {station.code}
@@ -333,10 +349,7 @@ export default function DashboardPage() {
                   </TableHeader>
                   <TableBody>
                     {schedules.slice(0, 10).map((schedule) => (
-                      <TableRow
-                        key={schedule.id}
-                        className="hover:bg-muted/30"
-                      >
+                      <TableRow key={schedule.id} className="hover:bg-muted/30">
                         <TableCell className="font-medium font-mono">
                           {schedule.trainNumber}
                         </TableCell>
