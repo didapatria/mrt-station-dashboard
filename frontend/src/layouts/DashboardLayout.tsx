@@ -44,6 +44,7 @@ import {
 } from "@/components/ui/tooltip";
 import { Separator } from "@/components/ui/separator";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { LanguageToggle } from "@/components/LanguageToggle";
 import { CommandSearch } from "@/components/CommandSearch";
 import { useRole } from "@/hooks/use-role";
 import { useState } from "react";
@@ -61,11 +62,8 @@ const navItems = [
 
 function SidebarContent({
   onNavClick,
-  user,
-  onLogout,
   isAdmin,
   collapsed,
-  onToggle,
 }: {
   onNavClick?: () => void;
   user: { name: string; role: string; email: string } | null;
@@ -75,7 +73,7 @@ function SidebarContent({
   onToggle?: () => void;
 }) {
   const visibleNav = navItems.filter(
-    (item) => !("adminOnly" in item && item.adminOnly) || isAdmin
+    (item) => !("adminOnly" in item && item.adminOnly) || isAdmin,
   );
 
   return (
@@ -89,16 +87,6 @@ function SidebarContent({
           <span className="font-semibold text-sm tracking-tight truncate">
             MRT Jakarta
           </span>
-        )}
-        {onToggle && !collapsed && (
-          <Button
-            variant="ghost"
-            size="icon"
-            className="ml-auto h-7 w-7 shrink-0 text-muted-foreground"
-            onClick={onToggle}
-          >
-            <PanelLeftClose className="h-4 w-4" />
-          </Button>
         )}
       </div>
 
@@ -122,7 +110,7 @@ function SidebarContent({
                       collapsed ? "justify-center px-2 py-2" : "px-3 py-2",
                       isActive
                         ? "bg-primary text-primary-foreground"
-                        : "text-muted-foreground hover:text-foreground hover:bg-accent"
+                        : "text-muted-foreground hover:text-foreground hover:bg-accent",
                     )
                   }
                 >
@@ -137,60 +125,6 @@ function SidebarContent({
           ))}
         </TooltipProvider>
       </nav>
-
-      <Separator />
-
-      {/* User Section */}
-      <div className={cn("shrink-0", collapsed ? "p-2" : "p-3")}>
-        {collapsed ? (
-          <TooltipProvider delayDuration={0}>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <button
-                  onClick={onLogout}
-                  className="flex items-center justify-center w-full"
-                >
-                  <Avatar className="h-8 w-8">
-                    <AvatarFallback className="bg-primary text-primary-foreground text-xs font-bold">
-                      {user?.name?.charAt(0).toUpperCase()}
-                    </AvatarFallback>
-                  </Avatar>
-                </button>
-              </TooltipTrigger>
-              <TooltipContent side="right">
-                {user?.name} ({user?.role})
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-        ) : (
-          <>
-            <div className="flex items-center gap-2.5 px-2 py-1.5 mb-2">
-              <Avatar className="h-8 w-8 shrink-0">
-                <AvatarFallback className="bg-primary text-primary-foreground text-xs font-bold">
-                  {user?.name?.charAt(0).toUpperCase()}
-                </AvatarFallback>
-              </Avatar>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium truncate leading-tight">
-                  {user?.name}
-                </p>
-                <p className="text-[11px] text-muted-foreground leading-tight">
-                  {user?.role}
-                </p>
-              </div>
-            </div>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="w-full justify-start text-muted-foreground hover:text-destructive"
-              onClick={onLogout}
-            >
-              <LogOut className="h-3.5 w-3.5 mr-2" />
-              Logout
-            </Button>
-          </>
-        )}
-      </div>
     </div>
   );
 }
@@ -221,7 +155,7 @@ export default function DashboardLayout() {
       <aside
         className={cn(
           "fixed top-0 left-0 z-40 h-full bg-card border-r hidden lg:flex lg:flex-col transition-all duration-200",
-          sidebarWidth
+          sidebarWidth,
         )}
       >
         <SidebarContent
@@ -284,7 +218,7 @@ export default function DashboardLayout() {
             className="hidden sm:flex items-center gap-2 text-muted-foreground w-48 justify-between"
             onClick={() =>
               document.dispatchEvent(
-                new KeyboardEvent("keydown", { key: "k", metaKey: true })
+                new KeyboardEvent("keydown", { key: "k", metaKey: true }),
               )
             }
           >
@@ -299,6 +233,7 @@ export default function DashboardLayout() {
 
           <CommandSearch />
 
+          <LanguageToggle />
           <ThemeToggle />
 
           <Separator orientation="vertical" className="h-5" />
@@ -312,7 +247,7 @@ export default function DashboardLayout() {
                     {user?.name?.charAt(0).toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
-                <span className="hidden sm:block text-sm font-medium max-w-[100px] truncate">
+                <span className="hidden sm:block text-sm font-medium max-w-25 truncate">
                   {user?.name}
                 </span>
                 <ChevronRight className="h-3 w-3 text-muted-foreground hidden sm:block rotate-90" />
