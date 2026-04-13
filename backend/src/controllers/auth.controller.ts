@@ -34,6 +34,18 @@ export const authController = {
     }
   },
 
+  async changePassword(req: AuthRequest, res: Response): Promise<void> {
+    try {
+      const { currentPassword, newPassword } = req.body;
+      await authService.changePassword(req.user!.userId, currentPassword, newPassword);
+      res.json({ success: true, message: "Password changed successfully" });
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Failed to change password";
+      const status = message === "Current password is incorrect" ? 400 : 500;
+      res.status(status).json({ success: false, error: message });
+    }
+  },
+
   async getProfile(req: AuthRequest, res: Response): Promise<void> {
     try {
       const user = await authService.getProfile(req.user!.userId);

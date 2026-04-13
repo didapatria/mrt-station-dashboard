@@ -96,3 +96,4 @@ authRouter.post("/login", validate(loginSchema), authController.login);
  *         description: Unauthorized
  */
 authRouter.get("/profile", authMiddleware, authController.getProfile);
+authRouter.post("/change-password", authMiddleware, authController.changePassword);
