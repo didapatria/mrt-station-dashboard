@@ -1,4 +1,5 @@
 import { Outlet, Navigate, NavLink, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { useAuthStore } from "@/store/auth.store";
 import { useLogout } from "@/hooks/use-auth";
 import { motion } from "framer-motion";
@@ -47,23 +48,33 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 import { LanguageToggle } from "@/components/LanguageToggle";
 import { CommandSearch } from "@/components/CommandSearch";
 import { useRole } from "@/hooks/use-role";
-import { useState } from "react";
+import { useState, type ComponentType } from "react";
 import { cn } from "@/lib/utils";
 
-const navItems = [
-  { to: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
-  { to: "/stations", icon: MapPin, label: "Stations" },
-  { to: "/schedules", icon: Clock, label: "Schedules" },
-  { to: "/map", icon: Map, label: "Station Map" },
-  { to: "/users", icon: Users, label: "Users", adminOnly: true },
-  { to: "/activity", icon: Activity, label: "Activity Log" },
-  { to: "/profile", icon: User, label: "Profile" },
-] as const;
+interface NavItem {
+  to: string;
+  icon: ComponentType<{ className?: string }>;
+  labelKey: string;
+  adminOnly?: boolean;
+}
+
+const navItems: NavItem[] = [
+  { to: "/dashboard", icon: LayoutDashboard, labelKey: "nav.dashboard" },
+  { to: "/stations", icon: MapPin, labelKey: "nav.stations" },
+  { to: "/schedules", icon: Clock, labelKey: "nav.schedules" },
+  { to: "/map", icon: Map, labelKey: "nav.stationMap" },
+  { to: "/users", icon: Users, labelKey: "nav.users", adminOnly: true },
+  { to: "/activity", icon: Activity, labelKey: "nav.activityLog" },
+  { to: "/profile", icon: User, labelKey: "nav.profile" },
+];
 
 function SidebarContent({
   onNavClick,
+  user,
+  onLogout,
   isAdmin,
   collapsed,
+  onToggle,
 }: {
   onNavClick?: () => void;
   user: { name: string; role: string; email: string } | null;
@@ -72,64 +83,138 @@ function SidebarContent({
   collapsed?: boolean;
   onToggle?: () => void;
 }) {
-  const visibleNav = navItems.filter(
-    (item) => !("adminOnly" in item && item.adminOnly) || isAdmin,
-  );
+  const { t } = useTranslation();
+  const visibleNav = navItems.filter((item) => !item.adminOnly || isAdmin);
 
   return (
     <div className="flex flex-col h-full">
-      {/* Logo — h-14 matches header */}
+      {/* Logo */}
       <div className="flex items-center gap-3 px-4 h-14 shrink-0 border-b">
         <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary shrink-0">
           <Train className="h-4 w-4 text-primary-foreground" />
         </div>
         {!collapsed && (
-          <span className="font-semibold text-sm tracking-tight truncate">
-            MRT Jakarta
-          </span>
+          <>
+            <span className="font-semibold text-sm tracking-tight truncate flex-1">
+              MRT Jakarta
+            </span>
+            {onToggle && (
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-7 w-7 shrink-0 text-muted-foreground"
+                onClick={onToggle}
+              >
+                <PanelLeftClose className="h-4 w-4" />
+              </Button>
+            )}
+          </>
         )}
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 overflow-y-auto px-3 py-3 space-y-1">
+      <nav className="flex-1 overflow-y-auto px-3 py-3">
         {!collapsed && (
-          <p className="px-2 mb-1 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
-            Menu
+          <p className="px-2 mb-2 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
+            {t("nav.menu")}
           </p>
         )}
-        <TooltipProvider delayDuration={0}>
-          {visibleNav.map((item) => (
-            <Tooltip key={item.to}>
-              <TooltipTrigger asChild>
-                <NavLink
-                  to={item.to}
-                  onClick={onNavClick}
-                  className={({ isActive }) =>
-                    cn(
-                      "flex items-center gap-3 rounded-md text-sm font-medium transition-colors",
-                      collapsed ? "justify-center px-2 py-2" : "px-3 py-2",
-                      isActive
-                        ? "bg-primary text-primary-foreground"
-                        : "text-muted-foreground hover:text-foreground hover:bg-accent",
-                    )
-                  }
-                >
-                  <item.icon className="h-4 w-4 shrink-0" />
-                  {!collapsed && item.label}
-                </NavLink>
-              </TooltipTrigger>
-              {collapsed && (
-                <TooltipContent side="right">{item.label}</TooltipContent>
-              )}
-            </Tooltip>
-          ))}
-        </TooltipProvider>
+        <div className="space-y-1">
+          <TooltipProvider delayDuration={0}>
+            {visibleNav.map((item) => {
+              const Icon = item.icon;
+              return (
+                <Tooltip key={item.to}>
+                  <TooltipTrigger asChild>
+                    <NavLink
+                      to={item.to}
+                      onClick={onNavClick}
+                      className={({ isActive }) =>
+                        cn(
+                          "flex flex-row items-center gap-3 rounded-md text-sm font-medium transition-colors",
+                          collapsed
+                            ? "justify-center px-2 py-2.5"
+                            : "px-3 py-2",
+                          isActive
+                            ? "bg-primary text-primary-foreground shadow-sm"
+                            : "text-muted-foreground hover:text-foreground hover:bg-accent",
+                        )
+                      }
+                    >
+                      <Icon className="h-4 w-4 shrink-0" />
+                      {!collapsed && (
+                        <span className="truncate">{t(item.labelKey)}</span>
+                      )}
+                    </NavLink>
+                  </TooltipTrigger>
+                  {collapsed && (
+                    <TooltipContent side="right">
+                      {t(item.labelKey)}
+                    </TooltipContent>
+                  )}
+                </Tooltip>
+              );
+            })}
+          </TooltipProvider>
+        </div>
       </nav>
+
+      <Separator />
+
+      {/* User Section */}
+      <div className={cn("shrink-0", collapsed ? "p-2" : "p-3")}>
+        {collapsed ? (
+          <TooltipProvider delayDuration={0}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div className="flex items-center justify-center">
+                  <Avatar className="h-8 w-8">
+                    <AvatarFallback className="bg-primary text-primary-foreground text-xs font-bold">
+                      {user?.name?.charAt(0).toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
+                </div>
+              </TooltipTrigger>
+              <TooltipContent side="right">
+                {user?.name} ({user?.role})
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        ) : (
+          <>
+            <div className="flex items-center gap-2.5 px-2 py-1.5 mb-2">
+              <Avatar className="h-8 w-8 shrink-0">
+                <AvatarFallback className="bg-primary text-primary-foreground text-xs font-bold">
+                  {user?.name?.charAt(0).toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium truncate leading-tight">
+                  {user?.name}
+                </p>
+                <p className="text-[11px] text-muted-foreground leading-tight">
+                  {user?.role}
+                </p>
+              </div>
+            </div>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="w-full justify-start text-muted-foreground hover:text-destructive"
+              onClick={onLogout}
+            >
+              <LogOut className="h-3.5 w-3.5 mr-2" />
+              {t("common.logout")}
+            </Button>
+          </>
+        )}
+      </div>
     </div>
   );
 }
 
 export default function DashboardLayout() {
+  const { t } = useTranslation();
   const { token, user } = useAuthStore();
   const { isAdmin } = useRole();
   const logout = useLogout();
@@ -184,7 +269,7 @@ export default function DashboardLayout() {
 
       {/* Main content */}
       <div className={cn("transition-all duration-200", sidebarPl)}>
-        {/* Top bar — h-14 matches sidebar logo area */}
+        {/* Top bar */}
         <header className="sticky top-0 z-30 flex items-center gap-3 border-b bg-background/80 backdrop-blur-lg px-4 h-14">
           {/* Mobile menu */}
           <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
@@ -199,7 +284,7 @@ export default function DashboardLayout() {
           <Button
             variant="ghost"
             size="icon"
-            className="h-8 w-8 hidden lg:flex text-muted-foreground"
+            className="h-8 w-8 hidden lg:inline-flex text-muted-foreground"
             onClick={() => setCollapsed(!collapsed)}
           >
             {collapsed ? (
@@ -215,16 +300,16 @@ export default function DashboardLayout() {
           <Button
             variant="outline"
             size="sm"
-            className="hidden sm:flex items-center gap-2 text-muted-foreground w-48 justify-between"
+            className="hidden sm:inline-flex items-center gap-2 text-muted-foreground w-48 justify-between"
             onClick={() =>
               document.dispatchEvent(
                 new KeyboardEvent("keydown", { key: "k", metaKey: true }),
               )
             }
           >
-            <span className="flex items-center gap-2 text-xs">
+            <span className="inline-flex items-center gap-2 text-xs">
               <Search className="h-3.5 w-3.5" />
-              Search...
+              {t("common.search")}
             </span>
             <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground">
               ⌘K
@@ -232,7 +317,6 @@ export default function DashboardLayout() {
           </Button>
 
           <CommandSearch />
-
           <LanguageToggle />
           <ThemeToggle />
 
@@ -247,10 +331,10 @@ export default function DashboardLayout() {
                     {user?.name?.charAt(0).toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
-                <span className="hidden sm:block text-sm font-medium max-w-25 truncate">
+                <span className="hidden sm:inline text-sm font-medium max-w-25 truncate">
                   {user?.name}
                 </span>
-                <ChevronRight className="h-3 w-3 text-muted-foreground hidden sm:block rotate-90" />
+                <ChevronRight className="h-3 w-3 text-muted-foreground hidden sm:inline rotate-90" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-56">
@@ -263,7 +347,7 @@ export default function DashboardLayout() {
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={() => navigate("/profile")}>
                 <Settings className="h-4 w-4 mr-2" />
-                Profile
+                {t("nav.profile")}
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem
@@ -271,7 +355,7 @@ export default function DashboardLayout() {
                 className="text-destructive focus:text-destructive"
               >
                 <LogOut className="h-4 w-4 mr-2" />
-                Logout
+                {t("common.logout")}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
