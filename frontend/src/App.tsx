@@ -14,6 +14,7 @@ import StationsPage from "@/pages/StationsPage";
 import SchedulesPage from "@/pages/SchedulesPage";
 import ProfilePage from "@/pages/ProfilePage";
 import MapPage from "@/pages/MapPage";
+import UsersPage from "@/pages/UsersPage";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -50,6 +51,7 @@ function App() {
             <Route path="/stations" element={<StationsPage />} />
             <Route path="/schedules" element={<SchedulesPage />} />
             <Route path="/map" element={<MapPage />} />
+            <Route path="/users" element={<UsersPage />} />
             <Route path="/profile" element={<ProfilePage />} />
           </Route>
 

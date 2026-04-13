@@ -14,6 +14,7 @@ import {
   Map,
   ChevronRight,
   Search,
+  Users,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -36,6 +37,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { CommandSearch } from "@/components/CommandSearch";
+import { useRole } from "@/hooks/use-role";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 
@@ -44,18 +46,24 @@ const navItems = [
   { to: "/stations", icon: MapPin, label: "Stations" },
   { to: "/schedules", icon: Clock, label: "Schedules" },
   { to: "/map", icon: Map, label: "Station Map" },
+  { to: "/users", icon: Users, label: "Users", adminOnly: true },
   { to: "/profile", icon: User, label: "Profile" },
-];
+] as const;
 
 function SidebarContent({
   onNavClick,
   user,
   onLogout,
+  isAdmin,
 }: {
   onNavClick?: () => void;
   user: { name: string; role: string; email: string } | null;
   onLogout: () => void;
+  isAdmin: boolean;
 }) {
+  const visibleNav = navItems.filter(
+    (item) => !("adminOnly" in item && item.adminOnly) || isAdmin
+  );
   return (
     <div className="flex flex-col h-full">
       {/* Logo */}
@@ -80,7 +88,7 @@ function SidebarContent({
         <p className="px-3 mb-2 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
           Menu
         </p>
-        {navItems.map((item) => (
+        {visibleNav.map((item) => (
           <NavLink
             key={item.to}
             to={item.to}
@@ -133,6 +141,7 @@ function SidebarContent({
 
 export default function DashboardLayout() {
   const { token, user } = useAuthStore();
+  const { isAdmin } = useRole();
   const logout = useLogout();
   const navigate = useNavigate();
   const [sheetOpen, setSheetOpen] = useState(false);
@@ -150,7 +159,7 @@ export default function DashboardLayout() {
     <div className="min-h-screen bg-muted/40">
       {/* Desktop Sidebar */}
       <aside className="fixed top-0 left-0 z-50 h-full w-64 bg-card border-r hidden lg:flex lg:flex-col shadow-sm">
-        <SidebarContent user={user} onLogout={handleLogout} />
+        <SidebarContent user={user} onLogout={handleLogout} isAdmin={isAdmin} />
       </aside>
 
       {/* Mobile Sheet Sidebar */}
@@ -163,6 +172,7 @@ export default function DashboardLayout() {
             onNavClick={() => setSheetOpen(false)}
             user={user}
             onLogout={handleLogout}
+            isAdmin={isAdmin}
           />
         </SheetContent>
       </Sheet>

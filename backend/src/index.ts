@@ -10,6 +10,7 @@ import { stationRouter } from "./routes/station.routes";
 import { scheduleRouter } from "./routes/schedule.routes";
 import { dashboardRouter } from "./routes/dashboard.routes";
 import { exportRouter } from "./routes/export.routes";
+import { userRouter } from "./routes/user.routes";
 import { errorHandler } from "./middlewares/error.middleware";
 
 dotenv.config();
@@ -55,6 +56,7 @@ app.use("/api/stations", stationRouter);
 app.use("/api/schedules", scheduleRouter);
 app.use("/api/dashboard", dashboardRouter);
 app.use("/api/export", exportRouter);
+app.use("/api/users", userRouter);
 
 // Error handler
 app.use(errorHandler);
