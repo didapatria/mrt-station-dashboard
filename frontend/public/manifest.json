@@ -1,0 +1,12 @@
+{
+  "name": "MRT Jakarta - Station Dashboard",
+  "short_name": "MRT Jakarta",
+  "description": "Station management dashboard for MRT Jakarta",
+  "theme_color": "#0066cc",
+  "background_color": "#ffffff",
+  "display": "standalone",
+  "start_url": "/",
+  "icons": [
+    { "src": "/favicon.ico", "sizes": "64x64", "type": "image/x-icon" }
+  ]
+}
