@@ -13,6 +13,7 @@ import {
   Settings,
   Map,
   ChevronRight,
+  Search,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -34,6 +35,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Separator } from "@/components/ui/separator";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { CommandSearch } from "@/components/CommandSearch";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 
@@ -179,7 +181,28 @@ export default function DashboardLayout() {
 
           <div className="flex-1" />
 
+          <Button
+            variant="outline"
+            size="sm"
+            className="hidden sm:flex items-center gap-2 text-muted-foreground w-[200px] justify-between"
+            onClick={() =>
+              document.dispatchEvent(
+                new KeyboardEvent("keydown", { key: "k", metaKey: true })
+              )
+            }
+          >
+            <span className="flex items-center gap-2">
+              <Search className="h-3.5 w-3.5" />
+              Search...
+            </span>
+            <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground">
+              ⌘K
+            </kbd>
+          </Button>
+
           <ThemeToggle />
+
+          <CommandSearch />
 
           <Separator orientation="vertical" className="h-6" />
 
