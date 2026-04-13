@@ -42,6 +42,7 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 import { LanguageToggle } from "@/components/LanguageToggle";
 import { CommandSearch } from "@/components/CommandSearch";
 import { useRole } from "@/hooks/use-role";
+import { PageBreadcrumb } from "@/components/PageBreadcrumb";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 
@@ -290,6 +291,7 @@ export default function DashboardLayout() {
         </header>
 
         <main className="p-4 md:p-6">
+          <PageBreadcrumb />
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
