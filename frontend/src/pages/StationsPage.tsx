@@ -56,6 +56,8 @@ import {
   useUpdateStation,
   useDeleteStation,
 } from "@/hooks/use-stations";
+import { SortableTableHead } from "@/components/SortableTableHead";
+import { useSortable } from "@/hooks/use-sortable";
 import { dashboardService } from "@/services/dashboard.service";
 import { useRole } from "@/hooks/use-role";
 import type { Station } from "@/types";
@@ -90,6 +92,7 @@ export default function StationsPage() {
 
   const stations = data?.stations ?? [];
   const meta = data?.meta ?? null;
+  const { sorted: sortedStations, sortConfig, requestSort } = useSortable<Station>(stations, "order");
 
   const createMutation = useCreateStation();
   const updateMutation = useUpdateStation();
@@ -239,16 +242,36 @@ export default function StationsPage() {
           <CardContent className="p-0">
             <Table>
               <TableHeader>
-                <TableRow>
-                  <TableHead className="w-[60px]">Order</TableHead>
-                  <TableHead>Station</TableHead>
-                  <TableHead className="hidden md:table-cell">
-                    Location
-                  </TableHead>
+                <TableRow className="bg-muted/50">
+                  <SortableTableHead<Station>
+                    label="Order"
+                    sortKey="order"
+                    sortConfig={sortConfig}
+                    onSort={requestSort}
+                    className="w-[60px]"
+                  />
+                  <SortableTableHead<Station>
+                    label="Station"
+                    sortKey="name"
+                    sortConfig={sortConfig}
+                    onSort={requestSort}
+                  />
+                  <SortableTableHead<Station>
+                    label="Location"
+                    sortKey="location"
+                    sortConfig={sortConfig}
+                    onSort={requestSort}
+                    className="hidden md:table-cell"
+                  />
                   <TableHead className="hidden lg:table-cell">
                     Coordinates
                   </TableHead>
-                  <TableHead>Status</TableHead>
+                  <SortableTableHead<Station>
+                    label="Status"
+                    sortKey="status"
+                    sortConfig={sortConfig}
+                    onSort={requestSort}
+                  />
                   {isAdmin && (
                     <TableHead className="text-right w-[100px]">
                       Actions
@@ -285,7 +308,7 @@ export default function StationsPage() {
                         )}
                       </TableRow>
                     ))
-                  : stations.map((station) => (
+                  : sortedStations.map((station) => (
                       <TableRow key={station.id}>
                         <TableCell className="font-mono text-muted-foreground">
                           {station.order}
@@ -392,7 +415,7 @@ export default function StationsPage() {
         </Card>
       </motion.div>
 
-      {stations.length === 0 && !isLoading && (
+      {sortedStations.length === 0 && !isLoading && (
         <div className="text-center py-12 text-muted-foreground">
           No stations found. Create your first station.
         </div>

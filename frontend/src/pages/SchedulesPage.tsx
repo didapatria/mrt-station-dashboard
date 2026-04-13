@@ -57,6 +57,8 @@ import {
   useDeleteSchedule,
 } from "@/hooks/use-schedules";
 import { useStations } from "@/hooks/use-stations";
+import { SortableTableHead } from "@/components/SortableTableHead";
+import { useSortable } from "@/hooks/use-sortable";
 import { dashboardService } from "@/services/dashboard.service";
 import { useRole } from "@/hooks/use-role";
 import type { Schedule } from "@/types";
@@ -93,6 +95,7 @@ export default function SchedulesPage() {
 
   const schedules = data?.schedules ?? [];
   const meta = data?.meta ?? null;
+  const { sorted: sortedSchedules, sortConfig, requestSort } = useSortable<Schedule>(schedules, "trainNumber");
 
   const { data: stationsData } = useStations({ limit: 100 });
   const stations = stationsData?.stations ?? [];
@@ -252,12 +255,33 @@ export default function SchedulesPage() {
           <CardContent className="p-0">
             <Table>
               <TableHeader>
-                <TableRow>
-                  <TableHead>Train</TableHead>
+                <TableRow className="bg-muted/50">
+                  <SortableTableHead<Schedule>
+                    label="Train"
+                    sortKey="trainNumber"
+                    sortConfig={sortConfig}
+                    onSort={requestSort}
+                  />
                   <TableHead>Route</TableHead>
-                  <TableHead className="hidden sm:table-cell">Time</TableHead>
-                  <TableHead>Day</TableHead>
-                  <TableHead>Status</TableHead>
+                  <SortableTableHead<Schedule>
+                    label="Time"
+                    sortKey="departureTime"
+                    sortConfig={sortConfig}
+                    onSort={requestSort}
+                    className="hidden sm:table-cell"
+                  />
+                  <SortableTableHead<Schedule>
+                    label="Day"
+                    sortKey="dayType"
+                    sortConfig={sortConfig}
+                    onSort={requestSort}
+                  />
+                  <SortableTableHead<Schedule>
+                    label="Status"
+                    sortKey="status"
+                    sortConfig={sortConfig}
+                    onSort={requestSort}
+                  />
                   {isAdmin && (
                     <TableHead className="text-right w-[100px]">
                       Actions
@@ -291,7 +315,7 @@ export default function SchedulesPage() {
                         )}
                       </TableRow>
                     ))
-                  : schedules.map((schedule) => (
+                  : sortedSchedules.map((schedule) => (
                       <TableRow key={schedule.id}>
                         <TableCell>
                           <p className="font-medium font-mono">
@@ -396,7 +420,7 @@ export default function SchedulesPage() {
         </Card>
       </motion.div>
 
-      {schedules.length === 0 && !isLoading && (
+      {sortedSchedules.length === 0 && !isLoading && (
         <div className="text-center py-12 text-muted-foreground">
           No schedules found. Create your first schedule.
         </div>
