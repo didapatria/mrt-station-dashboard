@@ -3,7 +3,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { motion, AnimatePresence } from "framer-motion";
-import { Plus, Pencil, Trash2, Search } from "lucide-react";
+import { Plus, Pencil, Trash2, Search, Download } from "lucide-react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -23,7 +24,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Pagination } from "@/components/ui/pagination";
 import { useStationStore } from "@/store/station.store";
+import { dashboardService } from "@/services/dashboard.service";
 import type { Station } from "@/types";
 
 const stationSchema = z.object({
@@ -50,6 +53,7 @@ export default function StationsPage() {
   } = useStationStore();
 
   const [search, setSearch] = useState("");
+  const [page, setPage] = useState(1);
   const [statusFilter, setStatusFilter] = useState<string>("ALL");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingStation, setEditingStation] = useState<Station | null>(null);
@@ -68,11 +72,12 @@ export default function StationsPage() {
 
   useEffect(() => {
     fetchStations({
+      page,
       search: search || undefined,
       status: statusFilter !== "ALL" ? statusFilter : undefined,
-      limit: 50,
+      limit: 12,
     });
-  }, [fetchStations, search, statusFilter]);
+  }, [fetchStations, search, statusFilter, page]);
 
   const openCreate = () => {
     setEditingStation(null);
@@ -105,13 +110,24 @@ export default function StationsPage() {
     try {
       if (editingStation) {
         await updateStation(editingStation.id, payload);
+        toast.success("Station updated successfully");
       } else {
         await createStation(payload);
+        toast.success("Station created successfully");
       }
       setDialogOpen(false);
-      fetchStations({ limit: 50 });
+      fetchStations({ page, limit: 12 });
     } catch {
-      // Error handled by store
+      toast.error("Failed to save station");
+    }
+  };
+
+  const handleExport = async () => {
+    try {
+      await dashboardService.exportStationsCSV();
+      toast.success("Stations exported to CSV");
+    } catch {
+      toast.error("Failed to export");
     }
   };
 
@@ -119,8 +135,9 @@ export default function StationsPage() {
     try {
       await deleteStation(id);
       setDeleteConfirm(null);
+      toast.success("Station deleted successfully");
     } catch {
-      // Error handled by store
+      toast.error("Failed to delete station");
     }
   };
 
@@ -133,10 +150,16 @@ export default function StationsPage() {
             Manage MRT Jakarta stations ({meta?.total ?? stations.length} total)
           </p>
         </div>
-        <Button onClick={openCreate}>
-          <Plus className="h-4 w-4 mr-2" />
-          Add Station
-        </Button>
+        <div className="flex gap-2">
+          <Button variant="outline" onClick={handleExport}>
+            <Download className="h-4 w-4 mr-2" />
+            CSV
+          </Button>
+          <Button onClick={openCreate}>
+            <Plus className="h-4 w-4 mr-2" />
+            Add Station
+          </Button>
+        </div>
       </div>
 
       {/* Filters */}
@@ -243,6 +266,14 @@ export default function StationsPage() {
         <div className="text-center py-12 text-muted-foreground">
           No stations found. Create your first station.
         </div>
+      )}
+
+      {meta && meta.totalPages > 1 && (
+        <Pagination
+          page={page}
+          totalPages={meta.totalPages}
+          onPageChange={setPage}
+        />
       )}
 
       {/* Create/Edit Dialog */}

@@ -9,8 +9,10 @@ import {
   LogOut,
   Menu,
   X,
+  User,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 
@@ -18,6 +20,7 @@ const navItems = [
   { to: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
   { to: "/stations", icon: MapPin, label: "Stations" },
   { to: "/schedules", icon: Clock, label: "Schedules" },
+  { to: "/profile", icon: User, label: "Profile" },
 ];
 
 export default function DashboardLayout() {
@@ -124,8 +127,10 @@ export default function DashboardLayout() {
             <Menu className="h-5 w-5" />
           </Button>
           <div className="flex-1" />
+          <ThemeToggle />
           <p className="text-sm text-muted-foreground">
-            Welcome, <span className="font-medium text-foreground">{user?.name}</span>
+            Welcome,{" "}
+            <span className="font-medium text-foreground">{user?.name}</span>
           </p>
         </header>
 

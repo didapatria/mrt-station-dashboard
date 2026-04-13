@@ -3,7 +3,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { motion, AnimatePresence } from "framer-motion";
-import { Plus, Pencil, Trash2, Search, ArrowRight } from "lucide-react";
+import { Plus, Pencil, Trash2, Search, ArrowRight, Download } from "lucide-react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -23,8 +24,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Pagination } from "@/components/ui/pagination";
 import { useScheduleStore } from "@/store/schedule.store";
 import { useStationStore } from "@/store/station.store";
+import { dashboardService } from "@/services/dashboard.service";
 import type { Schedule } from "@/types";
 
 const scheduleSchema = z.object({
@@ -52,6 +55,7 @@ export default function SchedulesPage() {
   const { stations, fetchStations } = useStationStore();
 
   const [search, setSearch] = useState("");
+  const [page, setPage] = useState(1);
   const [dayTypeFilter, setDayTypeFilter] = useState<string>("ALL");
   const [statusFilter, setStatusFilter] = useState<string>("ALL");
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -75,12 +79,13 @@ export default function SchedulesPage() {
 
   useEffect(() => {
     fetchSchedules({
+      page,
       search: search || undefined,
       dayType: dayTypeFilter !== "ALL" ? dayTypeFilter : undefined,
       status: statusFilter !== "ALL" ? statusFilter : undefined,
-      limit: 50,
+      limit: 15,
     });
-  }, [fetchSchedules, search, dayTypeFilter, statusFilter]);
+  }, [fetchSchedules, search, dayTypeFilter, statusFilter, page]);
 
   const openCreate = () => {
     setEditingSchedule(null);
@@ -114,13 +119,26 @@ export default function SchedulesPage() {
     try {
       if (editingSchedule) {
         await updateSchedule(editingSchedule.id, data);
+        toast.success("Schedule updated successfully");
       } else {
         await createSchedule(data);
+        toast.success("Schedule created successfully");
       }
       setDialogOpen(false);
-      fetchSchedules({ limit: 50 });
+      fetchSchedules({ page, limit: 15 });
     } catch {
-      // Error handled by store
+      toast.error("Failed to save schedule");
+    }
+  };
+
+  const handleExport = async () => {
+    try {
+      await dashboardService.exportSchedulesCSV(
+        dayTypeFilter !== "ALL" ? dayTypeFilter : undefined
+      );
+      toast.success("Schedules exported to CSV");
+    } catch {
+      toast.error("Failed to export");
     }
   };
 
@@ -128,8 +146,9 @@ export default function SchedulesPage() {
     try {
       await deleteSchedule(id);
       setDeleteConfirm(null);
+      toast.success("Schedule deleted successfully");
     } catch {
-      // Error handled by store
+      toast.error("Failed to delete schedule");
     }
   };
 
@@ -142,10 +161,16 @@ export default function SchedulesPage() {
             Manage train schedules ({meta?.total ?? schedules.length} total)
           </p>
         </div>
-        <Button onClick={openCreate}>
-          <Plus className="h-4 w-4 mr-2" />
-          Add Schedule
-        </Button>
+        <div className="flex gap-2">
+          <Button variant="outline" onClick={handleExport}>
+            <Download className="h-4 w-4 mr-2" />
+            CSV
+          </Button>
+          <Button onClick={openCreate}>
+            <Plus className="h-4 w-4 mr-2" />
+            Add Schedule
+          </Button>
+        </div>
       </div>
 
       {/* Filters */}
@@ -275,6 +300,14 @@ export default function SchedulesPage() {
         <div className="text-center py-12 text-muted-foreground">
           No schedules found. Create your first schedule.
         </div>
+      )}
+
+      {meta && meta.totalPages > 1 && (
+        <Pagination
+          page={page}
+          totalPages={meta.totalPages}
+          onPageChange={setPage}
+        />
       )}
 
       {/* Create/Edit Dialog */}
