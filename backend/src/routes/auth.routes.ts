@@ -96,4 +96,28 @@ authRouter.post("/login", validate(loginSchema), authController.login);
  *         description: Unauthorized
  */
 authRouter.get("/profile", authMiddleware, authController.getProfile);
+/**
+ * @swagger
+ * /auth/change-password:
+ *   post:
+ *     tags: [Authentication]
+ *     summary: Change password
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [currentPassword, newPassword]
+ *             properties:
+ *               currentPassword: { type: string }
+ *               newPassword: { type: string, minLength: 6 }
+ *     responses:
+ *       200:
+ *         description: Password changed
+ *       400:
+ *         description: Current password incorrect
+ */
 authRouter.post("/change-password", authMiddleware, authController.changePassword);
