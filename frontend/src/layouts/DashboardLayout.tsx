@@ -43,6 +43,7 @@ import { LanguageToggle } from "@/components/LanguageToggle";
 import { CommandSearch } from "@/components/CommandSearch";
 import { useRole } from "@/hooks/use-role";
 import { PageBreadcrumb } from "@/components/PageBreadcrumb";
+import { useRealtimeNotifications } from "@/hooks/use-sse";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 
@@ -109,6 +110,7 @@ export default function DashboardLayout() {
   const navigate = useNavigate();
   const [sheetOpen, setSheetOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
+  useRealtimeNotifications();
 
   if (!token) return <Navigate to="/login" replace />;
 

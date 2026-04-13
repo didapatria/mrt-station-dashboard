@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import { sseService } from "./sse.service";
 
 const prisma = new PrismaClient();
 
@@ -17,9 +18,12 @@ export const activityLogService = {
     entityId: string,
     details?: string
   ) {
-    return prisma.activityLog.create({
+    const log = await prisma.activityLog.create({
       data: { userId, action, entity, entityId, details },
+      include: { user: { select: { id: true, name: true, email: true, role: true } } },
     });
+    sseService.broadcast("activity", { action, entity, entityId, details, user: log.user, createdAt: log.createdAt });
+    return log;
   },
 
   async getAll(params: ListLogsParams) {
