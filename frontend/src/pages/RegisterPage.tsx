@@ -2,17 +2,12 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Link, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { useRegister } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Train } from "lucide-react";
 
 const registerSchema = z.object({
@@ -24,35 +19,23 @@ const registerSchema = z.object({
 type RegisterFormData = z.infer<typeof registerSchema>;
 
 export default function RegisterPage() {
+  const { t } = useTranslation();
   const registerMutation = useRegister();
   const navigate = useNavigate();
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<RegisterFormData>({
+  const { register, handleSubmit, formState: { errors } } = useForm<RegisterFormData>({
     resolver: zodResolver(registerSchema),
   });
 
   const onSubmit = async (data: RegisterFormData) => {
     try {
-      await registerMutation.mutateAsync({
-        name: data.name,
-        email: data.email,
-        password: data.password,
-      });
+      await registerMutation.mutateAsync({ name: data.name, email: data.email, password: data.password });
       navigate("/dashboard");
-    } catch {
-      // Error handled by mutation
-    }
+    } catch { /* handled by mutation */ }
   };
 
-  const errorMessage = registerMutation.error
-    ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (registerMutation.error as any)?.response?.data?.error ||
-      registerMutation.error.message
-    : null;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const errorMessage = registerMutation.error ? (registerMutation.error as any)?.response?.data?.error || registerMutation.error.message : null;
 
   return (
     <>
@@ -60,84 +43,35 @@ export default function RegisterPage() {
         <Train className="h-8 w-8 text-primary" />
         <h1 className="text-2xl font-bold">MRT Jakarta</h1>
       </div>
-
       <Card>
         <CardHeader>
-          <CardTitle>Create Account</CardTitle>
-          <CardDescription>
-            Register to access the station management dashboard
-          </CardDescription>
+          <CardTitle>{t("auth.signUp")}</CardTitle>
+          <CardDescription>{t("auth.registerDescription")}</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            {errorMessage && (
-              <div
-                className="bg-destructive/10 text-destructive text-sm p-3 rounded-md"
-                onClick={() => registerMutation.reset()}
-              >
-                {errorMessage}
-              </div>
-            )}
-
+            {errorMessage && <div className="bg-destructive/10 text-destructive text-sm p-3 rounded-md" onClick={() => registerMutation.reset()}>{errorMessage}</div>}
             <div className="space-y-2">
-              <Label htmlFor="name">Full Name</Label>
-              <Input
-                id="name"
-                placeholder="Enter your name"
-                {...register("name")}
-              />
-              {errors.name && (
-                <p className="text-sm text-destructive">
-                  {errors.name.message}
-                </p>
-              )}
+              <Label htmlFor="name">{t("auth.name")}</Label>
+              <Input id="name" placeholder="Enter your name" {...register("name")} />
+              {errors.name && <p className="text-sm text-destructive">{errors.name.message}</p>}
             </div>
-
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="your@email.com"
-                {...register("email")}
-              />
-              {errors.email && (
-                <p className="text-sm text-destructive">
-                  {errors.email.message}
-                </p>
-              )}
+              <Label htmlFor="email">{t("auth.email")}</Label>
+              <Input id="email" type="email" placeholder="your@email.com" {...register("email")} />
+              {errors.email && <p className="text-sm text-destructive">{errors.email.message}</p>}
             </div>
-
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
-              <Input
-                id="password"
-                type="password"
-                placeholder="Min. 6 characters"
-                {...register("password")}
-              />
-              {errors.password && (
-                <p className="text-sm text-destructive">
-                  {errors.password.message}
-                </p>
-              )}
+              <Label htmlFor="password">{t("auth.password")}</Label>
+              <Input id="password" type="password" placeholder="Min. 6 characters" {...register("password")} />
+              {errors.password && <p className="text-sm text-destructive">{errors.password.message}</p>}
             </div>
-
-            <Button
-              type="submit"
-              className="w-full"
-              disabled={registerMutation.isPending}
-            >
-              {registerMutation.isPending
-                ? "Creating account..."
-                : "Create Account"}
+            <Button type="submit" className="w-full" disabled={registerMutation.isPending}>
+              {registerMutation.isPending ? t("auth.creatingAccount") : t("auth.signUp")}
             </Button>
-
             <p className="text-center text-sm text-muted-foreground">
-              Already have an account?{" "}
-              <Link to="/login" className="text-primary hover:underline">
-                Sign In
-              </Link>
+              {t("auth.hasAccount")}{" "}
+              <Link to="/login" className="text-primary hover:underline">{t("auth.signIn")}</Link>
             </p>
           </form>
         </CardContent>

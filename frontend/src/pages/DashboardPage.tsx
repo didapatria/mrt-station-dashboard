@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { motion } from "framer-motion";
 import {
   MapPin,
@@ -52,6 +53,7 @@ const item = {
 };
 
 export default function DashboardPage() {
+  const { t } = useTranslation();
   const { data: stationsData } = useStations({ limit: 100 });
   const { data: schedulesData } = useSchedules({ limit: 10 });
   const { data: stats, isLoading: statsLoading } = useDashboardStats();
@@ -82,42 +84,42 @@ export default function DashboardPage() {
   const statCards = stats
     ? [
         {
-          title: "Total Stations",
+          title: t("dashboard.totalStations"),
           value: stats.totalStations,
           icon: MapPin,
           color: "text-blue-600 dark:text-blue-400",
           bg: "bg-blue-100 dark:bg-blue-950",
         },
         {
-          title: "Active Stations",
+          title: t("dashboard.activeStations"),
           value: stats.activeStations,
           icon: TrainFront,
           color: "text-emerald-600 dark:text-emerald-400",
           bg: "bg-emerald-100 dark:bg-emerald-950",
         },
         {
-          title: "Active Schedules",
+          title: t("dashboard.activeSchedules"),
           value: stats.activeSchedules,
           icon: Clock,
           color: "text-violet-600 dark:text-violet-400",
           bg: "bg-violet-100 dark:bg-violet-950",
         },
         {
-          title: "Delayed / Maintenance",
+          title: t("dashboard.delayedMaintenance"),
           value: stats.delayedSchedules + stats.maintenanceStations,
           icon: AlertTriangle,
           color: "text-amber-600 dark:text-amber-400",
           bg: "bg-amber-100 dark:bg-amber-950",
         },
         {
-          title: "Total Schedules",
+          title: t("dashboard.totalSchedules"),
           value: stats.totalSchedules,
           icon: BarChart3,
           color: "text-pink-600 dark:text-pink-400",
           bg: "bg-pink-100 dark:bg-pink-950",
         },
         {
-          title: "Total Users",
+          title: t("dashboard.totalUsers"),
           value: stats.totalUsers,
           icon: Users,
           color: "text-cyan-600 dark:text-cyan-400",
@@ -130,19 +132,19 @@ export default function DashboardPage() {
     <div>
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight">Dashboard</h2>
+          <h2 className="text-2xl font-bold tracking-tight">{t("dashboard.title")}</h2>
           <p className="text-muted-foreground">
-            Overview of MRT Jakarta station operations
+            {t("dashboard.subtitle")}
           </p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline" size="sm" onClick={handleExportStations}>
             <Download className="h-4 w-4 mr-2" />
-            Export Stations
+            {t("dashboard.exportStations")}
           </Button>
           <Button variant="outline" size="sm" onClick={handleExportSchedules}>
             <Download className="h-4 w-4 mr-2" />
-            Export Schedules
+            {t("dashboard.exportSchedules")}
           </Button>
         </div>
       </div>
@@ -205,10 +207,10 @@ export default function DashboardPage() {
               <div className="flex items-center justify-between">
                 <div>
                   <CardTitle className="text-lg">
-                    Weekday Schedule Distribution
+                    {t("dashboard.weekdayDistribution")}
                   </CardTitle>
                   <CardDescription>
-                    Number of active schedules per hour
+                    {t("dashboard.schedulesPerHour")}
                   </CardDescription>
                 </div>
                 <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
