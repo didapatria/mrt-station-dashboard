@@ -61,12 +61,18 @@ src/
 ## Features
 
 - **Authentication** - Register/Login with JWT tokens
-- **Dashboard** - Overview with station & schedule statistics
-- **Station Management** - CRUD operations with search & filter
-- **Schedule Management** - Train schedule CRUD with station relations
+- **Dashboard** - Overview with statistics, hourly schedule chart, export CSV
+- **Station Management** - CRUD operations with search, filter, and pagination
+- **Schedule Management** - Train schedule CRUD with station relations and pagination
+- **API Documentation** - Interactive Swagger UI at `/api/docs`
+- **Dark Mode** - Toggle between light and dark themes
+- **Toast Notifications** - Real-time feedback for all actions
+- **Export CSV** - Download station and schedule data as CSV files
+- **Profile Page** - User account information and tech stack overview
 - **Responsive Design** - Mobile-first with sidebar navigation
-- **Animations** - Smooth page transitions and list animations
+- **Animations** - Smooth page transitions and list animations (Framer Motion)
 - **Form Validation** - Client & server-side with Zod schemas
+- **Docker** - Full containerization with docker-compose
 
 ## Getting Started
 
@@ -142,6 +148,25 @@ Operator: operator@mrtjakarta.co.id / operator123
 | POST | `/api/schedules` | Create schedule |
 | PUT | `/api/schedules/:id` | Update schedule |
 | DELETE | `/api/schedules/:id` | Delete schedule |
+
+### Dashboard
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/dashboard/stats` | Dashboard statistics |
+| GET | `/api/dashboard/stations-summary` | Station status summary |
+| GET | `/api/dashboard/schedules-by-hour` | Hourly schedule distribution |
+
+### Export
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/export/stations` | Export stations as CSV |
+| GET | `/api/export/schedules` | Export schedules as CSV |
+
+### Documentation
+| URL | Description |
+|-----|-------------|
+| `/api/docs` | Swagger UI (interactive API docs) |
+| `/api/docs.json` | OpenAPI JSON spec |
 
 ## Database Schema
 
