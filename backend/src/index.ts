@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
+import rateLimit from "express-rate-limit";
 import dotenv from "dotenv";
 import swaggerUi from "swagger-ui-express";
 import { swaggerSpec } from "./config/swagger";
@@ -24,6 +25,25 @@ app.use(helmet({ contentSecurityPolicy: false }));
 app.use(cors({ origin: process.env.CORS_ORIGIN || "http://localhost:5173" }));
 app.use(morgan("dev"));
 app.use(express.json());
+
+// Rate limiting
+const apiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 100,
+  standardHeaders: "draft-7",
+  legacyHeaders: false,
+  message: { success: false, error: "Too many requests, please try again later." },
+});
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 20,
+  standardHeaders: "draft-7",
+  legacyHeaders: false,
+  message: { success: false, error: "Too many login attempts, please try again later." },
+});
+app.use("/api/auth/login", authLimiter);
+app.use("/api/auth/register", authLimiter);
+app.use("/api", apiLimiter);
 
 // Swagger UI
 app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
