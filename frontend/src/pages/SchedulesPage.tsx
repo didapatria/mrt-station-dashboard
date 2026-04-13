@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -59,6 +60,7 @@ import {
 import { useStations } from "@/hooks/use-stations";
 import { SortableTableHead } from "@/components/SortableTableHead";
 import { useSortable } from "@/hooks/use-sortable";
+import { useDebounce } from "@/hooks/use-debounce";
 import { dashboardService } from "@/services/dashboard.service";
 import { useRole } from "@/hooks/use-role";
 import type { Schedule } from "@/types";
@@ -77,17 +79,37 @@ type ScheduleFormData = z.infer<typeof scheduleSchema>;
 
 export default function SchedulesPage() {
   const { isAdmin } = useRole();
-  const [search, setSearch] = useState("");
-  const [page, setPage] = useState(1);
-  const [dayTypeFilter, setDayTypeFilter] = useState<string>("ALL");
-  const [statusFilter, setStatusFilter] = useState<string>("ALL");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [search, setSearch] = useState(searchParams.get("q") ?? "");
+  const [page, setPage] = useState(Number(searchParams.get("page")) || 1);
+  const [dayTypeFilter, setDayTypeFilter] = useState<string>(
+    searchParams.get("dayType") ?? "ALL"
+  );
+  const [statusFilter, setStatusFilter] = useState<string>(
+    searchParams.get("status") ?? "ALL"
+  );
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingSchedule, setEditingSchedule] = useState<Schedule | null>(null);
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
 
+  const debouncedSearch = useDebounce(search, 300);
+
+  useEffect(() => {
+    const params = new URLSearchParams();
+    if (debouncedSearch) params.set("q", debouncedSearch);
+    if (dayTypeFilter !== "ALL") params.set("dayType", dayTypeFilter);
+    if (statusFilter !== "ALL") params.set("status", statusFilter);
+    if (page > 1) params.set("page", String(page));
+    setSearchParams(params, { replace: true });
+  }, [debouncedSearch, dayTypeFilter, statusFilter, page, setSearchParams]);
+
+  useEffect(() => {
+    setPage(1);
+  }, [debouncedSearch, dayTypeFilter, statusFilter]);
+
   const { data, isLoading } = useSchedules({
     page,
-    search: search || undefined,
+    search: debouncedSearch || undefined,
     dayType: dayTypeFilter !== "ALL" ? dayTypeFilter : undefined,
     status: statusFilter !== "ALL" ? statusFilter : undefined,
     limit: 15,

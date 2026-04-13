@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import { useForm, type Resolver } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -58,6 +59,7 @@ import {
 } from "@/hooks/use-stations";
 import { SortableTableHead } from "@/components/SortableTableHead";
 import { useSortable } from "@/hooks/use-sortable";
+import { useDebounce } from "@/hooks/use-debounce";
 import { dashboardService } from "@/services/dashboard.service";
 import { useRole } from "@/hooks/use-role";
 import type { Station } from "@/types";
@@ -76,16 +78,33 @@ type StationFormData = z.infer<typeof stationSchema>;
 
 export default function StationsPage() {
   const { isAdmin } = useRole();
-  const [search, setSearch] = useState("");
-  const [page, setPage] = useState(1);
-  const [statusFilter, setStatusFilter] = useState<string>("ALL");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [search, setSearch] = useState(searchParams.get("q") ?? "");
+  const [page, setPage] = useState(Number(searchParams.get("page")) || 1);
+  const [statusFilter, setStatusFilter] = useState<string>(
+    searchParams.get("status") ?? "ALL"
+  );
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingStation, setEditingStation] = useState<Station | null>(null);
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
 
+  const debouncedSearch = useDebounce(search, 300);
+
+  useEffect(() => {
+    const params = new URLSearchParams();
+    if (debouncedSearch) params.set("q", debouncedSearch);
+    if (statusFilter !== "ALL") params.set("status", statusFilter);
+    if (page > 1) params.set("page", String(page));
+    setSearchParams(params, { replace: true });
+  }, [debouncedSearch, statusFilter, page, setSearchParams]);
+
+  useEffect(() => {
+    setPage(1);
+  }, [debouncedSearch, statusFilter]);
+
   const { data, isLoading } = useStations({
     page,
-    search: search || undefined,
+    search: debouncedSearch || undefined,
     status: statusFilter !== "ALL" ? statusFilter : undefined,
     limit: 12,
   });
