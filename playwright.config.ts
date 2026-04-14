@@ -22,12 +22,12 @@ export default defineConfig({
   projects: [
     {
       name: "auth-tests",
-      testMatch: /auth\.spec\.ts/,
+      testMatch: /auth.*\.spec\.ts/,
       use: { ...devices["Desktop Chrome"] },
     },
     {
       name: "admin-tests",
-      testIgnore: /auth\.spec\.ts/,
+      testIgnore: /auth.*\.spec\.ts/,
       use: {
         ...devices["Desktop Chrome"],
         storageState: "e2e/.auth/admin.json",
