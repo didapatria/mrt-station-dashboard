@@ -182,7 +182,7 @@ export default function ProfilePage() {
                     <Label htmlFor="currentPassword">{t("profile.currentPassword")}</Label>
                     <div className="relative">
                       <Input id="currentPassword" type={showCurrent ? "text" : "password"} {...register("currentPassword")} />
-                      <Button type="button" variant="ghost" size="icon" className="absolute right-0 top-0 h-full w-10" onClick={() => setShowCurrent(!showCurrent)}>
+                      <Button type="button" variant="ghost" size="icon" className="absolute right-0 top-0 h-full w-10" tabIndex={-1} onClick={() => setShowCurrent(!showCurrent)}>
                         {showCurrent ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                       </Button>
                     </div>
@@ -192,7 +192,7 @@ export default function ProfilePage() {
                     <Label htmlFor="newPassword">{t("profile.newPassword")}</Label>
                     <div className="relative">
                       <Input id="newPassword" type={showNew ? "text" : "password"} {...register("newPassword")} />
-                      <Button type="button" variant="ghost" size="icon" className="absolute right-0 top-0 h-full w-10" onClick={() => setShowNew(!showNew)}>
+                      <Button type="button" variant="ghost" size="icon" className="absolute right-0 top-0 h-full w-10" tabIndex={-1} onClick={() => setShowNew(!showNew)}>
                         {showNew ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                       </Button>
                     </div>
