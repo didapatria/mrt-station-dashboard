@@ -119,12 +119,9 @@ export default function ChangelogPage() {
                 {i === 0 && <Badge variant="success" className="text-[10px]">Latest</Badge>}
               </div>
               <Separator className="mb-4" />
-              <ul className="space-y-2">
+              <ul className="list-disc list-inside space-y-1.5 text-sm marker:text-primary">
                 {release.items.map((item) => (
-                  <li key={item} style={{ display: "flex", flexDirection: "row", alignItems: "flex-start", gap: "0.5rem" }} className="text-sm">
-                    <span className="text-primary mt-1.5 shrink-0">•</span>
-                    <span>{item}</span>
-                  </li>
+                  <li key={item}>{item}</li>
                 ))}
               </ul>
             </CardContent>
