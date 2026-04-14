@@ -20,6 +20,7 @@ const MapPage = lazy(() => import("@/pages/MapPage"));
 const UsersPage = lazy(() => import("@/pages/UsersPage"));
 const ActivityLogPage = lazy(() => import("@/pages/ActivityLogPage"));
 const StationDetailPage = lazy(() => import("@/pages/StationDetailPage"));
+const SettingsPage = lazy(() => import("@/pages/SettingsPage"));
 const ChangelogPage = lazy(() => import("@/pages/ChangelogPage"));
 const NotFoundPage = lazy(() => import("@/pages/NotFoundPage"));
 
@@ -77,6 +78,7 @@ function App() {
                 <Route path="/map" element={<MapPage />} />
                 <Route path="/users" element={<UsersPage />} />
                 <Route path="/activity" element={<ActivityLogPage />} />
+            <Route path="/settings" element={<SettingsPage />} />
             <Route path="/changelog" element={<ChangelogPage />} />
                 <Route path="/profile" element={<ProfilePage />} />
               </Route>

@@ -64,6 +64,7 @@ const navItems: NavItem[] = [
   { to: "/map", icon: Map, labelKey: "nav.stationMap" },
   { to: "/users", icon: Users, labelKey: "nav.users", adminOnly: true },
   { to: "/activity", icon: Activity, labelKey: "nav.activityLog" },
+  { to: "/settings", icon: Settings, labelKey: "nav.settings" },
   { to: "/changelog", icon: History, labelKey: "nav.changelog" },
   { to: "/profile", icon: User, labelKey: "nav.profile" },
 ];
