@@ -47,6 +47,7 @@ import { useStations } from "@/hooks/use-stations";
 import { useSchedules } from "@/hooks/use-schedules";
 import { useDashboardStats, useSchedulesByHour } from "@/hooks/use-dashboard";
 import { dashboardService } from "@/services/dashboard.service";
+import { useAuthStore } from "@/store/auth.store";
 import { exportDashboardPDF } from "@/lib/export-pdf";
 
 const container = {
@@ -64,6 +65,7 @@ const item = {
 
 export default function DashboardPage() {
   const { t } = useTranslation();
+  const user = useAuthStore((s) => s.user);
   const { data: stationsData } = useStations({ limit: 100 });
   const { data: schedulesData } = useSchedules({ limit: 10 });
   const { data: stats, isLoading: statsLoading } = useDashboardStats();
@@ -138,8 +140,31 @@ export default function DashboardPage() {
       ]
     : [];
 
+  const greeting = (() => {
+    const h = new Date().getHours();
+    if (h < 12) return "Good Morning";
+    if (h < 17) return "Good Afternoon";
+    return "Good Evening";
+  })();
+
   return (
     <div>
+      {/* Welcome Banner */}
+      <Card className="mb-6 bg-primary text-primary-foreground shadow-md">
+        <CardContent className="p-6" style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+          <div>
+            <h2 className="text-xl font-bold">{greeting}, {user?.name?.split(" ")[0]}!</h2>
+            <p className="text-primary-foreground/80 text-sm mt-1">{t("dashboard.subtitle")}</p>
+          </div>
+          {stats && (
+            <div className="hidden sm:flex gap-6 text-right">
+              <div><p className="text-2xl font-bold">{stats.totalStations}</p><p className="text-xs text-primary-foreground/70">{t("dashboard.totalStations")}</p></div>
+              <div><p className="text-2xl font-bold">{stats.activeSchedules}</p><p className="text-xs text-primary-foreground/70">{t("dashboard.activeSchedules")}</p></div>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>
           <h2 className="text-2xl font-bold tracking-tight">

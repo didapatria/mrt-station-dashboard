@@ -20,6 +20,7 @@ const MapPage = lazy(() => import("@/pages/MapPage"));
 const UsersPage = lazy(() => import("@/pages/UsersPage"));
 const ActivityLogPage = lazy(() => import("@/pages/ActivityLogPage"));
 const StationDetailPage = lazy(() => import("@/pages/StationDetailPage"));
+const RoutePlannerPage = lazy(() => import("@/pages/RoutePlannerPage"));
 const SettingsPage = lazy(() => import("@/pages/SettingsPage"));
 const ChangelogPage = lazy(() => import("@/pages/ChangelogPage"));
 const NotFoundPage = lazy(() => import("@/pages/NotFoundPage"));
@@ -76,6 +77,7 @@ function App() {
                 <Route path="/stations/:id" element={<StationDetailPage />} />
                 <Route path="/schedules" element={<SchedulesPage />} />
                 <Route path="/map" element={<MapPage />} />
+                <Route path="/route-planner" element={<RoutePlannerPage />} />
                 <Route path="/users" element={<UsersPage />} />
                 <Route path="/activity" element={<ActivityLogPage />} />
                 <Route path="/settings" element={<SettingsPage />} />

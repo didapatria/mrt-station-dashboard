@@ -1,7 +1,8 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { motion } from "framer-motion";
-import { ArrowLeft, MapPin, Clock, Navigation } from "lucide-react";
+import { ArrowLeft, MapPin, Clock, Navigation, Copy } from "lucide-react";
+import { toast } from "sonner";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -36,7 +37,7 @@ export default function StationDetailPage() {
             <Card>
               <CardHeader>
                 <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "1rem" }}>
-                  <div className="h-14 w-14 rounded-xl bg-primary/10 flex items-center justify-center text-xl font-bold text-primary">{station.code}</div>
+                  <button className="h-14 w-14 rounded-xl bg-primary/10 flex items-center justify-center text-xl font-bold text-primary hover:bg-primary/20 transition-colors" onClick={() => { navigator.clipboard.writeText(station.code); toast.success(`Copied: ${station.code}`); }}>{station.code}</button>
                   <div>
                     <CardTitle className="text-xl">{station.name}</CardTitle>
                     <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "0.5rem", marginTop: "0.25rem" }}>
@@ -50,7 +51,7 @@ export default function StationDetailPage() {
               <CardContent className="pt-6 space-y-3">
                 <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "0.5rem" }} className="text-sm"><MapPin className="h-4 w-4 text-muted-foreground" />{station.location}</div>
                 {station.latitude && station.longitude && (
-                  <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "0.5rem" }} className="text-sm"><Navigation className="h-4 w-4 text-muted-foreground" /><span className="font-mono text-xs">{station.latitude.toFixed(6)}, {station.longitude.toFixed(6)}</span></div>
+                  <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "0.5rem" }} className="text-sm"><Navigation className="h-4 w-4 text-muted-foreground" /><span className="font-mono text-xs">{station.latitude.toFixed(6)}, {station.longitude.toFixed(6)}</span><button className="text-muted-foreground hover:text-foreground" onClick={() => { navigator.clipboard.writeText(`${station.latitude}, ${station.longitude}`); toast.success("Coordinates copied"); }}><Copy className="h-3 w-3" /></button></div>
                 )}
               </CardContent>
             </Card>

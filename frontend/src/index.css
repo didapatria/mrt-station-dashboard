@@ -156,3 +156,21 @@
 .leaflet-popup-pane {
   z-index: 20 !important;
 }
+
+/* Print styles */
+@media print {
+  aside, header, nav, [data-tour], .leaflet-control {
+    display: none !important;
+  }
+  main {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+  .lg\:pl-60, .lg\:pl-16 {
+    padding-left: 0 !important;
+  }
+  body {
+    background: white !important;
+    color: black !important;
+  }
+}

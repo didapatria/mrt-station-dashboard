@@ -20,6 +20,8 @@ import {
   PanelLeftClose,
   PanelLeft,
   History,
+  RefreshCw,
+  Navigation,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -43,6 +45,7 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 import { LanguageToggle } from "@/components/LanguageToggle";
 import { CommandSearch } from "@/components/CommandSearch";
 import { useRole } from "@/hooks/use-role";
+import { useQueryClient } from "@tanstack/react-query";
 import { PageBreadcrumb } from "@/components/PageBreadcrumb";
 import { useRealtimeNotifications } from "@/hooks/use-sse";
 import { NotificationCenter } from "@/components/NotificationCenter";
@@ -63,6 +66,7 @@ const navItems: NavItem[] = [
   { to: "/stations", icon: MapPin, labelKey: "nav.stations" },
   { to: "/schedules", icon: Clock, labelKey: "nav.schedules" },
   { to: "/map", icon: Map, labelKey: "nav.stationMap" },
+  { to: "/route-planner", icon: Navigation, labelKey: "nav.routePlanner" },
   { to: "/users", icon: Users, labelKey: "nav.users", adminOnly: true },
   { to: "/activity", icon: Activity, labelKey: "nav.activityLog" },
   { to: "/settings", icon: Settings, labelKey: "nav.settings" },
@@ -116,6 +120,7 @@ export default function DashboardLayout() {
   const navigate = useNavigate();
   const [sheetOpen, setSheetOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
+  const queryClient = useQueryClient();
   useRealtimeNotifications();
 
   if (!token) return <Navigate to="/login" replace />;
@@ -257,6 +262,9 @@ export default function DashboardLayout() {
             </kbd>
           </Button>
 
+          <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground" onClick={() => queryClient.invalidateQueries()}>
+            <RefreshCw className="h-4 w-4" />
+          </Button>
           <CommandSearch />
           <KeyboardShortcuts />
           <span data-tour="notifications"><NotificationCenter /></span>
