@@ -7,8 +7,12 @@ const pathToKey: Record<string, string> = {
   stations: "nav.stations",
   schedules: "nav.schedules",
   map: "nav.stationMap",
+  "route-planner": "nav.routePlanner",
+  compare: "nav.compare",
   users: "nav.users",
   activity: "nav.activityLog",
+  settings: "nav.settings",
+  changelog: "nav.changelog",
   profile: "nav.profile",
 };
 

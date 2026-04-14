@@ -14,6 +14,10 @@ Full-stack web application for managing MRT Jakarta stations and train schedules
 - **Framer Motion** - Smooth animations
 - **React Router v7** - Client-side routing
 - **Axios** - HTTP client
+- **Recharts** - Charts and data visualization
+- **react-i18next** - Internationalization (EN/ID)
+- **jsPDF** - PDF report generation
+- **react-joyride** - Onboarding tour
 - **Vitest** + **React Testing Library** - Testing
 
 ### Backend
@@ -107,7 +111,20 @@ React Page → TanStack Query Hook → API Service (axios) → Express Route →
 - **Interactive Station Map** - Leaflet-powered map with route visualization and station markers
 - **Role-Based Access** - Admin vs Operator UI with conditional CRUD actions
 - **CI/CD** - GitHub Actions pipeline with lint, type check, test, and build
-- **Testing** - Vitest + React Testing Library with 13+ tests
+- **Testing** - Vitest + React Testing Library + Supertest + Playwright
+- **Real-time Notifications** - Server-Sent Events with notification center
+- **i18n** - English and Indonesian language support
+- **Route Planner** - Find schedules between stations
+- **Station Comparison** - Side-by-side station compare
+- **Activity/Audit Log** - Track all data changes with CSV export
+- **User Management** - Admin CRUD with role assignment
+- **PDF Export** - Generate dashboard reports with jsPDF
+- **PWA** - Installable progressive web app
+- **Change Password** - Secure password update with validation
+- **Onboarding Tour** - Guided tour for new users
+- **Keyboard Shortcuts** - Cmd+K search, ? for shortcuts help
+- **Settings Page** - Language, theme, notification preferences
+- **Changelog** - Version history and release notes
 - **Docker** - Full containerization with docker-compose
 
 ## Getting Started

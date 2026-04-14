@@ -1,7 +1,7 @@
 # MRT Station Management Dashboard
 
 ## Project Overview
-Full-stack web application for managing MRT Jakarta stations and schedules. Built as a portfolio project demonstrating MERN-like stack proficiency.
+Full-stack web application for managing MRT Jakarta stations and schedules. Built as a portfolio project demonstrating full-stack proficiency with 85+ commits, 14+ pages, 40+ features.
 
 ## Commands
 
@@ -12,6 +12,7 @@ Full-stack web application for managing MRT Jakarta stations and schedules. Buil
 - Database migrate: `npx prisma migrate dev`
 - Database seed: `npm run seed`
 - Generate Prisma client: `npx prisma generate`
+- Test: `NODE_ENV=test npm run test:run`
 
 ### Frontend (`/frontend`)
 - Dev server: `npm run dev`
@@ -29,26 +30,35 @@ Full-stack web application for managing MRT Jakarta stations and schedules. Buil
 ## Tech Stack
 
 ### Frontend
-- React 19 + TypeScript (Vite)
-- Tailwind CSS 4 + Shadcn UI (styling & UI components)
-- Zustand (client state management: auth token, theme)
+- React 19 + TypeScript (Vite 8)
+- Tailwind CSS 4 + Shadcn UI (19+ components)
+- Zustand (client state: auth token, theme)
 - TanStack Query (server state: data fetching, caching, mutations)
 - React Hook Form + Zod (form handling & validation)
+- Recharts (charts: bar, pie)
 - Leaflet + React-Leaflet (interactive maps)
+- react-i18next (internationalization: EN/ID)
+- jsPDF + jspdf-autotable (PDF report export)
+- react-joyride (onboarding tour)
 - Framer Motion (animations)
-- React Router v7 (routing)
+- React Router v7 (routing with lazy loading)
 - Axios (HTTP client)
 - Vitest + React Testing Library (testing)
 
 ### Backend
-- Node.js + Express.js + TypeScript
+- Node.js + Express.js 5 + TypeScript
 - Prisma ORM + PostgreSQL
 - JWT authentication (jsonwebtoken + bcryptjs)
 - Zod (request validation)
+- express-rate-limit (API rate limiting)
+- Server-Sent Events (real-time notifications)
+- Swagger/OpenAPI documentation
 
 ### Infrastructure
 - Docker + docker-compose (PostgreSQL, backend, frontend)
 - GitHub Actions CI/CD (lint, type check, test, build)
+- PWA (manifest, service worker, offline map tiles)
+- Playwright (E2E testing)
 
 ## Architecture
 
@@ -56,11 +66,12 @@ Full-stack web application for managing MRT Jakarta stations and schedules. Buil
 ```
 src/
 ├── components/     # Reusable UI components (Shadcn + custom)
-├── pages/          # Route page components
-├── hooks/          # TanStack Query hooks (use-stations, use-schedules, use-dashboard, use-auth)
-├── store/          # Zustand stores (auth, theme — client state only)
+├── pages/          # 14 route page components (lazy loaded)
+├── hooks/          # TanStack Query hooks + custom hooks
+├── store/          # Zustand stores (auth, theme)
 ├── services/       # API service layer (axios)
-├── lib/            # Utility functions
+├── i18n/           # Internationalization (en.json, id.json)
+├── lib/            # Utility functions (cn, export-pdf)
 ├── types/          # TypeScript type definitions
 └── layouts/        # Layout components (auth, dashboard)
 ```
@@ -68,32 +79,38 @@ src/
 ### Backend (`/backend/src`)
 ```
 src/
-├── controllers/    # Request handlers
-├── middlewares/     # Auth, error handling, validation
+├── controllers/    # Request handlers (auth, station, schedule, user, activity-log)
+├── middlewares/     # Auth, admin, error handling, validation, rate limiting
 ├── routes/         # Express route definitions
-├── services/       # Business logic layer
+├── services/       # Business logic (+ activity-log, sse)
 ├── validators/     # Zod schemas for request validation
+├── __tests__/      # API tests (Supertest)
 └── prisma/         # Schema, migrations, seed
 ```
+
+## Pages
+- Dashboard, Stations, Station Detail, Schedules, Station Map
+- Route Planner, Station Compare, Users (Admin), Activity Log
+- Settings, Changelog, Profile, 404
 
 ## Data Flow
 ```
 React Page → TanStack Query Hook → API Service (axios) → Express Route → Controller → Service → Prisma → PostgreSQL
 ```
 
-## State Management Strategy
-- **Server state** (stations, schedules, dashboard stats, user profile): Managed by TanStack Query with automatic caching (5min staleTime), background refetching, and mutation invalidation
-- **Client state** (auth token, theme preference): Managed by Zustand with localStorage persistence
+## State Management
+- **Server state**: TanStack Query (5min staleTime, auto-invalidation)
+- **Client state**: Zustand + localStorage (auth token, theme, language)
 
 ## Rules
 - Use TypeScript strict mode in both frontend and backend
-- API responses follow consistent envelope: `{ success, data?, message?, error? }`
-- All form inputs validated with Zod schemas (shared patterns between FE/BE)
+- API responses follow envelope: `{ success, data?, message?, error?, meta? }`
+- All form inputs validated with Zod schemas
 - Use named exports, never default exports (except pages for lazy loading)
 - Backend controllers are thin — business logic goes in services
-- Frontend components are functional components with hooks only
-- Environment variables via `.env` files (never commit secrets)
-- Server state uses TanStack Query hooks in `hooks/` directory, not Zustand
-- Mutations use `useMutation` with `queryClient.invalidateQueries` for cache sync
-- RBAC: use `useRole()` hook to check `isAdmin`/`isOperator` for conditional UI
-- Tests: co-locate test files with source (`foo.ts` → `foo.test.ts`), use Vitest + RTL
+- Server state uses TanStack Query hooks, not Zustand
+- Mutations use `useMutation` with `queryClient.invalidateQueries`
+- RBAC: use `useRole()` hook for conditional UI
+- i18n: use `t()` for all user-facing strings
+- Use inline styles for flex layouts to prevent linter issues
+- Tests: co-locate with source, use Vitest + RTL

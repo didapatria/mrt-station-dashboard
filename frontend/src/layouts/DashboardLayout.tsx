@@ -24,7 +24,7 @@ import {
   Navigation,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Sheet,
   SheetContent,
@@ -61,18 +61,43 @@ interface NavItem {
   adminOnly?: boolean;
 }
 
-const navItems: NavItem[] = [
-  { to: "/dashboard", icon: LayoutDashboard, labelKey: "nav.dashboard" },
-  { to: "/stations", icon: MapPin, labelKey: "nav.stations" },
-  { to: "/schedules", icon: Clock, labelKey: "nav.schedules" },
-  { to: "/map", icon: Map, labelKey: "nav.stationMap" },
-  { to: "/route-planner", icon: Navigation, labelKey: "nav.routePlanner" },
-  { to: "/compare", icon: LayoutDashboard, labelKey: "nav.compare" },
-  { to: "/users", icon: Users, labelKey: "nav.users", adminOnly: true },
-  { to: "/activity", icon: Activity, labelKey: "nav.activityLog" },
-  { to: "/settings", icon: Settings, labelKey: "nav.settings" },
-  { to: "/changelog", icon: History, labelKey: "nav.changelog" },
-  { to: "/profile", icon: User, labelKey: "nav.profile" },
+interface NavGroup {
+  labelKey: string;
+  items: NavItem[];
+}
+
+const navGroups: NavGroup[] = [
+  {
+    labelKey: "nav.menu",
+    items: [
+      { to: "/dashboard", icon: LayoutDashboard, labelKey: "nav.dashboard" },
+    ],
+  },
+  {
+    labelKey: "nav.operations",
+    items: [
+      { to: "/stations", icon: MapPin, labelKey: "nav.stations" },
+      { to: "/schedules", icon: Clock, labelKey: "nav.schedules" },
+      { to: "/map", icon: Map, labelKey: "nav.stationMap" },
+      { to: "/route-planner", icon: Navigation, labelKey: "nav.routePlanner" },
+      { to: "/compare", icon: LayoutDashboard, labelKey: "nav.compare" },
+    ],
+  },
+  {
+    labelKey: "nav.management",
+    items: [
+      { to: "/users", icon: Users, labelKey: "nav.users", adminOnly: true },
+      { to: "/activity", icon: Activity, labelKey: "nav.activityLog" },
+    ],
+  },
+  {
+    labelKey: "nav.system",
+    items: [
+      { to: "/settings", icon: Settings, labelKey: "nav.settings" },
+      { to: "/changelog", icon: History, labelKey: "nav.changelog" },
+      { to: "/profile", icon: User, labelKey: "nav.profile" },
+    ],
+  },
 ];
 
 function NavItemLink({
@@ -131,7 +156,10 @@ export default function DashboardLayout() {
     navigate("/login");
   };
 
-  const visibleNav = navItems.filter((item) => !item.adminOnly || isAdmin);
+  const visibleGroups = navGroups.map((g) => ({
+    ...g,
+    items: g.items.filter((item) => !item.adminOnly || isAdmin),
+  })).filter((g) => g.items.length > 0);
   const sidebarWidth = collapsed ? "w-16" : "w-60";
   const sidebarPl = collapsed ? "lg:pl-16" : "lg:pl-60";
 
@@ -165,23 +193,27 @@ export default function DashboardLayout() {
         )}
       </div>
 
-      <nav className="flex-1 overflow-y-auto px-3 py-3">
-        {!collapsed && (
-          <p className="px-2 mb-2 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
-            {t("nav.menu")}
-          </p>
-        )}
-        <div className="space-y-1" data-tour="sidebar-nav">
-          {visibleNav.map((item) => (
-            <NavItemLink
-              key={item.to}
-              item={item}
-              onClick={onNavClick}
-              collapsed={collapsed}
-              t={t}
+      <nav className="flex-1 overflow-y-auto px-3 py-3" data-tour="sidebar-nav">
+        {visibleGroups.map((group) => (
+          <div key={group.labelKey} className="mb-3">
+            {!collapsed && (
+              <p className="px-2 mb-1.5 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
+                {t(group.labelKey)}
+              </p>
+            )}
+            <div className="space-y-0.5">
+              {group.items.map((item) => (
+                <NavItemLink
+                  key={item.to}
+                  item={item}
+                  onClick={onNavClick}
+                  collapsed={collapsed}
+                  t={t}
             />
-          ))}
-        </div>
+              ))}
+            </div>
+          </div>
+        ))}
       </nav>
     </div>
   );
@@ -277,6 +309,7 @@ export default function DashboardLayout() {
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="sm" className="gap-2 px-2" data-tour="user-menu">
                 <Avatar className="h-7 w-7">
+                  <AvatarImage src={`https://api.dicebear.com/9.x/initials/svg?seed=${encodeURIComponent(user?.name || "")}`} />
                   <AvatarFallback className="bg-primary text-primary-foreground text-[10px] font-bold">
                     {user?.name?.charAt(0).toUpperCase()}
                   </AvatarFallback>

@@ -11,7 +11,10 @@
     "compare": "Compare",
     "settings": "Settings",
     "changelog": "Changelog",
-    "menu": "Menu"
+    "menu": "Menu",
+    "operations": "Operations",
+    "management": "Management",
+    "system": "System"
   },
   "common": {
     "search": "Search...",

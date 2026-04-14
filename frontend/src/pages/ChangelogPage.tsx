@@ -5,6 +5,23 @@ import { Separator } from "@/components/ui/separator";
 
 const changelog = [
   {
+    version: "2.2.0",
+    date: "April 2026",
+    items: [
+      "Route Planner — find schedules between stations",
+      "Station Comparison — side-by-side station compare",
+      "Dashboard welcome banner with time-based greeting",
+      "Data refresh button in header",
+      "Table column visibility toggle",
+      "Copy to clipboard (station code, coordinates)",
+      "Print-friendly CSS for reports",
+      "Activity log CSV export",
+      "DiceBear avatar images",
+      "System status API endpoint",
+      "Grouped sidebar navigation",
+    ],
+  },
+  {
     version: "2.1.0",
     date: "April 2026",
     items: [
@@ -13,6 +30,12 @@ const changelog = [
       "Keyboard shortcuts help modal (?)",
       "Changelog page",
       "Profile page two-column layout with preferences",
+      "CSV import for bulk station creation",
+      "Schedule timeline view",
+      "Settings page",
+      "Station detail page with schedules and map",
+      "Schedule conflict detection",
+      "Onboarding tour for new users",
     ],
   },
   {
