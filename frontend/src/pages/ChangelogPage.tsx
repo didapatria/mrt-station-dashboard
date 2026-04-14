@@ -84,7 +84,7 @@ export default function ChangelogPage() {
         <p className="text-muted-foreground">Version history and release notes</p>
       </div>
 
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="max-w-3xl space-y-6">
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
         {changelog.map((release, i) => (
           <Card key={release.version} className="shadow-sm">
             <CardContent className="p-6">

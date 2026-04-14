@@ -47,6 +47,7 @@ import { PageBreadcrumb } from "@/components/PageBreadcrumb";
 import { useRealtimeNotifications } from "@/hooks/use-sse";
 import { NotificationCenter } from "@/components/NotificationCenter";
 import { KeyboardShortcuts } from "@/components/KeyboardShortcuts";
+import { OnboardingTour } from "@/components/OnboardingTour";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 
@@ -164,7 +165,7 @@ export default function DashboardLayout() {
             {t("nav.menu")}
           </p>
         )}
-        <div className="space-y-1">
+        <div className="space-y-1" data-tour="sidebar-nav">
           {visibleNav.map((item) => (
             <NavItemLink
               key={item.to}
@@ -181,6 +182,7 @@ export default function DashboardLayout() {
 
   return (
     <div className="min-h-screen bg-muted/40">
+      <OnboardingTour />
       <aside
         className={cn(
           "fixed top-0 left-0 z-40 h-full bg-card border-r hidden lg:flex lg:flex-col transition-all duration-200",
@@ -236,6 +238,7 @@ export default function DashboardLayout() {
           <div className="flex-1" />
 
           <Button
+            data-tour="search-btn"
             variant="outline"
             size="sm"
             className="hidden sm:inline-flex items-center gap-2 text-muted-foreground w-48 justify-between"
@@ -256,14 +259,14 @@ export default function DashboardLayout() {
 
           <CommandSearch />
           <KeyboardShortcuts />
-          <NotificationCenter />
-          <LanguageToggle />
-          <ThemeToggle />
+          <span data-tour="notifications"><NotificationCenter /></span>
+          <span data-tour="language"><LanguageToggle /></span>
+          <span data-tour="theme"><ThemeToggle /></span>
           <Separator orientation="vertical" className="h-5" />
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="sm" className="gap-2 px-2">
+              <Button variant="ghost" size="sm" className="gap-2 px-2" data-tour="user-menu">
                 <Avatar className="h-7 w-7">
                   <AvatarFallback className="bg-primary text-primary-foreground text-[10px] font-bold">
                     {user?.name?.charAt(0).toUpperCase()}

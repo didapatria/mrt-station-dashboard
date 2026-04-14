@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, Link } from "react-router-dom";
 import { useForm, type Resolver } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -411,7 +411,7 @@ export default function StationsPage() {
                               {station.code}
                             </div>
                             <div>
-                              <a href={`/stations/${station.id}`} className="font-medium hover:text-primary hover:underline">{station.name}</a>
+                              <Link to={`/stations/${station.id}`} className="font-medium hover:text-primary hover:underline">{station.name}</Link>
                               <p className="text-xs text-muted-foreground md:hidden">
                                 {station.location}
                               </p>

@@ -22,7 +22,7 @@ export default function SettingsPage() {
         <p className="text-muted-foreground">Manage your application preferences</p>
       </div>
 
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="max-w-2xl space-y-6">
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="grid gap-6 lg:grid-cols-2">
         <Card>
           <CardHeader>
             <CardTitle className="text-lg" style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "0.5rem" }}><Globe className="h-4 w-4" />Language</CardTitle>
