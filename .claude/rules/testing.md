@@ -2,10 +2,12 @@
 paths:
   - "**/*.test.ts"
   - "**/*.test.tsx"
+  - "e2e/**/*.spec.ts"
 ---
 
 # Testing Rules
 
+## Unit Tests (Vitest + RTL)
 - Use Vitest + React Testing Library (frontend)
 - Co-locate test files with source: `foo.ts` → `foo.test.ts`
 - Use descriptive test names: "should [expected] when [condition]"
@@ -14,3 +16,17 @@ paths:
 - For Zustand stores: use `useStore.setState()` and `useStore.getState()` for direct testing
 - For hooks: use `renderHook` from `@testing-library/react`
 - Mock external services (API calls), not internal modules
+
+## E2E Tests (Playwright)
+- Test files live in `/e2e/*.spec.ts`, fixtures in `/e2e/fixtures/`
+- Use `adminPage` fixture for authenticated tests (auto-login via storageState)
+- Use `operatorPage` fixture to test operator role restrictions
+- Use `navigateTo(page, "/path")` for SPA navigation — it clicks sidebar links
+- Never use `waitForLoadState("networkidle")` — SSE keeps connections open
+- Use `page.waitForTimeout(2000)` after navigation for data to load
+- Combine related assertions in one test to reduce browser context creation
+- For Radix/Shadcn selects: click `button[role='combobox']`, then `getByRole("option")`
+- For dialogs: use `page.locator("[role='dialog']")`
+- For ambiguous locators: always add `.first()` to avoid strict mode errors
+- Global setup (`e2e/global-setup.ts`) logs in and saves storageState for both roles
+- Config uses two projects: `auth-tests` (no auth) and `admin-tests` (with storageState)

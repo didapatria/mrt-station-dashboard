@@ -22,6 +22,16 @@ Full-stack web application for managing MRT Jakarta stations and schedules. Buil
 - Test: `npm run test:run`
 - Test watch: `npm test`
 
+### E2E Tests (`/e2e`) — Playwright
+- Prerequisites: both backend and frontend must be running
+- Run all: `npm run e2e` (from project root)
+- Run headed (see browser): `npm run e2e:headed`
+- Run with UI mode: `npm run e2e:ui`
+- Run single file: `npx playwright test e2e/stations.spec.ts`
+- Run by grep: `npx playwright test -g "should create"`
+- Show last report: `npm run e2e:report`
+- Debug mode: `npx playwright test --debug`
+
 ### Docker
 - Start all services: `docker-compose up -d`
 - Stop all services: `docker-compose down`
@@ -114,3 +124,6 @@ React Page → TanStack Query Hook → API Service (axios) → Express Route →
 - i18n: use `t()` for all user-facing strings
 - Use inline styles for flex layouts to prevent linter issues
 - Tests: co-locate with source, use Vitest + RTL
+- E2E: Playwright tests in `/e2e`, use `adminPage` fixture for authenticated tests
+- E2E: use `navigateTo(page, "/path")` for SPA navigation (sidebar link clicks)
+- E2E: never use `waitForLoadState("networkidle")` — SSE connections prevent it

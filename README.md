@@ -111,7 +111,8 @@ React Page → TanStack Query Hook → API Service (axios) → Express Route →
 - **Interactive Station Map** - Leaflet-powered map with route visualization and station markers
 - **Role-Based Access** - Admin vs Operator UI with conditional CRUD actions
 - **CI/CD** - GitHub Actions pipeline with lint, type check, test, and build
-- **Testing** - Vitest + React Testing Library + Supertest + Playwright
+- **Unit Testing** - Vitest + React Testing Library + Supertest
+- **E2E Testing** - Playwright (34 tests across 13 spec files)
 - **Real-time Notifications** - Server-Sent Events with notification center
 - **i18n** - English and Indonesian language support
 - **Route Planner** - Find schedules between stations
@@ -220,6 +221,59 @@ Operator: operator@mrtjakarta.co.id / operator123
 |-----|-------------|
 | `/api/docs` | Swagger UI (interactive API docs) |
 | `/api/docs.json` | OpenAPI JSON spec |
+
+## E2E Testing (Playwright)
+
+### Prerequisites
+Both backend and frontend must be running:
+```bash
+# Terminal 1 — Backend
+cd backend && npm run dev
+
+# Terminal 2 — Frontend
+cd frontend && npm run dev
+```
+
+### Running Tests
+```bash
+# Run all tests (headless)
+npm run e2e
+
+# Run with browser visible
+npm run e2e:headed
+
+# Run with Playwright UI (interactive)
+npm run e2e:ui
+
+# Run a specific test file
+npx playwright test e2e/stations.spec.ts
+
+# Run tests matching a name
+npx playwright test -g "should create"
+
+# Debug mode (step through tests)
+npx playwright test --debug
+
+# Show HTML report from last run
+npm run e2e:report
+```
+
+### Test Coverage (34 tests)
+| Spec File | Tests | What's Tested |
+|-----------|-------|---------------|
+| `auth.spec.ts` | 11 | Login, register, validation, auth guard, 404 |
+| `dashboard.spec.ts` | 2 | Stats, charts, tabs, export buttons |
+| `stations.spec.ts` | 3 | List, search, sort, pagination, detail, CRUD |
+| `schedules.spec.ts` | 2 | List, search, timeline, CRUD |
+| `users.spec.ts` | 2 | List, search, RBAC |
+| `map.spec.ts` | 2 | Leaflet map, sidebar search |
+| `route-planner.spec.ts` | 1 | Station selection, results |
+| `station-compare.spec.ts` | 1 | Side-by-side comparison |
+| `activity-log.spec.ts` | 1 | Entries, filter, CSV export |
+| `settings.spec.ts` | 2 | Language/theme toggle |
+| `profile.spec.ts` | 2 | Profile info, password validation |
+| `changelog.spec.ts` | 1 | Version display |
+| `navigation.spec.ts` | 4 | Sidebar routing, admin menu, logout |
 
 ## Database Schema
 
