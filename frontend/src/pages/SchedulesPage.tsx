@@ -60,6 +60,8 @@ import {
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/EmptyState";
+import { ScheduleCalendar } from "@/components/ScheduleCalendar";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Pagination } from "@/components/ui/pagination";
 import {
   useSchedules,
@@ -293,7 +295,13 @@ export default function SchedulesPage() {
         </Select>
       </div>
 
-      {/* Schedules Table */}
+      {/* Schedules View */}
+      <Tabs defaultValue="table" className="mb-4">
+        <TabsList><TabsTrigger value="table">Table</TabsTrigger><TabsTrigger value="calendar">Timeline</TabsTrigger></TabsList>
+        <TabsContent value="calendar">
+          <Card><CardContent className="p-0"><ScheduleCalendar schedules={sortedSchedules} /></CardContent></Card>
+        </TabsContent>
+        <TabsContent value="table">
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
@@ -465,6 +473,8 @@ export default function SchedulesPage() {
           </CardContent>
         </Card>
       </motion.div>
+        </TabsContent>
+      </Tabs>
 
       {sortedSchedules.length === 0 && !isLoading && (
         <EmptyState
