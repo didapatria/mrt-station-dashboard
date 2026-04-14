@@ -74,6 +74,20 @@ app.get("/api/health", (_req, res) => {
   res.json({ success: true, message: "MRT Station API is running" });
 });
 
+app.get("/api/system/status", authMiddleware, (_req, res) => {
+  res.json({
+    success: true,
+    data: {
+      uptime: process.uptime(),
+      memoryUsage: process.memoryUsage(),
+      nodeVersion: process.version,
+      platform: process.platform,
+      rateLimit: { api: { windowMs: 900000, limit: 100 }, auth: { windowMs: 900000, limit: 20 } },
+      sseClients: sseService.getClientCount(),
+    },
+  });
+});
+
 app.use("/api/auth", authRouter);
 app.use("/api/stations", stationRouter);
 app.use("/api/schedules", scheduleRouter);

@@ -67,6 +67,7 @@ const navItems: NavItem[] = [
   { to: "/schedules", icon: Clock, labelKey: "nav.schedules" },
   { to: "/map", icon: Map, labelKey: "nav.stationMap" },
   { to: "/route-planner", icon: Navigation, labelKey: "nav.routePlanner" },
+  { to: "/compare", icon: LayoutDashboard, labelKey: "nav.compare" },
   { to: "/users", icon: Users, labelKey: "nav.users", adminOnly: true },
   { to: "/activity", icon: Activity, labelKey: "nav.activityLog" },
   { to: "/settings", icon: Settings, labelKey: "nav.settings" },
