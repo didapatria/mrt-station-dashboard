@@ -3,6 +3,9 @@ dist/
 build/
 .env
 .env.local
+e2e/.auth/
+test-results/
+playwright-report/
 .env.production
 *.log
 .DS_Store
