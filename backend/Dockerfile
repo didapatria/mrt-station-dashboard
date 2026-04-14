@@ -21,4 +21,4 @@ COPY --from=base /app/node_modules/.prisma ./node_modules/.prisma
 COPY --from=base /app/node_modules/@prisma ./node_modules/@prisma
 
 EXPOSE 3000
-CMD ["sh", "-c", "npx prisma migrate deploy --schema=dist/prisma/schema.prisma && node dist/index.js"]
+CMD ["sh", "-c", "npx prisma migrate deploy --schema=dist/prisma/schema.prisma && if [ \"$RUN_SEED\" = \"true\" ]; then node dist/prisma/seed.js; fi && node dist/index.js"]
