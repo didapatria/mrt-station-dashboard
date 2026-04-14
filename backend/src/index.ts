@@ -34,16 +34,17 @@ app.use(morgan("dev"));
 app.use(express.json());
 
 // Rate limiting
+const isDev = process.env.NODE_ENV !== "production";
 const apiLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  limit: 100,
+  limit: isDev ? 1000 : 100,
   standardHeaders: "draft-7",
   legacyHeaders: false,
   message: { success: false, error: "Too many requests, please try again later." },
 });
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  limit: 20,
+  limit: isDev ? 100 : 20,
   standardHeaders: "draft-7",
   legacyHeaders: false,
   message: { success: false, error: "Too many login attempts, please try again later." },
@@ -87,7 +88,7 @@ app.get("/api/system/status", authMiddleware, (_req, res) => {
       memoryUsage: process.memoryUsage(),
       nodeVersion: process.version,
       platform: process.platform,
-      rateLimit: { api: { windowMs: 900000, limit: 100 }, auth: { windowMs: 900000, limit: 20 } },
+      rateLimit: { api: { windowMs: 900000, limit: isDev ? 1000 : 100 }, auth: { windowMs: 900000, limit: isDev ? 100 : 20 } },
       sseClients: sseService.getClientCount(),
     },
   });
