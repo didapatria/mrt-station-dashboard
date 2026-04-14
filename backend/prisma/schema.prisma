@@ -39,6 +39,8 @@ model User {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
+  activityLogs ActivityLog[]
+
   @@map("users")
 }
 
@@ -76,4 +78,18 @@ model Schedule {
   arrivalStation   Station @relation("ArrivalStation", fields: [arrivalStationId], references: [id])
 
   @@map("schedules")
+}
+
+model ActivityLog {
+  id        String   @id @default(uuid())
+  userId    String   @map("user_id")
+  action    String
+  entity    String
+  entityId  String   @map("entity_id")
+  details   String?
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("activity_logs")
 }
