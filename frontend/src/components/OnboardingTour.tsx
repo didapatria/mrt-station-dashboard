@@ -4,7 +4,7 @@ import { Joyride } from "react-joyride";
 const TOUR_KEY = "mrt-onboarding-done";
 
 const steps = [
-  { target: "[data-tour='sidebar-nav']", content: "Navigate between pages using the sidebar menu." },
+  { target: "[data-tour='sidebar-nav']", content: "Navigate between pages using the sidebar menu.", placement: "right" as const },
   { target: "[data-tour='search-btn']", content: "Search pages and stations with ⌘K." },
   { target: "[data-tour='notifications']", content: "Real-time notifications appear here." },
   { target: "[data-tour='language']", content: "Switch between English and Indonesian." },
