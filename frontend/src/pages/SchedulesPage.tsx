@@ -297,182 +297,192 @@ export default function SchedulesPage() {
 
       {/* Schedules View */}
       <Tabs defaultValue="table" className="mb-4">
-        <TabsList><TabsTrigger value="table">Table</TabsTrigger><TabsTrigger value="calendar">Timeline</TabsTrigger></TabsList>
+        <TabsList>
+          <TabsTrigger value="table">Table</TabsTrigger>
+          <TabsTrigger value="calendar">Timeline</TabsTrigger>
+        </TabsList>
         <TabsContent value="calendar">
-          <Card><CardContent className="p-0"><ScheduleCalendar schedules={sortedSchedules} /></CardContent></Card>
+          <Card>
+            <CardContent className="p-0">
+              <ScheduleCalendar schedules={sortedSchedules} />
+            </CardContent>
+          </Card>
         </TabsContent>
         <TabsContent value="table">
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3 }}
-      >
-        <Card>
-          <CardContent className="p-0">
-            <Table>
-              <TableHeader>
-                <TableRow className="bg-muted/50">
-                  <SortableTableHead<Schedule>
-                    label={t("schedules.trainNumber")}
-                    sortKey="trainNumber"
-                    sortConfig={sortConfig}
-                    onSort={requestSort}
-                  />
-                  <TableHead>{t("schedules.route")}</TableHead>
-                  <SortableTableHead<Schedule>
-                    label={t("schedules.time")}
-                    sortKey="departureTime"
-                    sortConfig={sortConfig}
-                    onSort={requestSort}
-                    className="hidden sm:table-cell"
-                  />
-                  <SortableTableHead<Schedule>
-                    label={t("schedules.dayType")}
-                    sortKey="dayType"
-                    sortConfig={sortConfig}
-                    onSort={requestSort}
-                  />
-                  <SortableTableHead<Schedule>
-                    label={t("stations.status")}
-                    sortKey="status"
-                    sortConfig={sortConfig}
-                    onSort={requestSort}
-                  />
-                  {isAdmin && (
-                    <TableHead className="text-right w-25">
-                      {t("common.actions")}
-                    </TableHead>
-                  )}
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {isLoading
-                  ? Array.from({ length: 5 }).map((_, i) => (
-                      <TableRow key={i}>
-                        <TableCell>
-                          <Skeleton className="h-4 w-24" />
-                        </TableCell>
-                        <TableCell>
-                          <Skeleton className="h-4 w-40" />
-                        </TableCell>
-                        <TableCell className="hidden sm:table-cell">
-                          <Skeleton className="h-4 w-28" />
-                        </TableCell>
-                        <TableCell>
-                          <Skeleton className="h-5 w-16 rounded-full" />
-                        </TableCell>
-                        <TableCell>
-                          <Skeleton className="h-5 w-16 rounded-full" />
-                        </TableCell>
-                        {isAdmin && (
-                          <TableCell>
-                            <Skeleton className="h-8 w-16 ml-auto" />
-                          </TableCell>
-                        )}
-                      </TableRow>
-                    ))
-                  : sortedSchedules.map((schedule) => (
-                      <TableRow key={schedule.id}>
-                        <TableCell>
-                          <p className="font-medium font-mono">
-                            {schedule.trainNumber}
-                          </p>
-                        </TableCell>
-                        <TableCell>
-                          <div className="flex items-center gap-2">
-                            <div>
-                              <p className="text-sm font-medium">
-                                {schedule.departureStation?.code}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            <Card>
+              <CardContent className="p-0">
+                <Table>
+                  <TableHeader>
+                    <TableRow className="bg-muted/50">
+                      <SortableTableHead<Schedule>
+                        label={t("schedules.trainNumber")}
+                        sortKey="trainNumber"
+                        sortConfig={sortConfig}
+                        onSort={requestSort}
+                      />
+                      <TableHead>{t("schedules.route")}</TableHead>
+                      <SortableTableHead<Schedule>
+                        label={t("schedules.time")}
+                        sortKey="departureTime"
+                        sortConfig={sortConfig}
+                        onSort={requestSort}
+                        className="hidden sm:table-cell"
+                      />
+                      <SortableTableHead<Schedule>
+                        label={t("schedules.dayType")}
+                        sortKey="dayType"
+                        sortConfig={sortConfig}
+                        onSort={requestSort}
+                      />
+                      <SortableTableHead<Schedule>
+                        label={t("stations.status")}
+                        sortKey="status"
+                        sortConfig={sortConfig}
+                        onSort={requestSort}
+                      />
+                      {isAdmin && (
+                        <TableHead className="text-right w-25">
+                          {t("common.actions")}
+                        </TableHead>
+                      )}
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {isLoading
+                      ? Array.from({ length: 5 }).map((_, i) => (
+                          <TableRow key={i}>
+                            <TableCell>
+                              <Skeleton className="h-4 w-24" />
+                            </TableCell>
+                            <TableCell>
+                              <Skeleton className="h-4 w-40" />
+                            </TableCell>
+                            <TableCell className="hidden sm:table-cell">
+                              <Skeleton className="h-4 w-28" />
+                            </TableCell>
+                            <TableCell>
+                              <Skeleton className="h-5 w-16 rounded-full" />
+                            </TableCell>
+                            <TableCell>
+                              <Skeleton className="h-5 w-16 rounded-full" />
+                            </TableCell>
+                            {isAdmin && (
+                              <TableCell>
+                                <Skeleton className="h-8 w-16 ml-auto" />
+                              </TableCell>
+                            )}
+                          </TableRow>
+                        ))
+                      : sortedSchedules.map((schedule) => (
+                          <TableRow key={schedule.id}>
+                            <TableCell>
+                              <p className="font-medium font-mono">
+                                {schedule.trainNumber}
                               </p>
-                              <p className="text-xs text-muted-foreground sm:hidden">
-                                {schedule.departureTime}
+                            </TableCell>
+                            <TableCell>
+                              <div className="flex items-center gap-2">
+                                <div>
+                                  <p className="text-sm font-medium">
+                                    {schedule.departureStation?.code}
+                                  </p>
+                                  <p className="text-xs text-muted-foreground sm:hidden">
+                                    {schedule.departureTime}
+                                  </p>
+                                </div>
+                                <ArrowRight className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+                                <div>
+                                  <p className="text-sm font-medium">
+                                    {schedule.arrivalStation?.code}
+                                  </p>
+                                  <p className="text-xs text-muted-foreground sm:hidden">
+                                    {schedule.arrivalTime}
+                                  </p>
+                                </div>
+                              </div>
+                              <p className="text-xs text-muted-foreground mt-0.5">
+                                {schedule.departureStation?.name} →{" "}
+                                {schedule.arrivalStation?.name}
                               </p>
-                            </div>
-                            <ArrowRight className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
-                            <div>
-                              <p className="text-sm font-medium">
-                                {schedule.arrivalStation?.code}
-                              </p>
-                              <p className="text-xs text-muted-foreground sm:hidden">
+                            </TableCell>
+                            <TableCell className="hidden sm:table-cell">
+                              <p className="font-mono text-sm">
+                                {schedule.departureTime} —{" "}
                                 {schedule.arrivalTime}
                               </p>
-                            </div>
-                          </div>
-                          <p className="text-xs text-muted-foreground mt-0.5">
-                            {schedule.departureStation?.name} →{" "}
-                            {schedule.arrivalStation?.name}
-                          </p>
-                        </TableCell>
-                        <TableCell className="hidden sm:table-cell">
-                          <p className="font-mono text-sm">
-                            {schedule.departureTime} — {schedule.arrivalTime}
-                          </p>
-                        </TableCell>
-                        <TableCell>
-                          <Badge variant="secondary">{schedule.dayType}</Badge>
-                        </TableCell>
-                        <TableCell>
-                          <Badge
-                            variant={
-                              schedule.status === "ACTIVE"
-                                ? "success"
-                                : schedule.status === "DELAYED"
-                                  ? "warning"
-                                  : "destructive"
-                            }
-                          >
-                            {schedule.status}
-                          </Badge>
-                        </TableCell>
-                        {isAdmin && (
-                          <TableCell className="text-right">
-                            <div className="flex justify-end gap-1">
-                              <TooltipProvider>
-                                <Tooltip>
-                                  <TooltipTrigger asChild>
-                                    <Button
-                                      variant="ghost"
-                                      size="icon"
-                                      className="h-8 w-8"
-                                      onClick={() => openEdit(schedule)}
-                                    >
-                                      <Pencil className="h-3.5 w-3.5" />
-                                    </Button>
-                                  </TooltipTrigger>
-                                  <TooltipContent>
-                                    {t("schedules.editSchedule")}
-                                  </TooltipContent>
-                                </Tooltip>
-                              </TooltipProvider>
-                              <TooltipProvider>
-                                <Tooltip>
-                                  <TooltipTrigger asChild>
-                                    <Button
-                                      variant="ghost"
-                                      size="icon"
-                                      className="h-8 w-8 text-destructive hover:text-destructive"
-                                      onClick={() =>
-                                        setDeleteConfirm(schedule.id)
-                                      }
-                                    >
-                                      <Trash2 className="h-3.5 w-3.5" />
-                                    </Button>
-                                  </TooltipTrigger>
-                                  <TooltipContent>
-                                    {t("schedules.deleteSchedule")}
-                                  </TooltipContent>
-                                </Tooltip>
-                              </TooltipProvider>
-                            </div>
-                          </TableCell>
-                        )}
-                      </TableRow>
-                    ))}
-              </TableBody>
-            </Table>
-          </CardContent>
-        </Card>
-      </motion.div>
+                            </TableCell>
+                            <TableCell>
+                              <Badge variant="secondary">
+                                {schedule.dayType}
+                              </Badge>
+                            </TableCell>
+                            <TableCell>
+                              <Badge
+                                variant={
+                                  schedule.status === "ACTIVE"
+                                    ? "success"
+                                    : schedule.status === "DELAYED"
+                                      ? "warning"
+                                      : "destructive"
+                                }
+                              >
+                                {schedule.status}
+                              </Badge>
+                            </TableCell>
+                            {isAdmin && (
+                              <TableCell className="text-right">
+                                <div className="flex justify-end gap-1">
+                                  <TooltipProvider>
+                                    <Tooltip>
+                                      <TooltipTrigger asChild>
+                                        <Button
+                                          variant="ghost"
+                                          size="icon"
+                                          className="h-8 w-8"
+                                          onClick={() => openEdit(schedule)}
+                                        >
+                                          <Pencil className="h-3.5 w-3.5" />
+                                        </Button>
+                                      </TooltipTrigger>
+                                      <TooltipContent>
+                                        {t("schedules.editSchedule")}
+                                      </TooltipContent>
+                                    </Tooltip>
+                                  </TooltipProvider>
+                                  <TooltipProvider>
+                                    <Tooltip>
+                                      <TooltipTrigger asChild>
+                                        <Button
+                                          variant="ghost"
+                                          size="icon"
+                                          className="h-8 w-8 text-destructive hover:text-destructive"
+                                          onClick={() =>
+                                            setDeleteConfirm(schedule.id)
+                                          }
+                                        >
+                                          <Trash2 className="h-3.5 w-3.5" />
+                                        </Button>
+                                      </TooltipTrigger>
+                                      <TooltipContent>
+                                        {t("schedules.deleteSchedule")}
+                                      </TooltipContent>
+                                    </Tooltip>
+                                  </TooltipProvider>
+                                </div>
+                              </TableCell>
+                            )}
+                          </TableRow>
+                        ))}
+                  </TableBody>
+                </Table>
+              </CardContent>
+            </Card>
+          </motion.div>
         </TabsContent>
       </Tabs>
 

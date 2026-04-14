@@ -78,8 +78,8 @@ function App() {
                 <Route path="/map" element={<MapPage />} />
                 <Route path="/users" element={<UsersPage />} />
                 <Route path="/activity" element={<ActivityLogPage />} />
-            <Route path="/settings" element={<SettingsPage />} />
-            <Route path="/changelog" element={<ChangelogPage />} />
+                <Route path="/settings" element={<SettingsPage />} />
+                <Route path="/changelog" element={<ChangelogPage />} />
                 <Route path="/profile" element={<ProfilePage />} />
               </Route>
 
