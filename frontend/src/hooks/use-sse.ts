@@ -26,8 +26,8 @@ export function useRealtimeNotifications() {
   );
 
   useEffect(() => {
-    const baseUrl = import.meta.env.VITE_API_URL || "";
-    const eventSource = new EventSource(`${baseUrl}/api/events`);
+    const baseUrl = import.meta.env.VITE_API_URL || "/api";
+    const eventSource = new EventSource(`${baseUrl}/events`);
 
     eventSource.addEventListener("activity", (e) => {
       try {

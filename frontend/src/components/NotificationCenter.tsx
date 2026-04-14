@@ -22,8 +22,8 @@ export function NotificationCenter() {
   }, []);
 
   useEffect(() => {
-    const baseUrl = import.meta.env.VITE_API_URL || "";
-    const es = new EventSource(`${baseUrl}/api/events`);
+    const baseUrl = import.meta.env.VITE_API_URL || "/api";
+    const es = new EventSource(`${baseUrl}/events`);
     es.addEventListener("activity", (e) => {
       try {
         const data = JSON.parse(e.data);
