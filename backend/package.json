@@ -8,6 +8,8 @@
     "start": "npx prisma migrate deploy --schema=dist/prisma/schema.prisma && node dist/index.js",
     "seed": "tsx src/prisma/seed.ts",
     "db:migrate": "npx prisma migrate dev",
+    "db:fresh": "npx prisma migrate reset --force",
+    "db:fresh:seed": "npx prisma migrate reset --force && npm run seed",
     "db:generate": "npx prisma generate",
     "db:studio": "npx prisma studio",
     "test": "vitest",
