@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -8,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Train } from "lucide-react";
+import { Train, Eye, EyeOff } from "lucide-react";
 
 const registerSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -22,6 +23,7 @@ export default function RegisterPage() {
   const { t } = useTranslation();
   const registerMutation = useRegister();
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
 
   const { register, handleSubmit, formState: { errors } } = useForm<RegisterFormData>({
     resolver: zodResolver(registerSchema),
@@ -63,7 +65,12 @@ export default function RegisterPage() {
             </div>
             <div className="space-y-2">
               <Label htmlFor="password">{t("auth.password")}</Label>
-              <Input id="password" type="password" placeholder="Min. 6 characters" {...register("password")} />
+              <div className="relative">
+                <Input id="password" type={showPassword ? "text" : "password"} placeholder="Min. 6 characters" {...register("password")} />
+                <Button type="button" variant="ghost" size="icon" className="absolute right-0 top-0 h-full w-10" tabIndex={-1} onClick={() => setShowPassword(!showPassword)}>
+                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </Button>
+              </div>
               {errors.password && <p className="text-sm text-destructive">{errors.password.message}</p>}
             </div>
             <Button type="submit" className="w-full" disabled={registerMutation.isPending}>
