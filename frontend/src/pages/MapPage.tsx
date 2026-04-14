@@ -14,7 +14,7 @@ import type { Station } from "@/types";
 export default function MapPage() {
   const { t } = useTranslation();
   const { data, isLoading } = useStations({ limit: 100 });
-  const stations = data?.stations ?? [];
+  const stations = useMemo(() => data?.stations ?? [], [data]);
   const [selectedStation, setSelectedStation] = useState<Station | null>(null);
   const [mapSearch, setMapSearch] = useState("");
 

@@ -35,13 +35,19 @@ export function NotificationCenter() {
   }, [addNotification]);
 
   const markRead = () => setUnread(0);
+  const [now, setNow] = useState(() => Date.now());
 
-  const timeAgo = (d: Date) => {
-    const s = Math.floor((Date.now() - d.getTime()) / 1000);
+  useEffect(() => {
+    const interval = setInterval(() => setNow(Date.now()), 30000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const timeAgo = useCallback((d: Date) => {
+    const s = Math.floor((now - d.getTime()) / 1000);
     if (s < 60) return "just now";
     if (s < 3600) return `${Math.floor(s / 60)}m ago`;
     return `${Math.floor(s / 3600)}h ago`;
-  };
+  }, [now]);
 
   return (
     <DropdownMenu onOpenChange={(open) => { if (open) markRead(); }}>
