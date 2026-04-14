@@ -108,6 +108,13 @@ export default function DashboardPage() {
           bg: "bg-emerald-100 dark:bg-emerald-950",
         },
         {
+          title: t("dashboard.totalUsers"),
+          value: stats.totalUsers,
+          icon: Users,
+          color: "text-cyan-600 dark:text-cyan-400",
+          bg: "bg-cyan-100 dark:bg-cyan-950",
+        },
+        {
           title: t("dashboard.activeSchedules"),
           value: stats.activeSchedules,
           icon: Clock,
@@ -128,13 +135,6 @@ export default function DashboardPage() {
           color: "text-pink-600 dark:text-pink-400",
           bg: "bg-pink-100 dark:bg-pink-950",
         },
-        {
-          title: t("dashboard.totalUsers"),
-          value: stats.totalUsers,
-          icon: Users,
-          color: "text-cyan-600 dark:text-cyan-400",
-          bg: "bg-cyan-100 dark:bg-cyan-950",
-        },
       ]
     : [];
 
@@ -149,7 +149,11 @@ export default function DashboardPage() {
         </div>
         <div className="flex gap-2">
           {stats && (
-            <Button variant="outline" size="sm" onClick={() => exportDashboardPDF(stats, stations, schedules)}>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => exportDashboardPDF(stats, stations, schedules)}
+            >
               <Download className="h-4 w-4 mr-2" />
               PDF Report
             </Button>
@@ -217,12 +221,29 @@ export default function DashboardPage() {
       {stats && (
         <div className="grid gap-6 lg:grid-cols-2 mb-8">
           <Card className="shadow-sm">
-            <CardHeader><CardTitle className="text-lg">{t("dashboard.totalStations")} Breakdown</CardTitle></CardHeader>
+            <CardHeader>
+              <CardTitle className="text-lg">
+                {t("dashboard.totalStations")} Breakdown
+              </CardTitle>
+            </CardHeader>
             <Separator />
             <CardContent className="pt-6">
               <ResponsiveContainer width="100%" height={220}>
                 <PieChart>
-                  <Pie data={[{ name: "Active", value: stats.activeStations }, { name: "Maintenance", value: stats.maintenanceStations }, { name: "Inactive", value: stats.inactiveStations }].filter(d => d.value > 0)} cx="50%" cy="50%" innerRadius={50} outerRadius={80} paddingAngle={4} dataKey="value" label={({ name, value }) => `${name}: ${value}`}>
+                  <Pie
+                    data={[
+                      { name: "Active", value: stats.activeStations },
+                      { name: "Maintenance", value: stats.maintenanceStations },
+                      { name: "Inactive", value: stats.inactiveStations },
+                    ].filter((d) => d.value > 0)}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={50}
+                    outerRadius={80}
+                    paddingAngle={4}
+                    dataKey="value"
+                    label={({ name, value }) => `${name}: ${value}`}
+                  >
                     <Cell fill="#22c55e" />
                     <Cell fill="#f59e0b" />
                     <Cell fill="#ef4444" />
@@ -233,12 +254,29 @@ export default function DashboardPage() {
             </CardContent>
           </Card>
           <Card className="shadow-sm">
-            <CardHeader><CardTitle className="text-lg">{t("dashboard.totalSchedules")} Breakdown</CardTitle></CardHeader>
+            <CardHeader>
+              <CardTitle className="text-lg">
+                {t("dashboard.totalSchedules")} Breakdown
+              </CardTitle>
+            </CardHeader>
             <Separator />
             <CardContent className="pt-6">
               <ResponsiveContainer width="100%" height={220}>
                 <PieChart>
-                  <Pie data={[{ name: "Active", value: stats.activeSchedules }, { name: "Delayed", value: stats.delayedSchedules }, { name: "Cancelled", value: stats.cancelledSchedules }].filter(d => d.value > 0)} cx="50%" cy="50%" innerRadius={50} outerRadius={80} paddingAngle={4} dataKey="value" label={({ name, value }) => `${name}: ${value}`}>
+                  <Pie
+                    data={[
+                      { name: "Active", value: stats.activeSchedules },
+                      { name: "Delayed", value: stats.delayedSchedules },
+                      { name: "Cancelled", value: stats.cancelledSchedules },
+                    ].filter((d) => d.value > 0)}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={50}
+                    outerRadius={80}
+                    paddingAngle={4}
+                    dataKey="value"
+                    label={({ name, value }) => `${name}: ${value}`}
+                  >
                     <Cell fill="#22c55e" />
                     <Cell fill="#f59e0b" />
                     <Cell fill="#ef4444" />
