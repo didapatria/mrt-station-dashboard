@@ -34,7 +34,7 @@ async function main() {
   });
   console.log("Created operator user:", operator.email);
 
-  // Create MRT Jakarta stations (North-South Line / Fase 1 & 2)
+  // Create MRT Jakarta stations (North-South Line)
   const stationsData = [
     { name: "Lebak Bulus Grab", code: "LBB", location: "Lebak Bulus, Jakarta Selatan", latitude: -6.2893, longitude: 106.7742, order: 1 },
     { name: "Fatmawati Indomaret", code: "FTM", location: "Fatmawati, Jakarta Selatan", latitude: -6.2925, longitude: 106.7935, order: 2 },
@@ -62,60 +62,104 @@ async function main() {
   }
   console.log(`Created ${stations.length} stations`);
 
-  // Create schedules (sample weekday schedules)
-  const schedulesData = [];
-  const baseHours = [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22];
+  // Create schedules: consecutive station pairs + full line
+  const schedulesData: Array<{
+    trainNumber: string;
+    departureStationId: string;
+    arrivalStationId: string;
+    departureTime: string;
+    arrivalTime: string;
+    dayType: "WEEKDAY" | "WEEKEND" | "HOLIDAY";
+    status: "ACTIVE" | "CANCELLED" | "DELAYED";
+  }> = [];
 
-  for (const hour of baseHours) {
+  const fmt = (h: number, m: number) =>
+    `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
+
+  // Full-line schedules: LBB → BHI (Northbound)
+  for (const hour of [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22]) {
     for (const minute of [0, 20, 40]) {
-      const depTime = `${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}`;
-      const arrMinute = minute + 30;
-      const arrHour = hour + Math.floor(arrMinute / 60);
-      const arrMin = arrMinute % 60;
-
-      if (arrHour < 24) {
-        const arrTime = `${String(arrHour).padStart(2, "0")}:${String(arrMin).padStart(2, "0")}`;
-        const trainNum = `MRT-${String(hour).padStart(2, "0")}${String(minute).padStart(2, "0")}-NS`;
-
-        schedulesData.push({
-          trainNumber: trainNum,
-          departureStationId: stations[0].id, // Lebak Bulus
-          arrivalStationId: stations[12].id,  // Bundaran HI
-          departureTime: depTime,
-          arrivalTime: arrTime,
-          dayType: "WEEKDAY" as const,
-          status: "ACTIVE" as const,
-        });
-      }
+      const arrMin = minute + 30;
+      const arrHour = hour + Math.floor(arrMin / 60);
+      if (arrHour >= 24) continue;
+      schedulesData.push({
+        trainNumber: `MRT-${fmt(hour, minute)}-NS`,
+        departureStationId: stations[0].id,
+        arrivalStationId: stations[12].id,
+        departureTime: fmt(hour, minute),
+        arrivalTime: fmt(arrHour, arrMin % 60),
+        dayType: "WEEKDAY",
+        status: "ACTIVE",
+      });
     }
   }
 
-  // Also add some reverse direction schedules
-  for (const hour of [6, 7, 8, 9, 17, 18, 19]) {
+  // Full-line schedules: BHI → LBB (Southbound)
+  for (const hour of [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21]) {
     for (const minute of [10, 30, 50]) {
-      const depTime = `${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}`;
-      const arrMinute = minute + 30;
-      const arrHour = hour + Math.floor(arrMinute / 60);
-      const arrMin = arrMinute % 60;
-      const arrTime = `${String(arrHour).padStart(2, "0")}:${String(arrMin).padStart(2, "0")}`;
-      const trainNum = `MRT-${String(hour).padStart(2, "0")}${String(minute).padStart(2, "0")}-SN`;
-
+      const arrMin = minute + 30;
+      const arrHour = hour + Math.floor(arrMin / 60);
+      if (arrHour >= 24) continue;
       schedulesData.push({
-        trainNumber: trainNum,
-        departureStationId: stations[12].id, // Bundaran HI
-        arrivalStationId: stations[0].id,    // Lebak Bulus
-        departureTime: depTime,
-        arrivalTime: arrTime,
-        dayType: "WEEKDAY" as const,
-        status: "ACTIVE" as const,
+        trainNumber: `MRT-${fmt(hour, minute)}-SN`,
+        departureStationId: stations[12].id,
+        arrivalStationId: stations[0].id,
+        departureTime: fmt(hour, minute),
+        arrivalTime: fmt(arrHour, arrMin % 60),
+        dayType: "WEEKDAY",
+        status: "ACTIVE",
       });
     }
+  }
+
+  // Intermediate schedules: between consecutive stations (short routes)
+  for (let i = 0; i < stations.length - 1; i++) {
+    for (const hour of [6, 8, 12, 17, 20]) {
+      schedulesData.push({
+        trainNumber: `MRT-${fmt(hour, 15)}-${stations[i].code}`,
+        departureStationId: stations[i].id,
+        arrivalStationId: stations[i + 1].id,
+        departureTime: fmt(hour, 15),
+        arrivalTime: fmt(hour, 19),
+        dayType: "WEEKDAY",
+        status: "ACTIVE",
+      });
+    }
+  }
+
+  // Weekend schedules (reduced frequency)
+  for (const hour of [7, 9, 11, 13, 15, 17, 19]) {
+    schedulesData.push({
+      trainNumber: `MRT-${fmt(hour, 0)}-WE-NS`,
+      departureStationId: stations[0].id,
+      arrivalStationId: stations[12].id,
+      departureTime: fmt(hour, 0),
+      arrivalTime: fmt(hour, 30),
+      dayType: "WEEKEND",
+      status: "ACTIVE",
+    });
+    schedulesData.push({
+      trainNumber: `MRT-${fmt(hour, 30)}-WE-SN`,
+      departureStationId: stations[12].id,
+      arrivalStationId: stations[0].id,
+      departureTime: fmt(hour, 30),
+      arrivalTime: fmt(hour + 1, 0),
+      dayType: "WEEKEND",
+      status: "ACTIVE",
+    });
+  }
+
+  // A few delayed/cancelled for variety
+  if (schedulesData.length > 5) {
+    schedulesData[3].status = "DELAYED";
+    schedulesData[8].status = "DELAYED";
+    schedulesData[15].status = "CANCELLED";
   }
 
   let scheduleCount = 0;
   for (const data of schedulesData) {
     const existing = await prisma.schedule.findFirst({
-      where: { trainNumber: data.trainNumber },
+      where: { trainNumber: data.trainNumber, dayType: data.dayType },
     });
     if (!existing) {
       await prisma.schedule.create({ data });
