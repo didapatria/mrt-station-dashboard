@@ -72,6 +72,8 @@ import { useSortable } from "@/hooks/use-sortable";
 import { useDebounce } from "@/hooks/use-debounce";
 import { dashboardService } from "@/services/dashboard.service";
 import { CSVImportDialog } from "@/components/CSVImport";
+import { ColumnToggle } from "@/components/ColumnToggle";
+import { useColumnToggle } from "@/hooks/use-column-toggle";
 import { useRole } from "@/hooks/use-role";
 import type { Station } from "@/types";
 
@@ -101,6 +103,7 @@ export default function StationsPage() {
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [bulkDeleteOpen, setBulkDeleteOpen] = useState(false);
   const [csvImportOpen, setCsvImportOpen] = useState(false);
+  const columns = useColumnToggle(["order", "name", "location", "coordinates", "status"]);
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
 
   const debouncedSearch = useDebounce(search, 300);
@@ -272,6 +275,7 @@ export default function StationsPage() {
               {t("common.delete")} ({selectedIds.size})
             </Button>
           )}
+          <ColumnToggle columns={[{ key: "order", label: "Order" }, { key: "location", label: "Location" }, { key: "coordinates", label: "Coordinates" }, { key: "status", label: "Status" }]} isVisible={columns.isVisible} toggle={columns.toggle} />
           <Button variant="outline" onClick={handleExport}>
             <Download className="h-4 w-4 mr-2" />
             CSV

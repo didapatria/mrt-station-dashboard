@@ -8,7 +8,7 @@ import { z } from "zod";
 import { toast } from "sonner";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
@@ -104,6 +104,7 @@ export default function ProfilePage() {
               <CardHeader>
                 <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "1rem" }}>
                   <Avatar className="h-16 w-16">
+                    <AvatarImage src={`https://api.dicebear.com/9.x/initials/svg?seed=${encodeURIComponent(user.name)}`} alt={user.name} />
                     <AvatarFallback className="bg-primary text-primary-foreground text-2xl font-bold">
                       {user.name.charAt(0).toUpperCase()}
                     </AvatarFallback>
