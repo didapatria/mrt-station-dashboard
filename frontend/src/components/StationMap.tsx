@@ -1,5 +1,12 @@
 import { useEffect } from "react";
-import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap } from "react-leaflet";
+import {
+  MapContainer,
+  TileLayer,
+  Marker,
+  Popup,
+  Polyline,
+  useMap,
+} from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { Badge } from "@/components/ui/badge";
@@ -49,7 +56,7 @@ function FitBounds({ stations }: { stations: Station[] }) {
     if (withCoords.length === 0) return;
 
     const bounds = L.latLngBounds(
-      withCoords.map((s) => [s.latitude!, s.longitude!])
+      withCoords.map((s) => [s.latitude!, s.longitude!]),
     );
     map.fitBounds(bounds, { padding: [50, 50] });
   }, [map, stations]);
@@ -87,11 +94,9 @@ export function StationMap({
       zoom={13}
       className="h-full w-full rounded-lg"
       style={{ minHeight: "400px" }}
+      attributionControl={false}
     >
-      <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-      />
+      <TileLayer url="https://mt1.google.com/vt/lyrs=r&x={x}&y={y}&z={z}" />
 
       <FitBounds stations={stations} />
 
@@ -120,7 +125,7 @@ export function StationMap({
           }
         >
           <Popup>
-            <div className="min-w-[180px]">
+            <div className="min-w-45">
               <div className="flex items-center gap-2 mb-1">
                 <span className="font-bold text-sm">{station.code}</span>
                 <Badge
@@ -137,7 +142,9 @@ export function StationMap({
                 </Badge>
               </div>
               <p className="font-medium text-sm">{station.name}</p>
-              <p className="text-xs text-muted-foreground">{station.location}</p>
+              <p className="text-xs text-muted-foreground">
+                {station.location}
+              </p>
               <p className="text-[10px] text-muted-foreground mt-1 font-mono">
                 {station.latitude?.toFixed(6)}, {station.longitude?.toFixed(6)}
               </p>
