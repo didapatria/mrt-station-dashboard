@@ -6,7 +6,14 @@ import { OAuth2Client } from "google-auth-library";
 import { RegisterInput, LoginInput } from "../validators/auth.validator";
 import { JwtPayload } from "../types";
 
-const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+let googleClient: OAuth2Client | null = null;
+
+function getGoogleClient() {
+  if (!googleClient) {
+    googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+  }
+  return googleClient;
+}
 
 const prisma = new PrismaClient();
 
@@ -105,7 +112,7 @@ export const authService = {
   },
 
   async googleAuth(credential: string) {
-    const ticket = await googleClient.verifyIdToken({
+    const ticket = await getGoogleClient().verifyIdToken({
       idToken: credential,
       audience: process.env.GOOGLE_CLIENT_ID,
     });
