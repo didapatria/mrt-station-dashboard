@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { lazy, Suspense, useEffect } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 import { useAuthStore } from "@/store/auth.store";
 import { useThemeStore } from "@/store/theme.store";
 import { Toaster } from "@/components/ui/toaster";
@@ -62,6 +63,7 @@ function App() {
 
   return (
     <ErrorBoundary>
+      <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID || ""}>
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
           <Suspense fallback={<PageLoader />}>
@@ -101,6 +103,7 @@ function App() {
         </BrowserRouter>
         <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
+      </GoogleOAuthProvider>
     </ErrorBoundary>
   );
 }

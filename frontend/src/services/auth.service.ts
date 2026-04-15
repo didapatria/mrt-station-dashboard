@@ -21,6 +21,13 @@ export const authService = {
     return response.data;
   },
 
+  async googleAuth(credential: string) {
+    const response = await api.post<
+      ApiResponse<{ user: User; token: string }>
+    >("/auth/google", { credential });
+    return response.data;
+  },
+
   async getProfile() {
     const response = await api.get<ApiResponse<User>>("/auth/profile");
     return response.data;

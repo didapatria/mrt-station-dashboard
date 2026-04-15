@@ -43,7 +43,10 @@
     "enterCredentials": "Masukkan kredensial untuk mengakses dashboard",
     "registerDescription": "Daftar untuk mengakses dashboard manajemen stasiun",
     "noAccount": "Belum punya akun?",
-    "hasAccount": "Sudah punya akun?"
+    "hasAccount": "Sudah punya akun?",
+    "orContinueWith": "Atau lanjutkan dengan",
+    "continueWithGoogle": "Lanjutkan dengan Google",
+    "confirmPassword": "Konfirmasi Kata Sandi"
   },
   "dashboard": {
     "title": "Dasbor",

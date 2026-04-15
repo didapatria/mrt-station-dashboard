@@ -10,6 +10,7 @@ interface AuthState {
 
   login: (email: string, password: string) => Promise<void>;
   register: (name: string, email: string, password: string) => Promise<void>;
+  googleLogin: (credential: string) => Promise<void>;
   logout: () => void;
   clearError: () => void;
   initFromStorage: () => void;
@@ -33,6 +34,16 @@ export const useAuthStore = create<AuthState>((set) => ({
 
   register: async (name, email, password) => {
     const response = await authService.register({ name, email, password });
+    if (response.success && response.data) {
+      const { user, token } = response.data;
+      localStorage.setItem("token", token);
+      localStorage.setItem("user", JSON.stringify(user));
+      set({ user, token });
+    }
+  },
+
+  googleLogin: async (credential) => {
+    const response = await authService.googleAuth(credential);
     if (response.success && response.data) {
       const { user, token } = response.data;
       localStorage.setItem("token", token);

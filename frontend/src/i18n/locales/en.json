@@ -43,7 +43,10 @@
     "enterCredentials": "Enter your credentials to access the dashboard",
     "registerDescription": "Register to access the station management dashboard",
     "noAccount": "Don't have an account?",
-    "hasAccount": "Already have an account?"
+    "hasAccount": "Already have an account?",
+    "orContinueWith": "Or continue with",
+    "continueWithGoogle": "Continue with Google",
+    "confirmPassword": "Confirm Password"
   },
   "dashboard": {
     "title": "Dashboard",

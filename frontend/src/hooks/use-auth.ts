@@ -29,6 +29,14 @@ export function useLogin() {
   });
 }
 
+export function useGoogleLogin() {
+  const { googleLogin } = useAuthStore();
+
+  return useMutation({
+    mutationFn: (credential: string) => googleLogin(credential),
+  });
+}
+
 export function useRegister() {
   const { register } = useAuthStore();
 
