@@ -5,9 +5,9 @@ const options: swaggerJsdoc.Options = {
     openapi: "3.0.0",
     info: {
       title: "MRT Jakarta - Station Management API",
-      version: "1.0.0",
+      version: "2.2.0",
       description:
-        "REST API for managing MRT Jakarta stations and train schedules. Built with Express.js, TypeScript, Prisma ORM, and PostgreSQL.",
+        "REST API for managing MRT Jakarta stations and train schedules. Features JWT authentication, RBAC (Admin/Operator), activity logging, real-time SSE notifications, CSV/PDF export, and rate limiting. Built with Express.js 5, TypeScript, Prisma ORM, and PostgreSQL.",
       contact: {
         name: "Dida",
         email: "didapatria3@gmail.com",
@@ -173,6 +173,34 @@ const options: swaggerJsdoc.Options = {
             order: { type: "integer", example: 14 },
           },
         },
+        ActivityLog: {
+          type: "object",
+          properties: {
+            id: { type: "string", format: "uuid" },
+            userId: { type: "string", format: "uuid" },
+            action: { type: "string", enum: ["CREATE", "UPDATE", "DELETE"] },
+            entity: { type: "string", enum: ["Station", "Schedule", "User"] },
+            entityId: { type: "string", format: "uuid" },
+            details: { type: "string", example: "Created station Lebak Bulus Grab (LBB)" },
+            createdAt: { type: "string", format: "date-time" },
+            user: { $ref: "#/components/schemas/User" },
+          },
+        },
+        ChangePasswordRequest: {
+          type: "object",
+          required: ["currentPassword", "newPassword"],
+          properties: {
+            currentPassword: { type: "string", example: "admin123" },
+            newPassword: { type: "string", minLength: 6, example: "newpassword123" },
+          },
+        },
+        UpdateRoleRequest: {
+          type: "object",
+          required: ["role"],
+          properties: {
+            role: { type: "string", enum: ["ADMIN", "OPERATOR"] },
+          },
+        },
         CreateScheduleRequest: {
           type: "object",
           required: [
@@ -203,7 +231,7 @@ const options: swaggerJsdoc.Options = {
       },
     },
   },
-  apis: ["./src/routes/*.ts"],
+  apis: ["./src/routes/*.ts", "./src/index.ts"],
 };
 
 export const swaggerSpec = swaggerJsdoc(options);
