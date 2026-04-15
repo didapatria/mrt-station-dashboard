@@ -4,11 +4,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { useRegister } from "@/hooks/use-auth";
+import { GoogleLogin } from "@react-oauth/google";
+import { useRegister, useGoogleLogin } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 import { Train, Eye, EyeOff } from "lucide-react";
 
 const registerSchema = z.object({
@@ -26,6 +28,7 @@ type RegisterFormData = z.infer<typeof registerSchema>;
 export default function RegisterPage() {
   const { t } = useTranslation();
   const registerMutation = useRegister();
+  const googleLoginMutation = useGoogleLogin();
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
 
@@ -40,8 +43,18 @@ export default function RegisterPage() {
     } catch { /* handled by mutation */ }
   };
 
+  const handleGoogleSuccess = async (credentialResponse: { credential?: string }) => {
+    if (!credentialResponse.credential) return;
+    try {
+      await googleLoginMutation.mutateAsync(credentialResponse.credential);
+      navigate("/dashboard");
+    } catch { /* handled by mutation */ }
+  };
+
   const err = registerMutation.error as { response?: { data?: { error?: string } } } | null;
   const errorMessage = err?.response?.data?.error || registerMutation.error?.message || null;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const googleError = googleLoginMutation.error ? (googleLoginMutation.error as any)?.response?.data?.error || googleLoginMutation.error.message : null;
 
   return (
     <>
@@ -57,6 +70,7 @@ export default function RegisterPage() {
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             {errorMessage && <div className="bg-destructive/10 text-destructive text-sm p-3 rounded-md" onClick={() => registerMutation.reset()}>{errorMessage}</div>}
+            {googleError && <div className="bg-destructive/10 text-destructive text-sm p-3 rounded-md" onClick={() => googleLoginMutation.reset()}>{googleError}</div>}
             <div className="space-y-2">
               <Label htmlFor="name">{t("auth.name")}</Label>
               <Input id="name" placeholder="Enter your name" {...register("name")} />
@@ -85,11 +99,28 @@ export default function RegisterPage() {
             <Button type="submit" className="w-full" disabled={registerMutation.isPending}>
               {registerMutation.isPending ? t("auth.creatingAccount") : t("auth.signUp")}
             </Button>
-            <p className="text-center text-sm text-muted-foreground">
-              {t("auth.hasAccount")}{" "}
-              <Link to="/login" className="text-primary hover:underline">{t("auth.signIn")}</Link>
-            </p>
           </form>
+
+          <div className="my-4" style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "0.75rem" }}>
+            <Separator className="flex-1" />
+            <span className="text-xs text-muted-foreground uppercase">{t("auth.orContinueWith")}</span>
+            <Separator className="flex-1" />
+          </div>
+
+          <div className="flex justify-center">
+            <GoogleLogin
+              onSuccess={handleGoogleSuccess}
+              onError={() => {}}
+              size="large"
+              width="100%"
+              text="continue_with"
+            />
+          </div>
+
+          <p className="text-center text-sm text-muted-foreground mt-4">
+            {t("auth.hasAccount")}{" "}
+            <Link to="/login" className="text-primary hover:underline">{t("auth.signIn")}</Link>
+          </p>
         </CardContent>
       </Card>
     </>
