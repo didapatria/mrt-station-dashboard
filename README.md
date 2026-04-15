@@ -43,6 +43,7 @@ https://github.com/user-attachments/assets/demo-video.mp4
 - **Prisma ORM** - Type-safe database access
 - **PostgreSQL** - Relational database
 - **JWT** - Authentication
+- **Google OAuth** - Social login (google-auth-library + @react-oauth/google)
 - **Zod** - Request validation
 
 ### Infrastructure
@@ -130,7 +131,7 @@ React Page → TanStack Query Hook → API Service (axios) → Express Route →
 - **Role-Based Access Control** - Permission system with Access Management page, admin middleware on CUD routes
 - **CI/CD** - GitHub Actions pipeline with lint, type check, test, and build
 - **Unit Testing** - Vitest + React Testing Library + Supertest
-- **E2E Testing** - Playwright (46 tests across 15 spec files)
+- **E2E Testing** - Playwright (48 tests across 15 spec files)
 - **Real-time Notifications** - Server-Sent Events with notification center
 - **i18n** - English and Indonesian language support
 - **Route Planner** - Find schedules between stations
@@ -289,10 +290,10 @@ npx playwright test --debug
 npm run e2e:report
 ```
 
-### Test Coverage (46 tests)
+### Test Coverage (48 tests)
 | Spec File | Tests | What's Tested |
 |-----------|-------|---------------|
-| `auth.spec.ts` | 11 | Login, register, validation, auth guard, 404 |
+| `auth.spec.ts` | 13 | Login, register, Google OAuth, validation, auth guard, 404 |
 | `dashboard.spec.ts` | 2 | Stats, charts, tabs, export buttons |
 | `stations.spec.ts` | 3 | List, search, sort, pagination, detail, CRUD |
 | `schedules.spec.ts` | 2 | List, search, timeline, CRUD |

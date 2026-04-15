@@ -5,6 +5,18 @@ import { Separator } from "@/components/ui/separator";
 
 const changelog = [
   {
+    version: "2.5.0",
+    date: "April 2026",
+    items: [
+      "Google OAuth — login and register with Google account",
+      "Google Sign-In button on login and register pages with divider",
+      "Backend Google token verification with google-auth-library",
+      "Auto-register new users from Google OAuth",
+      "GoogleOAuthProvider integrated in app root",
+      "Screenshots and demo video section in README",
+    ],
+  },
+  {
     version: "2.4.0",
     date: "April 2026",
     items: [

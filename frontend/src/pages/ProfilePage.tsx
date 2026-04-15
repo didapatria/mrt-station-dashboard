@@ -138,6 +138,7 @@ export default function ProfilePage() {
     "jsPDF",
     "react-joyride",
     "Sonner",
+    "Google OAuth",
   ];
   const backendStack = [
     "Node.js",
@@ -166,7 +167,7 @@ export default function ProfilePage() {
     "Vitest",
     "React Testing Library",
     "Supertest",
-    "Playwright (46 E2E)",
+    "Playwright (48 E2E)",
   ];
 
   return (

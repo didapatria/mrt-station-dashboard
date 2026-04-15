@@ -24,6 +24,7 @@ paths:
 - Services contain business logic and database operations via Prisma
 - Validators define Zod schemas used in validation middleware
 - Auth middleware extracts JWT and attaches user to request
+- Google OAuth via google-auth-library (verify ID token, auto-register)
 - Admin middleware checks role for protected endpoints
 - Activity logging on all CUD operations via activityLogService
 - SSE broadcasts on data changes for real-time notifications

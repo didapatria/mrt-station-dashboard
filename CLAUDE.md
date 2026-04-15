@@ -1,7 +1,7 @@
 # MRT Station Management Dashboard
 
 ## Project Overview
-Full-stack web application for managing MRT Jakarta stations and schedules. Built as a portfolio project demonstrating full-stack proficiency with 100+ commits, 14+ pages, 40+ features, 46 E2E tests.
+Full-stack web application for managing MRT Jakarta stations and schedules. Built as a portfolio project demonstrating full-stack proficiency with 100+ commits, 14+ pages, 40+ features, 48 E2E tests.
 
 ## Commands
 
@@ -56,12 +56,13 @@ Full-stack web application for managing MRT Jakarta stations and schedules. Buil
 - Framer Motion (animations)
 - React Router v7 (routing with lazy loading)
 - Axios (HTTP client)
+- @react-oauth/google (Google OAuth)
 - Vitest + React Testing Library (testing)
 
 ### Backend
 - Node.js + Express.js 5 + TypeScript
 - Prisma ORM + PostgreSQL
-- JWT authentication (jsonwebtoken + bcryptjs)
+- JWT authentication (jsonwebtoken + bcryptjs) + Google OAuth (google-auth-library)
 - Zod (request validation)
 - express-rate-limit (API rate limiting)
 - Server-Sent Events (real-time notifications)

@@ -52,6 +52,10 @@ test.describe("Login Page", () => {
     await expect(page).toHaveURL(/dashboard/);
   });
 
+  test("should display Google OAuth button", async ({ page }) => {
+    await expect(page.locator("text=/continue with/i").first()).toBeVisible();
+  });
+
   test("should navigate to register page", async ({ page }) => {
     await page.click("a[href='/register']");
     await expect(page).toHaveURL(/register/);
@@ -82,6 +86,10 @@ test.describe("Register Page", () => {
       .isVisible()
       .catch(() => false);
     expect(hasErrors).toBeTruthy();
+  });
+
+  test("should display Google OAuth button", async ({ page }) => {
+    await expect(page.locator("text=/continue with/i").first()).toBeVisible();
   });
 
   test("should navigate to login page", async ({ page }) => {
