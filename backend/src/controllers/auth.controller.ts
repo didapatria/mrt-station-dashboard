@@ -34,6 +34,21 @@ export const authController = {
     }
   },
 
+  async googleAuth(req: Request, res: Response): Promise<void> {
+    try {
+      const result = await authService.googleAuth(req.body.credential);
+      res.json({
+        success: true,
+        message: "Google authentication successful",
+        data: result,
+      });
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Google authentication failed";
+      res.status(401).json({ success: false, error: message });
+    }
+  },
+
   async changePassword(req: AuthRequest, res: Response): Promise<void> {
     try {
       const { currentPassword, newPassword } = req.body;

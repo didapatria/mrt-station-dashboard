@@ -1,8 +1,12 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import crypto from "crypto";
 import { PrismaClient } from "@prisma/client";
+import { OAuth2Client } from "google-auth-library";
 import { RegisterInput, LoginInput } from "../validators/auth.validator";
 import { JwtPayload } from "../types";
+
+const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 const prisma = new PrismaClient();
 
@@ -98,6 +102,52 @@ export const authService = {
     }
 
     return user;
+  },
+
+  async googleAuth(credential: string) {
+    const ticket = await googleClient.verifyIdToken({
+      idToken: credential,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+
+    const payload = ticket.getPayload();
+    if (!payload || !payload.email) {
+      throw new Error("Invalid Google token");
+    }
+
+    const { email, name, sub: googleId } = payload;
+
+    let user = await prisma.user.findUnique({
+      where: { email },
+      select: { id: true, name: true, email: true, role: true, createdAt: true, password: true },
+    });
+
+    if (!user) {
+      const randomPassword = crypto.randomBytes(32).toString("hex");
+      const hashedPassword = await bcrypt.hash(randomPassword, 12);
+
+      user = await prisma.user.create({
+        data: {
+          name: name || email.split("@")[0],
+          email,
+          password: hashedPassword,
+        },
+        select: { id: true, name: true, email: true, role: true, createdAt: true, password: true },
+      });
+    }
+
+    const token = generateToken({ userId: user.id, email: user.email });
+
+    return {
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        createdAt: user.createdAt,
+      },
+      token,
+    };
   },
 };
 

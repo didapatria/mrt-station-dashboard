@@ -2,7 +2,7 @@ import { Router } from "express";
 import { authController } from "../controllers/auth.controller";
 import { authMiddleware } from "../middlewares/auth.middleware";
 import { validate } from "../middlewares/validate.middleware";
-import { registerSchema, loginSchema } from "../validators/auth.validator";
+import { registerSchema, loginSchema, googleAuthSchema } from "../validators/auth.validator";
 
 export const authRouter = Router();
 
@@ -73,6 +73,40 @@ authRouter.post("/register", validate(registerSchema), authController.register);
  *         description: Validation error
  */
 authRouter.post("/login", validate(loginSchema), authController.login);
+
+/**
+ * @swagger
+ * /auth/google:
+ *   post:
+ *     tags: [Authentication]
+ *     summary: Login or register with Google OAuth
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/GoogleAuthRequest'
+ *     responses:
+ *       200:
+ *         description: Google authentication successful
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success: { type: boolean, example: true }
+ *                 message: { type: string, example: "Google authentication successful" }
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     user: { $ref: '#/components/schemas/User' }
+ *                     token: { type: string }
+ *       401:
+ *         description: Invalid Google token
+ *       422:
+ *         description: Validation error
+ */
+authRouter.post("/google", validate(googleAuthSchema), authController.googleAuth);
 
 /**
  * @swagger

@@ -157,6 +157,17 @@ const options: swaggerJsdoc.Options = {
             },
           },
         },
+        GoogleAuthRequest: {
+          type: "object",
+          required: ["credential"],
+          properties: {
+            credential: {
+              type: "string",
+              description: "Google OAuth ID token from Google Sign-In",
+              example: "eyJhbGciOiJSUzI1NiIs...",
+            },
+          },
+        },
         CreateStationRequest: {
           type: "object",
           required: ["name", "code", "location", "order"],
