@@ -22,6 +22,7 @@ import {
   History,
   RefreshCw,
   Navigation,
+  KeyRound,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -87,6 +88,7 @@ const navGroups: NavGroup[] = [
     labelKey: "nav.management",
     items: [
       { to: "/users", icon: Users, labelKey: "nav.users", adminOnly: true },
+      { to: "/access", icon: KeyRound, labelKey: "nav.accessManagement", adminOnly: true },
       { to: "/activity", icon: Activity, labelKey: "nav.activityLog" },
     ],
   },

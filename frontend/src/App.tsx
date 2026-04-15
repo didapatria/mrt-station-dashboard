@@ -24,6 +24,7 @@ const RoutePlannerPage = lazy(() => import("@/pages/RoutePlannerPage"));
 const StationComparePage = lazy(() => import("@/pages/StationComparePage"));
 const SettingsPage = lazy(() => import("@/pages/SettingsPage"));
 const ChangelogPage = lazy(() => import("@/pages/ChangelogPage"));
+const AccessManagementPage = lazy(() => import("@/pages/AccessManagementPage"));
 const NotFoundPage = lazy(() => import("@/pages/NotFoundPage"));
 
 const queryClient = new QueryClient({
@@ -81,6 +82,7 @@ function App() {
                 <Route path="/route-planner" element={<RoutePlannerPage />} />
                 <Route path="/compare" element={<StationComparePage />} />
                 <Route path="/users" element={<UsersPage />} />
+                <Route path="/access" element={<AccessManagementPage />} />
                 <Route path="/activity" element={<ActivityLogPage />} />
                 <Route path="/settings" element={<SettingsPage />} />
                 <Route path="/changelog" element={<ChangelogPage />} />
