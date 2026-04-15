@@ -153,14 +153,6 @@ jobs:
           path: playwright-report/
           retention-days: 30
 
-      - name: Deploy report to GitHub Pages
-        if: github.ref == 'refs/heads/main' && always()
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./playwright-report
-          destination_dir: playwright-report
-
   docker:
     name: Docker Build
     runs-on: ubuntu-latest
