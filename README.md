@@ -2,6 +2,24 @@
 
 Full-stack web application for managing MRT Jakarta stations and train schedules. Built with modern web technologies focusing on clean architecture, type safety, and great developer experience.
 
+## Screenshots
+
+| Dashboard | Stations | Station Map |
+|-----------|----------|-------------|
+| ![Dashboard](docs/screenshots/dashboard.png) | ![Stations](docs/screenshots/stations.png) | ![Station Map](docs/screenshots/map.png) |
+
+| Schedules | Route Planner | Station Compare |
+|-----------|---------------|-----------------|
+| ![Schedules](docs/screenshots/schedules.png) | ![Route Planner](docs/screenshots/route-planner.png) | ![Station Compare](docs/screenshots/station-compare.png) |
+
+| Login (Google OAuth) | Dashboard Dark Mode | Activity Log |
+|----------------------|---------------------|--------------|
+| ![Login](docs/screenshots/login.png) | ![Dark Mode](docs/screenshots/dashboard-dark.png) | ![Activity Log](docs/screenshots/activity-log.png) |
+
+## Demo Video
+
+https://github.com/user-attachments/assets/demo-video.mp4
+
 ## Tech Stack
 
 ### Frontend
@@ -95,7 +113,7 @@ React Page → TanStack Query Hook → API Service (axios) → Express Route →
 
 ## Features
 
-- **Authentication** - Register/Login with JWT tokens
+- **Authentication** - Register/Login with JWT tokens + Google OAuth
 - **Dashboard** - Overview with statistics, hourly schedule chart, export CSV
 - **Station Management** - CRUD operations with search, filter, and pagination
 - **Schedule Management** - Train schedule CRUD with station relations and pagination
@@ -183,6 +201,7 @@ Operator: operator@mrtjakarta.co.id / operator123
 |--------|----------|-------------|
 | POST | `/api/auth/register` | Register new user |
 | POST | `/api/auth/login` | Login |
+| POST | `/api/auth/google` | Login/Register with Google OAuth |
 | GET | `/api/auth/profile` | Get current user profile |
 
 ### Stations
