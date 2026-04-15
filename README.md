@@ -112,7 +112,7 @@ React Page → TanStack Query Hook → API Service (axios) → Express Route →
 - **Role-Based Access** - Admin vs Operator UI with conditional CRUD actions
 - **CI/CD** - GitHub Actions pipeline with lint, type check, test, and build
 - **Unit Testing** - Vitest + React Testing Library + Supertest
-- **E2E Testing** - Playwright (34 tests across 13 spec files)
+- **E2E Testing** - Playwright (46 tests across 15 spec files)
 - **Real-time Notifications** - Server-Sent Events with notification center
 - **i18n** - English and Indonesian language support
 - **Route Planner** - Find schedules between stations
@@ -210,6 +210,18 @@ Operator: operator@mrtjakarta.co.id / operator123
 | GET | `/api/dashboard/stations-summary` | Station status summary |
 | GET | `/api/dashboard/schedules-by-hour` | Hourly schedule distribution |
 
+### Users (Admin only)
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/users` | List users (with search, role filter) |
+| PATCH | `/api/users/:id/role` | Update user role |
+| DELETE | `/api/users/:id` | Delete user |
+
+### Activity Logs
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/activity-logs` | List activity logs (with entity filter) |
+
 ### Export
 | Method | Endpoint | Description |
 |--------|----------|-------------|
@@ -258,7 +270,7 @@ npx playwright test --debug
 npm run e2e:report
 ```
 
-### Test Coverage (34 tests)
+### Test Coverage (46 tests)
 | Spec File | Tests | What's Tested |
 |-----------|-------|---------------|
 | `auth.spec.ts` | 11 | Login, register, validation, auth guard, 404 |
@@ -274,18 +286,20 @@ npm run e2e:report
 | `profile.spec.ts` | 2 | Profile info, password validation |
 | `changelog.spec.ts` | 1 | Version display |
 | `navigation.spec.ts` | 4 | Sidebar routing, admin menu, logout |
+| `ux-auth.spec.ts` | 4 | Password toggle, tab order, validation UX |
+| `ux.spec.ts` | 8 | Forms, breadcrumbs, empty states, sidebar |
 
 ## Database Schema
 
 ```
-users          stations              schedules
-├── id         ├── id                ├── id
-├── name       ├── name              ├── train_number
-├── email      ├── code (unique)     ├── departure_station_id → stations.id
-├── password   ├── location          ├── arrival_station_id → stations.id
-├── role       ├── latitude          ├── departure_time
-├── created_at ├── longitude         ├── arrival_time
-└── updated_at ├── status            ├── day_type
+users          stations              schedules             activity_logs
+├── id         ├── id                ├── id                ├── id
+├── name       ├── name              ├── train_number      ├── user_id → users.id
+├── email      ├── code (unique)     ├── departure_station ├── action (CREATE/UPDATE/DELETE)
+├── password   ├── location          ├── arrival_station   ├── entity (Station/Schedule)
+├── role       ├── latitude          ├── departure_time    ├── entity_id
+├── created_at ├── longitude         ├── arrival_time      ├── details
+└── updated_at ├── status            ├── day_type          └── created_at
                ├── order             ├── status
                ├── created_at        ├── created_at
                └── updated_at        └── updated_at

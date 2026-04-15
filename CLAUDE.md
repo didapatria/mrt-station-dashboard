@@ -1,7 +1,7 @@
 # MRT Station Management Dashboard
 
 ## Project Overview
-Full-stack web application for managing MRT Jakarta stations and schedules. Built as a portfolio project demonstrating full-stack proficiency with 85+ commits, 14+ pages, 40+ features.
+Full-stack web application for managing MRT Jakarta stations and schedules. Built as a portfolio project demonstrating full-stack proficiency with 100+ commits, 14+ pages, 40+ features, 46 E2E tests.
 
 ## Commands
 
@@ -11,7 +11,10 @@ Full-stack web application for managing MRT Jakarta stations and schedules. Buil
 - Start: `npm start`
 - Database migrate: `npx prisma migrate dev`
 - Database seed: `npm run seed`
+- Database reset + seed: `npm run db:fresh:seed` (like Laravel migrate:fresh --seed)
+- Database reset only: `npm run db:fresh`
 - Generate Prisma client: `npx prisma generate`
+- Prisma Studio: `npm run db:studio`
 - Test: `NODE_ENV=test npm run test:run`
 
 ### Frontend (`/frontend`)

@@ -5,6 +5,21 @@ import { Separator } from "@/components/ui/separator";
 
 const changelog = [
   {
+    version: "2.3.0",
+    date: "April 2026",
+    items: [
+      "E2E automation testing — 46 Playwright tests across 15 spec files",
+      "UX tests — password toggle, tab order, empty states, breadcrumbs",
+      "Show/hide password toggle on login and register pages",
+      "Tab focus fix — password eye buttons skipped in tab order",
+      "Sidebar tour tooltip repositioned to prevent clipping",
+      "React strict mode fixes (useMemo, pure render)",
+      "Development rate limit increased (1000 req/15min)",
+      "Database reset scripts (db:fresh, db:fresh:seed)",
+      "Swagger API docs updated to v2.3.0 with new schemas",
+    ],
+  },
+  {
     version: "2.2.0",
     date: "April 2026",
     items: [
