@@ -107,6 +107,11 @@ app.get("/api/events", (_req, res) => {
   sseService.addClient(res);
 });
 
+// Redirect root to API docs
+app.get("/", (_req, res) => {
+  res.redirect("/api/docs");
+});
+
 // Error handler
 app.use(errorHandler);
 
