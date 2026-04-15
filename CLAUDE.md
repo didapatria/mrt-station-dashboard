@@ -103,8 +103,8 @@ src/
 
 ## Pages
 - Dashboard, Stations, Station Detail, Schedules, Station Map
-- Route Planner, Station Compare, Users (Admin), Activity Log
-- Settings, Changelog, Profile, 404
+- Route Planner, Station Compare, Users (Admin), Access Management (Admin)
+- Activity Log, Settings, Changelog, Profile, 404
 
 ## Data Flow
 ```
@@ -123,7 +123,8 @@ React Page → TanStack Query Hook → API Service (axios) → Express Route →
 - Backend controllers are thin — business logic goes in services
 - Server state uses TanStack Query hooks, not Zustand
 - Mutations use `useMutation` with `queryClient.invalidateQueries`
-- RBAC: use `useRole()` hook for conditional UI
+- RBAC: use `usePermission()` hook for permission-based UI, `useRole()` for role checks
+- Permissions: defined in `lib/permissions.ts`, enforced by backend adminMiddleware on CUD routes
 - i18n: use `t()` for all user-facing strings
 - Use inline styles for flex layouts to prevent linter issues
 - Tests: co-locate with source, use Vitest + RTL

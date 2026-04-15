@@ -5,6 +5,18 @@ import { Separator } from "@/components/ui/separator";
 
 const changelog = [
   {
+    version: "2.4.0",
+    date: "April 2026",
+    items: [
+      "User Access Management page — role-permission matrix (admin-only)",
+      "RBAC permission system — permissions config, usePermission() hook",
+      "Backend admin middleware on station and schedule CUD routes",
+      "Confirm password field on register page",
+      "Fix login page refresh on wrong credentials",
+      "Register page eslint fix and typed error handling",
+    ],
+  },
+  {
     version: "2.3.0",
     date: "April 2026",
     items: [
@@ -16,7 +28,7 @@ const changelog = [
       "React strict mode fixes (useMemo, pure render)",
       "Development rate limit increased (1000 req/15min)",
       "Database reset scripts (db:fresh, db:fresh:seed)",
-      "Swagger API docs updated to v2.3.0 with new schemas",
+      "Swagger API docs updated with new schemas",
     ],
   },
   {

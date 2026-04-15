@@ -4,7 +4,7 @@ test.describe("Navigation", () => {
   test("should navigate to all pages via sidebar", async ({ adminPage: page }) => {
     const routes = [
       "/stations", "/schedules", "/map", "/route-planner", "/compare",
-      "/activity", "/changelog", "/profile", "/dashboard",
+      "/access", "/activity", "/changelog", "/profile", "/dashboard",
     ];
     for (const route of routes) {
       await navigateTo(page, route);

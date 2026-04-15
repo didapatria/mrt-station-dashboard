@@ -27,3 +27,25 @@ test.describe("Users Page", () => {
     expect(isVisible).toBeFalsy();
   });
 });
+
+test.describe("Access Management Page", () => {
+  test("should display permission matrix for admin", async ({ adminPage: page }) => {
+    await navigateTo(page, "/access");
+
+    await expect(page.locator("text=/User Access Management/i").first()).toBeVisible();
+    await expect(page.locator("text=/Permission Matrix/i").first()).toBeVisible();
+
+    // Should show both roles
+    await expect(page.locator("text=ADMIN").first()).toBeVisible();
+    await expect(page.locator("text=OPERATOR").first()).toBeVisible();
+
+    // Should show permission groups
+    await expect(page.locator("text=/Stations|Schedules|Users/").first()).toBeVisible();
+  });
+
+  test("should not show Access Management for operator", async ({ operatorPage: page }) => {
+    const accessLink = page.locator("a[href='/access']");
+    const isVisible = await accessLink.isVisible().catch(() => false);
+    expect(isVisible).toBeFalsy();
+  });
+});

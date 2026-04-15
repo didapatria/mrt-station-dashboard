@@ -109,7 +109,7 @@ React Page → TanStack Query Hook → API Service (axios) → Express Route →
 - **Form Validation** - Client & server-side with Zod schemas
 - **Server State Caching** - Automatic caching and background refetching (TanStack Query)
 - **Interactive Station Map** - Leaflet-powered map with route visualization and station markers
-- **Role-Based Access** - Admin vs Operator UI with conditional CRUD actions
+- **Role-Based Access Control** - Permission system with Access Management page, admin middleware on CUD routes
 - **CI/CD** - GitHub Actions pipeline with lint, type check, test, and build
 - **Unit Testing** - Vitest + React Testing Library + Supertest
 - **E2E Testing** - Playwright (46 tests across 15 spec files)
