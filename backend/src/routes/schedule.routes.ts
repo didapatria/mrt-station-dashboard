@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { scheduleController } from "../controllers/schedule.controller";
 import { authMiddleware } from "../middlewares/auth.middleware";
+import { adminMiddleware } from "../middlewares/admin.middleware";
 import { validate } from "../middlewares/validate.middleware";
 import {
   createScheduleSchema,
@@ -114,7 +115,7 @@ scheduleRouter.get("/:id", scheduleController.getById);
  *       422:
  *         description: Validation error
  */
-scheduleRouter.post("/", validate(createScheduleSchema), scheduleController.create);
+scheduleRouter.post("/", adminMiddleware, validate(createScheduleSchema), scheduleController.create);
 
 /**
  * @swagger
@@ -141,7 +142,7 @@ scheduleRouter.post("/", validate(createScheduleSchema), scheduleController.crea
  *       404:
  *         description: Schedule not found
  */
-scheduleRouter.put("/:id", validate(updateScheduleSchema), scheduleController.update);
+scheduleRouter.put("/:id", adminMiddleware, validate(updateScheduleSchema), scheduleController.update);
 
 /**
  * @swagger
@@ -162,4 +163,4 @@ scheduleRouter.put("/:id", validate(updateScheduleSchema), scheduleController.up
  *       404:
  *         description: Schedule not found
  */
-scheduleRouter.delete("/:id", scheduleController.delete);
+scheduleRouter.delete("/:id", adminMiddleware, scheduleController.delete);

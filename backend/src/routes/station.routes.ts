@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { stationController } from "../controllers/station.controller";
 import { authMiddleware } from "../middlewares/auth.middleware";
+import { adminMiddleware } from "../middlewares/admin.middleware";
 import { validate } from "../middlewares/validate.middleware";
 import {
   createStationSchema,
@@ -110,7 +111,7 @@ stationRouter.get("/:id", stationController.getById);
  *       422:
  *         description: Validation error
  */
-stationRouter.post("/", validate(createStationSchema), stationController.create);
+stationRouter.post("/", adminMiddleware, validate(createStationSchema), stationController.create);
 
 /**
  * @swagger
@@ -139,7 +140,7 @@ stationRouter.post("/", validate(createStationSchema), stationController.create)
  *       422:
  *         description: Validation error
  */
-stationRouter.put("/:id", validate(updateStationSchema), stationController.update);
+stationRouter.put("/:id", adminMiddleware, validate(updateStationSchema), stationController.update);
 
 /**
  * @swagger
@@ -160,4 +161,4 @@ stationRouter.put("/:id", validate(updateStationSchema), stationController.updat
  *       404:
  *         description: Station not found
  */
-stationRouter.delete("/:id", stationController.delete);
+stationRouter.delete("/:id", adminMiddleware, stationController.delete);
