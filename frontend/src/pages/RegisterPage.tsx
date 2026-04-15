@@ -15,6 +15,10 @@ const registerSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   email: z.string().email("Invalid email address"),
   password: z.string().min(6, "Password must be at least 6 characters"),
+  confirmPassword: z.string().min(1, "Please confirm your password"),
+}).refine((data) => data.password === data.confirmPassword, {
+  message: "Passwords do not match",
+  path: ["confirmPassword"],
 });
 
 type RegisterFormData = z.infer<typeof registerSchema>;
@@ -36,8 +40,8 @@ export default function RegisterPage() {
     } catch { /* handled by mutation */ }
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const errorMessage = registerMutation.error ? (registerMutation.error as any)?.response?.data?.error || registerMutation.error.message : null;
+  const err = registerMutation.error as { response?: { data?: { error?: string } } } | null;
+  const errorMessage = err?.response?.data?.error || registerMutation.error?.message || null;
 
   return (
     <>
@@ -72,6 +76,11 @@ export default function RegisterPage() {
                 </Button>
               </div>
               {errors.password && <p className="text-sm text-destructive">{errors.password.message}</p>}
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="confirmPassword">{t("auth.confirmPassword") || "Confirm Password"}</Label>
+              <Input id="confirmPassword" type="password" placeholder="Re-enter your password" {...register("confirmPassword")} />
+              {errors.confirmPassword && <p className="text-sm text-destructive">{errors.confirmPassword.message}</p>}
             </div>
             <Button type="submit" className="w-full" disabled={registerMutation.isPending}>
               {registerMutation.isPending ? t("auth.creatingAccount") : t("auth.signUp")}
