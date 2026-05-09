@@ -1,6 +1,26 @@
 # MRT Jakarta - Station Management Dashboard
 
+<p align="left">
+  <img src="https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=white" />
+  <img src="https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white" />
+  <img src="https://img.shields.io/badge/Node.js-339933?logo=node.js&logoColor=white" />
+  <img src="https://img.shields.io/badge/Express-000000?logo=express&logoColor=white" />
+  <img src="https://img.shields.io/badge/PostgreSQL-4169E1?logo=postgresql&logoColor=white" />
+  <img src="https://img.shields.io/badge/Prisma-2D3748?logo=prisma&logoColor=white" />
+  <img src="https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=white" />
+</p>
+
 Full-stack web application for managing MRT Jakarta stations and train schedules. Built with modern web technologies focusing on clean architecture, type safety, and great developer experience.
+
+## Highlights
+
+- 🚉 Full-stack enterprise dashboard application
+- 🔐 JWT Authentication + Google OAuth
+- 🗺 Interactive map with Leaflet
+- 🧪 Unit + E2E testing with Vitest & Playwright
+- 📦 Dockerized development environment
+- 🌐 Internationalization (EN/ID)
+- 📱 Responsive + PWA support
 
 ## Tech Stack
 
