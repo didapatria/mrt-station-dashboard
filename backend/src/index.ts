@@ -13,6 +13,7 @@ import { dashboardRouter } from "./routes/dashboard.routes";
 import { exportRouter } from "./routes/export.routes";
 import { userRouter } from "./routes/user.routes";
 import { activityLogRouter } from "./routes/activity-log.routes";
+import { feedbackRouter } from "./routes/feedback.routes";
 import { sseService } from "./services/sse.service";
 import { authMiddleware } from "./middlewares/auth.middleware";
 import { errorHandler } from "./middlewares/error.middleware";
@@ -101,6 +102,7 @@ app.use("/api/dashboard", dashboardRouter);
 app.use("/api/export", exportRouter);
 app.use("/api/users", userRouter);
 app.use("/api/activity-logs", activityLogRouter);
+app.use("/api/feedback", feedbackRouter);
 
 // SSE endpoint for real-time notifications
 app.get("/api/events", (_req, res) => {

@@ -515,7 +515,7 @@ export default function SchedulesPage() {
 
       {/* Create/Edit Dialog */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent>
+        <DialogContent className="max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>
               {editingSchedule
@@ -543,7 +543,7 @@ export default function SchedulesPage() {
               )}
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label>{t("schedules.departureStation")}</Label>
                 <Select
@@ -599,8 +599,8 @@ export default function SchedulesPage() {
                 </Label>
                 <Input
                   id="departureTime"
+                  type="time"
                   {...register("departureTime")}
-                  placeholder="06:00"
                 />
                 {errors.departureTime && (
                   <p className="text-xs text-destructive">
@@ -614,8 +614,8 @@ export default function SchedulesPage() {
                 </Label>
                 <Input
                   id="arrivalTime"
+                  type="time"
                   {...register("arrivalTime")}
-                  placeholder="06:30"
                 />
                 {errors.arrivalTime && (
                   <p className="text-xs text-destructive">

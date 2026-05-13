@@ -136,6 +136,23 @@
     "goBack": "Go Back",
     "dashboard": "Dashboard"
   },
+  "feedback": {
+    "title": "Send Feedback",
+    "subtitle": "Help us improve by sharing your experience",
+    "rating": "Rating",
+    "category": "Category",
+    "categories": {
+      "general": "General",
+      "bug": "Bug Report",
+      "feature": "Feature Request",
+      "ux": "UX / Design"
+    },
+    "message": "Message",
+    "messagePlaceholder": "Tell us what you think...",
+    "submit": "Send Feedback",
+    "success": "Feedback sent! Thank you.",
+    "error": "Failed to send feedback."
+  },
   "activity": {
     "title": "Activity Log",
     "subtitle": "Track all changes made to stations and schedules",

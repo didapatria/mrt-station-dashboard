@@ -40,8 +40,22 @@ model User {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   activityLogs ActivityLog[]
+  feedbacks    Feedback[]
 
   @@map("users")
+}
+
+model Feedback {
+  id        String   @id @default(uuid())
+  userId    String   @map("user_id")
+  rating    Int
+  category  String
+  message   String
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("feedbacks")
 }
 
 model ActivityLog {

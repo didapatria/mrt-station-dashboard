@@ -23,6 +23,7 @@ import {
   RefreshCw,
   Navigation,
   KeyRound,
+  MessageSquare,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -52,6 +53,7 @@ import { useRealtimeNotifications } from "@/hooks/use-sse";
 import { NotificationCenter } from "@/components/NotificationCenter";
 import { KeyboardShortcuts } from "@/components/KeyboardShortcuts";
 import { OnboardingTour } from "@/components/OnboardingTour";
+import { FeedbackDialog } from "@/components/FeedbackDialog";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 
@@ -148,6 +150,7 @@ export default function DashboardLayout() {
   const navigate = useNavigate();
   const [sheetOpen, setSheetOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
+  const [feedbackOpen, setFeedbackOpen] = useState(false);
   const queryClient = useQueryClient();
   useRealtimeNotifications();
 
@@ -223,6 +226,7 @@ export default function DashboardLayout() {
   return (
     <div className="min-h-screen bg-muted/40">
       <OnboardingTour />
+      <FeedbackDialog open={feedbackOpen} onOpenChange={setFeedbackOpen} />
       <aside
         className={cn(
           "fixed top-0 left-0 z-40 h-full bg-card border-r hidden lg:flex lg:flex-col transition-all duration-200",
@@ -297,13 +301,13 @@ export default function DashboardLayout() {
             </kbd>
           </Button>
 
-          <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground" onClick={() => queryClient.invalidateQueries()}>
+          <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hidden sm:inline-flex" onClick={() => queryClient.invalidateQueries()}>
             <RefreshCw className="h-4 w-4" />
           </Button>
           <CommandSearch />
-          <KeyboardShortcuts />
+          <span className="hidden sm:inline"><KeyboardShortcuts /></span>
           <span data-tour="notifications"><NotificationCenter /></span>
-          <span data-tour="language"><LanguageToggle /></span>
+          <span data-tour="language" className="hidden xs:inline"><LanguageToggle /></span>
           <span data-tour="theme"><ThemeToggle /></span>
           <Separator orientation="vertical" className="h-5" />
 
@@ -333,6 +337,10 @@ export default function DashboardLayout() {
               <DropdownMenuItem onClick={() => navigate("/profile")}>
                 <Settings className="h-4 w-4 mr-2" />
                 {t("nav.profile")}
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setFeedbackOpen(true)}>
+                <MessageSquare className="h-4 w-4 mr-2" />
+                {t("feedback.title")}
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem

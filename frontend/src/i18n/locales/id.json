@@ -136,6 +136,23 @@
     "goBack": "Kembali",
     "dashboard": "Dasbor"
   },
+  "feedback": {
+    "title": "Kirim Masukan",
+    "subtitle": "Bantu kami berkembang dengan berbagi pengalaman Anda",
+    "rating": "Penilaian",
+    "category": "Kategori",
+    "categories": {
+      "general": "Umum",
+      "bug": "Laporan Bug",
+      "feature": "Permintaan Fitur",
+      "ux": "UX / Desain"
+    },
+    "message": "Pesan",
+    "messagePlaceholder": "Ceritakan pendapat Anda...",
+    "submit": "Kirim Masukan",
+    "success": "Masukan terkirim! Terima kasih.",
+    "error": "Gagal mengirim masukan."
+  },
   "activity": {
     "title": "Log Aktivitas",
     "subtitle": "Lacak semua perubahan pada stasiun dan jadwal",

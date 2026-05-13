@@ -4,8 +4,16 @@
       "Bash(npm run *)",
       "Bash(npm test *)",
       "Bash(npx prisma *)",
+      "Bash(npx playwright *)",
       "Bash(docker-compose *)",
       "Bash(cd * && npm *)",
+      "Bash(rtk *)",
+      "Bash(git status)",
+      "Bash(git log *)",
+      "Bash(git diff *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(gh *)",
       "Read",
       "Edit",
       "Write",
@@ -14,7 +22,22 @@
     ],
     "deny": [
       "Bash(rm -rf *)",
-      "Bash(git push --force *)"
+      "Bash(git push --force *)",
+      "Bash(git reset --hard *)",
+      "Bash(npx prisma migrate reset)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "rtk hook claude"
+          }
+        ]
+      }
     ]
   }
 }

@@ -75,6 +75,7 @@ import { CSVImportDialog } from "@/components/CSVImport";
 import { ColumnToggle } from "@/components/ColumnToggle";
 import { useColumnToggle } from "@/hooks/use-column-toggle";
 import { useRole } from "@/hooks/use-role";
+import { MapLocationPicker } from "@/components/MapLocationPicker";
 import type { Station } from "@/types";
 
 const stationSchema = z.object({
@@ -155,6 +156,7 @@ export default function StationsPage() {
     handleSubmit,
     reset,
     setValue,
+    watch,
     formState: { errors },
   } = useForm<StationFormData>({
     resolver: zodResolver(stationSchema) as Resolver<StationFormData>,
@@ -542,7 +544,7 @@ export default function StationsPage() {
 
       {/* Create/Edit Dialog */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent>
+        <DialogContent className="max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>
               {editingStation
@@ -556,7 +558,7 @@ export default function StationsPage() {
             </DialogDescription>
           </DialogHeader>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="name">{t("stations.stationName")}</Label>
                 <Input id="name" {...register("name")} />
@@ -587,33 +589,46 @@ export default function StationsPage() {
               )}
             </div>
 
-            <div className="grid grid-cols-3 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="latitude">{t("stations.latitude")}</Label>
-                <Input
-                  id="latitude"
-                  type="number"
-                  step="any"
-                  {...register("latitude")}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="longitude">{t("stations.longitude")}</Label>
-                <Input
-                  id="longitude"
-                  type="number"
-                  step="any"
-                  {...register("longitude")}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="order">{t("stations.order")}</Label>
-                <Input id="order" type="number" {...register("order")} />
-                {errors.order && (
-                  <p className="text-xs text-destructive">
-                    {errors.order.message}
-                  </p>
-                )}
+            <div className="space-y-2">
+              <Label>{t("stations.coordinates")}</Label>
+              <MapLocationPicker
+                latitude={watch("latitude")}
+                longitude={watch("longitude")}
+                onPick={(lat, lng) => {
+                  setValue("latitude", lat);
+                  setValue("longitude", lng);
+                }}
+              />
+              <div className="grid grid-cols-3 gap-2">
+                <div className="space-y-1">
+                  <Label htmlFor="latitude" className="text-xs text-muted-foreground">{t("stations.latitude")}</Label>
+                  <Input
+                    id="latitude"
+                    type="number"
+                    step="any"
+                    className="h-8 text-xs"
+                    {...register("latitude")}
+                  />
+                </div>
+                <div className="space-y-1">
+                  <Label htmlFor="longitude" className="text-xs text-muted-foreground">{t("stations.longitude")}</Label>
+                  <Input
+                    id="longitude"
+                    type="number"
+                    step="any"
+                    className="h-8 text-xs"
+                    {...register("longitude")}
+                  />
+                </div>
+                <div className="space-y-1">
+                  <Label htmlFor="order" className="text-xs text-muted-foreground">{t("stations.order")}</Label>
+                  <Input id="order" type="number" className="h-8 text-xs" {...register("order")} />
+                  {errors.order && (
+                    <p className="text-xs text-destructive">
+                      {errors.order.message}
+                    </p>
+                  )}
+                </div>
               </div>
             </div>
 
