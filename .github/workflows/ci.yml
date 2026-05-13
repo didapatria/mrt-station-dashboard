@@ -112,7 +112,7 @@ jobs:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/mrt_station_db?schema=public
         run: |
           npx prisma generate --schema=src/prisma/schema.prisma
-          npx prisma migrate deploy --schema=src/prisma/schema.prisma
+          npx prisma migrate deploy --schema=prisma/schema.prisma
           npm run seed
 
       - name: Start backend
