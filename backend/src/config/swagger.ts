@@ -16,8 +16,12 @@ const options: swaggerJsdoc.Options = {
     },
     servers: [
       {
+        url: "https://mrt-station-backend.fly.dev/api",
+        description: "Production (Fly.io)",
+      },
+      {
         url: "/api",
-        description: "API Server",
+        description: "Local",
       },
     ],
     components: {
@@ -183,6 +187,26 @@ const options: swaggerJsdoc.Options = {
               default: "ACTIVE",
             },
             order: { type: "integer", example: 14 },
+          },
+        },
+        Feedback: {
+          type: "object",
+          properties: {
+            id: { type: "string", format: "uuid" },
+            userId: { type: "string", format: "uuid" },
+            rating: { type: "integer", minimum: 1, maximum: 5, example: 4 },
+            category: { type: "string", enum: ["general", "bug", "feature", "ux"], example: "general" },
+            message: { type: "string", example: "Great dashboard!" },
+            createdAt: { type: "string", format: "date-time" },
+          },
+        },
+        FeedbackRequest: {
+          type: "object",
+          required: ["rating", "category", "message"],
+          properties: {
+            rating: { type: "integer", minimum: 1, maximum: 5, example: 4 },
+            category: { type: "string", enum: ["general", "bug", "feature", "ux"], example: "general" },
+            message: { type: "string", example: "Great dashboard!" },
           },
         },
         ActivityLog: {

@@ -137,7 +137,7 @@ React Page → TanStack Query Hook → API Service (axios) → Express Route →
 - **Role-Based Access Control** - Permission system with Access Management page, admin middleware on CUD routes
 - **CI/CD** - GitHub Actions pipeline with lint, type check, test, and build
 - **Unit Testing** - Vitest + React Testing Library + Supertest
-- **E2E Testing** - Playwright (50 tests across 16 spec files)
+- **E2E Testing** - Playwright (52 tests across 16 spec files)
 - **Real-time Notifications** - Server-Sent Events with notification center
 - **i18n** - English and Indonesian language support
 - **Route Planner** - Find schedules between stations
@@ -167,7 +167,7 @@ React Page → TanStack Query Hook → API Service (axios) → Express Route →
 docker-compose up -d
 
 # Run database migrations
-docker exec mrt-backend npx prisma migrate deploy --schema=src/prisma/schema.prisma
+docker exec mrt-backend npx prisma migrate deploy --schema=prisma/schema.prisma
 
 # Seed database
 docker exec mrt-backend node dist/prisma/seed.js
@@ -302,7 +302,7 @@ npx playwright test --debug
 npm run e2e:report
 ```
 
-### Test Coverage (50 tests)
+### Test Coverage (52 tests)
 | Spec File | Tests | What's Tested |
 |-----------|-------|---------------|
 | `auth.spec.ts` | 13 | Login, register, Google OAuth, validation, auth guard, 404 |
@@ -369,9 +369,8 @@ flyctl secrets set \
   CORS_ORIGIN="https://your-app.vercel.app" \
   GOOGLE_CLIENT_ID="your-client-id.apps.googleusercontent.com"
 
-# Run migrations on first deploy
+# Deploy (migrations run automatically on container start)
 flyctl deploy
-flyctl ssh console -C "npx prisma migrate deploy --schema=dist/prisma/schema.prisma"
 ```
 
 Free tier: 3 shared VMs, 256MB RAM, no sleep (auto-stop/start on traffic).
@@ -400,9 +399,10 @@ Or connect GitHub repo in [vercel.com](https://vercel.com) dashboard:
 
 ### CI/CD
 GitHub Actions runs on every push to `main`:
-- Lint + type check
-- Unit tests (Vitest + Supertest)
-- Build
+- Frontend: lint, type check, unit tests (Vitest + RTL), build
+- Backend: unit tests (Supertest), build
+- E2E: Playwright (52 tests) against local services + postgres
+- Docker: `docker compose build` validation
 
 ## License
 
