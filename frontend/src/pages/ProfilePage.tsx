@@ -158,7 +158,9 @@ export default function ProfilePage() {
   const infraStack = [
     "Docker",
     "docker-compose",
-    "Render",
+    "Fly.io",
+    "Supabase",
+    "Vercel",
     "GitHub Actions",
     "PWA",
     "Playwright",

@@ -50,7 +50,9 @@ Full-stack web application for managing MRT Jakarta stations and train schedules
 
 ### Infrastructure
 - **Docker** + **docker-compose** - Containerization
-- **Render** - Cloud deployment (web service + PostgreSQL)
+- **Fly.io** - Backend deployment (free tier, auto-stop/start)
+- **Supabase** - Managed PostgreSQL (free tier)
+- **Vercel** - Frontend deployment (free tier)
 
 ## Key Libraries
 
@@ -336,22 +338,65 @@ users          stations              schedules             activity_logs        
                └── updated_at        └── updated_at
 ```
 
-## Deployment (Render)
+## Deployment (Free Stack)
 
-Deployed on [Render](https://render.com) — free tier for web services + managed PostgreSQL.
+**Supabase** (PostgreSQL) + **Fly.io** (backend) + **Vercel** (frontend) — all free tiers, no sleep on backend.
 
-### Setup
+### 1. Database — Supabase
 
-1. **Create a PostgreSQL database** on Render (free tier)
-2. **Create a Web Service** for the backend:
-   - Environment: `Docker`
-   - Root directory: `backend`
-   - Set env vars: `DATABASE_URL`, `JWT_SECRET`, `CORS_ORIGIN`, `GOOGLE_CLIENT_ID`
-3. **Create a Static Site** for the frontend:
-   - Build command: `npm install && npm run build`
-   - Publish directory: `dist`
-   - Root directory: `frontend`
-   - Set env var: `VITE_API_URL`, `VITE_GOOGLE_CLIENT_ID`
+1. Create project at [supabase.com](https://supabase.com)
+2. Go to **Project Settings → Database → Connection string → URI**
+3. Copy the connection string (use Transaction pooler for production):
+   ```
+   postgresql://postgres.[ref]:[password]@aws-0-ap-southeast-1.pooler.supabase.com:6543/postgres?pgbouncer=true&connection_limit=1
+   ```
+
+### 2. Backend — Fly.io
+
+```bash
+# Install flyctl
+brew install flyctl
+
+# Login
+flyctl auth login
+
+# Deploy from backend/ directory
+cd backend
+flyctl launch --no-deploy   # creates fly.toml (already included)
+flyctl secrets set \
+  DATABASE_URL="postgresql://..." \
+  JWT_SECRET="your-secret" \
+  CORS_ORIGIN="https://your-app.vercel.app" \
+  GOOGLE_CLIENT_ID="your-client-id.apps.googleusercontent.com"
+
+# Run migrations on first deploy
+flyctl deploy
+flyctl ssh console -C "npx prisma migrate deploy --schema=dist/prisma/schema.prisma"
+```
+
+Free tier: 3 shared VMs, 256MB RAM, no sleep (auto-stop/start on traffic).
+
+### 3. Frontend — Vercel
+
+```bash
+# Install Vercel CLI
+npm i -g vercel
+
+# Deploy from frontend/ directory
+cd frontend
+vercel --prod
+# Set env vars when prompted:
+#   VITE_API_URL = https://mrt-station-backend.fly.dev/api
+#   VITE_GOOGLE_CLIENT_ID = your-client-id.apps.googleusercontent.com
+```
+
+Or connect GitHub repo in [vercel.com](https://vercel.com) dashboard:
+- Root directory: `frontend`
+- Build command: `npm run build`
+- Output directory: `dist`
+- Add same env vars above
+
+`vercel.json` handles SPA routing (included in repo).
 
 ### CI/CD
 GitHub Actions runs on every push to `main`:
