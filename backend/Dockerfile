@@ -8,7 +8,7 @@ COPY . .
 RUN npx prisma generate --schema=src/prisma/schema.prisma
 RUN npx tsc
 RUN cp -r src/prisma dist/
-RUN cp -r prisma/migrations dist/prisma/migrations
+RUN rm -rf dist/prisma/migrations && cp -r prisma/migrations dist/prisma/migrations
 
 # Production stage
 FROM node:22-alpine AS production
