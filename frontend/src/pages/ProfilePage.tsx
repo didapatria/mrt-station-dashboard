@@ -158,7 +158,7 @@ export default function ProfilePage() {
   const infraStack = [
     "Docker",
     "docker-compose",
-    "Railway",
+    "Render",
     "GitHub Actions",
     "PWA",
     "Playwright",
@@ -167,7 +167,7 @@ export default function ProfilePage() {
     "Vitest",
     "React Testing Library",
     "Supertest",
-    "Playwright (48 E2E)",
+    "Playwright (50 E2E)",
   ];
 
   return (

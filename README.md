@@ -50,6 +50,7 @@ Full-stack web application for managing MRT Jakarta stations and train schedules
 
 ### Infrastructure
 - **Docker** + **docker-compose** - Containerization
+- **Render** - Cloud deployment (web service + PostgreSQL)
 
 ## Key Libraries
 
@@ -118,8 +119,9 @@ React Page → TanStack Query Hook → API Service (axios) → Express Route →
 
 - **Authentication** - Register/Login with JWT tokens + Google OAuth
 - **Dashboard** - Overview with statistics, hourly schedule chart, export CSV
-- **Station Management** - CRUD operations with search, filter, and pagination
-- **Schedule Management** - Train schedule CRUD with station relations and pagination
+- **Station Management** - CRUD with map location picker, search, filter, pagination
+- **Schedule Management** - Train schedule CRUD with native time picker and station relations
+- **Feedback System** - Star rating + category form, stored in DB, admin-viewable
 - **API Documentation** - Interactive Swagger UI at `/api/docs`
 - **Dark Mode** - Toggle between light and dark themes
 - **Toast Notifications** - Real-time feedback for all actions
@@ -129,11 +131,11 @@ React Page → TanStack Query Hook → API Service (axios) → Express Route →
 - **Animations** - Smooth page transitions and list animations (Framer Motion)
 - **Form Validation** - Client & server-side with Zod schemas
 - **Server State Caching** - Automatic caching and background refetching (TanStack Query)
-- **Interactive Station Map** - Leaflet-powered map with route visualization and station markers
+- **Interactive Station Map** - Leaflet-powered map with route visualization, station markers, and location picker
 - **Role-Based Access Control** - Permission system with Access Management page, admin middleware on CUD routes
 - **CI/CD** - GitHub Actions pipeline with lint, type check, test, and build
 - **Unit Testing** - Vitest + React Testing Library + Supertest
-- **E2E Testing** - Playwright (48 tests across 15 spec files)
+- **E2E Testing** - Playwright (50 tests across 16 spec files)
 - **Real-time Notifications** - Server-Sent Events with notification center
 - **i18n** - English and Indonesian language support
 - **Route Planner** - Find schedules between stations
@@ -239,6 +241,12 @@ Operator: operator@mrtjakarta.co.id / operator123
 | PATCH | `/api/users/:id/role` | Update user role |
 | DELETE | `/api/users/:id` | Delete user |
 
+### Feedback
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/feedback` | Submit feedback (authenticated) |
+| GET | `/api/feedback` | List feedback (admin only) |
+
 ### Activity Logs
 | Method | Endpoint | Description |
 |--------|----------|-------------|
@@ -292,13 +300,14 @@ npx playwright test --debug
 npm run e2e:report
 ```
 
-### Test Coverage (48 tests)
+### Test Coverage (50 tests)
 | Spec File | Tests | What's Tested |
 |-----------|-------|---------------|
 | `auth.spec.ts` | 13 | Login, register, Google OAuth, validation, auth guard, 404 |
 | `dashboard.spec.ts` | 2 | Stats, charts, tabs, export buttons |
-| `stations.spec.ts` | 3 | List, search, sort, pagination, detail, CRUD |
-| `schedules.spec.ts` | 2 | List, search, timeline, CRUD |
+| `stations.spec.ts` | 3 | List, search, sort, pagination, detail, CRUD, map picker |
+| `schedules.spec.ts` | 2 | List, search, timeline, CRUD, time picker |
+| `feedback.spec.ts` | 2 | Feedback dialog, star rating, submit, disabled state |
 | `users.spec.ts` | 2 | List, search, RBAC |
 | `map.spec.ts` | 2 | Leaflet map, sidebar search |
 | `route-planner.spec.ts` | 1 | Station selection, results |
@@ -314,18 +323,41 @@ npm run e2e:report
 ## Database Schema
 
 ```
-users          stations              schedules             activity_logs
-├── id         ├── id                ├── id                ├── id
-├── name       ├── name              ├── train_number      ├── user_id → users.id
-├── email      ├── code (unique)     ├── departure_station ├── action (CREATE/UPDATE/DELETE)
-├── password   ├── location          ├── arrival_station   ├── entity (Station/Schedule)
-├── role       ├── latitude          ├── departure_time    ├── entity_id
-├── created_at ├── longitude         ├── arrival_time      ├── details
+users          stations              schedules             activity_logs         feedbacks
+├── id         ├── id                ├── id                ├── id                ├── id
+├── name       ├── name              ├── train_number      ├── user_id → users   ├── user_id → users
+├── email      ├── code (unique)     ├── departure_station ├── action            ├── rating (1-5)
+├── password   ├── location          ├── arrival_station   ├── entity            ├── category
+├── role       ├── latitude          ├── departure_time    ├── entity_id         ├── message
+├── created_at ├── longitude         ├── arrival_time      ├── details           └── created_at
 └── updated_at ├── status            ├── day_type          └── created_at
                ├── order             ├── status
                ├── created_at        ├── created_at
                └── updated_at        └── updated_at
 ```
+
+## Deployment (Render)
+
+Deployed on [Render](https://render.com) — free tier for web services + managed PostgreSQL.
+
+### Setup
+
+1. **Create a PostgreSQL database** on Render (free tier)
+2. **Create a Web Service** for the backend:
+   - Environment: `Docker`
+   - Root directory: `backend`
+   - Set env vars: `DATABASE_URL`, `JWT_SECRET`, `CORS_ORIGIN`, `GOOGLE_CLIENT_ID`
+3. **Create a Static Site** for the frontend:
+   - Build command: `npm install && npm run build`
+   - Publish directory: `dist`
+   - Root directory: `frontend`
+   - Set env var: `VITE_API_URL`, `VITE_GOOGLE_CLIENT_ID`
+
+### CI/CD
+GitHub Actions runs on every push to `main`:
+- Lint + type check
+- Unit tests (Vitest + Supertest)
+- Build
 
 ## License
 
