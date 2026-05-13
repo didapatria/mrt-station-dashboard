@@ -96,6 +96,9 @@ jobs:
         with:
           node-version: lts/*
 
+      - name: Install root dependencies
+        run: npm install
+
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
 
@@ -138,9 +141,6 @@ jobs:
           echo "Waiting for frontend..."
           timeout 30 bash -c 'until curl -s http://localhost:5173 > /dev/null 2>&1; do sleep 1; done'
           echo "Both services ready!"
-
-      - name: Install root dependencies
-        run: npm install
 
       - name: Run E2E tests
         run: npx playwright test --reporter=html
