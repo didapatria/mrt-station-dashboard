@@ -12,6 +12,15 @@
 
 Full-stack web application for managing MRT Jakarta stations and train schedules. Built with modern web technologies focusing on clean architecture, type safety, and great developer experience.
 
+## Live Deployment
+
+| Service | URL |
+|---------|-----|
+| Frontend | [mrt-station-dashboard.vercel.app](https://mrt-station-dashboard.vercel.app/) |
+| Backend API | [mrt-station-backend.fly.dev](https://mrt-station-backend.fly.dev/) |
+| API Docs | [mrt-station-backend.fly.dev/api/docs](https://mrt-station-backend.fly.dev/api/docs) |
+| E2E Report | [didapatria.github.io/mrt-station-dashboard](https://didapatria.github.io/mrt-station-dashboard/) |
+
 ## Highlights
 
 - 🚉 Full-stack enterprise dashboard application
