@@ -28,4 +28,16 @@ test.describe("Station Compare Page", () => {
       page.locator("text=/LBB|FTM|CPR|HJN|BLA|BLM|ASN|SNY|IST|BNH|STB|DKA|BHI/").first()
     ).toBeVisible();
   });
+
+  test("should show all stations in compare dropdowns", async ({ adminPage: page }) => {
+    await navigateTo(page, "/compare");
+
+    const comboboxes = page.locator("button[role='combobox']");
+    await comboboxes.first().click();
+    await page.waitForTimeout(300);
+
+    const options = page.getByRole("option");
+    expect(await options.count()).toBeGreaterThanOrEqual(13);
+    await page.keyboard.press("Escape");
+  });
 });

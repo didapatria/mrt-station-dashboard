@@ -1,7 +1,7 @@
 # MRT Station Management Dashboard
 
 ## Project Overview
-Full-stack web application for managing MRT Jakarta stations and schedules. Built as a portfolio project demonstrating full-stack proficiency with 100+ commits, 14+ pages, 40+ features, 52 E2E tests.
+Full-stack web application for managing MRT Jakarta stations and schedules. Built as a portfolio project demonstrating full-stack proficiency with 100+ commits, 14+ pages, 40+ features, 72 E2E tests.
 
 ## Commands
 

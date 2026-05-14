@@ -24,6 +24,15 @@ test.describe("Dashboard", () => {
     await expect(page.locator("table").first()).toBeVisible();
   });
 
+  test("should not show admin-only controls for operator", async ({ operatorPage: page }) => {
+    await navigateTo(page, "/dashboard");
+    await page.waitForTimeout(2000);
+    // Operator sees dashboard but not user management link
+    await expect(page.locator("text=/good (morning|afternoon|evening)/i")).toBeVisible();
+    const usersLink = page.locator("a[href='/users']");
+    expect(await usersLink.isVisible().catch(() => false)).toBeFalsy();
+  });
+
   test("should switch data tabs and use export buttons", async ({ adminPage: page }) => {
     await navigateTo(page, "/dashboard");
 

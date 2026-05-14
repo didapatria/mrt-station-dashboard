@@ -64,4 +64,64 @@ test.describe("Feedback", () => {
     const submitBtn = dialog.getByRole("button", { name: /send feedback/i });
     await expect(submitBtn).toBeDisabled();
   });
+
+  test("should submit feedback with bug category", async ({ adminPage: page }) => {
+    await navigateTo(page, "/dashboard");
+
+    const userMenu = page.locator("[data-tour='user-menu']");
+    await userMenu.click();
+    await page.waitForTimeout(300);
+    await page.getByRole("menuitem", { name: /feedback/i }).click();
+    await page.waitForTimeout(500);
+
+    const dialog = page.locator("[role='dialog']");
+    await expect(dialog).toBeVisible();
+
+    // Click 3rd star
+    const stars = dialog.locator("button").filter({ has: page.locator("svg") });
+    await stars.nth(2).click();
+    await page.waitForTimeout(200);
+
+    // Select bug category
+    await dialog.locator("button[role='combobox']").click();
+    await page.waitForTimeout(200);
+    await page.getByRole("option", { name: /bug/i }).click();
+    await page.waitForTimeout(200);
+
+    await dialog.locator("textarea").fill("Found a minor display issue on mobile.");
+
+    const submitBtn = dialog.getByRole("button", { name: /send feedback/i });
+    await expect(submitBtn).toBeEnabled();
+    await submitBtn.click();
+    await page.waitForTimeout(2000);
+    await expect(dialog).not.toBeVisible({ timeout: 5000 });
+  });
+
+  test("should submit feedback as operator", async ({ operatorPage: page }) => {
+    await navigateTo(page, "/dashboard");
+
+    const userMenu = page.locator("[data-tour='user-menu']");
+    await userMenu.click();
+    await page.waitForTimeout(300);
+    await page.getByRole("menuitem", { name: /feedback/i }).click();
+    await page.waitForTimeout(500);
+
+    const dialog = page.locator("[role='dialog']");
+    await expect(dialog).toBeVisible();
+
+    const stars = dialog.locator("button").filter({ has: page.locator("svg") });
+    await stars.nth(4).click();
+    await page.waitForTimeout(200);
+
+    await dialog.locator("button[role='combobox']").click();
+    await page.waitForTimeout(200);
+    await page.getByRole("option", { name: /feature/i }).click();
+    await page.waitForTimeout(200);
+
+    await dialog.locator("textarea").fill("Would love to see bulk schedule import.");
+
+    await dialog.getByRole("button", { name: /send feedback/i }).click();
+    await page.waitForTimeout(2000);
+    await expect(dialog).not.toBeVisible({ timeout: 5000 });
+  });
 });

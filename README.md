@@ -137,7 +137,7 @@ React Page → TanStack Query Hook → API Service (axios) → Express Route →
 - **Role-Based Access Control** - Spatie-style 5-table RBAC (`roles`, `permissions`, `model_has_roles`, `model_has_permissions`, `role_has_permissions`), `GET /api/permissions/me` returns user permissions on login, stored in Zustand, no hardcoded frontend config
 - **CI/CD** - GitHub Actions pipeline with lint, type check, test, and build
 - **Unit Testing** - Vitest + React Testing Library + Supertest
-- **E2E Testing** - Playwright (52 tests across 16 spec files)
+- **E2E Testing** - Playwright (72 tests across 17 spec files)
 - **Real-time Notifications** - Server-Sent Events with notification center
 - **i18n** - English and Indonesian language support
 - **Route Planner** - Find schedules between stations
@@ -308,22 +308,23 @@ npx playwright test --debug
 npm run e2e:report
 ```
 
-### Test Coverage (52 tests)
+### Test Coverage (72 tests)
 | Spec File | Tests | What's Tested |
 |-----------|-------|---------------|
 | `auth.spec.ts` | 13 | Login, register, Google OAuth, validation, auth guard, 404 |
-| `dashboard.spec.ts` | 2 | Stats, charts, tabs, export buttons |
+| `dashboard.spec.ts` | 3 | Stats, charts, tabs, export buttons, operator RBAC |
 | `stations.spec.ts` | 3 | List, search, sort, pagination, detail, CRUD, map picker |
 | `schedules.spec.ts` | 2 | List, search, timeline, CRUD, time picker |
-| `feedback.spec.ts` | 2 | Feedback dialog, star rating, submit, disabled state |
-| `users.spec.ts` | 2 | List, search, RBAC |
+| `feedback.spec.ts` | 4 | Star rating, submit, disabled state, bug category, operator submit |
+| `permissions.spec.ts` | 6 | API /me (admin+operator), /all (admin+403), Access Management page |
+| `users.spec.ts` | 4 | List, search, RBAC, access management matrix |
 | `map.spec.ts` | 2 | Leaflet map, sidebar search |
-| `route-planner.spec.ts` | 1 | Station selection, results |
-| `station-compare.spec.ts` | 1 | Side-by-side comparison |
-| `activity-log.spec.ts` | 1 | Entries, filter, CSV export |
+| `route-planner.spec.ts` | 3 | Station selection, results, all 13 stations, operator access |
+| `station-compare.spec.ts` | 2 | Side-by-side comparison, 13 stations in dropdown |
+| `activity-log.spec.ts` | 3 | Entries, entity filter, CSV export |
 | `settings.spec.ts` | 2 | Language/theme toggle |
-| `profile.spec.ts` | 2 | Profile info, password validation |
-| `changelog.spec.ts` | 1 | Version display |
+| `profile.spec.ts` | 5 | Profile info, password validation, permissions card, operator perms, tech stack tabs |
+| `changelog.spec.ts` | 4 | Version display, Latest badge, commit hash links, content per version |
 | `navigation.spec.ts` | 4 | Sidebar routing, admin menu, logout |
 | `ux-auth.spec.ts` | 4 | Password toggle, tab order, validation UX |
 | `ux.spec.ts` | 8 | Forms, breadcrumbs, empty states, sidebar |
