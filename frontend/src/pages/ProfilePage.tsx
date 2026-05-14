@@ -34,6 +34,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuthStore } from "@/store/auth.store";
 import { useThemeStore } from "@/store/theme.store";
+import { usePermission } from "@/hooks/use-permission";
 import { authService } from "@/services/auth.service";
 
 const passwordSchema = z
@@ -53,6 +54,7 @@ export default function ProfilePage() {
   const { t, i18n } = useTranslation();
   const { user } = useAuthStore();
   const { theme } = useThemeStore();
+  const { permissions } = usePermission();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showCurrent, setShowCurrent] = useState(false);
   const [showNew, setShowNew] = useState(false);
@@ -301,6 +303,29 @@ export default function ProfilePage() {
                       </div>
                     );
                   })}
+                </div>
+              </CardContent>
+            </Card>
+            {/* Permissions */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg" style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "0.5rem" }}>
+                  <Shield className="h-4 w-4" />
+                  Permissions
+                </CardTitle>
+                <CardDescription>{permissions.length} permissions granted</CardDescription>
+              </CardHeader>
+              <Separator />
+              <CardContent className="pt-4">
+                <div className="flex flex-wrap gap-1.5">
+                  {permissions.map((perm) => (
+                    <Badge key={perm} variant="outline" className="text-xs font-mono">
+                      {perm}
+                    </Badge>
+                  ))}
+                  {permissions.length === 0 && (
+                    <p className="text-sm text-muted-foreground">No permissions assigned</p>
+                  )}
                 </div>
               </CardContent>
             </Card>

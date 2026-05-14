@@ -21,6 +21,8 @@ paths:
 - Permissions fetched from `GET /api/permissions/me` on login, stored in Zustand `auth.store` as `permissions[]`
 - `usePermission().can(perm)` reads from store — no hardcoded role→permission mapping in frontend
 - `lib/permissions.ts` contains only UI labels/groups, not permission data
+- RBAC is Spatie-style 5-table: `roles`, `permissions`, `model_has_roles`, `model_has_permissions`, `role_has_permissions`
+- `permissionService.getPermissionsForUser(userId)` = role perms ∪ direct user perms (deduped Set)
 
 ## Backend
 - Controllers handle HTTP concerns only (parse request, send response)
@@ -29,6 +31,7 @@ paths:
 - Auth middleware extracts JWT and attaches user to request
 - Google OAuth via google-auth-library (verify ID token, auto-register)
 - Admin middleware checks role for protected endpoints
+- RBAC: `permissionService.getPermissionsForUser(userId)` merges role + direct permissions; called in auth.service on login/register/google-auth
 - Activity logging on all CUD operations via activityLogService
 - SSE broadcasts on data changes for real-time notifications
 - Rate limiting on API (100 req/15min) and auth (20 req/15min)

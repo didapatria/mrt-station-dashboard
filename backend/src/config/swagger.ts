@@ -6,14 +6,25 @@ const options: swaggerJsdoc.Options = {
     openapi: "3.0.0",
     info: {
       title: "MRT Jakarta - Station Management API",
-      version: "2.5.0",
+      version: "2.6.0",
       description:
-        "REST API for managing MRT Jakarta stations and train schedules. Features JWT authentication, RBAC (Admin/Operator), activity logging, real-time SSE notifications, CSV/PDF export, and rate limiting. Built with Express.js 5, TypeScript, Prisma ORM, and PostgreSQL.",
+        "REST API for managing MRT Jakarta stations and train schedules. Features JWT authentication, Spatie-style 5-table RBAC (roles, permissions, model_has_roles, model_has_permissions, role_has_permissions), activity logging, real-time SSE notifications, CSV/PDF export, and rate limiting. Built with Express.js 5, TypeScript, Prisma ORM, and PostgreSQL.",
       contact: {
         name: "Dida",
         email: "didapatria3@gmail.com",
       },
     },
+    tags: [
+      { name: "Auth", description: "Authentication endpoints" },
+      { name: "Stations", description: "Station management" },
+      { name: "Schedules", description: "Schedule management" },
+      { name: "Dashboard", description: "Dashboard statistics" },
+      { name: "Users", description: "User management (Admin only)" },
+      { name: "Permissions", description: "RBAC permission management" },
+      { name: "Feedback", description: "User feedback" },
+      { name: "Activity Logs", description: "Audit trail" },
+      { name: "Export", description: "CSV/PDF export" },
+    ],
     servers: [
       {
         url: "https://mrt-station-backend.fly.dev/api",

@@ -134,7 +134,7 @@ React Page → TanStack Query Hook → API Service (axios) → Express Route →
 - **Form Validation** - Client & server-side with Zod schemas
 - **Server State Caching** - Automatic caching and background refetching (TanStack Query)
 - **Interactive Station Map** - Leaflet-powered map with route visualization, station markers, and location picker
-- **Role-Based Access Control** - DB-backed permissions (`permissions` + `role_permissions` tables), `GET /api/permissions/me` returns role's permissions on login, stored in Zustand, no hardcoded frontend config
+- **Role-Based Access Control** - Spatie-style 5-table RBAC (`roles`, `permissions`, `model_has_roles`, `model_has_permissions`, `role_has_permissions`), `GET /api/permissions/me` returns user permissions on login, stored in Zustand, no hardcoded frontend config
 - **CI/CD** - GitHub Actions pipeline with lint, type check, test, and build
 - **Unit Testing** - Vitest + React Testing Library + Supertest
 - **E2E Testing** - Playwright (52 tests across 16 spec files)
@@ -331,17 +331,26 @@ npm run e2e:report
 ## Database Schema
 
 ```
-users          stations              schedules             activity_logs         feedbacks          permissions        role_permissions
-├── id         ├── id                ├── id                ├── id                ├── id             ├── id             ├── id
-├── name       ├── name              ├── train_number      ├── user_id → users   ├── user_id → users├── name (unique)  ├── role
-├── email      ├── code (unique)     ├── departure_station ├── action            ├── rating (1-5)   ├── label          ├── permission_id → permissions
-├── password   ├── location          ├── arrival_station   ├── entity            ├── category       └── group
-├── role       ├── latitude          ├── departure_time    ├── entity_id         ├── message
-├── created_at ├── longitude         ├── arrival_time      ├── details           └── created_at
-└── updated_at ├── status            ├── day_type          └── created_at
-               ├── order             ├── status
-               ├── created_at        ├── created_at
-               └── updated_at        └── updated_at
+users          stations          schedules          activity_logs       feedbacks
+├── id         ├── id            ├── id             ├── id              ├── id
+├── name       ├── name          ├── train_number   ├── user_id         ├── user_id
+├── email      ├── code          ├── departure_stn  ├── action          ├── rating (1-5)
+├── password   ├── location      ├── arrival_stn    ├── entity          ├── category
+├── role*      ├── latitude      ├── departure_time ├── entity_id       ├── message
+├── created_at ├── longitude     ├── arrival_time   ├── details         └── created_at
+└── updated_at ├── status        ├── day_type       └── created_at
+               ├── order         ├── status
+               ├── created_at    ├── created_at
+               └── updated_at    └── updated_at
+
+RBAC (Spatie-style 5-table)
+roles                permissions            model_has_roles        model_has_permissions  role_has_permissions
+├── id               ├── id                ├── user_id → users    ├── user_id → users    ├── role_id → roles
+├── name (unique)    ├── name (unique)     └── role_id → roles    └── permission_id      └── permission_id
+└── label            ├── label                                         → permissions          → permissions
+                     └── group
+
+* role enum kept on users for backward compat; model_has_roles is source of truth for RBAC
 ```
 
 ## Deployment (Free Stack)
@@ -407,7 +416,7 @@ Or connect GitHub repo in [vercel.com](https://vercel.com) dashboard:
 GitHub Actions runs on every push to `main`:
 - Frontend: lint, type check, unit tests (Vitest + RTL), build
 - Backend: unit tests (Supertest), build
-- E2E: Playwright (52 tests) against local services + postgres
+- E2E: Playwright (52 tests) against local services + postgres — report with UI screenshots deployed to **[GitHub Pages](https://didapatria.github.io/mrt-station-dashboard/)**
 - Docker: `docker compose build` validation
 
 ## License
