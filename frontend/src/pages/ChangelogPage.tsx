@@ -8,7 +8,7 @@ const changelog = [
   {
     version: "2.7.0",
     date: "14 May 2026",
-    commits: ["13949a0", "fc1c219", "55cd598", "fc6a2e3", "0b7604d", "393c4e8"],
+    commits: ["16aa9d8", "13949a0", "fc1c219", "55cd598", "fc6a2e3", "0b7604d", "393c4e8"],
     items: [
       "Spatie-style 5-table RBAC — roles, permissions, model_has_roles, model_has_permissions, role_has_permissions",
       "permissionService.getPermissionsForUser() merges role + direct permissions (Set dedup)",
@@ -16,7 +16,8 @@ const changelog = [
       "Playwright screenshots captured for every test (visible on GitHub Pages report)",
       "GitHub Pages deployment for Playwright E2E report — QA accessible",
       "Swagger API v2.6.0 — tagged endpoints, Permissions routes documented",
-      "Architecture rules updated for 5-table RBAC pattern",
+      "Changelog shows commit hashes with links to GitHub per release",
+      "README database schema updated to 5-table RBAC diagram",
     ],
   },
   {
