@@ -1,7 +1,7 @@
 # MRT Station Management Dashboard
 
 ## Project Overview
-Full-stack web application for managing MRT Jakarta stations and schedules. Built as a portfolio project demonstrating full-stack proficiency with 100+ commits, 14+ pages, 40+ features, 48 E2E tests.
+Full-stack web application for managing MRT Jakarta stations and schedules. Built as a portfolio project demonstrating full-stack proficiency with 100+ commits, 14+ pages, 40+ features, 52 E2E tests.
 
 ## Commands
 
@@ -93,10 +93,10 @@ src/
 ### Backend (`/backend/src`)
 ```
 src/
-├── controllers/    # Request handlers (auth, station, schedule, user, activity-log)
+├── controllers/    # Request handlers (auth, station, schedule, user, activity-log, permission, feedback)
 ├── middlewares/     # Auth, admin, error handling, validation, rate limiting
 ├── routes/         # Express route definitions
-├── services/       # Business logic (+ activity-log, sse)
+├── services/       # Business logic (+ activity-log, sse, permission, feedback)
 ├── validators/     # Zod schemas for request validation
 ├── __tests__/      # API tests (Supertest)
 └── prisma/         # Schema, migrations, seed
@@ -114,7 +114,7 @@ React Page → TanStack Query Hook → API Service (axios) → Express Route →
 
 ## State Management
 - **Server state**: TanStack Query (5min staleTime, auto-invalidation)
-- **Client state**: Zustand + localStorage (auth token, theme, language)
+- **Client state**: Zustand + localStorage (auth token, theme, language, permissions[])
 
 ## Rules
 - Use TypeScript strict mode in both frontend and backend
@@ -125,7 +125,8 @@ React Page → TanStack Query Hook → API Service (axios) → Express Route →
 - Server state uses TanStack Query hooks, not Zustand
 - Mutations use `useMutation` with `queryClient.invalidateQueries`
 - RBAC: use `usePermission()` hook for permission-based UI, `useRole()` for role checks
-- Permissions: defined in `lib/permissions.ts`, enforced by backend adminMiddleware on CUD routes
+- Permissions: stored in DB (`permissions` + `role_permissions` tables), fetched via `GET /api/permissions/me` on login, stored in Zustand auth store `permissions[]`, enforced by backend adminMiddleware on CUD routes
+- `lib/permissions.ts` contains only UI labels/groups (no hardcoded role data)
 - i18n: use `t()` for all user-facing strings
 - Use inline styles for flex layouts to prevent linter issues
 - Tests: co-locate with source, use Vitest + RTL

@@ -39,8 +39,11 @@ test.describe("Access Management Page", () => {
     await expect(page.locator("text=ADMIN").first()).toBeVisible();
     await expect(page.locator("text=OPERATOR").first()).toBeVisible();
 
-    // Should show permission groups
+    // Should show permission groups (loaded from API)
     await expect(page.locator("text=/Stations|Schedules|Users/").first()).toBeVisible();
+
+    // Permission badges loaded from DB
+    await expect(page.locator("text=/View Stations|Create Stations/").first()).toBeVisible({ timeout: 10000 });
   });
 
   test("should not show Access Management for operator", async ({ operatorPage: page }) => {

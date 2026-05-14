@@ -18,6 +18,9 @@ paths:
 - Use inline styles for flex layouts (linter-safe)
 - Nav items organized in groups (operations, management, system)
 - Admin-only features gated by `useRole()` hook
+- Permissions fetched from `GET /api/permissions/me` on login, stored in Zustand `auth.store` as `permissions[]`
+- `usePermission().can(perm)` reads from store — no hardcoded role→permission mapping in frontend
+- `lib/permissions.ts` contains only UI labels/groups, not permission data
 
 ## Backend
 - Controllers handle HTTP concerns only (parse request, send response)

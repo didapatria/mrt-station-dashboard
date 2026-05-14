@@ -189,6 +189,16 @@ const options: swaggerJsdoc.Options = {
             order: { type: "integer", example: 14 },
           },
         },
+        Permission: {
+          type: "object",
+          properties: {
+            id: { type: "string", format: "uuid" },
+            name: { type: "string", example: "stations.view" },
+            label: { type: "string", example: "View Stations" },
+            group: { type: "string", example: "Stations" },
+            roles: { type: "array", items: { type: "string", enum: ["ADMIN", "OPERATOR"] } },
+          },
+        },
         Feedback: {
           type: "object",
           properties: {

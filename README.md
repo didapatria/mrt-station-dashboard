@@ -134,7 +134,7 @@ React Page → TanStack Query Hook → API Service (axios) → Express Route →
 - **Form Validation** - Client & server-side with Zod schemas
 - **Server State Caching** - Automatic caching and background refetching (TanStack Query)
 - **Interactive Station Map** - Leaflet-powered map with route visualization, station markers, and location picker
-- **Role-Based Access Control** - Permission system with Access Management page, admin middleware on CUD routes
+- **Role-Based Access Control** - DB-backed permissions (`permissions` + `role_permissions` tables), `GET /api/permissions/me` returns role's permissions on login, stored in Zustand, no hardcoded frontend config
 - **CI/CD** - GitHub Actions pipeline with lint, type check, test, and build
 - **Unit Testing** - Vitest + React Testing Library + Supertest
 - **E2E Testing** - Playwright (52 tests across 16 spec files)
@@ -243,6 +243,12 @@ Operator: operator@mrtjakarta.co.id / operator123
 | PATCH | `/api/users/:id/role` | Update user role |
 | DELETE | `/api/users/:id` | Delete user |
 
+### Permissions
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/permissions/me` | Get current user's permissions (authenticated) |
+| GET | `/api/permissions` | List all permissions with role assignments (admin only) |
+
 ### Feedback
 | Method | Endpoint | Description |
 |--------|----------|-------------|
@@ -325,11 +331,11 @@ npm run e2e:report
 ## Database Schema
 
 ```
-users          stations              schedules             activity_logs         feedbacks
-├── id         ├── id                ├── id                ├── id                ├── id
-├── name       ├── name              ├── train_number      ├── user_id → users   ├── user_id → users
-├── email      ├── code (unique)     ├── departure_station ├── action            ├── rating (1-5)
-├── password   ├── location          ├── arrival_station   ├── entity            ├── category
+users          stations              schedules             activity_logs         feedbacks          permissions        role_permissions
+├── id         ├── id                ├── id                ├── id                ├── id             ├── id             ├── id
+├── name       ├── name              ├── train_number      ├── user_id → users   ├── user_id → users├── name (unique)  ├── role
+├── email      ├── code (unique)     ├── departure_station ├── action            ├── rating (1-5)   ├── label          ├── permission_id → permissions
+├── password   ├── location          ├── arrival_station   ├── entity            ├── category       └── group
 ├── role       ├── latitude          ├── departure_time    ├── entity_id         ├── message
 ├── created_at ├── longitude         ├── arrival_time      ├── details           └── created_at
 └── updated_at ├── status            ├── day_type          └── created_at
