@@ -11,14 +11,30 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { ROLE_PERMISSIONS, PERMISSION_LABELS, PERMISSION_GROUPS, type Permission } from "@/lib/permissions";
+import { PERMISSION_GROUPS, PERMISSION_LABELS } from "@/lib/permissions";
+import { useAllPermissions } from "@/hooks/use-permissions";
 
-function hasRole(role: string, permission: Permission): boolean {
-  return ROLE_PERMISSIONS[role]?.includes(permission) ?? false;
-}
+const ROLES = ["ADMIN", "OPERATOR"];
 
 export default function AccessManagementPage() {
-  const roles = Object.keys(ROLE_PERMISSIONS);
+  const { data: permissions = [], isLoading } = useAllPermissions();
+
+  function hasRole(role: string, permName: string): boolean {
+    const perm = permissions.find((p) => p.name === permName);
+    return perm?.roles.includes(role) ?? false;
+  }
+
+  function getRolePermissions(role: string): string[] {
+    return permissions.filter((p) => p.roles.includes(role)).map((p) => p.name);
+  }
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <p className="text-muted-foreground">Loading permissions...</p>
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -30,44 +46,47 @@ export default function AccessManagementPage() {
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
         {/* Role Summary Cards */}
         <div className="grid gap-4 md:grid-cols-2">
-          {roles.map((role) => (
-            <Card key={role}>
-              <CardHeader>
-                <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "0.75rem" }}>
-                  {role === "ADMIN" ? (
-                    <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                      <ShieldCheck className="h-5 w-5 text-primary" />
+          {ROLES.map((role) => {
+            const rolePerms = getRolePermissions(role);
+            return (
+              <Card key={role}>
+                <CardHeader>
+                  <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "0.75rem" }}>
+                    {role === "ADMIN" ? (
+                      <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                        <ShieldCheck className="h-5 w-5 text-primary" />
+                      </div>
+                    ) : (
+                      <div className="h-10 w-10 rounded-lg bg-muted flex items-center justify-center">
+                        <Shield className="h-5 w-5 text-muted-foreground" />
+                      </div>
+                    )}
+                    <div>
+                      <CardTitle className="text-lg">{role}</CardTitle>
+                      <CardDescription>
+                        {role === "ADMIN"
+                          ? "Full access to all features and management"
+                          : "Read-only access to operational data"}
+                      </CardDescription>
                     </div>
-                  ) : (
-                    <div className="h-10 w-10 rounded-lg bg-muted flex items-center justify-center">
-                      <Shield className="h-5 w-5 text-muted-foreground" />
-                    </div>
-                  )}
-                  <div>
-                    <CardTitle className="text-lg">{role}</CardTitle>
-                    <CardDescription>
-                      {role === "ADMIN"
-                        ? "Full access to all features and management"
-                        : "Read-only access to operational data"}
-                    </CardDescription>
                   </div>
-                </div>
-              </CardHeader>
-              <Separator />
-              <CardContent className="pt-4">
-                <div className="flex flex-wrap gap-1.5">
-                  {ROLE_PERMISSIONS[role].map((perm) => (
-                    <Badge key={perm} variant={role === "ADMIN" ? "default" : "secondary"} className="text-xs">
-                      {PERMISSION_LABELS[perm]}
-                    </Badge>
-                  ))}
-                </div>
-                <p className="text-xs text-muted-foreground mt-3">
-                  {ROLE_PERMISSIONS[role].length} permissions assigned
-                </p>
-              </CardContent>
-            </Card>
-          ))}
+                </CardHeader>
+                <Separator />
+                <CardContent className="pt-4">
+                  <div className="flex flex-wrap gap-1.5">
+                    {rolePerms.map((perm) => (
+                      <Badge key={perm} variant={role === "ADMIN" ? "default" : "secondary"} className="text-xs">
+                        {PERMISSION_LABELS[perm] ?? perm}
+                      </Badge>
+                    ))}
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-3">
+                    {rolePerms.length} permissions assigned
+                  </p>
+                </CardContent>
+              </Card>
+            );
+          })}
         </div>
 
         {/* Permission Matrix */}
@@ -83,7 +102,7 @@ export default function AccessManagementPage() {
                   <TableRow>
                     <TableHead className="w-48">Module</TableHead>
                     <TableHead className="w-56">Permission</TableHead>
-                    {roles.map((role) => (
+                    {ROLES.map((role) => (
                       <TableHead key={role} className="text-center w-32">
                         <div style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "center", gap: "0.375rem" }}>
                           {role === "ADMIN" ? <ShieldCheck className="h-3.5 w-3.5" /> : <Shield className="h-3.5 w-3.5" />}
@@ -102,8 +121,8 @@ export default function AccessManagementPage() {
                             {group.group}
                           </TableCell>
                         )}
-                        <TableCell className="text-sm">{PERMISSION_LABELS[perm]}</TableCell>
-                        {roles.map((role) => (
+                        <TableCell className="text-sm">{PERMISSION_LABELS[perm] ?? perm}</TableCell>
+                        {ROLES.map((role) => (
                           <TableCell key={role} className="text-center">
                             {hasRole(role, perm) ? (
                               <Check className="h-4 w-4 text-success mx-auto" />

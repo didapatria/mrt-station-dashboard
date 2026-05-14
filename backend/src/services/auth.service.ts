@@ -5,6 +5,7 @@ import { PrismaClient } from "@prisma/client";
 import { OAuth2Client } from "google-auth-library";
 import { RegisterInput, LoginInput } from "../validators/auth.validator";
 import { JwtPayload } from "../types";
+import { permissionService } from "./permission.service";
 
 let googleClient: OAuth2Client | null = null;
 
@@ -45,8 +46,9 @@ export const authService = {
     });
 
     const token = generateToken({ userId: user.id, email: user.email });
+    const permissions = await permissionService.getPermissionsForRole(user.role);
 
-    return { user, token };
+    return { user, token, permissions };
   },
 
   async login(input: LoginInput) {
@@ -65,6 +67,7 @@ export const authService = {
     }
 
     const token = generateToken({ userId: user.id, email: user.email });
+    const permissions = await permissionService.getPermissionsForRole(user.role);
 
     return {
       user: {
@@ -75,6 +78,7 @@ export const authService = {
         createdAt: user.createdAt,
       },
       token,
+      permissions,
     };
   },
 
@@ -144,6 +148,7 @@ export const authService = {
     }
 
     const token = generateToken({ userId: user.id, email: user.email });
+    const permissions = await permissionService.getPermissionsForRole(user.role);
 
     return {
       user: {
@@ -154,6 +159,7 @@ export const authService = {
         createdAt: user.createdAt,
       },
       token,
+      permissions,
     };
   },
 };

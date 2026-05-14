@@ -110,3 +110,25 @@ model Schedule {
 
   @@map("schedules")
 }
+
+model Permission {
+  id    String @id @default(uuid())
+  name  String @unique
+  label String
+  group String
+
+  rolePermissions RolePermission[]
+
+  @@map("permissions")
+}
+
+model RolePermission {
+  id           String   @id @default(uuid())
+  role         UserRole
+  permissionId String   @map("permission_id")
+
+  permission Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@unique([role, permissionId])
+  @@map("role_permissions")
+}

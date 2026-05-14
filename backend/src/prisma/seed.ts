@@ -168,6 +168,65 @@ async function main() {
   }
   console.log(`Created ${scheduleCount} schedules`);
 
+  // Seed permissions
+  const permissionsData = [
+    { name: "dashboard.view", label: "View Dashboard", group: "Dashboard" },
+    { name: "dashboard.export", label: "Export Reports (CSV/PDF)", group: "Dashboard" },
+    { name: "stations.view", label: "View Stations", group: "Stations" },
+    { name: "stations.create", label: "Create Stations", group: "Stations" },
+    { name: "stations.edit", label: "Edit Stations", group: "Stations" },
+    { name: "stations.delete", label: "Delete Stations", group: "Stations" },
+    { name: "schedules.view", label: "View Schedules", group: "Schedules" },
+    { name: "schedules.create", label: "Create Schedules", group: "Schedules" },
+    { name: "schedules.edit", label: "Edit Schedules", group: "Schedules" },
+    { name: "schedules.delete", label: "Delete Schedules", group: "Schedules" },
+    { name: "users.view", label: "View Users", group: "Users" },
+    { name: "users.edit_role", label: "Change User Roles", group: "Users" },
+    { name: "users.delete", label: "Delete Users", group: "Users" },
+    { name: "activity_logs.view", label: "View Activity Logs", group: "Activity Logs" },
+    { name: "map.view", label: "View Station Map", group: "Map" },
+    { name: "settings.view", label: "View Settings", group: "Settings" },
+    { name: "settings.edit", label: "Change Settings", group: "Settings" },
+  ];
+
+  const adminPermissions = permissionsData.map(p => p.name);
+  const operatorPermissions = [
+    "dashboard.view", "stations.view", "schedules.view",
+    "activity_logs.view", "map.view", "settings.view", "settings.edit",
+  ];
+
+  for (const perm of permissionsData) {
+    await prisma.permission.upsert({
+      where: { name: perm.name },
+      update: { label: perm.label, group: perm.group },
+      create: perm,
+    });
+  }
+  console.log("Seeded permissions:", permissionsData.length);
+
+  // Seed role_permissions
+  for (const permName of adminPermissions) {
+    const perm = await prisma.permission.findUnique({ where: { name: permName } });
+    if (perm) {
+      await prisma.rolePermission.upsert({
+        where: { role_permissionId: { role: "ADMIN", permissionId: perm.id } },
+        update: {},
+        create: { role: "ADMIN", permissionId: perm.id },
+      });
+    }
+  }
+  for (const permName of operatorPermissions) {
+    const perm = await prisma.permission.findUnique({ where: { name: permName } });
+    if (perm) {
+      await prisma.rolePermission.upsert({
+        where: { role_permissionId: { role: "OPERATOR", permissionId: perm.id } },
+        update: {},
+        create: { role: "OPERATOR", permissionId: perm.id },
+      });
+    }
+  }
+  console.log("Seeded role permissions");
+
   console.log("Seeding completed!");
 }
 

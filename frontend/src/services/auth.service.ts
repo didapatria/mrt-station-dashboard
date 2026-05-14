@@ -4,14 +4,14 @@ import type { ApiResponse, User, LoginForm, RegisterForm } from "@/types";
 export const authService = {
   async login(data: LoginForm) {
     const response = await api.post<
-      ApiResponse<{ user: User; token: string }>
+      ApiResponse<{ user: User; token: string; permissions: string[] }>
     >("/auth/login", data);
     return response.data;
   },
 
   async register(data: RegisterForm) {
     const response = await api.post<
-      ApiResponse<{ user: User; token: string }>
+      ApiResponse<{ user: User; token: string; permissions: string[] }>
     >("/auth/register", data);
     return response.data;
   },
@@ -23,7 +23,7 @@ export const authService = {
 
   async googleAuth(credential: string) {
     const response = await api.post<
-      ApiResponse<{ user: User; token: string }>
+      ApiResponse<{ user: User; token: string; permissions: string[] }>
     >("/auth/google", { credential });
     return response.data;
   },
