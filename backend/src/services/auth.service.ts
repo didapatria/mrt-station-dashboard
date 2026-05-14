@@ -46,7 +46,7 @@ export const authService = {
     });
 
     const token = generateToken({ userId: user.id, email: user.email });
-    const permissions = await permissionService.getPermissionsForRole(user.role);
+    const permissions = await permissionService.getPermissionsForUser(user.id);
 
     return { user, token, permissions };
   },
@@ -67,7 +67,7 @@ export const authService = {
     }
 
     const token = generateToken({ userId: user.id, email: user.email });
-    const permissions = await permissionService.getPermissionsForRole(user.role);
+    const permissions = await permissionService.getPermissionsForUser(user.id);
 
     return {
       user: {
@@ -148,7 +148,7 @@ export const authService = {
     }
 
     const token = generateToken({ userId: user.id, email: user.email });
-    const permissions = await permissionService.getPermissionsForRole(user.role);
+    const permissions = await permissionService.getPermissionsForUser(user.id);
 
     return {
       user: {

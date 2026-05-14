@@ -189,12 +189,6 @@ async function main() {
     { name: "settings.edit", label: "Change Settings", group: "Settings" },
   ];
 
-  const adminPermissions = permissionsData.map(p => p.name);
-  const operatorPermissions = [
-    "dashboard.view", "stations.view", "schedules.view",
-    "activity_logs.view", "map.view", "settings.view", "settings.edit",
-  ];
-
   for (const perm of permissionsData) {
     await prisma.permission.upsert({
       where: { name: perm.name },
@@ -204,28 +198,72 @@ async function main() {
   }
   console.log("Seeded permissions:", permissionsData.length);
 
-  // Seed role_permissions
-  for (const permName of adminPermissions) {
-    const perm = await prisma.permission.findUnique({ where: { name: permName } });
-    if (perm) {
-      await prisma.rolePermission.upsert({
-        where: { role_permissionId: { role: "ADMIN", permissionId: perm.id } },
+  // Seed roles
+  const rolesData = [
+    { name: "ADMIN", label: "Administrator" },
+    { name: "OPERATOR", label: "Operator" },
+  ];
+
+  for (const r of rolesData) {
+    await prisma.role.upsert({
+      where: { name: r.name },
+      update: { label: r.label },
+      create: r,
+    });
+  }
+  console.log("Seeded roles:", rolesData.length);
+
+  // Seed role_has_permissions
+  const adminRole = await prisma.role.findUnique({ where: { name: "ADMIN" } });
+  const operatorRole = await prisma.role.findUnique({ where: { name: "OPERATOR" } });
+
+  const adminPermNames = permissionsData.map(p => p.name);
+  const operatorPermNames = [
+    "dashboard.view", "stations.view", "schedules.view",
+    "activity_logs.view", "map.view", "settings.view", "settings.edit",
+  ];
+
+  if (adminRole) {
+    for (const permName of adminPermNames) {
+      const perm = await prisma.permission.findUnique({ where: { name: permName } });
+      if (perm) {
+        await prisma.roleHasPermission.upsert({
+          where: { roleId_permissionId: { roleId: adminRole.id, permissionId: perm.id } },
+          update: {},
+          create: { roleId: adminRole.id, permissionId: perm.id },
+        });
+      }
+    }
+  }
+
+  if (operatorRole) {
+    for (const permName of operatorPermNames) {
+      const perm = await prisma.permission.findUnique({ where: { name: permName } });
+      if (perm) {
+        await prisma.roleHasPermission.upsert({
+          where: { roleId_permissionId: { roleId: operatorRole.id, permissionId: perm.id } },
+          update: {},
+          create: { roleId: operatorRole.id, permissionId: perm.id },
+        });
+      }
+    }
+  }
+  console.log("Seeded role_has_permissions");
+
+  // Sync model_has_roles: assign roles to existing users based on their role enum
+  const allUsers = await prisma.user.findMany({ select: { id: true, role: true } });
+  for (const u of allUsers) {
+    const roleName = u.role as string;
+    const role = await prisma.role.findUnique({ where: { name: roleName } });
+    if (role) {
+      await prisma.modelHasRole.upsert({
+        where: { userId_roleId: { userId: u.id, roleId: role.id } },
         update: {},
-        create: { role: "ADMIN", permissionId: perm.id },
+        create: { userId: u.id, roleId: role.id },
       });
     }
   }
-  for (const permName of operatorPermissions) {
-    const perm = await prisma.permission.findUnique({ where: { name: permName } });
-    if (perm) {
-      await prisma.rolePermission.upsert({
-        where: { role_permissionId: { role: "OPERATOR", permissionId: perm.id } },
-        update: {},
-        create: { role: "OPERATOR", permissionId: perm.id },
-      });
-    }
-  }
-  console.log("Seeded role permissions");
+  console.log("Seeded model_has_roles from existing users");
 
   console.log("Seeding completed!");
 }

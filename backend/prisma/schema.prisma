@@ -39,8 +39,10 @@ model User {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  activityLogs ActivityLog[]
-  feedbacks    Feedback[]
+  activityLogs     ActivityLog[]
+  feedbacks        Feedback[]
+  modelRoles       ModelHasRole[]
+  modelPermissions ModelHasPermission[]
 
   @@map("users")
 }
@@ -114,18 +116,52 @@ model Permission {
   label String
   group String
 
-  rolePermissions RolePermission[]
+  rolePermissions RoleHasPermission[]
+  userPermissions ModelHasPermission[]
 
   @@map("permissions")
 }
 
-model RolePermission {
-  id           String   @id @default(uuid())
-  role         UserRole
-  permissionId String   @map("permission_id")
+model Role {
+  id    String @id @default(uuid())
+  name  String @unique
+  label String
 
+  userRoles       ModelHasRole[]
+  rolePermissions RoleHasPermission[]
+
+  @@map("roles")
+}
+
+model ModelHasRole {
+  userId String @map("user_id")
+  roleId String @map("role_id")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role Role @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  @@id([userId, roleId])
+  @@map("model_has_roles")
+}
+
+model ModelHasPermission {
+  userId       String @map("user_id")
+  permissionId String @map("permission_id")
+
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   permission Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
 
-  @@unique([role, permissionId])
-  @@map("role_permissions")
+  @@id([userId, permissionId])
+  @@map("model_has_permissions")
+}
+
+model RoleHasPermission {
+  roleId       String @map("role_id")
+  permissionId String @map("permission_id")
+
+  role       Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@id([roleId, permissionId])
+  @@map("role_has_permissions")
 }
