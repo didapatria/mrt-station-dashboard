@@ -150,27 +150,88 @@ export default function DashboardPage() {
   return (
     <div>
       {/* Welcome Banner */}
-      <Card className="mb-6 bg-primary text-primary-foreground shadow-md">
-        <CardContent className="p-6" style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+      <div
+        className="mb-6 rounded-xl overflow-hidden relative"
+        style={{
+          background: "linear-gradient(135deg, #0a1628 0%, #0d2248 40%, #0a1a3a 100%)",
+          boxShadow: "0 4px 24px rgba(10, 22, 40, 0.3)",
+        }}
+      >
+        {/* Grid texture */}
+        <div
+          className="absolute inset-0 opacity-[0.05]"
+          style={{
+            backgroundImage:
+              "linear-gradient(#60a5fa 1px, transparent 1px), linear-gradient(90deg, #60a5fa 1px, transparent 1px)",
+            backgroundSize: "32px 32px",
+          }}
+        />
+        {/* Glowing accent */}
+        <div
+          className="absolute right-0 top-0 w-64 h-full opacity-15 pointer-events-none"
+          style={{
+            background: "radial-gradient(ellipse at right center, #3b82f6 0%, transparent 70%)",
+          }}
+        />
+        <div className="relative p-6" style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
           <div>
-            <h2 className="text-xl font-bold">{greeting}, {user?.name?.split(" ")[0]}!</h2>
-            <p className="text-primary-foreground/80 text-sm mt-1">{t("dashboard.subtitle")}</p>
+            <p
+              style={{
+                fontFamily: "'JetBrains Mono', monospace",
+                fontSize: 10,
+                letterSpacing: "0.12em",
+                color: "rgba(96, 165, 250, 0.7)",
+                textTransform: "uppercase",
+                marginBottom: 4,
+              }}
+            >
+              Operations Center
+            </p>
+            <h2
+              className="font-display"
+              style={{ fontSize: 28, color: "white", lineHeight: 1.1, letterSpacing: "0.01em" }}
+            >
+              {greeting.toUpperCase()}, {user?.name?.split(" ")[0]?.toUpperCase()}
+            </h2>
+            <p style={{ color: "rgba(148, 163, 184, 0.7)", fontSize: 13, marginTop: 4 }}>
+              {t("dashboard.subtitle")}
+            </p>
           </div>
           {stats && (
-            <div className="hidden sm:flex gap-6 text-right">
-              <div><p className="text-2xl font-bold">{stats.totalStations}</p><p className="text-xs text-primary-foreground/70">{t("dashboard.totalStations")}</p></div>
-              <div><p className="text-2xl font-bold">{stats.activeSchedules}</p><p className="text-xs text-primary-foreground/70">{t("dashboard.activeSchedules")}</p></div>
+            <div className="hidden sm:flex gap-8 text-right">
+              <div>
+                <p
+                  className="font-display"
+                  style={{ fontSize: 36, color: "white", lineHeight: 1 }}
+                >
+                  {stats.totalStations}
+                </p>
+                <p style={{ fontSize: 10, color: "rgba(148, 163, 184, 0.6)", letterSpacing: "0.08em", textTransform: "uppercase", marginTop: 2 }}>
+                  {t("dashboard.totalStations")}
+                </p>
+              </div>
+              <div>
+                <p
+                  className="font-display"
+                  style={{ fontSize: 36, color: "#60a5fa", lineHeight: 1 }}
+                >
+                  {stats.activeSchedules}
+                </p>
+                <p style={{ fontSize: 10, color: "rgba(148, 163, 184, 0.6)", letterSpacing: "0.08em", textTransform: "uppercase", marginTop: 2 }}>
+                  {t("dashboard.activeSchedules")}
+                </p>
+              </div>
             </div>
           )}
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight">
+          <h2 className="font-display text-3xl tracking-tight">
             {t("dashboard.title")}
           </h2>
-          <p className="text-muted-foreground">{t("dashboard.subtitle")}</p>
+          <p className="text-muted-foreground text-sm mt-0.5">{t("dashboard.subtitle")}</p>
         </div>
         <div className="flex flex-wrap gap-2">
           {stats && (
@@ -220,19 +281,26 @@ export default function DashboardPage() {
         >
           {statCards.map((stat) => (
             <motion.div key={stat.title} variants={item}>
-              <Card className="hover:shadow-md transition-shadow duration-200">
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-muted-foreground">
-                        {stat.title}
-                      </p>
-                      <p className="text-3xl font-bold tracking-tight mt-1">
-                        {stat.value}
-                      </p>
-                    </div>
-                    <div className={`${stat.bg} p-3 rounded-xl shadow-sm`}>
-                      <stat.icon className={`h-6 w-6 ${stat.color}`} />
+              <Card className="hover:shadow-md transition-all duration-200 overflow-hidden group hover:-translate-y-0.5">
+                <CardContent className="p-0">
+                  <div className="flex items-stretch">
+                    {/* Left accent bar */}
+                    <div className={`w-1 shrink-0 ${stat.bg} opacity-80`} />
+                    <div className="flex items-center justify-between flex-1 p-5">
+                      <div>
+                        <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                          {stat.title}
+                        </p>
+                        <p
+                          className="font-display mt-1"
+                          style={{ fontSize: 40, lineHeight: 1, letterSpacing: "-0.01em" }}
+                        >
+                          {stat.value}
+                        </p>
+                      </div>
+                      <div className={`${stat.bg} p-3 rounded-xl shadow-sm group-hover:scale-110 transition-transform duration-200`}>
+                        <stat.icon className={`h-5 w-5 ${stat.color}`} />
+                      </div>
                     </div>
                   </div>
                 </CardContent>

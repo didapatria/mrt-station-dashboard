@@ -138,12 +138,43 @@
   body {
     @apply bg-background text-foreground;
     font-family:
+      "Sora",
       "Inter",
       -apple-system,
       BlinkMacSystemFont,
       "Segoe UI",
       sans-serif;
   }
+  .font-display {
+    font-family: "Bebas Neue", "Sora", sans-serif;
+  }
+  .font-mono {
+    font-family: "JetBrains Mono", "Fira Code", monospace;
+  }
+}
+
+/* Auth page decorative line animation */
+@keyframes pulse-station {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.2); }
+}
+@keyframes draw-line {
+  from { stroke-dashoffset: 600; }
+  to { stroke-dashoffset: 0; }
+}
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-up {
+  animation: fade-up 0.7s ease both;
+}
+.station-dot {
+  animation: pulse-station 3s ease-in-out infinite;
+}
+.mrt-line {
+  stroke-dasharray: 600;
+  animation: draw-line 2s ease forwards;
 }
 
 /* Leaflet z-index fix: keep map below sidebar and header */

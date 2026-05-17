@@ -182,18 +182,24 @@ export default function DashboardLayout() {
           borderBottom: "1px solid var(--color-border)",
         }}
       >
-        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary shrink-0">
+        <div
+          className="flex h-8 w-8 items-center justify-center rounded-lg shrink-0"
+          style={{
+            background: "linear-gradient(135deg, var(--color-primary), oklch(0.6 0.2 220))",
+            boxShadow: "0 0 10px color-mix(in oklch, var(--color-primary) 40%, transparent)",
+          }}
+        >
           <Train
             style={{
-              width: 16,
-              height: 16,
+              width: 15,
+              height: 15,
               color: "var(--color-primary-foreground)",
             }}
           />
         </div>
         {!collapsed && (
-          <span className="font-semibold text-sm tracking-tight">
-            MRT Jakarta
+          <span className="font-display text-base tracking-wide" style={{ letterSpacing: "0.06em" }}>
+            MRT JAKARTA
           </span>
         )}
       </div>
