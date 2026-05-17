@@ -8,7 +8,7 @@ const changelog = [
   {
     version: "2.9.0",
     date: "17 May 2026",
-    commits: ["b7f3637", "9e87c25"],
+    commits: ["c105a77", "b6025f3", "b7f3637", "9e87c25"],
     items: [
       "Frontend design overhaul — Sora (body), Bebas Neue (display), JetBrains Mono (data labels)",
       "Auth page left panel redesigned — dark navy gradient, animated SVG MRT N–S line diagram with 13 stations",
@@ -17,8 +17,8 @@ const changelog = [
       "Stat cards — left accent color bar, Bebas Neue number at 40px, icon scales on hover",
       "Sidebar logo — gradient glow + Bebas Neue 'MRT JAKARTA' wordmark",
       "6 new E2E design tests — auth panel branding, mobile hidden check, stat card structure (93 total)",
-      "Fixed 9 mobile test selectors — heading role filter, clear auth state for login tests",
-      "Changelog v2.8.0 version target in mobile E2E test",
+      "Fixed mobile test selectors — heading role filter, clear auth state for login tests",
+      "Fixed Vercel monorepo deployment — root vercel.json with buildCommand + outputDirectory",
     ],
   },
   {
