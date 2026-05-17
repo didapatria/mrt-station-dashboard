@@ -32,14 +32,19 @@ export default function LoginPage() {
 
   const onSubmit = async (data: LoginFormData) => {
     try {
-      await loginMutation.mutateAsync({ email: data.email, password: data.password });
+      await loginMutation.mutateAsync({
+        email: data.email,
+        password: data.password,
+      });
       navigate("/dashboard");
     } catch {
       /* handled by mutation */
     }
   };
 
-  const handleGoogleSuccess = async (credentialResponse: { credential?: string }) => {
+  const handleGoogleSuccess = async (credentialResponse: {
+    credential?: string;
+  }) => {
     if (!credentialResponse.credential) return;
     try {
       await googleLoginMutation.mutateAsync(credentialResponse.credential);
@@ -51,10 +56,12 @@ export default function LoginPage() {
 
   type ApiError = { response?: { data?: { error?: string } } };
   const errorMessage = loginMutation.error
-    ? (loginMutation.error as ApiError)?.response?.data?.error || loginMutation.error.message
+    ? (loginMutation.error as ApiError)?.response?.data?.error ||
+      loginMutation.error.message
     : null;
   const googleError = googleLoginMutation.error
-    ? (googleLoginMutation.error as ApiError)?.response?.data?.error || googleLoginMutation.error.message
+    ? (googleLoginMutation.error as ApiError)?.response?.data?.error ||
+      googleLoginMutation.error.message
     : null;
 
   return (
@@ -62,7 +69,12 @@ export default function LoginPage() {
       {/* Mobile header */}
       <div
         className="lg:hidden"
-        style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 40 }}
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 10,
+          marginBottom: 40,
+        }}
       >
         <div
           style={{
@@ -217,7 +229,9 @@ export default function LoginPage() {
           margin: "28px 0",
         }}
       >
-        <div style={{ flex: 1, height: 1, background: "rgba(255,255,255,0.07)" }} />
+        <div
+          style={{ flex: 1, height: 1, background: "rgba(255,255,255,0.07)" }}
+        />
         <span
           style={{
             fontFamily: "'JetBrains Mono', monospace",
@@ -228,10 +242,14 @@ export default function LoginPage() {
         >
           {t("auth.orContinueWith").toUpperCase()}
         </span>
-        <div style={{ flex: 1, height: 1, background: "rgba(255,255,255,0.07)" }} />
+        <div
+          style={{ flex: 1, height: 1, background: "rgba(255,255,255,0.07)" }}
+        />
       </div>
 
-      <div style={{ display: "flex", justifyContent: "center", marginBottom: 24 }}>
+      <div
+        style={{ display: "flex", justifyContent: "center", marginBottom: 24 }}
+      >
         <GoogleLogin
           onSuccess={handleGoogleSuccess}
           onError={() => {}}

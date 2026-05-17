@@ -294,9 +294,6 @@ tbody tr:hover::after {
 .animate-fade-up {
     animation: fade-up 0.7s ease both;
 }
-.station-dot {
-    animation: pulse-station 3s ease-in-out infinite;
-}
 .mrt-line {
     stroke-dasharray: 260;
     animation: draw-line 2s ease forwards;
@@ -304,16 +301,32 @@ tbody tr:hover::after {
 
 /* ─── Auth page — Control Terminal ───────────────────────── */
 @keyframes status-pulse {
-    0%, 100% { opacity: 1; box-shadow: 0 0 4px rgba(16,185,129,0.6); }
-    50% { opacity: 0.4; box-shadow: 0 0 8px rgba(16,185,129,0.2); }
+    0%,
+    100% {
+        opacity: 1;
+        box-shadow: 0 0 4px rgba(16, 185, 129, 0.6);
+    }
+    50% {
+        opacity: 0.4;
+        box-shadow: 0 0 8px rgba(16, 185, 129, 0.2);
+    }
 }
 @keyframes colon-blink {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.3; }
+    0%,
+    100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.3;
+    }
 }
 @keyframes scanline-move {
-    0% { transform: translateY(-100%); }
-    100% { transform: translateY(100vh); }
+    0% {
+        transform: translateY(-100%);
+    }
+    100% {
+        transform: translateY(100vh);
+    }
 }
 
 .auth-status-dot {
@@ -348,7 +361,7 @@ tbody tr:hover::after {
     background: linear-gradient(
         to bottom,
         transparent 0%,
-        rgba(29,111,232,0.018) 50%,
+        rgba(29, 111, 232, 0.018) 50%,
         transparent 100%
     );
     animation: scanline-move 8s linear infinite;
@@ -360,37 +373,37 @@ tbody tr:hover::after {
     width: 100%;
     background: transparent;
     border: none;
-    border-bottom: 1px solid rgba(148,163,184,0.15);
+    border-bottom: 1px solid rgba(148, 163, 184, 0.15);
     border-radius: 0;
     padding: 10px 0;
-    color: rgba(226,232,240,0.9);
-    font-family: 'Sora', sans-serif;
+    color: rgba(226, 232, 240, 0.9);
+    font-family: "Sora", sans-serif;
     font-size: 14px;
     outline: none;
     transition: border-color 0.2s ease;
     box-sizing: border-box;
 }
 .auth-input::placeholder {
-    color: rgba(148,163,184,0.2);
+    color: rgba(148, 163, 184, 0.2);
     font-size: 13px;
 }
 .auth-input:focus {
     border-bottom-color: #1d6fe8;
-    box-shadow: 0 1px 0 0 rgba(29,111,232,0.5);
+    box-shadow: 0 1px 0 0 rgba(29, 111, 232, 0.5);
 }
 
 .auth-label {
     display: block;
-    font-family: 'JetBrains Mono', monospace;
+    font-family: "JetBrains Mono", monospace;
     font-size: 9.5px;
-    color: rgba(148,163,184,0.5);
+    color: rgba(148, 163, 184, 0.5);
     letter-spacing: 0.16em;
     text-transform: uppercase;
     margin-bottom: 10px;
 }
 
 .auth-field-error {
-    font-family: 'JetBrains Mono', monospace;
+    font-family: "JetBrains Mono", monospace;
     font-size: 10px;
     color: #f87171;
     margin-top: 6px;
@@ -398,11 +411,11 @@ tbody tr:hover::after {
 }
 
 .auth-error-banner {
-    background: rgba(239,68,68,0.07);
-    border: 1px solid rgba(239,68,68,0.22);
+    background: rgba(239, 68, 68, 0.07);
+    border: 1px solid rgba(239, 68, 68, 0.22);
     border-radius: 4px;
     padding: 10px 14px;
-    font-family: 'JetBrains Mono', monospace;
+    font-family: "JetBrains Mono", monospace;
     font-size: 11px;
     color: #f87171;
     letter-spacing: 0.04em;
@@ -417,17 +430,20 @@ tbody tr:hover::after {
     border: none;
     border-radius: 4px;
     color: white;
-    font-family: 'JetBrains Mono', monospace;
+    font-family: "JetBrains Mono", monospace;
     font-size: 12px;
     font-weight: 600;
     letter-spacing: 0.16em;
     cursor: pointer;
-    transition: background 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
-    box-shadow: 0 0 24px rgba(29,111,232,0.25);
+    transition:
+        background 0.15s ease,
+        box-shadow 0.15s ease,
+        opacity 0.15s ease;
+    box-shadow: 0 0 24px rgba(29, 111, 232, 0.25);
 }
 .auth-submit-btn:hover:not(:disabled) {
     background: #2563eb;
-    box-shadow: 0 0 32px rgba(29,111,232,0.4);
+    box-shadow: 0 0 32px rgba(29, 111, 232, 0.4);
 }
 .auth-submit-btn:active:not(:disabled) {
     background: #1a5cc7;

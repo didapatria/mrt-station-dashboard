@@ -50,7 +50,9 @@ export default function RegisterPage() {
     }
   };
 
-  const handleGoogleSuccess = async (credentialResponse: { credential?: string }) => {
+  const handleGoogleSuccess = async (credentialResponse: {
+    credential?: string;
+  }) => {
     if (!credentialResponse.credential) return;
     try {
       await googleLoginMutation.mutateAsync(credentialResponse.credential);
@@ -60,12 +62,16 @@ export default function RegisterPage() {
     }
   };
 
-  const err = registerMutation.error as { response?: { data?: { error?: string } } } | null;
-  const errorMessage = err?.response?.data?.error || registerMutation.error?.message || null;
+  const err = registerMutation.error as {
+    response?: { data?: { error?: string } };
+  } | null;
+  const errorMessage =
+    err?.response?.data?.error || registerMutation.error?.message || null;
 
   type ApiError = { response?: { data?: { error?: string } } };
   const googleError = googleLoginMutation.error
-    ? (googleLoginMutation.error as ApiError)?.response?.data?.error || googleLoginMutation.error.message
+    ? (googleLoginMutation.error as ApiError)?.response?.data?.error ||
+      googleLoginMutation.error.message
     : null;
 
   return (
@@ -73,7 +79,12 @@ export default function RegisterPage() {
       {/* Mobile header */}
       <div
         className="lg:hidden"
-        style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 40 }}
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 10,
+          marginBottom: 40,
+        }}
       >
         <div
           style={{
@@ -161,7 +172,9 @@ export default function RegisterPage() {
             className="auth-input"
             {...register("name")}
           />
-          {errors.name && <p className="auth-field-error">{errors.name.message}</p>}
+          {errors.name && (
+            <p className="auth-field-error">{errors.name.message}</p>
+          )}
         </div>
 
         {/* Email */}
@@ -176,7 +189,9 @@ export default function RegisterPage() {
             className="auth-input"
             {...register("email")}
           />
-          {errors.email && <p className="auth-field-error">{errors.email.message}</p>}
+          {errors.email && (
+            <p className="auth-field-error">{errors.email.message}</p>
+          )}
         </div>
 
         {/* Password */}
@@ -216,7 +231,9 @@ export default function RegisterPage() {
               {showPassword ? <EyeOff size={14} /> : <Eye size={14} />}
             </button>
           </div>
-          {errors.password && <p className="auth-field-error">{errors.password.message}</p>}
+          {errors.password && (
+            <p className="auth-field-error">{errors.password.message}</p>
+          )}
         </div>
 
         {/* Confirm password */}
@@ -241,7 +258,9 @@ export default function RegisterPage() {
           disabled={registerMutation.isPending}
           className="auth-submit-btn"
         >
-          {registerMutation.isPending ? t("auth.creatingAccount") : "CREATE ACCOUNT"}
+          {registerMutation.isPending
+            ? t("auth.creatingAccount")
+            : "CREATE ACCOUNT"}
         </button>
       </form>
 
@@ -254,7 +273,9 @@ export default function RegisterPage() {
           margin: "28px 0",
         }}
       >
-        <div style={{ flex: 1, height: 1, background: "rgba(255,255,255,0.07)" }} />
+        <div
+          style={{ flex: 1, height: 1, background: "rgba(255,255,255,0.07)" }}
+        />
         <span
           style={{
             fontFamily: "'JetBrains Mono', monospace",
@@ -265,10 +286,14 @@ export default function RegisterPage() {
         >
           {t("auth.orContinueWith").toUpperCase()}
         </span>
-        <div style={{ flex: 1, height: 1, background: "rgba(255,255,255,0.07)" }} />
+        <div
+          style={{ flex: 1, height: 1, background: "rgba(255,255,255,0.07)" }}
+        />
       </div>
 
-      <div style={{ display: "flex", justifyContent: "center", marginBottom: 24 }}>
+      <div
+        style={{ display: "flex", justifyContent: "center", marginBottom: 24 }}
+      >
         <GoogleLogin
           onSuccess={handleGoogleSuccess}
           onError={() => {}}
