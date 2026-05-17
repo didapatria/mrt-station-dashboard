@@ -6,9 +6,9 @@ const options: swaggerJsdoc.Options = {
     openapi: "3.0.0",
     info: {
       title: "MRT Jakarta - Station Management API",
-      version: "2.12.0",
+      version: "2.13.0",
       description:
-        "REST API for managing MRT Jakarta stations and train schedules. Features JWT authentication, Spatie-style 5-table RBAC (roles, permissions, model_has_roles, model_has_permissions, role_has_permissions), activity logging, real-time SSE notifications, CSV/PDF export, and rate limiting. Built with Express.js 5, TypeScript, Prisma ORM, and PostgreSQL. Frontend: React 19 + Vite 8, Operations Terminal design system (Bebas Neue + JetBrains Mono + Sora), 14 pages, 93 E2E tests.",
+        "REST API for managing MRT Jakarta stations and train schedules. Features JWT authentication, Spatie-style 5-table RBAC (roles, permissions, model_has_roles, model_has_permissions, role_has_permissions), activity logging, real-time SSE notifications, CSV/PDF export, and rate limiting. Built with Express.js 5, TypeScript, Prisma ORM, and PostgreSQL. Frontend: React 19 + Vite 8, Operations Terminal design system (Bebas Neue + JetBrains Mono + Sora), 14 pages, 112 E2E tests.",
       contact: {
         name: "Dida",
         email: "didapatria3@gmail.com",

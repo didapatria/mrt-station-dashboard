@@ -376,7 +376,7 @@ export default function DashboardLayout() {
               color: "rgba(29,111,232,0.3)",
             }}
           >
-            v2.12.0
+            v2.13.0
           </span>
         </div>
       )}

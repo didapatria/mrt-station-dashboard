@@ -231,7 +231,7 @@ export default function ProfilePage() {
     "Vitest",
     "React Testing Library",
     "Supertest",
-    "Playwright (106 E2E, GitHub Pages report)",
+    "Playwright (112 E2E, GitHub Pages report)",
   ];
 
   return (

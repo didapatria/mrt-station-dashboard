@@ -3,6 +3,29 @@ import { GitCommit } from "lucide-react";
 
 const changelog = [
   {
+    version: "2.13.0",
+    date: "18 May 2026",
+    commits: [
+      "4a87811",
+      "f03a4e7",
+      "48c5152",
+      "9b9541a",
+      "380ed4e",
+      "8dff0ad",
+      "055810e",
+      "e792cef",
+    ],
+    items: [
+      "Google OAuth profile photo — avatarUrl stored on OAuth login, displayed in header avatar + ProfilePage",
+      "Theme toggle auth fix — right panel uses CSS vars (var(--color-background/foreground)), responds to dark/light toggle",
+      "ThemeToggle icon fix — inherits var(--color-foreground) instead of hardcoded white, visible in both modes",
+      "Auth pages theme-aware — login/register text, inputs, borders use CSS variables; left panel stays intentionally dark",
+      "SettingsPage layout fix — 2-column grid (was auto-fit unbounded), card accent via inset boxShadow (borderImage disabled borderRadius)",
+      "E2E theme tests — 6 new Playwright tests: ThemeToggle visibility, dark/light toggle, localStorage persistence, navigation persistence (112 total)",
+      "Version bump to v2.13.0 across swagger, sidebar footer, auth panel, settings",
+    ],
+  },
+  {
     version: "2.12.0",
     date: "18 May 2026",
     commits: [

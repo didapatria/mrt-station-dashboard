@@ -499,7 +499,7 @@ export default function AuthLayout() {
                 letterSpacing: "0.08em",
               }}
             >
-              v2.12.0
+              v2.13.0
             </span>
           </motion.div>
         </div>
