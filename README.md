@@ -34,8 +34,9 @@ Full-stack web application for managing MRT Jakarta stations and train schedules
 ## Tech Stack
 
 ### Frontend
-- **React 19** + TypeScript (Vite)
+- **React 19** + TypeScript (Vite 8)
 - **Tailwind CSS** + **Shadcn UI** - Styling & UI components
+- **Sora** + **Bebas Neue** + **JetBrains Mono** - Custom font system
 - **Zustand** - Client state management
 - **TanStack Query** - Server state management
 - **React Hook Form** + **Zod** - Form handling & validation
@@ -146,7 +147,7 @@ React Page → TanStack Query Hook → API Service (axios) → Express Route →
 - **Role-Based Access Control** - Spatie-style 5-table RBAC (`roles`, `permissions`, `model_has_roles`, `model_has_permissions`, `role_has_permissions`), `GET /api/permissions/me` returns user permissions on login, stored in Zustand, no hardcoded frontend config
 - **CI/CD** - GitHub Actions pipeline with lint, type check, test, and build
 - **Unit Testing** - Vitest + React Testing Library + Supertest
-- **E2E Testing** - Playwright (87 tests across 18 spec files, including mobile viewport)
+- **E2E Testing** - Playwright (93 tests across 19 spec files, including mobile viewport and UI design checks)
 - **Real-time Notifications** - Server-Sent Events with notification center
 - **i18n** - English and Indonesian language support
 - **Route Planner** - Find schedules between stations
@@ -317,7 +318,7 @@ npx playwright test --debug
 npm run e2e:report
 ```
 
-### Test Coverage (87 tests)
+### Test Coverage (93 tests)
 | Spec File | Tests | What's Tested |
 |-----------|-------|---------------|
 | `auth.spec.ts` | 13 | Login, register, Google OAuth, validation, auth guard, 404 |
@@ -338,6 +339,7 @@ npm run e2e:report
 | `ux-auth.spec.ts` | 4 | Password toggle, tab order, validation UX |
 | `ux.spec.ts` | 8 | Forms, breadcrumbs, empty states, sidebar |
 | `mobile.spec.ts` | 15 | Viewport overflow, sidebar toggle, nav, auth, map, profile, changelog — Pixel 7 |
+| `ux-design.spec.ts` | 6 | Auth panel branding, rail line SVG, mobile hidden check, dashboard banner, stat cards |
 
 ## Database Schema
 
@@ -427,7 +429,7 @@ Or connect GitHub repo in [vercel.com](https://vercel.com) dashboard:
 GitHub Actions runs on every push to `main`:
 - Frontend: lint, type check, unit tests (Vitest + RTL), build
 - Backend: unit tests (Supertest), build
-- E2E: Playwright (52 tests) against local services + postgres — report with UI screenshots deployed to **[GitHub Pages](https://didapatria.github.io/mrt-station-dashboard/)**
+- E2E: Playwright (93 tests across 19 spec files) against local services + postgres — report with UI screenshots deployed to **[GitHub Pages](https://didapatria.github.io/mrt-station-dashboard/)**
 - Docker: `docker compose build` validation
 
 ## License

@@ -184,8 +184,8 @@ test.describe("Mobile — Changelog", () => {
     await page.goto("/changelog");
     await page.waitForTimeout(2000);
 
-    // Latest version (v2.8.0) should be visible
-    await expect(page.locator("text=/2\.8\.0/").first()).toBeVisible({ timeout: 8000 });
+    // Latest version (v2.9.0) should be visible
+    await expect(page.locator("text=/2\.9\.0/").first()).toBeVisible({ timeout: 8000 });
     const bodyWidth = await page.evaluate(() => document.body.scrollWidth);
     const viewportWidth = await page.evaluate(() => window.innerWidth);
     expect(bodyWidth).toBeLessThanOrEqual(viewportWidth + 10);

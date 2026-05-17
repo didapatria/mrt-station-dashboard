@@ -1,7 +1,7 @@
 # MRT Station Management Dashboard
 
 ## Project Overview
-Full-stack web application for managing MRT Jakarta stations and schedules. Built as a portfolio project demonstrating full-stack proficiency with 100+ commits, 14+ pages, 40+ features, 87 E2E tests.
+Full-stack web application for managing MRT Jakarta stations and schedules. Built as a portfolio project demonstrating full-stack proficiency with 100+ commits, 14+ pages, 40+ features, 93 E2E tests.
 
 ## Commands
 
@@ -129,6 +129,7 @@ React Page → TanStack Query Hook → API Service (axios) → Express Route →
 - `lib/permissions.ts` contains only UI labels/groups (no hardcoded role data)
 - i18n: use `t()` for all user-facing strings
 - Use inline styles for flex layouts to prevent linter issues
+- Fonts: Sora (body), Bebas Neue (`font-display` class), JetBrains Mono (`font-mono`) — loaded via Google Fonts in index.html
 - Tests: co-locate with source, use Vitest + RTL
 - E2E: Playwright tests in `/e2e`, use `adminPage` fixture for authenticated tests
 - E2E: use `navigateTo(page, "/path")` for SPA navigation (sidebar link clicks)
