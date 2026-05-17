@@ -90,7 +90,12 @@ const navGroups: NavGroup[] = [
     labelKey: "nav.management",
     items: [
       { to: "/users", icon: Users, labelKey: "nav.users", adminOnly: true },
-      { to: "/access", icon: KeyRound, labelKey: "nav.accessManagement", adminOnly: true },
+      {
+        to: "/access",
+        icon: KeyRound,
+        labelKey: "nav.accessManagement",
+        adminOnly: true,
+      },
       { to: "/activity", icon: Activity, labelKey: "nav.activityLog" },
     ],
   },
@@ -133,7 +138,7 @@ function NavItemLink({
           isActive
             ? collapsed
               ? "bg-primary text-primary-foreground shadow-sm"
-              : "bg-primary/[0.10] text-primary font-semibold"
+              : "bg-primary/10 text-primary font-semibold"
             : "text-muted-foreground hover:text-foreground hover:bg-accent/70",
         )
       }
@@ -163,10 +168,12 @@ export default function DashboardLayout() {
     navigate("/login");
   };
 
-  const visibleGroups = navGroups.map((g) => ({
-    ...g,
-    items: g.items.filter((item) => !item.adminOnly || isAdmin),
-  })).filter((g) => g.items.length > 0);
+  const visibleGroups = navGroups
+    .map((g) => ({
+      ...g,
+      items: g.items.filter((item) => !item.adminOnly || isAdmin),
+    }))
+    .filter((g) => g.items.length > 0);
   const sidebarWidth = collapsed ? "w-16" : "w-60";
   const sidebarPl = collapsed ? "lg:pl-16" : "lg:pl-60";
 
@@ -187,8 +194,10 @@ export default function DashboardLayout() {
         <div
           className="flex h-8 w-8 items-center justify-center rounded-lg shrink-0"
           style={{
-            background: "linear-gradient(135deg, var(--color-primary), oklch(0.6 0.2 220))",
-            boxShadow: "0 0 10px color-mix(in oklch, var(--color-primary) 40%, transparent)",
+            background:
+              "linear-gradient(135deg, var(--color-primary), oklch(0.6 0.2 220))",
+            boxShadow:
+              "0 0 10px color-mix(in oklch, var(--color-primary) 40%, transparent)",
           }}
         >
           <Train
@@ -200,7 +209,10 @@ export default function DashboardLayout() {
           />
         </div>
         {!collapsed && (
-          <span className="font-display text-base tracking-wide" style={{ letterSpacing: "0.06em" }}>
+          <span
+            className="font-display text-base tracking-wide"
+            style={{ letterSpacing: "0.06em" }}
+          >
             MRT JAKARTA
           </span>
         )}
@@ -210,7 +222,15 @@ export default function DashboardLayout() {
         {visibleGroups.map((group) => (
           <div key={group.labelKey} className="mb-3">
             {!collapsed && (
-              <div style={{ display: "flex", alignItems: "center", gap: "6px", padding: "0 8px", marginBottom: "6px" }}>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "6px",
+                  padding: "0 8px",
+                  marginBottom: "6px",
+                }}
+              >
                 <span
                   style={{
                     fontFamily: "'JetBrains Mono', monospace",
@@ -224,7 +244,14 @@ export default function DashboardLayout() {
                 >
                   {t(group.labelKey)}
                 </span>
-                <span style={{ flex: 1, height: "1px", background: "var(--color-border)", opacity: 0.5 }} />
+                <span
+                  style={{
+                    flex: 1,
+                    height: "1px",
+                    background: "var(--color-border)",
+                    opacity: 0.5,
+                  }}
+                />
               </div>
             )}
             <div className="space-y-0.5">
@@ -235,7 +262,7 @@ export default function DashboardLayout() {
                   onClick={onNavClick}
                   collapsed={collapsed}
                   t={t}
-            />
+                />
               ))}
             </div>
           </div>
@@ -326,21 +353,41 @@ export default function DashboardLayout() {
             </kbd>
           </Button>
 
-          <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hidden sm:inline-flex" onClick={() => queryClient.invalidateQueries()}>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8 text-muted-foreground hidden sm:inline-flex"
+            onClick={() => queryClient.invalidateQueries()}
+          >
             <RefreshCw className="h-4 w-4" />
           </Button>
           <CommandSearch />
-          <span className="hidden sm:inline"><KeyboardShortcuts /></span>
-          <span data-tour="notifications"><NotificationCenter /></span>
-          <span data-tour="language" className="hidden xs:inline"><LanguageToggle /></span>
-          <span data-tour="theme"><ThemeToggle /></span>
+          <span className="hidden sm:inline">
+            <KeyboardShortcuts />
+          </span>
+          <span data-tour="notifications">
+            <NotificationCenter />
+          </span>
+          <span data-tour="language" className="hidden sm:inline">
+            <LanguageToggle />
+          </span>
+          <span data-tour="theme">
+            <ThemeToggle />
+          </span>
           <Separator orientation="vertical" className="h-5" />
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="sm" className="gap-2 px-2" data-tour="user-menu">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="gap-2 px-2"
+                data-tour="user-menu"
+              >
                 <Avatar className="h-7 w-7">
-                  <AvatarImage src={`https://api.dicebear.com/9.x/initials/svg?seed=${encodeURIComponent(user?.name || "")}`} />
+                  <AvatarImage
+                    src={`https://api.dicebear.com/9.x/initials/svg?seed=${encodeURIComponent(user?.name || "")}`}
+                  />
                   <AvatarFallback className="bg-primary text-primary-foreground text-[10px] font-bold">
                     {user?.name?.charAt(0).toUpperCase()}
                   </AvatarFallback>
