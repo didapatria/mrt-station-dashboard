@@ -340,7 +340,9 @@ npm run e2e:report
 | `ux-auth.spec.ts` | 4 | Password toggle, tab order, validation UX |
 | `ux.spec.ts` | 8 | Forms, breadcrumbs, empty states, sidebar |
 | `mobile.spec.ts` | 15 | Viewport overflow, sidebar toggle, nav, auth, map, profile, changelog — Pixel 7 |
-| `ux-design.spec.ts` | 6 | Auth panel branding, rail line SVG, mobile hidden check, dashboard banner, stat cards |
+| `ux-design.spec.ts` | 6 | Auth panel branding, rail line SVG, mobile hidden check, dashboard banner, stat cards (admin-tests only) |
+
+> **UI Screenshots**: Every test captures a screenshot (`screenshot: "on"`). After CI passes, the full HTML report with all screenshots is deployed to **[GitHub Pages](https://didapatria.github.io/mrt-station-dashboard/)** — browse passing tests to see live UI screenshots for each page.
 
 ## Database Schema
 
@@ -430,7 +432,7 @@ Or connect GitHub repo in [vercel.com](https://vercel.com) dashboard:
 GitHub Actions runs on every push to `main`:
 - Frontend: lint, type check, unit tests (Vitest + RTL), build
 - Backend: unit tests (Supertest), build
-- E2E: Playwright (93 tests across 19 spec files) against local services + postgres — report with UI screenshots deployed to **[GitHub Pages](https://didapatria.github.io/mrt-station-dashboard/)**
+- E2E: Playwright (93 tests across 19 spec files, `screenshot: "on"` for all tests) against local services + postgres — report with UI screenshots deployed to **[GitHub Pages](https://didapatria.github.io/mrt-station-dashboard/)**
 - Docker: `docker compose build` validation
 
 ## License

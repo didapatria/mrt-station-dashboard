@@ -6,6 +6,20 @@ import { GitCommit } from "lucide-react";
 
 const changelog = [
   {
+    version: "2.11.0",
+    date: "17 May 2026",
+    commits: ["09df222", "387cba4", "fc17cc7"],
+    items: [
+      "Fixed 10 Playwright test failures — ux-design auth tests (beforeEach clears localStorage), dashboard tests (page.goto replaces navigateTo on blank page)",
+      "global-setup.ts waits for non-empty permissions in localStorage before saving storageState — prevents getMyPermissions() re-fetch + 401 redirect on expired tokens",
+      "App.tsx auto-fetches permissions on startup when store is empty (fixes ProfilePage showing 0 permissions for pre-RBAC sessions)",
+      "DashboardPage welcome banner — conditional dark/light gradient using useThemeStore (isDark)",
+      "Fixed dark map tiles — CSS filter invert+hue-rotate on .dark .leaflet-tile-pane",
+      "AccessManagementPage permission matrix — proportional columns via table-fixed + colgroup (22% / 44% / 34% split)",
+      "SettingsPage version corrected to 2.10.0",
+    ],
+  },
+  {
     version: "2.10.0",
     date: "17 May 2026",
     commits: ["e3afc85", "851fc2c"],
