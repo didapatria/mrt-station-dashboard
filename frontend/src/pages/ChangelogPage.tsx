@@ -6,6 +6,23 @@ import { GitCommit } from "lucide-react";
 
 const changelog = [
   {
+    version: "2.10.0",
+    date: "17 May 2026",
+    commits: ["e3afc85"],
+    items: [
+      "Dark mode overhaul — deep blue-black system (#0a1523 family), matches auth panel aesthetic",
+      "Light mode — subtle blue-white tint instead of clinical pure white",
+      "Sidebar: transit-line active indicator (3px left bar with spring animation via CSS ::before)",
+      "Sidebar: nav group labels with JetBrains Mono + horizontal rule separator",
+      "Sidebar: distinct collapsed vs expanded active states",
+      "Table rows: left accent reveal on hover (2px primary bar via CSS ::after)",
+      "Custom scrollbar — 6px, blue-tinted in dark mode",
+      "Card titles use Bebas Neue font-display for visual hierarchy",
+      "Header: stronger backdrop blur (backdrop-blur-xl)",
+      "Chart cards: overflow-hidden for cleaner borders",
+    ],
+  },
+  {
     version: "2.9.0",
     date: "17 May 2026",
     commits: ["c105a77", "b6025f3", "b7f3637", "9e87c25"],

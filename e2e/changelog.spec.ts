@@ -10,8 +10,8 @@ test.describe("Changelog Page", () => {
   test("should show Latest badge on newest release", async ({ adminPage: page }) => {
     await navigateTo(page, "/changelog");
     await expect(page.locator("text=/latest/i").first()).toBeVisible();
-    // v2.9.0 should be at top
-    await expect(page.locator("text=/2\.9\.0/").first()).toBeVisible();
+    // v2.10.0 should be at top
+    await expect(page.locator("text=/2\.10\.0/").first()).toBeVisible();
   });
 
   test("should show commit hash links", async ({ adminPage: page }) => {
