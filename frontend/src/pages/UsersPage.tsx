@@ -48,7 +48,6 @@ import { useDebounce } from "@/hooks/use-debounce";
 import { useAuthStore } from "@/store/auth.store";
 import type { User } from "@/types";
 
-
 export default function UsersPage() {
   const { t } = useTranslation();
   const currentUser = useAuthStore((s) => s.user);
@@ -387,22 +386,29 @@ export default function UsersPage() {
                       className="hover:bg-muted/30"
                       style={{
                         transition: "background 0.12s ease",
-                        borderLeft: user.role === "ADMIN"
-                          ? "2px solid rgba(59,130,246,0.3)"
-                          : undefined,
+                        borderLeft:
+                          user.role === "ADMIN"
+                            ? "2px solid rgba(59,130,246,0.3)"
+                            : undefined,
                       }}
                     >
                       <TableCell>
-                        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 10,
+                          }}
+                        >
                           <Avatar className="h-9 w-9">
                             <AvatarFallback
                               style={{
-                                background: user.role === "ADMIN"
-                                  ? "rgba(16,185,129,0.15)"
-                                  : "rgba(59,130,246,0.15)",
-                                color: user.role === "ADMIN"
-                                  ? "#10b981"
-                                  : "#60a5fa",
+                                background:
+                                  user.role === "ADMIN"
+                                    ? "rgba(16,185,129,0.15)"
+                                    : "rgba(59,130,246,0.15)",
+                                color:
+                                  user.role === "ADMIN" ? "#10b981" : "#60a5fa",
                                 fontFamily: "'JetBrains Mono', monospace",
                                 fontSize: 13,
                                 fontWeight: 700,
@@ -562,12 +568,19 @@ export default function UsersPage() {
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle
-              style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: 22, letterSpacing: "0.05em" }}
+              style={{
+                fontFamily: "'Bebas Neue', sans-serif",
+                fontSize: 22,
+                letterSpacing: "0.05em",
+              }}
             >
               {t("common.delete")}
             </AlertDialogTitle>
             <AlertDialogDescription
-              style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11.5 }}
+              style={{
+                fontFamily: "'JetBrains Mono', monospace",
+                fontSize: 11.5,
+              }}
             >
               {t("users.deleteConfirm")}
             </AlertDialogDescription>

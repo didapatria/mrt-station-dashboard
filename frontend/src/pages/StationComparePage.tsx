@@ -39,11 +39,20 @@ interface StationCardProps {
   otherScheduleCount: number;
 }
 
-function StationCard({ station, scheduleCount, otherScheduleCount }: StationCardProps) {
+function StationCard({
+  station,
+  scheduleCount,
+  otherScheduleCount,
+}: StationCardProps) {
   if (!station) {
     return (
       <div style={cardStyle}>
-        <div style={{ height: 2, background: "linear-gradient(90deg, #3b82f6 0%, transparent 100%)" }} />
+        <div
+          style={{
+            height: 2,
+            background: "linear-gradient(90deg, #3b82f6 0%, transparent 100%)",
+          }}
+        />
         <div
           style={{
             padding: "60px 24px",
@@ -85,18 +94,38 @@ function StationCard({ station, scheduleCount, otherScheduleCount }: StationCard
   const led = statusLED(station.status);
   const schedulesWin = scheduleCount >= otherScheduleCount;
 
-  const rows: { icon: React.ReactNode; label: string; value: React.ReactNode; highlight?: boolean }[] = [
+  const rows: {
+    icon: React.ReactNode;
+    label: string;
+    value: React.ReactNode;
+    highlight?: boolean;
+  }[] = [
     {
-      icon: <Hash size={13} style={{ color: "var(--color-muted-foreground)" }} />,
+      icon: (
+        <Hash size={13} style={{ color: "var(--color-muted-foreground)" }} />
+      ),
       label: "ORDER",
       value: (
-        <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 14 }}>
+        <span
+          style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 14 }}
+        >
           {String(station.order).padStart(2, "0")}
         </span>
       ),
     },
     {
-      icon: <div style={{ width: 7, height: 7, borderRadius: "50%", background: led.color, boxShadow: led.shadow, flexShrink: 0 }} />,
+      icon: (
+        <div
+          style={{
+            width: 7,
+            height: 7,
+            borderRadius: "50%",
+            background: led.color,
+            boxShadow: led.shadow,
+            flexShrink: 0,
+          }}
+        />
+      ),
       label: "STATUS",
       value: (
         <span
@@ -111,7 +140,12 @@ function StationCard({ station, scheduleCount, otherScheduleCount }: StationCard
       ),
     },
     {
-      icon: <Calendar size={13} style={{ color: "var(--color-muted-foreground)" }} />,
+      icon: (
+        <Calendar
+          size={13}
+          style={{ color: "var(--color-muted-foreground)" }}
+        />
+      ),
       label: "SCHEDULES",
       value: (
         <span
@@ -128,7 +162,9 @@ function StationCard({ station, scheduleCount, otherScheduleCount }: StationCard
       highlight: schedulesWin,
     },
     {
-      icon: <MapPin size={13} style={{ color: "var(--color-muted-foreground)" }} />,
+      icon: (
+        <MapPin size={13} style={{ color: "var(--color-muted-foreground)" }} />
+      ),
       label: "LOCATION",
       value: (
         <span style={{ fontFamily: "'Sora', sans-serif", fontSize: 12 }}>
@@ -137,10 +173,17 @@ function StationCard({ station, scheduleCount, otherScheduleCount }: StationCard
       ),
     },
     {
-      icon: <Navigation size={13} style={{ color: "var(--color-muted-foreground)" }} />,
+      icon: (
+        <Navigation
+          size={13}
+          style={{ color: "var(--color-muted-foreground)" }}
+        />
+      ),
       label: "COORDINATES",
       value: (
-        <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10 }}>
+        <span
+          style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10 }}
+        >
           {station.latitude?.toFixed(4)}, {station.longitude?.toFixed(4)}
         </span>
       ),
@@ -149,7 +192,12 @@ function StationCard({ station, scheduleCount, otherScheduleCount }: StationCard
 
   return (
     <div style={cardStyle}>
-      <div style={{ height: 2, background: "linear-gradient(90deg, #3b82f6 0%, transparent 100%)" }} />
+      <div
+        style={{
+          height: 2,
+          background: "linear-gradient(90deg, #3b82f6 0%, transparent 100%)",
+        }}
+      />
       <div style={cardHeaderStyle}>
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
           <span
@@ -193,7 +241,14 @@ function StationCard({ station, scheduleCount, otherScheduleCount }: StationCard
           {station.location}
         </p>
       </div>
-      <div style={{ padding: "16px 24px", display: "flex", flexDirection: "column", gap: 0 }}>
+      <div
+        style={{
+          padding: "16px 24px",
+          display: "flex",
+          flexDirection: "column",
+          gap: 0,
+        }}
+      >
         {rows.map((row, i) => (
           <div
             key={i}
@@ -202,13 +257,26 @@ function StationCard({ station, scheduleCount, otherScheduleCount }: StationCard
               alignItems: "center",
               gap: 10,
               padding: "12px 8px",
-              borderBottom: i < rows.length - 1 ? "1px solid var(--color-border)" : "none",
-              background: row.highlight ? "rgba(34,197,94,0.05)" : "transparent",
-              borderLeft: row.highlight ? "2px solid rgba(34,197,94,0.4)" : "2px solid transparent",
+              borderBottom:
+                i < rows.length - 1 ? "1px solid var(--color-border)" : "none",
+              background: row.highlight
+                ? "rgba(34,197,94,0.05)"
+                : "transparent",
+              borderLeft: row.highlight
+                ? "2px solid rgba(34,197,94,0.4)"
+                : "2px solid transparent",
               borderRadius: row.highlight ? 4 : 0,
             }}
           >
-            <div style={{ display: "flex", alignItems: "center", gap: 6, width: 100, flexShrink: 0 }}>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 6,
+                width: 100,
+                flexShrink: 0,
+              }}
+            >
               {row.icon}
               <span
                 style={{
@@ -285,12 +353,16 @@ export default function StationComparePage() {
           style={{
             marginTop: 16,
             height: 1,
-            background: "linear-gradient(90deg, var(--color-border) 0%, transparent 80%)",
+            background:
+              "linear-gradient(90deg, var(--color-border) 0%, transparent 80%)",
           }}
         />
       </div>
 
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+      >
         {/* Selector area */}
         <div
           style={{
@@ -298,7 +370,13 @@ export default function StationComparePage() {
             marginBottom: 24,
           }}
         >
-          <div style={{ height: 2, background: "linear-gradient(90deg, #3b82f6 0%, transparent 100%)" }} />
+          <div
+            style={{
+              height: 2,
+              background:
+                "linear-gradient(90deg, #3b82f6 0%, transparent 100%)",
+            }}
+          />
           <div style={{ padding: "20px 24px" }}>
             <div
               style={{
@@ -335,8 +413,23 @@ export default function StationComparePage() {
                 </Select>
               </div>
 
-              <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 4, flexShrink: 0, paddingTop: 20 }}>
-                <div style={{ width: 1, height: 20, background: "rgba(59,130,246,0.3)" }} />
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  gap: 4,
+                  flexShrink: 0,
+                  paddingTop: 20,
+                }}
+              >
+                <div
+                  style={{
+                    width: 1,
+                    height: 20,
+                    background: "rgba(59,130,246,0.3)",
+                  }}
+                />
                 <span
                   style={{
                     fontFamily: "'Bebas Neue', sans-serif",
@@ -347,7 +440,13 @@ export default function StationComparePage() {
                 >
                   VS
                 </span>
-                <div style={{ width: 1, height: 20, background: "rgba(59,130,246,0.3)" }} />
+                <div
+                  style={{
+                    width: 1,
+                    height: 20,
+                    background: "rgba(59,130,246,0.3)",
+                  }}
+                />
               </div>
 
               <div>
@@ -388,8 +487,16 @@ export default function StationComparePage() {
             gap: 16,
           }}
         >
-          <StationCard station={left} scheduleCount={leftCount} otherScheduleCount={rightCount} />
-          <StationCard station={right} scheduleCount={rightCount} otherScheduleCount={leftCount} />
+          <StationCard
+            station={left}
+            scheduleCount={leftCount}
+            otherScheduleCount={rightCount}
+          />
+          <StationCard
+            station={right}
+            scheduleCount={rightCount}
+            otherScheduleCount={leftCount}
+          />
         </div>
       </motion.div>
     </div>

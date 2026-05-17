@@ -44,7 +44,8 @@ export default function MapPage() {
   const withCoords = filteredStations.filter((s) => s.latitude && s.longitude);
   const statusCounts = {
     active: filteredStations.filter((s) => s.status === "ACTIVE").length,
-    maintenance: filteredStations.filter((s) => s.status === "MAINTENANCE").length,
+    maintenance: filteredStations.filter((s) => s.status === "MAINTENANCE")
+      .length,
     inactive: filteredStations.filter((s) => s.status === "INACTIVE").length,
   };
 
@@ -52,7 +53,15 @@ export default function MapPage() {
     <div>
       {/* Page header */}
       <div style={{ marginBottom: 24 }}>
-        <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", flexWrap: "wrap", gap: 16 }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "flex-start",
+            justifyContent: "space-between",
+            flexWrap: "wrap",
+            gap: 16,
+          }}
+        >
           <div>
             <h1
               style={{
@@ -81,11 +90,30 @@ export default function MapPage() {
           </div>
 
           {/* Status count chips */}
-          <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
+          <div
+            style={{
+              display: "flex",
+              gap: 8,
+              flexWrap: "wrap",
+              alignItems: "center",
+            }}
+          >
             {[
-              { label: t("map.active"), count: statusCounts.active, status: "ACTIVE" },
-              { label: t("map.maintenance"), count: statusCounts.maintenance, status: "MAINTENANCE" },
-              { label: t("map.inactive"), count: statusCounts.inactive, status: "INACTIVE" },
+              {
+                label: t("map.active"),
+                count: statusCounts.active,
+                status: "ACTIVE",
+              },
+              {
+                label: t("map.maintenance"),
+                count: statusCounts.maintenance,
+                status: "MAINTENANCE",
+              },
+              {
+                label: t("map.inactive"),
+                count: statusCounts.inactive,
+                status: "INACTIVE",
+              },
             ].map(({ label, count, status }) => {
               const led = statusLED(status);
               return (
@@ -142,7 +170,8 @@ export default function MapPage() {
           style={{
             marginTop: 16,
             height: 1,
-            background: "linear-gradient(90deg, var(--color-border) 0%, transparent 80%)",
+            background:
+              "linear-gradient(90deg, var(--color-border) 0%, transparent 80%)",
           }}
         />
       </div>
@@ -184,7 +213,14 @@ export default function MapPage() {
           style={{ display: "flex", flexDirection: "column", gap: 16 }}
         >
           {/* Station list card */}
-          <div style={{ ...cardStyle, display: "flex", flexDirection: "column", height: 500 }}>
+          <div
+            style={{
+              ...cardStyle,
+              display: "flex",
+              flexDirection: "column",
+              height: 500,
+            }}
+          >
             {/* Card header */}
             <div
               style={{
@@ -194,7 +230,10 @@ export default function MapPage() {
               }}
             >
               <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                <Train size={13} style={{ color: "var(--color-muted-foreground)" }} />
+                <Train
+                  size={13}
+                  style={{ color: "var(--color-muted-foreground)" }}
+                />
                 <p
                   style={{
                     fontFamily: "'Bebas Neue', sans-serif",
@@ -271,8 +310,12 @@ export default function MapPage() {
                         width: "100%",
                         textAlign: "left",
                         padding: "10px 16px",
-                        background: isSelected ? "rgba(29,111,232,0.06)" : "transparent",
-                        borderLeft: isSelected ? "3px solid var(--color-primary)" : "3px solid transparent",
+                        background: isSelected
+                          ? "rgba(29,111,232,0.06)"
+                          : "transparent",
+                        borderLeft: isSelected
+                          ? "3px solid var(--color-primary)"
+                          : "3px solid transparent",
                         borderTop: "none",
                         borderRight: "none",
                         borderBottom: "1px solid var(--color-border)",
@@ -294,7 +337,13 @@ export default function MapPage() {
                         }}
                       />
                       <div style={{ flex: 1, minWidth: 0 }}>
-                        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 6,
+                          }}
+                        >
                           <span
                             style={{
                               fontFamily: "'JetBrains Mono', monospace",
@@ -352,14 +401,22 @@ export default function MapPage() {
                   boxShadow: "inset 0 1px 0 rgba(59,130,246,0.1)",
                 }}
               >
-                <div style={{ height: 2, background: "linear-gradient(90deg, #3b82f6 0%, transparent 100%)" }} />
+                <div
+                  style={{
+                    height: 2,
+                    background:
+                      "linear-gradient(90deg, #3b82f6 0%, transparent 100%)",
+                  }}
+                />
                 <div
                   style={{
                     padding: "14px 16px 12px",
                     borderBottom: "1px solid var(--color-border)",
                   }}
                 >
-                  <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  <div
+                    style={{ display: "flex", alignItems: "center", gap: 8 }}
+                  >
                     <span
                       style={{
                         background: "rgba(29,111,232,0.12)",
@@ -386,7 +443,14 @@ export default function MapPage() {
                       {selectedStation.name}
                     </p>
                   </div>
-                  <div style={{ display: "flex", alignItems: "center", gap: 6, marginTop: 6 }}>
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 6,
+                      marginTop: 6,
+                    }}
+                  >
                     {(() => {
                       const led = statusLED(selectedStation.status);
                       return (
@@ -415,7 +479,14 @@ export default function MapPage() {
                     })()}
                   </div>
                 </div>
-                <div style={{ padding: "12px 16px", display: "flex", flexDirection: "column", gap: 8 }}>
+                <div
+                  style={{
+                    padding: "12px 16px",
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 8,
+                  }}
+                >
                   <div
                     style={{
                       display: "flex",
@@ -436,8 +507,16 @@ export default function MapPage() {
                     </span>
                   </div>
                   {selectedStation.latitude && selectedStation.longitude && (
-                    <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                      <Navigation size={13} style={{ color: "var(--color-muted-foreground)", flexShrink: 0 }} />
+                    <div
+                      style={{ display: "flex", alignItems: "center", gap: 6 }}
+                    >
+                      <Navigation
+                        size={13}
+                        style={{
+                          color: "var(--color-muted-foreground)",
+                          flexShrink: 0,
+                        }}
+                      />
                       <span
                         style={{
                           fontFamily: "'JetBrains Mono', monospace",
@@ -445,7 +524,8 @@ export default function MapPage() {
                           color: "var(--color-muted-foreground)",
                         }}
                       >
-                        {selectedStation.latitude.toFixed(6)}, {selectedStation.longitude.toFixed(6)}
+                        {selectedStation.latitude.toFixed(6)},{" "}
+                        {selectedStation.longitude.toFixed(6)}
                       </span>
                     </div>
                   )}

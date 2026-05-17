@@ -420,7 +420,9 @@ export default function ProfilePage() {
               {accentLine}
               <div style={cardHeaderStyle}>
                 <div style={cardTitleStyle}>PREFERENCES</div>
-                <div style={cardSubtitleStyle}>Current environment settings</div>
+                <div style={cardSubtitleStyle}>
+                  Current environment settings
+                </div>
               </div>
               <div style={{ padding: "8px 0" }}>
                 {preferencesItems.map((item) => {
@@ -735,7 +737,9 @@ export default function ProfilePage() {
                     { value: "testing", stack: testingStack },
                   ].map(({ value, stack }) => (
                     <TabsContent key={value} value={value}>
-                      <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                      <div
+                        style={{ display: "flex", flexWrap: "wrap", gap: 6 }}
+                      >
                         {stack.map((tech) => (
                           <span key={tech} style={chipStyle} title={tech}>
                             {tech}

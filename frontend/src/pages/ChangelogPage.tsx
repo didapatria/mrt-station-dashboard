@@ -373,9 +373,7 @@ export default function ChangelogPage() {
                   gap: 8,
                 }}
               >
-                <div
-                  style={{ display: "flex", alignItems: "center", gap: 12 }}
-                >
+                <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
                   <span
                     style={{
                       fontFamily: "'Bebas Neue', sans-serif",
@@ -446,7 +444,11 @@ export default function ChangelogPage() {
                 {release.items.map((item) => (
                   <div
                     key={item}
-                    style={{ display: "flex", alignItems: "flex-start", gap: 10 }}
+                    style={{
+                      display: "flex",
+                      alignItems: "flex-start",
+                      gap: 10,
+                    }}
                   >
                     <div
                       style={{

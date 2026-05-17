@@ -514,8 +514,7 @@ export default function StationsPage() {
         <div
           style={{
             height: 2,
-            background:
-              "linear-gradient(90deg, #3b82f6 0%, transparent 100%)",
+            background: "linear-gradient(90deg, #3b82f6 0%, transparent 100%)",
           }}
         />
         <div className="overflow-x-auto">

@@ -324,12 +324,13 @@ export default function ActivityLogPage() {
               />
 
               {logs.map((log, idx) => {
-                const actionStyle =
-                  ACTION_STYLES[log.action as keyof typeof ACTION_STYLES] ?? {
-                    bg: "rgba(100,116,139,0.1)",
-                    color: "var(--color-muted-foreground)",
-                    Icon: Activity,
-                  };
+                const actionStyle = ACTION_STYLES[
+                  log.action as keyof typeof ACTION_STYLES
+                ] ?? {
+                  bg: "rgba(100,116,139,0.1)",
+                  color: "var(--color-muted-foreground)",
+                  Icon: Activity,
+                };
                 const { bg, color, Icon: ActionIcon } = actionStyle;
                 const EntityIcon =
                   ENTITY_ICONS[log.entity as keyof typeof ENTITY_ICONS] ??

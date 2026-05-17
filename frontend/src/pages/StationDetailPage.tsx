@@ -69,17 +69,12 @@ const ACCENT_LINE = (
   <div
     style={{
       height: 2,
-      background:
-        "linear-gradient(90deg, #3b82f6 0%, rgba(59,130,246,0) 100%)",
+      background: "linear-gradient(90deg, #3b82f6 0%, rgba(59,130,246,0) 100%)",
     }}
   />
 );
 
-function StatCard({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+function StatCard({ children }: { children: React.ReactNode }) {
   const [hovered, setHovered] = useState(false);
   return (
     <div
@@ -150,7 +145,10 @@ export default function StationDetailPage() {
         {t("stations.title")}
       </button>
 
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+      >
         {/* Page header */}
         <div>
           <div
@@ -402,7 +400,11 @@ export default function StationDetailPage() {
                       }}
                     >
                       <div
-                        style={{ display: "flex", alignItems: "baseline", gap: 6 }}
+                        style={{
+                          display: "flex",
+                          alignItems: "baseline",
+                          gap: 6,
+                        }}
                       >
                         <span
                           style={{
@@ -428,7 +430,11 @@ export default function StationDetailPage() {
                         </span>
                       </div>
                       <div
-                        style={{ display: "flex", alignItems: "baseline", gap: 6 }}
+                        style={{
+                          display: "flex",
+                          alignItems: "baseline",
+                          gap: 6,
+                        }}
                       >
                         <span
                           style={{
@@ -537,7 +543,9 @@ export default function StationDetailPage() {
                     <TableHead style={thStyle}>
                       {t("schedules.trainNumber")}
                     </TableHead>
-                    <TableHead style={thStyle}>{t("schedules.route")}</TableHead>
+                    <TableHead style={thStyle}>
+                      {t("schedules.route")}
+                    </TableHead>
                     <TableHead style={thStyle}>{t("schedules.time")}</TableHead>
                     <TableHead style={thStyle}>
                       {t("stations.status")}

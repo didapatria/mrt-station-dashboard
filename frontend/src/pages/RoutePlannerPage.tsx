@@ -101,12 +101,16 @@ export default function RoutePlannerPage() {
           style={{
             marginTop: 16,
             height: 1,
-            background: "linear-gradient(90deg, var(--color-border) 0%, transparent 80%)",
+            background:
+              "linear-gradient(90deg, var(--color-border) 0%, transparent 80%)",
           }}
         />
       </div>
 
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+      >
         {/* Terminal-style form card */}
         <div
           style={{
@@ -114,10 +118,19 @@ export default function RoutePlannerPage() {
             marginBottom: 24,
           }}
         >
-          <div style={{ height: 2, background: "linear-gradient(90deg, #3b82f6 0%, transparent 100%)" }} />
+          <div
+            style={{
+              height: 2,
+              background:
+                "linear-gradient(90deg, #3b82f6 0%, transparent 100%)",
+            }}
+          />
           <div style={cardHeaderStyle}>
             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-              <Train size={14} style={{ color: "var(--color-muted-foreground)" }} />
+              <Train
+                size={14}
+                style={{ color: "var(--color-muted-foreground)" }}
+              />
               <p
                 style={{
                   fontFamily: "'Bebas Neue', sans-serif",
@@ -213,11 +226,30 @@ export default function RoutePlannerPage() {
                   flexShrink: 0,
                 }}
               >
-                <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 2 }}>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    gap: 2,
+                  }}
+                >
                   {Array.from({ length: 4 }).map((_, i) => (
-                    <div key={i} style={{ width: 1, height: 4, background: "rgba(59,130,246,0.4)", borderRadius: 1 }} />
+                    <div
+                      key={i}
+                      style={{
+                        width: 1,
+                        height: 4,
+                        background: "rgba(59,130,246,0.4)",
+                        borderRadius: 1,
+                      }}
+                    />
                   ))}
-                  <div style={{ color: "#3b82f6", fontSize: 10, lineHeight: 1 }}>▼</div>
+                  <div
+                    style={{ color: "#3b82f6", fontSize: 10, lineHeight: 1 }}
+                  >
+                    ▼
+                  </div>
                 </div>
               </div>
 
@@ -298,7 +330,10 @@ export default function RoutePlannerPage() {
                 >
                   ——————————————
                 </span>
-                <ArrowRight size={12} style={{ color: "var(--color-primary)" }} />
+                <ArrowRight
+                  size={12}
+                  style={{ color: "var(--color-primary)" }}
+                />
                 <span
                   style={{
                     fontFamily: "'JetBrains Mono', monospace",
@@ -337,10 +372,19 @@ export default function RoutePlannerPage() {
         {/* Results */}
         {fromId && toId && fromId !== toId && (
           <div style={cardStyle}>
-            <div style={{ height: 2, background: "linear-gradient(90deg, #3b82f6 0%, transparent 100%)" }} />
+            <div
+              style={{
+                height: 2,
+                background:
+                  "linear-gradient(90deg, #3b82f6 0%, transparent 100%)",
+              }}
+            />
             <div style={cardHeaderStyle}>
               <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                <Clock size={14} style={{ color: "var(--color-muted-foreground)" }} />
+                <Clock
+                  size={14}
+                  style={{ color: "var(--color-muted-foreground)" }}
+                />
                 <p
                   style={{
                     fontFamily: "'Bebas Neue', sans-serif",
@@ -354,7 +398,15 @@ export default function RoutePlannerPage() {
                   }}
                 >
                   <span>{fromStation?.code}</span>
-                  <span style={{ color: "#3b82f6", fontFamily: "'JetBrains Mono', monospace", fontSize: 13 }}>→</span>
+                  <span
+                    style={{
+                      color: "#3b82f6",
+                      fontFamily: "'JetBrains Mono', monospace",
+                      fontSize: 13,
+                    }}
+                  >
+                    →
+                  </span>
                   <span>{toStation?.code}</span>
                 </p>
                 <span
@@ -395,7 +447,13 @@ export default function RoutePlannerPage() {
                   gap: 10,
                 }}
               >
-                <Clock size={32} style={{ color: "var(--color-muted-foreground)", opacity: 0.4 }} />
+                <Clock
+                  size={32}
+                  style={{
+                    color: "var(--color-muted-foreground)",
+                    opacity: 0.4,
+                  }}
+                />
                 <p
                   style={{
                     fontFamily: "'Bebas Neue', sans-serif",
@@ -418,24 +476,39 @@ export default function RoutePlannerPage() {
                     textAlign: "center",
                   }}
                 >
-                  No direct schedules from {fromStation?.name} to {toStation?.name}
+                  No direct schedules from {fromStation?.name} to{" "}
+                  {toStation?.name}
                 </p>
               </div>
             ) : (
               <Table>
                 <TableHeader>
                   <TableRow style={{ background: "var(--color-muted)" }}>
-                    <TableHead style={thStyle}>{t("schedules.trainNumber")}</TableHead>
-                    <TableHead style={thStyle}>{t("schedules.route")}</TableHead>
-                    <TableHead style={thStyle}>{t("schedules.departureTime")}</TableHead>
-                    <TableHead style={thStyle}>{t("schedules.arrivalTime")}</TableHead>
-                    <TableHead style={thStyle}>{t("schedules.dayType")}</TableHead>
-                    <TableHead style={thStyle}>{t("stations.status")}</TableHead>
+                    <TableHead style={thStyle}>
+                      {t("schedules.trainNumber")}
+                    </TableHead>
+                    <TableHead style={thStyle}>
+                      {t("schedules.route")}
+                    </TableHead>
+                    <TableHead style={thStyle}>
+                      {t("schedules.departureTime")}
+                    </TableHead>
+                    <TableHead style={thStyle}>
+                      {t("schedules.arrivalTime")}
+                    </TableHead>
+                    <TableHead style={thStyle}>
+                      {t("schedules.dayType")}
+                    </TableHead>
+                    <TableHead style={thStyle}>
+                      {t("stations.status")}
+                    </TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {results
-                    .sort((a, b) => a.departureTime.localeCompare(b.departureTime))
+                    .sort((a, b) =>
+                      a.departureTime.localeCompare(b.departureTime),
+                    )
                     .map((s) => {
                       const led = statusLED(s.status);
                       return (
@@ -450,14 +523,32 @@ export default function RoutePlannerPage() {
                             {s.trainNumber}
                           </TableCell>
                           <TableCell>
-                            <div style={{ display: "flex", alignItems: "center" }}>
-                              <span style={{ fontFamily: "'Sora', sans-serif", fontSize: 13 }}>
+                            <div
+                              style={{ display: "flex", alignItems: "center" }}
+                            >
+                              <span
+                                style={{
+                                  fontFamily: "'Sora', sans-serif",
+                                  fontSize: 13,
+                                }}
+                              >
                                 {fromStation?.name}
                               </span>
-                              <span style={{ color: "#3b82f6", margin: "0 6px", fontFamily: "'JetBrains Mono', monospace" }}>
+                              <span
+                                style={{
+                                  color: "#3b82f6",
+                                  margin: "0 6px",
+                                  fontFamily: "'JetBrains Mono', monospace",
+                                }}
+                              >
                                 →
                               </span>
-                              <span style={{ fontFamily: "'Sora', sans-serif", fontSize: 13 }}>
+                              <span
+                                style={{
+                                  fontFamily: "'Sora', sans-serif",
+                                  fontSize: 13,
+                                }}
+                              >
                                 {toStation?.name}
                               </span>
                             </div>
@@ -482,7 +573,13 @@ export default function RoutePlannerPage() {
                             <Badge variant="secondary">{s.dayType}</Badge>
                           </TableCell>
                           <TableCell>
-                            <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                            <div
+                              style={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: 6,
+                              }}
+                            >
                               <div
                                 style={{
                                   width: 7,

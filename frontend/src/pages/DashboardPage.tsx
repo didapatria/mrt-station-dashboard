@@ -270,8 +270,7 @@ export default function DashboardPage() {
                 marginBottom: 8,
               }}
             >
-              {greeting},{" "}
-              <span style={{ color: "#93c5fd" }}>{firstName}</span>
+              {greeting}, <span style={{ color: "#93c5fd" }}>{firstName}</span>
             </div>
             <p
               style={{
@@ -375,7 +374,9 @@ export default function DashboardPage() {
               marginTop: 5,
             }}
           >
-            <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+            <span
+              style={{ display: "inline-flex", alignItems: "center", gap: 6 }}
+            >
               <span
                 style={{
                   width: 5,
@@ -439,7 +440,10 @@ export default function DashboardPage() {
       {statsLoading ? (
         <div className="grid gap-px md:grid-cols-2 lg:grid-cols-3 mb-8">
           {Array.from({ length: 6 }).map((_, i) => (
-            <Skeleton key={i} className="h-28 rounded-none first:rounded-tl-xl last:rounded-br-xl" />
+            <Skeleton
+              key={i}
+              className="h-28 rounded-none first:rounded-tl-xl last:rounded-br-xl"
+            />
           ))}
         </div>
       ) : (
@@ -468,10 +472,18 @@ export default function DashboardPage() {
                   padding: "22px 24px",
                   overflow: "hidden",
                   cursor: "default",
-                  borderRadius: isFirst ? "11px 0 0 0" : isLast ? "0 0 11px 0" : 0,
+                  borderRadius: isFirst
+                    ? "11px 0 0 0"
+                    : isLast
+                      ? "0 0 11px 0"
+                      : 0,
                   transition: "background 0.15s ease",
                 }}
-                whileHover={{ backgroundColor: isDark ? "rgba(255,255,255,0.02)" : "rgba(0,0,0,0.01)" }}
+                whileHover={{
+                  backgroundColor: isDark
+                    ? "rgba(255,255,255,0.02)"
+                    : "rgba(0,0,0,0.01)",
+                }}
               >
                 {/* Left accent bar with pulse animation */}
                 <div
@@ -575,7 +587,8 @@ export default function DashboardPage() {
               <div
                 style={{
                   height: 2,
-                  background: "linear-gradient(90deg, #3b82f6 0%, rgba(59,130,246,0.0) 100%)",
+                  background:
+                    "linear-gradient(90deg, #3b82f6 0%, rgba(59,130,246,0.0) 100%)",
                   borderRadius: "12px 12px 0 0",
                 }}
               />
@@ -676,7 +689,8 @@ export default function DashboardPage() {
             <div
               style={{
                 height: 2,
-                background: "linear-gradient(90deg, #3b82f6 0%, rgba(59,130,246,0.0) 100%)",
+                background:
+                  "linear-gradient(90deg, #3b82f6 0%, rgba(59,130,246,0.0) 100%)",
                 borderRadius: "12px 12px 0 0",
               }}
             />
@@ -724,7 +738,11 @@ export default function DashboardPage() {
                 }}
               >
                 <TrendingUp
-                  style={{ width: 12, height: 12, color: "var(--color-muted-foreground)" }}
+                  style={{
+                    width: 12,
+                    height: 12,
+                    color: "var(--color-muted-foreground)",
+                  }}
                 />
                 <span
                   style={{
@@ -746,7 +764,9 @@ export default function DashboardPage() {
                 >
                   <CartesianGrid
                     strokeDasharray="2 4"
-                    stroke={isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.06)"}
+                    stroke={
+                      isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.06)"
+                    }
                     vertical={false}
                   />
                   <XAxis
@@ -755,7 +775,9 @@ export default function DashboardPage() {
                     tick={{
                       fontSize: 10,
                       fontFamily: "'JetBrains Mono', monospace",
-                      fill: isDark ? "rgba(148,163,184,0.6)" : "rgba(71,85,105,0.7)",
+                      fill: isDark
+                        ? "rgba(148,163,184,0.6)"
+                        : "rgba(71,85,105,0.7)",
                     }}
                     axisLine={false}
                     tickLine={false}
@@ -764,7 +786,9 @@ export default function DashboardPage() {
                     tick={{
                       fontSize: 10,
                       fontFamily: "'JetBrains Mono', monospace",
-                      fill: isDark ? "rgba(148,163,184,0.6)" : "rgba(71,85,105,0.7)",
+                      fill: isDark
+                        ? "rgba(148,163,184,0.6)"
+                        : "rgba(71,85,105,0.7)",
                     }}
                     axisLine={false}
                     tickLine={false}
@@ -778,7 +802,9 @@ export default function DashboardPage() {
                       fontSize: 11,
                     }}
                     cursor={{
-                      fill: isDark ? "rgba(255,255,255,0.04)" : "rgba(0,0,0,0.04)",
+                      fill: isDark
+                        ? "rgba(255,255,255,0.04)"
+                        : "rgba(0,0,0,0.04)",
                       radius: 4,
                     }}
                     labelFormatter={(v) => `${v}`}
@@ -833,7 +859,8 @@ export default function DashboardPage() {
               <div
                 style={{
                   height: 2,
-                  background: "linear-gradient(90deg, #3b82f6 0%, rgba(59,130,246,0.0) 100%)",
+                  background:
+                    "linear-gradient(90deg, #3b82f6 0%, rgba(59,130,246,0.0) 100%)",
                   borderRadius: "12px 12px 0 0",
                 }}
               />
@@ -904,7 +931,8 @@ export default function DashboardPage() {
                               height: 30,
                               width: 30,
                               borderRadius: 6,
-                              background: "color-mix(in oklch, var(--color-primary) 10%, transparent)",
+                              background:
+                                "color-mix(in oklch, var(--color-primary) 10%, transparent)",
                               display: "flex",
                               alignItems: "center",
                               justifyContent: "center",
@@ -938,7 +966,9 @@ export default function DashboardPage() {
                         >
                           {station.location}
                         </TableCell>
-                        <TableCell style={{ textAlign: "right", padding: "12px 16px" }}>
+                        <TableCell
+                          style={{ textAlign: "right", padding: "12px 16px" }}
+                        >
                           <Badge
                             variant={
                               station.status === "ACTIVE"
@@ -972,7 +1002,8 @@ export default function DashboardPage() {
               <div
                 style={{
                   height: 2,
-                  background: "linear-gradient(90deg, #3b82f6 0%, rgba(59,130,246,0.0) 100%)",
+                  background:
+                    "linear-gradient(90deg, #3b82f6 0%, rgba(59,130,246,0.0) 100%)",
                   borderRadius: "12px 12px 0 0",
                 }}
               />
@@ -994,7 +1025,8 @@ export default function DashboardPage() {
                             letterSpacing: "0.14em",
                             textTransform: "uppercase",
                             color: "var(--color-muted-foreground)",
-                            padding: i === 0 || i === 3 ? "12px 16px" : undefined,
+                            padding:
+                              i === 0 || i === 3 ? "12px 16px" : undefined,
                             textAlign: i === 3 ? "right" : undefined,
                           }}
                         >
@@ -1050,10 +1082,14 @@ export default function DashboardPage() {
                           }}
                         >
                           {schedule.departureTime}
-                          <span style={{ margin: "0 4px", opacity: 0.4 }}>—</span>
+                          <span style={{ margin: "0 4px", opacity: 0.4 }}>
+                            —
+                          </span>
                           {schedule.arrivalTime}
                         </TableCell>
-                        <TableCell style={{ textAlign: "right", padding: "12px 16px" }}>
+                        <TableCell
+                          style={{ textAlign: "right", padding: "12px 16px" }}
+                        >
                           <Badge
                             variant={
                               schedule.status === "ACTIVE"

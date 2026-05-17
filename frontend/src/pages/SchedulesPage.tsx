@@ -104,7 +104,9 @@ function StatusLED({ status }: { status: string }) {
   const cfg = STATUS_LED[status] ?? STATUS_LED["ACTIVE"];
   return (
     <>
-      <style>{"@keyframes pulse-led { 0%,100%{opacity:1} 50%{opacity:0.5} }"}</style>
+      <style>
+        {"@keyframes pulse-led { 0%,100%{opacity:1} 50%{opacity:0.5} }"}
+      </style>
       <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
         <span
           style={{
@@ -113,7 +115,10 @@ function StatusLED({ status }: { status: string }) {
             borderRadius: "50%",
             background: cfg.color,
             boxShadow: `0 0 6px ${cfg.glow}`,
-            animation: status === "ACTIVE" ? "pulse-led 2s ease-in-out infinite" : undefined,
+            animation:
+              status === "ACTIVE"
+                ? "pulse-led 2s ease-in-out infinite"
+                : undefined,
             flexShrink: 0,
             display: "inline-block",
           }}
@@ -908,7 +913,10 @@ export default function SchedulesPage() {
                 id="trainNumber"
                 {...register("trainNumber")}
                 placeholder="MRT-0600-NS"
-                style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 13 }}
+                style={{
+                  fontFamily: "'JetBrains Mono', monospace",
+                  fontSize: 13,
+                }}
               />
               {errors.trainNumber && (
                 <p className="text-xs text-destructive">
@@ -1002,7 +1010,10 @@ export default function SchedulesPage() {
                     id="departureTime"
                     type="time"
                     className="w-full pr-10 [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:inset-0 [&::-webkit-calendar-picker-indicator]:w-full [&::-webkit-calendar-picker-indicator]:cursor-pointer"
-                    style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 13 }}
+                    style={{
+                      fontFamily: "'JetBrains Mono', monospace",
+                      fontSize: 13,
+                    }}
                     {...register("departureTime")}
                   />
                   <Clock className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -1030,7 +1041,10 @@ export default function SchedulesPage() {
                     id="arrivalTime"
                     type="time"
                     className="w-full pr-10 [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:inset-0 [&::-webkit-calendar-picker-indicator]:w-full [&::-webkit-calendar-picker-indicator]:cursor-pointer"
-                    style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 13 }}
+                    style={{
+                      fontFamily: "'JetBrains Mono', monospace",
+                      fontSize: 13,
+                    }}
                     {...register("arrivalTime")}
                   />
                   <Clock className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />

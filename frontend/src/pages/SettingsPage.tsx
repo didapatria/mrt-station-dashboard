@@ -30,7 +30,8 @@ export default function SettingsPage() {
   const cardWithAccent: React.CSSProperties = {
     ...cardStyle,
     borderLeft: "3px solid transparent",
-    borderImage: "linear-gradient(180deg, #3b82f6 0%, rgba(59,130,246,0.2) 100%) 1",
+    borderImage:
+      "linear-gradient(180deg, #3b82f6 0%, rgba(59,130,246,0.2) 100%) 1",
   };
 
   const cardHeaderStyle: React.CSSProperties = {
@@ -105,7 +106,8 @@ export default function SettingsPage() {
           style={{
             marginTop: 16,
             height: 1,
-            background: "linear-gradient(90deg, var(--color-border) 0%, transparent 80%)",
+            background:
+              "linear-gradient(90deg, var(--color-border) 0%, transparent 80%)",
           }}
         />
       </div>
@@ -113,11 +115,21 @@ export default function SettingsPage() {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        style={{ display: "grid", gap: 24, gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))" }}
+        style={{
+          display: "grid",
+          gap: 24,
+          gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
+        }}
       >
         {/* Language */}
         <div style={cardWithAccent}>
-          <div style={{ height: 2, background: "linear-gradient(90deg, #3b82f6 0%, transparent 100%)" }} />
+          <div
+            style={{
+              height: 2,
+              background:
+                "linear-gradient(90deg, #3b82f6 0%, transparent 100%)",
+            }}
+          />
           <div style={cardHeaderStyle}>
             <div style={cardTitleStyle}>
               <Globe size={15} />
@@ -128,15 +140,35 @@ export default function SettingsPage() {
           <div style={settingRowStyle}>
             <span style={settingLabelStyle}>Active Language</span>
             <Select value={i18n.language} onValueChange={changeLanguage}>
-              <SelectTrigger style={{ width: 160, fontFamily: "'JetBrains Mono', monospace", fontSize: 11 }}>
+              <SelectTrigger
+                style={{
+                  width: 160,
+                  fontFamily: "'JetBrains Mono', monospace",
+                  fontSize: 11,
+                }}
+              >
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="en">
-                  <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11 }}>English</span>
+                  <span
+                    style={{
+                      fontFamily: "'JetBrains Mono', monospace",
+                      fontSize: 11,
+                    }}
+                  >
+                    English
+                  </span>
                 </SelectItem>
                 <SelectItem value="id">
-                  <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11 }}>Indonesia</span>
+                  <span
+                    style={{
+                      fontFamily: "'JetBrains Mono', monospace",
+                      fontSize: 11,
+                    }}
+                  >
+                    Indonesia
+                  </span>
                 </SelectItem>
               </SelectContent>
             </Select>
@@ -145,7 +177,13 @@ export default function SettingsPage() {
 
         {/* Appearance */}
         <div style={cardWithAccent}>
-          <div style={{ height: 2, background: "linear-gradient(90deg, #3b82f6 0%, transparent 100%)" }} />
+          <div
+            style={{
+              height: 2,
+              background:
+                "linear-gradient(90deg, #3b82f6 0%, transparent 100%)",
+            }}
+          />
           <div style={cardHeaderStyle}>
             <div style={cardTitleStyle}>
               <Palette size={15} />
@@ -156,15 +194,35 @@ export default function SettingsPage() {
           <div style={settingRowStyle}>
             <span style={settingLabelStyle}>Color Theme</span>
             <Select value={theme} onValueChange={() => toggleTheme()}>
-              <SelectTrigger style={{ width: 160, fontFamily: "'JetBrains Mono', monospace", fontSize: 11 }}>
+              <SelectTrigger
+                style={{
+                  width: 160,
+                  fontFamily: "'JetBrains Mono', monospace",
+                  fontSize: 11,
+                }}
+              >
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="light">
-                  <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11 }}>Light</span>
+                  <span
+                    style={{
+                      fontFamily: "'JetBrains Mono', monospace",
+                      fontSize: 11,
+                    }}
+                  >
+                    Light
+                  </span>
                 </SelectItem>
                 <SelectItem value="dark">
-                  <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11 }}>Dark</span>
+                  <span
+                    style={{
+                      fontFamily: "'JetBrains Mono', monospace",
+                      fontSize: 11,
+                    }}
+                  >
+                    Dark
+                  </span>
                 </SelectItem>
               </SelectContent>
             </Select>
@@ -173,13 +231,21 @@ export default function SettingsPage() {
 
         {/* Notifications */}
         <div style={cardWithAccent}>
-          <div style={{ height: 2, background: "linear-gradient(90deg, #3b82f6 0%, transparent 100%)" }} />
+          <div
+            style={{
+              height: 2,
+              background:
+                "linear-gradient(90deg, #3b82f6 0%, transparent 100%)",
+            }}
+          />
           <div style={cardHeaderStyle}>
             <div style={cardTitleStyle}>
               <Bell size={15} />
               NOTIFICATIONS
             </div>
-            <div style={cardSubtitleStyle}>Real-time notification preferences</div>
+            <div style={cardSubtitleStyle}>
+              Real-time notification preferences
+            </div>
           </div>
           <div style={settingRowStyle}>
             <div>
@@ -211,7 +277,13 @@ export default function SettingsPage() {
 
         {/* About */}
         <div style={cardWithAccent}>
-          <div style={{ height: 2, background: "linear-gradient(90deg, #3b82f6 0%, transparent 100%)" }} />
+          <div
+            style={{
+              height: 2,
+              background:
+                "linear-gradient(90deg, #3b82f6 0%, transparent 100%)",
+            }}
+          />
           <div style={cardHeaderStyle}>
             <div style={cardTitleStyle}>
               <Monitor size={15} />
@@ -240,7 +312,10 @@ export default function SettingsPage() {
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "space-between",
-                  borderBottom: idx < arr.length - 1 ? "1px solid var(--color-border)" : "none",
+                  borderBottom:
+                    idx < arr.length - 1
+                      ? "1px solid var(--color-border)"
+                      : "none",
                   transition: "all 0.12s ease",
                 }}
               >

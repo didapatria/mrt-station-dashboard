@@ -186,11 +186,19 @@ export default function AccessManagementPage() {
                     >
                       {role === "ADMIN" ? (
                         <ShieldCheck
-                          style={{ width: 20, height: 20, color: cfg.accentColor }}
+                          style={{
+                            width: 20,
+                            height: 20,
+                            color: cfg.accentColor,
+                          }}
                         />
                       ) : (
                         <Shield
-                          style={{ width: 20, height: 20, color: cfg.accentColor }}
+                          style={{
+                            width: 20,
+                            height: 20,
+                            color: cfg.accentColor,
+                          }}
                         />
                       )}
                     </div>
@@ -318,10 +326,7 @@ export default function AccessManagementPage() {
                 <col style={{ width: "22%" }} />
                 <col style={{ width: "44%" }} />
                 {ROLES.map((role) => (
-                  <col
-                    key={role}
-                    style={{ width: `${34 / ROLES.length}%` }}
-                  />
+                  <col key={role} style={{ width: `${34 / ROLES.length}%` }} />
                 ))}
               </colgroup>
               <TableHeader>
@@ -429,10 +434,7 @@ export default function AccessManagementPage() {
                           {PERMISSION_LABELS[perm] ?? perm}
                         </TableCell>
                         {ROLES.map((role) => (
-                          <TableCell
-                            key={role}
-                            style={{ textAlign: "center" }}
-                          >
+                          <TableCell key={role} style={{ textAlign: "center" }}>
                             {hasRole(role, perm) ? (
                               <Check
                                 style={{
