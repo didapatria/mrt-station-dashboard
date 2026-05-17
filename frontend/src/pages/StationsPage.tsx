@@ -270,7 +270,7 @@ export default function StationsPage() {
             {t("stations.manage")} ({meta?.total ?? stations.length} total)
           </p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           {isAdmin && selectedIds.size > 0 && (
             <Button variant="destructive" size="sm" onClick={() => setBulkDeleteOpen(true)}>
               <Trash2 className="h-4 w-4 mr-2" />
@@ -328,6 +328,7 @@ export default function StationsPage() {
       >
         <Card>
           <CardContent className="p-0">
+            <div className="overflow-x-auto">
             <Table>
               <TableHeader>
                 <TableRow className="bg-muted/50">
@@ -511,6 +512,7 @@ export default function StationsPage() {
                     ))}
               </TableBody>
             </Table>
+            </div>
           </CardContent>
         </Card>
       </motion.div>

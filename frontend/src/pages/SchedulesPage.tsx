@@ -246,7 +246,7 @@ export default function SchedulesPage() {
             {t("schedules.manage")} ({meta?.total ?? schedules.length} total)
           </p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           <Button variant="outline" onClick={handleExport}>
             <Download className="h-4 w-4 mr-2" />
             CSV
@@ -316,6 +316,7 @@ export default function SchedulesPage() {
           >
             <Card>
               <CardContent className="p-0">
+                <div className="overflow-x-auto">
                 <Table>
                   <TableHeader>
                     <TableRow className="bg-muted/50">
@@ -480,6 +481,7 @@ export default function SchedulesPage() {
                         ))}
                   </TableBody>
                 </Table>
+                </div>
               </CardContent>
             </Card>
           </motion.div>
@@ -592,16 +594,20 @@ export default function SchedulesPage() {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="departureTime">
                   {t("schedules.departureTime")}
                 </Label>
-                <Input
-                  id="departureTime"
-                  type="time"
-                  {...register("departureTime")}
-                />
+                <div className="relative">
+                  <Input
+                    id="departureTime"
+                    type="time"
+                    className="w-full pr-10 [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:inset-0 [&::-webkit-calendar-picker-indicator]:w-full [&::-webkit-calendar-picker-indicator]:cursor-pointer"
+                    {...register("departureTime")}
+                  />
+                  <Clock className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                </div>
                 {errors.departureTime && (
                   <p className="text-xs text-destructive">
                     {errors.departureTime.message}
@@ -612,11 +618,15 @@ export default function SchedulesPage() {
                 <Label htmlFor="arrivalTime">
                   {t("schedules.arrivalTime")}
                 </Label>
-                <Input
-                  id="arrivalTime"
-                  type="time"
-                  {...register("arrivalTime")}
-                />
+                <div className="relative">
+                  <Input
+                    id="arrivalTime"
+                    type="time"
+                    className="w-full pr-10 [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:inset-0 [&::-webkit-calendar-picker-indicator]:w-full [&::-webkit-calendar-picker-indicator]:cursor-pointer"
+                    {...register("arrivalTime")}
+                  />
+                  <Clock className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                </div>
                 {errors.arrivalTime && (
                   <p className="text-xs text-destructive">
                     {errors.arrivalTime.message}

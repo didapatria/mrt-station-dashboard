@@ -172,7 +172,7 @@ export default function DashboardPage() {
           </h2>
           <p className="text-muted-foreground">{t("dashboard.subtitle")}</p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           {stats && (
             <Button
               variant="outline"
@@ -391,6 +391,7 @@ export default function DashboardPage() {
           <TabsContent value="stations">
             <Card className="shadow-sm">
               <CardContent className="p-0">
+                <div className="overflow-x-auto">
                 <Table>
                   <TableHeader>
                     <TableRow className="bg-muted/50">
@@ -433,6 +434,7 @@ export default function DashboardPage() {
                     ))}
                   </TableBody>
                 </Table>
+                </div>
               </CardContent>
             </Card>
           </TabsContent>
@@ -440,6 +442,7 @@ export default function DashboardPage() {
           <TabsContent value="schedules">
             <Card className="shadow-sm">
               <CardContent className="p-0">
+                <div className="overflow-x-auto">
                 <Table>
                   <TableHeader>
                     <TableRow className="bg-muted/50">
@@ -483,6 +486,7 @@ export default function DashboardPage() {
                     ))}
                   </TableBody>
                 </Table>
+                </div>
               </CardContent>
             </Card>
           </TabsContent>
