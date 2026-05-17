@@ -130,6 +130,11 @@ React Page → TanStack Query Hook → API Service (axios) → Express Route →
 - i18n: use `t()` for all user-facing strings
 - Use inline styles for flex layouts to prevent linter issues
 - Fonts: Sora (body), Bebas Neue (`font-display` class), JetBrains Mono (`font-mono`) — loaded via Google Fonts in index.html
+- Dark mode: deep blue-black (`oklch(0.115 0.022 245)` bg, `oklch(0.152 0.02 243)` card, `oklch(0.09 0.022 245)` sidebar)
+- Light mode: subtle blue-white tint (`oklch(0.974 0.007 248)` bg)
+- Sidebar active nav: CSS `::before` on `.nav-link-item[aria-current="page"]` — 3px left bar, spring animation; `nav-collapsed` class disables it
+- Table row hover: CSS `::after` on `tbody tr` — 2px left primary accent, opacity transition
+- Custom scrollbar: 6px, blue-tinted dark mode, defined in `index.css`
 - Tests: co-locate with source, use Vitest + RTL
 - E2E: Playwright tests in `/e2e`, use `adminPage` fixture for authenticated tests
 - E2E: use `navigateTo(page, "/path")` for SPA navigation (sidebar link clicks)

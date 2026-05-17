@@ -34,5 +34,5 @@ paths:
 - Mobile tests use `page.tap()` not `page.click()` for touch interactions
 - Mobile overflow check pattern: `document.body.scrollWidth <= window.innerWidth + 10`
 - `screenshot: "on"` captures every test — visible in GitHub Pages report at https://didapatria.github.io/mrt-station-dashboard/
-- 93 total tests across 19 spec files (as of v2.9.0 — 17 May 2026)
+- 93 total tests across 19 spec files (as of v2.10.0 — 17 May 2026)
 - Design tests in `ux-design.spec.ts` — auth panel, dashboard banner, stat card structure; run in auth-tests + admin-tests projects

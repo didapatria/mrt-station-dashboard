@@ -8,7 +8,7 @@ const changelog = [
   {
     version: "2.10.0",
     date: "17 May 2026",
-    commits: ["e3afc85"],
+    commits: ["e3afc85", "851fc2c"],
     items: [
       "Dark mode overhaul — deep blue-black system (#0a1523 family), matches auth panel aesthetic",
       "Light mode — subtle blue-white tint instead of clinical pure white",

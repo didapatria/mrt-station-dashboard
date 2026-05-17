@@ -140,7 +140,8 @@ React Page → TanStack Query Hook → API Service (axios) → Express Route →
 - **Export CSV** - Download station and schedule data as CSV files
 - **Profile Page** - User account information and tech stack overview
 - **Responsive Design** - Mobile-first with sidebar navigation
-- **Animations** - Smooth page transitions and list animations (Framer Motion)
+- **Animations** - Smooth page transitions, list animations (Framer Motion), transit-line nav indicator spring animation
+- **Design System** - Deep blue-black dark mode, blue-white light mode, transit-line sidebar indicator (CSS `::before`), table row left accent reveal, custom scrollbar
 - **Form Validation** - Client & server-side with Zod schemas
 - **Server State Caching** - Automatic caching and background refetching (TanStack Query)
 - **Interactive Station Map** - Leaflet-powered map with route visualization, station markers, and location picker
