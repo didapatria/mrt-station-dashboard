@@ -43,7 +43,7 @@ export default function AuthLayout() {
       style={{
         minHeight: "100vh",
         display: "flex",
-        background: "#070c14",
+        background: "var(--color-background)",
       }}
     >
       {/* ── Left panel ── */}
@@ -513,7 +513,7 @@ export default function AuthLayout() {
           alignItems: "center",
           justifyContent: "center",
           padding: "2.5rem 2rem",
-          background: "#070c14",
+          background: "var(--color-background)",
           position: "relative",
         }}
       >

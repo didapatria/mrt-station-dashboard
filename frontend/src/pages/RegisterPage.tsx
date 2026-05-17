@@ -7,7 +7,6 @@ import { useTranslation } from "react-i18next";
 import { GoogleLogin } from "@react-oauth/google";
 import { useRegister, useGoogleLogin } from "@/hooks/use-auth";
 import { Eye, EyeOff, Train } from "lucide-react";
-import { ThemeToggle } from "@/components/ThemeToggle";
 
 const registerSchema = z
   .object({
@@ -107,14 +106,11 @@ export default function RegisterPage() {
             fontFamily: "'Bebas Neue', sans-serif",
             fontSize: 20,
             letterSpacing: "0.1em",
-            color: "white",
+            color: "var(--color-foreground)",
           }}
         >
           MRT JAKARTA
         </span>
-        <div style={{ marginLeft: "auto", color: "rgba(255,255,255,0.75)" }}>
-          <ThemeToggle />
-        </div>
       </div>
 
       {/* Heading */}
@@ -123,7 +119,7 @@ export default function RegisterPage() {
           style={{
             fontFamily: "'Bebas Neue', sans-serif",
             fontSize: 40,
-            color: "white",
+            color: "var(--color-foreground)",
             letterSpacing: "0.06em",
             lineHeight: 1,
             marginBottom: 10,
@@ -135,7 +131,7 @@ export default function RegisterPage() {
           style={{
             fontFamily: "'JetBrains Mono', monospace",
             fontSize: 10,
-            color: "rgba(148,163,184,0.4)",
+            color: "var(--color-muted-foreground)",
             letterSpacing: "0.14em",
             textTransform: "uppercase",
           }}
@@ -278,20 +274,20 @@ export default function RegisterPage() {
         }}
       >
         <div
-          style={{ flex: 1, height: 1, background: "rgba(255,255,255,0.07)" }}
+          style={{ flex: 1, height: 1, background: "var(--color-border)" }}
         />
         <span
           style={{
             fontFamily: "'JetBrains Mono', monospace",
             fontSize: 9,
-            color: "rgba(148,163,184,0.25)",
+            color: "var(--color-muted-foreground)",
             letterSpacing: "0.16em",
           }}
         >
           {t("auth.orContinueWith").toUpperCase()}
         </span>
         <div
-          style={{ flex: 1, height: 1, background: "rgba(255,255,255,0.07)" }}
+          style={{ flex: 1, height: 1, background: "var(--color-border)" }}
         />
       </div>
 
@@ -312,7 +308,7 @@ export default function RegisterPage() {
           textAlign: "center",
           fontFamily: "'JetBrains Mono', monospace",
           fontSize: 11,
-          color: "rgba(148,163,184,0.35)",
+          color: "var(--color-muted-foreground)",
           letterSpacing: "0.04em",
         }}
       >
