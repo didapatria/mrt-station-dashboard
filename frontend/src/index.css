@@ -255,7 +255,7 @@ tbody tr:hover::after {
   50% { opacity: 1; transform: scale(1.2); }
 }
 @keyframes draw-line {
-  from { stroke-dashoffset: 600; }
+  from { stroke-dashoffset: 260; }
   to { stroke-dashoffset: 0; }
 }
 @keyframes fade-up {
@@ -265,7 +265,7 @@ tbody tr:hover::after {
 .animate-fade-up { animation: fade-up 0.7s ease both; }
 .station-dot { animation: pulse-station 3s ease-in-out infinite; }
 .mrt-line {
-  stroke-dasharray: 600;
+  stroke-dasharray: 260;
   animation: draw-line 2s ease forwards;
 }
 

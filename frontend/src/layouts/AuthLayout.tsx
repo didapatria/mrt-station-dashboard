@@ -146,18 +146,18 @@ export default function AuthLayout() {
           >
             {/* SVG Line */}
             <div style={{ paddingTop: 4, flexShrink: 0 }}>
-              <svg width="16" height={MRT_STATIONS.length * 28} viewBox={`0 0 16 ${MRT_STATIONS.length * 28}`}>
+              <svg width="16" height={MRT_STATIONS.length * 20} viewBox={`0 0 16 ${MRT_STATIONS.length * 20}`}>
                 {/* Track line */}
                 <line
-                  x1="8" y1="8"
-                  x2="8" y2={MRT_STATIONS.length * 28 - 8}
+                  x1="8" y1="6"
+                  x2="8" y2={MRT_STATIONS.length * 20 - 6}
                   stroke="#1e3a5f"
                   strokeWidth="2"
                 />
                 <line
                   className="mrt-line"
-                  x1="8" y1="8"
-                  x2="8" y2={MRT_STATIONS.length * 28 - 8}
+                  x1="8" y1="6"
+                  x2="8" y2={MRT_STATIONS.length * 20 - 6}
                   stroke="#3b82f6"
                   strokeWidth="2"
                   strokeLinecap="round"
@@ -167,8 +167,8 @@ export default function AuthLayout() {
                   <circle
                     key={i}
                     cx="8"
-                    cy={8 + i * 28}
-                    r={i === 0 || i === MRT_STATIONS.length - 1 ? 5 : 3.5}
+                    cy={6 + i * 20}
+                    r={i === 0 || i === MRT_STATIONS.length - 1 ? 4.5 : 3}
                     fill={i === 0 || i === MRT_STATIONS.length - 1 ? "#3b82f6" : "#0a1628"}
                     stroke="#3b82f6"
                     strokeWidth="2"
@@ -185,7 +185,7 @@ export default function AuthLayout() {
                 <div
                   key={station}
                   style={{
-                    height: 28,
+                    height: 20,
                     display: "flex",
                     alignItems: "center",
                     opacity: i % 2 === 0 ? 0.85 : 0.45,
