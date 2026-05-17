@@ -536,7 +536,7 @@ export default function AuthLayout() {
             top: 16,
             right: 16,
             zIndex: 10,
-            color: "rgba(255,255,255,0.75)",
+            color: "var(--color-foreground)",
           }}
         >
           <ThemeToggle />
