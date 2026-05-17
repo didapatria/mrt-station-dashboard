@@ -313,9 +313,9 @@ export default function DashboardPage() {
       {/* Pie Charts */}
       {stats && (
         <div className="grid gap-6 lg:grid-cols-2 mb-8">
-          <Card className="shadow-sm">
-            <CardHeader>
-              <CardTitle className="text-lg">
+          <Card className="shadow-sm overflow-hidden">
+            <CardHeader className="pb-3">
+              <CardTitle className="font-display text-xl tracking-wide">
                 {t("dashboard.totalStations")} Breakdown
               </CardTitle>
             </CardHeader>
@@ -346,9 +346,9 @@ export default function DashboardPage() {
               </ResponsiveContainer>
             </CardContent>
           </Card>
-          <Card className="shadow-sm">
-            <CardHeader>
-              <CardTitle className="text-lg">
+          <Card className="shadow-sm overflow-hidden">
+            <CardHeader className="pb-3">
+              <CardTitle className="font-display text-xl tracking-wide">
                 {t("dashboard.totalSchedules")} Breakdown
               </CardTitle>
             </CardHeader>
@@ -385,11 +385,11 @@ export default function DashboardPage() {
       {/* Hourly Schedule Chart with Recharts */}
       {hourlyData.length > 0 && (
         <motion.div variants={item} initial="hidden" animate="show">
-          <Card className="mb-8 shadow-sm">
+          <Card className="mb-8 shadow-sm overflow-hidden">
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div>
-                  <CardTitle className="text-lg">
+                  <CardTitle className="font-display text-xl tracking-wide">
                     {t("dashboard.weekdayDistribution")}
                   </CardTitle>
                   <CardDescription>

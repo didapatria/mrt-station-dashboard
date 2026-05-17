@@ -48,102 +48,126 @@
   --radius-xl: calc(var(--radius) + 4px);
 }
 
+/* ─── Light mode ─────────────────────────────────────────── */
 :root {
   --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
+
+  /* Subtle blue-white background — not clinical pure white */
+  --background: oklch(0.974 0.007 248);
+  --foreground: oklch(0.13 0.02 248);
+
+  /* Cards stay pure white for clean contrast against bg */
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
+  --card-foreground: oklch(0.13 0.02 248);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.505 0.155 246.87);
+  --popover-foreground: oklch(0.13 0.02 248);
+
+  /* MRT Blue primary */
+  --primary: oklch(0.505 0.185 248);
   --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
+
+  --secondary: oklch(0.96 0.008 248);
+  --secondary-foreground: oklch(0.2 0.015 248);
+  --muted: oklch(0.96 0.008 248);
+  --muted-foreground: oklch(0.52 0.012 248);
+  --accent: oklch(0.96 0.008 248);
+  --accent-foreground: oklch(0.2 0.015 248);
+
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.985 0 0);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.505 0.155 246.87);
+
+  /* Blue-tinted borders */
+  --border: oklch(0.9 0.01 248);
+  --input: oklch(0.9 0.01 248);
+  --ring: oklch(0.505 0.185 248);
+
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.714);
   --chart-3: oklch(0.398 0.07 227.392);
   --chart-4: oklch(0.828 0.189 84.429);
   --chart-5: oklch(0.769 0.188 70.067);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.505 0.155 246.87);
+
+  /* Sidebar slightly more tinted than bg */
+  --sidebar: oklch(0.968 0.009 248);
+  --sidebar-foreground: oklch(0.13 0.02 248);
+  --sidebar-primary: oklch(0.505 0.185 248);
   --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.505 0.155 246.87);
+  --sidebar-accent: oklch(0.96 0.008 248);
+  --sidebar-accent-foreground: oklch(0.2 0.015 248);
+  --sidebar-border: oklch(0.9 0.01 248);
+  --sidebar-ring: oklch(0.505 0.185 248);
+
   --success: oklch(0.627 0.194 149.214);
   --success-foreground: oklch(0.985 0 0);
   --warning: oklch(0.795 0.184 86.047);
-  --warning-foreground: oklch(0.205 0 0);
+  --warning-foreground: oklch(0.13 0 0);
   --info: oklch(0.623 0.214 259.815);
   --info-foreground: oklch(0.985 0 0);
 }
 
+/* ─── Dark mode: Deep Transit Blue-Black ─────────────────── */
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.145 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.145 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.623 0.214 259.815);
+  /* Deep blue-black — matches auth panel aesthetic */
+  --background: oklch(0.115 0.022 245);
+  --foreground: oklch(0.92 0.008 240);
+
+  /* Cards: slightly elevated layer */
+  --card: oklch(0.152 0.02 243);
+  --card-foreground: oklch(0.92 0.008 240);
+  --popover: oklch(0.152 0.02 243);
+  --popover-foreground: oklch(0.92 0.008 240);
+
+  /* Brighter primary for dark mode */
+  --primary: oklch(0.62 0.22 258);
   --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
+
+  --secondary: oklch(0.2 0.022 243);
+  --secondary-foreground: oklch(0.92 0.008 240);
+  --muted: oklch(0.2 0.022 243);
+  --muted-foreground: oklch(0.6 0.018 245);
+  --accent: oklch(0.2 0.022 243);
+  --accent-foreground: oklch(0.92 0.008 240);
+
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.985 0 0);
-  --border: oklch(0.269 0 0);
-  --input: oklch(0.269 0 0);
-  --ring: oklch(0.623 0.214 259.815);
+
+  /* Blue-tinted borders — subtle but distinctive */
+  --border: oklch(0.225 0.022 243);
+  --input: oklch(0.2 0.022 243);
+  --ring: oklch(0.62 0.22 258);
+
   --chart-1: oklch(0.488 0.243 264.376);
   --chart-2: oklch(0.696 0.17 162.48);
   --chart-3: oklch(0.769 0.188 70.067);
   --chart-4: oklch(0.627 0.265 303.9);
   --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.175 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.623 0.214 259.815);
+
+  /* Sidebar: deepest layer */
+  --sidebar: oklch(0.09 0.022 245);
+  --sidebar-foreground: oklch(0.92 0.008 240);
+  --sidebar-primary: oklch(0.62 0.22 258);
   --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(0.269 0 0);
-  --sidebar-ring: oklch(0.623 0.214 259.815);
+  --sidebar-accent: oklch(0.2 0.022 243);
+  --sidebar-accent-foreground: oklch(0.92 0.008 240);
+  --sidebar-border: oklch(0.2 0.018 243);
+  --sidebar-ring: oklch(0.62 0.22 258);
+
   --success: oklch(0.527 0.194 149.214);
   --success-foreground: oklch(0.985 0 0);
   --warning: oklch(0.695 0.184 86.047);
-  --warning-foreground: oklch(0.205 0 0);
+  --warning-foreground: oklch(0.13 0 0);
   --info: oklch(0.523 0.214 259.815);
   --info-foreground: oklch(0.985 0 0);
 }
 
+/* ─── Base styles ─────────────────────────────────────────── */
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
   body {
     @apply bg-background text-foreground;
-    font-family:
-      "Sora",
-      "Inter",
-      -apple-system,
-      BlinkMacSystemFont,
-      "Segoe UI",
-      sans-serif;
+    font-family: "Sora", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   }
   .font-display {
     font-family: "Bebas Neue", "Sora", sans-serif;
@@ -153,7 +177,79 @@
   }
 }
 
-/* Auth page decorative line animation */
+/* ─── Custom scrollbar ────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 99px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--muted-foreground);
+}
+.dark ::-webkit-scrollbar-thumb {
+  background: oklch(0.3 0.025 243);
+}
+
+/* ─── Sidebar nav link — transit line indicator ───────────── */
+/* NavLink adds aria-current="page" to active links */
+.nav-link-item {
+  position: relative;
+  overflow: hidden;
+  transition: color 0.15s ease, background-color 0.15s ease;
+}
+.nav-link-item::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 4px;
+  bottom: 4px;
+  width: 3px;
+  border-radius: 0 3px 3px 0;
+  background: var(--color-primary);
+  transform: scaleY(0);
+  transform-origin: center;
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.nav-link-item[aria-current="page"]::before {
+  transform: scaleY(1);
+}
+/* Don't show indicator in collapsed mode */
+.nav-collapsed .nav-link-item::before {
+  display: none;
+}
+
+/* ─── Table row hover — left accent reveal ────────────────── */
+tbody tr {
+  position: relative;
+  transition: background-color 0.12s ease;
+}
+tbody tr::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--color-primary);
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+tbody tr:hover::after {
+  opacity: 0.6;
+}
+
+/* ─── Card improvements ───────────────────────────────────── */
+.dark .card-elevated {
+  background: linear-gradient(145deg, oklch(0.17 0.022 243), oklch(0.14 0.018 245));
+}
+
+/* ─── Auth page animations ────────────────────────────────── */
 @keyframes pulse-station {
   0%, 100% { opacity: 0.4; transform: scale(1); }
   50% { opacity: 1; transform: scale(1.2); }
@@ -166,42 +262,41 @@
   from { opacity: 0; transform: translateY(12px); }
   to { opacity: 1; transform: translateY(0); }
 }
-.animate-fade-up {
-  animation: fade-up 0.7s ease both;
-}
-.station-dot {
-  animation: pulse-station 3s ease-in-out infinite;
-}
+.animate-fade-up { animation: fade-up 0.7s ease both; }
+.station-dot { animation: pulse-station 3s ease-in-out infinite; }
 .mrt-line {
   stroke-dasharray: 600;
   animation: draw-line 2s ease forwards;
 }
 
-/* Leaflet z-index fix: keep map below sidebar and header */
+/* ─── Status badge polish ─────────────────────────────────── */
+.status-active {
+  color: var(--color-success);
+  background: color-mix(in oklch, var(--color-success) 12%, transparent);
+  border-color: color-mix(in oklch, var(--color-success) 30%, transparent);
+}
+.status-maintenance {
+  color: var(--color-warning);
+  background: color-mix(in oklch, var(--color-warning) 12%, transparent);
+  border-color: color-mix(in oklch, var(--color-warning) 30%, transparent);
+}
+.status-inactive {
+  color: var(--color-muted-foreground);
+  background: color-mix(in oklch, var(--color-muted-foreground) 10%, transparent);
+  border-color: color-mix(in oklch, var(--color-muted-foreground) 20%, transparent);
+}
+
+/* ─── Leaflet z-index fix ─────────────────────────────────── */
 .leaflet-pane,
 .leaflet-control,
 .leaflet-top,
-.leaflet-bottom {
-  z-index: 10 !important;
-}
-.leaflet-popup-pane {
-  z-index: 20 !important;
-}
+.leaflet-bottom { z-index: 10 !important; }
+.leaflet-popup-pane { z-index: 20 !important; }
 
-/* Print styles */
+/* ─── Print styles ────────────────────────────────────────── */
 @media print {
-  aside, header, nav, [data-tour], .leaflet-control {
-    display: none !important;
-  }
-  main {
-    padding: 0 !important;
-    margin: 0 !important;
-  }
-  .lg\:pl-60, .lg\:pl-16 {
-    padding-left: 0 !important;
-  }
-  body {
-    background: white !important;
-    color: black !important;
-  }
+  aside, header, nav, [data-tour], .leaflet-control { display: none !important; }
+  main { padding: 0 !important; margin: 0 !important; }
+  .lg\:pl-60, .lg\:pl-16 { padding-left: 0 !important; }
+  body { background: white !important; color: black !important; }
 }

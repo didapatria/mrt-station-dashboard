@@ -128,11 +128,13 @@ function NavItemLink({
       }}
       className={({ isActive }) =>
         cn(
-          "rounded-md text-sm font-medium transition-colors",
+          "nav-link-item rounded-md text-sm font-medium",
           collapsed ? "justify-center px-2 py-2.5" : "px-3 py-2",
           isActive
-            ? "bg-primary text-primary-foreground shadow-sm"
-            : "text-muted-foreground hover:text-foreground hover:bg-accent",
+            ? collapsed
+              ? "bg-primary text-primary-foreground shadow-sm"
+              : "bg-primary/[0.10] text-primary font-semibold"
+            : "text-muted-foreground hover:text-foreground hover:bg-accent/70",
         )
       }
     >
@@ -208,9 +210,22 @@ export default function DashboardLayout() {
         {visibleGroups.map((group) => (
           <div key={group.labelKey} className="mb-3">
             {!collapsed && (
-              <p className="px-2 mb-1.5 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
-                {t(group.labelKey)}
-              </p>
+              <div style={{ display: "flex", alignItems: "center", gap: "6px", padding: "0 8px", marginBottom: "6px" }}>
+                <span
+                  style={{
+                    fontFamily: "'JetBrains Mono', monospace",
+                    fontSize: "9px",
+                    fontWeight: 600,
+                    letterSpacing: "0.14em",
+                    textTransform: "uppercase",
+                    color: "var(--color-muted-foreground)",
+                    opacity: 0.7,
+                  }}
+                >
+                  {t(group.labelKey)}
+                </span>
+                <span style={{ flex: 1, height: "1px", background: "var(--color-border)", opacity: 0.5 }} />
+              </div>
             )}
             <div className="space-y-0.5">
               {group.items.map((item) => (
@@ -235,9 +250,13 @@ export default function DashboardLayout() {
       <FeedbackDialog open={feedbackOpen} onOpenChange={setFeedbackOpen} />
       <aside
         className={cn(
-          "fixed top-0 left-0 z-40 h-full bg-card border-r hidden lg:flex lg:flex-col transition-all duration-200",
+          "fixed top-0 left-0 z-40 h-full border-r hidden lg:flex lg:flex-col transition-all duration-200",
+          collapsed ? "nav-collapsed" : "",
           sidebarWidth,
         )}
+        style={{
+          background: "var(--color-sidebar)",
+        }}
       >
         {sidebarNav()}
       </aside>
@@ -262,7 +281,7 @@ export default function DashboardLayout() {
             padding: "0 1rem",
             borderBottom: "1px solid var(--color-border)",
           }}
-          className="sticky top-0 z-30 bg-background/80 backdrop-blur-lg"
+          className="sticky top-0 z-30 bg-background/85 backdrop-blur-xl"
         >
           <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
             <SheetTrigger asChild>
