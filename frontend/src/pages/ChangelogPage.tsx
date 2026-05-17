@@ -1,7 +1,4 @@
 import { motion } from "framer-motion";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
 import { GitCommit } from "lucide-react";
 
 const changelog = [
@@ -240,90 +237,166 @@ const changelog = [
   },
 ];
 
+const hashChipStyle: React.CSSProperties = {
+  fontFamily: "'JetBrains Mono', monospace",
+  fontSize: 10,
+  background: "rgba(29,111,232,0.1)",
+  border: "1px solid rgba(29,111,232,0.2)",
+  borderRadius: 3,
+  padding: "2px 6px",
+  color: "#60a5fa",
+  textDecoration: "none",
+  display: "inline-flex",
+  alignItems: "center",
+  gap: 4,
+  transition: "background 0.15s",
+};
+
 export default function ChangelogPage() {
   return (
     <div>
-      <div className="mb-6">
-        <h2 className="text-2xl font-bold tracking-tight">Changelog</h2>
-        <p className="text-muted-foreground">
-          Version history and release notes
+      <div style={{ marginBottom: 24 }}>
+        <h2
+          style={{
+            fontFamily: "'Bebas Neue', sans-serif",
+            fontSize: 36,
+            letterSpacing: "0.04em",
+            lineHeight: 1,
+            color: "var(--color-foreground)",
+            margin: 0,
+          }}
+        >
+          CHANGELOG
+        </h2>
+        <p
+          style={{
+            fontFamily: "'JetBrains Mono', monospace",
+            fontSize: 9.5,
+            letterSpacing: "0.1em",
+            color: "var(--color-muted-foreground)",
+            marginTop: 4,
+          }}
+        >
+          Release History · MRT Jakarta
         </p>
       </div>
 
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="space-y-6"
+        style={{ display: "flex", flexDirection: "column", gap: 20 }}
       >
         {changelog.map((release, i) => (
-          <Card key={release.version} className="shadow-sm">
-            <CardContent className="p-6">
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  flexWrap: "wrap",
-                  gap: "0.5rem",
-                  marginBottom: "1rem",
-                }}
-              >
-                <div
+          <div
+            key={release.version}
+            style={{
+              background: "var(--color-card)",
+              border: "1px solid var(--color-border)",
+              borderRadius: 12,
+              overflow: "hidden",
+            }}
+          >
+            {/* Card Header */}
+            <div
+              style={{
+                padding: "18px 24px 14px",
+                borderBottom: "1px solid var(--color-border)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                flexWrap: "wrap",
+                gap: 8,
+              }}
+            >
+              <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                <span
                   style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    alignItems: "center",
-                    gap: "0.75rem",
+                    fontFamily: "'Bebas Neue', sans-serif",
+                    fontSize: 22,
+                    letterSpacing: "0.05em",
+                    color: "var(--color-foreground)",
                   }}
                 >
-                  <Badge
-                    variant={i === 0 ? "default" : "outline"}
-                    className="text-sm px-3 py-1"
-                  >
-                    v{release.version}
-                  </Badge>
-                  <span className="text-sm text-muted-foreground">
-                    {release.date}
-                  </span>
-                  {i === 0 && (
-                    <Badge variant="success" className="text-[10px]">
-                      Latest
-                    </Badge>
-                  )}
-                </div>
-                {release.commits && release.commits.length > 0 && (
-                  <div
+                  v{release.version}
+                </span>
+                <span
+                  style={{
+                    fontFamily: "'JetBrains Mono', monospace",
+                    fontSize: 10,
+                    color: "var(--color-muted-foreground)",
+                    letterSpacing: "0.06em",
+                  }}
+                >
+                  {release.date}
+                </span>
+                {i === 0 && (
+                  <span
                     style={{
-                      display: "flex",
-                      flexDirection: "row",
-                      flexWrap: "wrap",
-                      gap: "0.25rem",
+                      fontFamily: "'JetBrains Mono', monospace",
+                      fontSize: 9,
+                      letterSpacing: "0.12em",
+                      background: "rgba(34,197,94,0.12)",
+                      border: "1px solid rgba(34,197,94,0.25)",
+                      borderRadius: 3,
+                      padding: "2px 7px",
+                      color: "#22c55e",
+                      fontWeight: 600,
                     }}
                   >
-                    {release.commits.map((hash) => (
-                      <a
-                        key={hash}
-                        href={`https://github.com/didapatria/mrt-station-dashboard/commit/${hash}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1 text-[10px] font-mono text-muted-foreground hover:text-foreground transition-colors"
-                      >
-                        <GitCommit className="h-3 w-3" />
-                        {hash}
-                      </a>
-                    ))}
-                  </div>
+                    LATEST
+                  </span>
                 )}
               </div>
-              <Separator className="mb-4" />
-              <ul className="list-disc list-inside space-y-1.5 text-sm marker:text-primary">
-                {release.items.map((item) => (
-                  <li key={item}>{item}</li>
-                ))}
-              </ul>
-            </CardContent>
-          </Card>
+              {release.commits.length > 0 && (
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 4 }}>
+                  {release.commits.map((hash) => (
+                    <a
+                      key={hash}
+                      href={`https://github.com/didapatria/mrt-station-dashboard/commit/${hash}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={hashChipStyle}
+                    >
+                      <GitCommit size={10} />
+                      {hash}
+                    </a>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Change list */}
+            <div style={{ padding: "16px 24px 20px", display: "flex", flexDirection: "column", gap: 8 }}>
+              {release.items.map((item) => (
+                <div
+                  key={item}
+                  style={{ display: "flex", alignItems: "flex-start", gap: 10 }}
+                >
+                  <div
+                    style={{
+                      width: 5,
+                      height: 5,
+                      borderRadius: "50%",
+                      background: "var(--color-primary)",
+                      opacity: 0.6,
+                      flexShrink: 0,
+                      marginTop: 7,
+                    }}
+                  />
+                  <span
+                    style={{
+                      fontFamily: "'Sora', sans-serif",
+                      fontSize: 13,
+                      color: "var(--color-foreground)",
+                      lineHeight: 1.55,
+                    }}
+                  >
+                    {item}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
         ))}
       </motion.div>
     </div>

@@ -125,16 +125,26 @@ function NavItemLink({
     <NavLink
       to={item.to}
       onClick={onClick}
-      style={{
+      style={({ isActive }) => ({
         display: "flex",
         flexDirection: "row",
         alignItems: "center",
         gap: "0.75rem",
-      }}
+        transition: "all 0.15s ease",
+        ...(collapsed
+          ? {}
+          : {
+              borderLeft: isActive
+                ? "2px solid var(--color-primary)"
+                : "2px solid transparent",
+              paddingLeft: "calc(12px - 2px)",
+              paddingRight: "12px",
+            }),
+      })}
       className={({ isActive }) =>
         cn(
           "nav-link-item rounded-md text-sm font-medium",
-          collapsed ? "justify-center px-2 py-2.5" : "px-3 py-2",
+          collapsed ? "justify-center px-2 py-2.5" : "py-2",
           isActive
             ? collapsed
               ? "bg-primary text-primary-foreground shadow-sm"
@@ -143,8 +153,21 @@ function NavItemLink({
         )
       }
     >
-      <Icon style={{ width: 16, height: 16, flexShrink: 0 }} />
-      {!collapsed && <span>{t(item.labelKey)}</span>}
+      {({ isActive }) => (
+        <>
+          <Icon
+            style={{
+              width: 16,
+              height: 16,
+              flexShrink: 0,
+              color: isActive
+                ? "var(--color-primary)"
+                : "var(--color-muted-foreground)",
+            }}
+          />
+          {!collapsed && <span>{t(item.labelKey)}</span>}
+        </>
+      )}
     </NavLink>
   );
 }
@@ -188,7 +211,7 @@ export default function DashboardLayout() {
           padding: "0 1rem",
           height: "3.5rem",
           flexShrink: 0,
-          borderBottom: "1px solid var(--color-border)",
+          borderBottom: "1px solid rgba(29,111,232,0.15)",
         }}
       >
         <div
@@ -209,12 +232,27 @@ export default function DashboardLayout() {
           />
         </div>
         {!collapsed && (
-          <span
-            className="font-display text-base tracking-wide"
-            style={{ letterSpacing: "0.06em" }}
-          >
-            MRT JAKARTA
-          </span>
+          <div style={{ display: "flex", flexDirection: "column", gap: "1px" }}>
+            <span
+              className="font-display text-base tracking-wide"
+              style={{ letterSpacing: "0.06em" }}
+            >
+              MRT JAKARTA
+            </span>
+            <span
+              style={{
+                fontFamily: "'JetBrains Mono', monospace",
+                fontSize: "8px",
+                fontWeight: 600,
+                letterSpacing: "0.16em",
+                textTransform: "uppercase",
+                color: "var(--color-muted-foreground)",
+                opacity: 0.5,
+              }}
+            >
+              N-S LINE
+            </span>
+          </div>
         )}
       </div>
 
@@ -239,7 +277,7 @@ export default function DashboardLayout() {
                     letterSpacing: "0.14em",
                     textTransform: "uppercase",
                     color: "var(--color-muted-foreground)",
-                    opacity: 0.7,
+                    opacity: 0.5,
                   }}
                 >
                   {t(group.labelKey)}
@@ -268,11 +306,60 @@ export default function DashboardLayout() {
           </div>
         ))}
       </nav>
+
+      {!collapsed && (
+        <div
+          style={{
+            borderTop: "1px solid rgba(255,255,255,0.04)",
+            padding: "10px 16px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            flexShrink: 0,
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+            <div
+              style={{
+                width: 5,
+                height: 5,
+                borderRadius: "50%",
+                background: "#22c55e",
+                boxShadow: "0 0 4px rgba(34,197,94,0.6)",
+                flexShrink: 0,
+              }}
+            />
+            <span
+              style={{
+                fontFamily: "'JetBrains Mono', monospace",
+                fontSize: "8px",
+                fontWeight: 600,
+                letterSpacing: "0.12em",
+                textTransform: "uppercase",
+                color: "rgba(148,163,184,0.2)",
+              }}
+            >
+              SYS ONLINE
+            </span>
+          </div>
+          <span
+            style={{
+              fontFamily: "'JetBrains Mono', monospace",
+              fontSize: "8px",
+              fontWeight: 500,
+              letterSpacing: "0.1em",
+              color: "rgba(29,111,232,0.3)",
+            }}
+          >
+            v2.11.0
+          </span>
+        </div>
+      )}
     </div>
   );
 
   return (
-    <div className="min-h-screen bg-muted/40">
+    <div className="min-h-screen bg-background">
       <OnboardingTour />
       <FeedbackDialog open={feedbackOpen} onOpenChange={setFeedbackOpen} />
       <aside
@@ -307,8 +394,9 @@ export default function DashboardLayout() {
             height: "3.5rem",
             padding: "0 1rem",
             borderBottom: "1px solid var(--color-border)",
+            background: "var(--color-sidebar)",
           }}
-          className="sticky top-0 z-30 bg-background/85 backdrop-blur-xl"
+          className="sticky top-0 z-30 backdrop-blur-xl"
         >
           <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
             <SheetTrigger asChild>
@@ -344,11 +432,17 @@ export default function DashboardLayout() {
               )
             }
           >
-            <span className="inline-flex items-center gap-2 text-xs">
+            <span
+              className="inline-flex items-center gap-2 text-xs"
+              style={{ fontFamily: "'JetBrains Mono', monospace" }}
+            >
               <Search style={{ width: 14, height: 14 }} />
               {t("common.search")}
             </span>
-            <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground">
+            <kbd
+              className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 text-[10px] font-medium text-muted-foreground"
+              style={{ fontFamily: "'JetBrains Mono', monospace" }}
+            >
               ⌘K
             </kbd>
           </Button>

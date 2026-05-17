@@ -5,21 +5,11 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { motion } from "framer-motion";
-import {
-  Plus,
-  Pencil,
-  Trash2,
-  Search,
-  ArrowRight,
-  Download,
-  Clock,
-} from "lucide-react";
+import { Plus, Pencil, Trash2, Search, Download, Clock } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -88,6 +78,57 @@ const scheduleSchema = z.object({
 });
 
 type ScheduleFormData = z.infer<typeof scheduleSchema>;
+
+const STATUS_LED: Record<
+  string,
+  { color: string; glow: string; label: string }
+> = {
+  ACTIVE: {
+    color: "#22c55e",
+    glow: "rgba(34,197,94,0.4)",
+    label: "ACTIVE",
+  },
+  DELAYED: {
+    color: "#f59e0b",
+    glow: "rgba(245,158,11,0.4)",
+    label: "DELAYED",
+  },
+  CANCELLED: {
+    color: "#ef4444",
+    glow: "rgba(239,68,68,0.4)",
+    label: "CANCELLED",
+  },
+};
+
+function StatusLED({ status }: { status: string }) {
+  const cfg = STATUS_LED[status] ?? STATUS_LED["ACTIVE"];
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+      <span
+        style={{
+          width: 7,
+          height: 7,
+          borderRadius: "50%",
+          background: cfg.color,
+          boxShadow: `0 0 6px ${cfg.glow}`,
+          flexShrink: 0,
+          display: "inline-block",
+        }}
+      />
+      <span
+        style={{
+          fontFamily: "'JetBrains Mono', monospace",
+          fontSize: 10,
+          letterSpacing: "0.1em",
+          textTransform: "uppercase",
+          color: cfg.color,
+        }}
+      >
+        {cfg.label}
+      </span>
+    </div>
+  );
+}
 
 export default function SchedulesPage() {
   const { t } = useTranslation();
@@ -201,10 +242,7 @@ export default function SchedulesPage() {
   const onSubmit = async (data: ScheduleFormData) => {
     try {
       if (editingSchedule) {
-        await updateMutation.mutateAsync({
-          id: editingSchedule.id,
-          data,
-        });
+        await updateMutation.mutateAsync({ id: editingSchedule.id, data });
         toast.success("Schedule updated successfully");
       } else {
         await createMutation.mutateAsync(data);
@@ -237,22 +275,69 @@ export default function SchedulesPage() {
     }
   };
 
+  const totalCount = meta?.total ?? schedules.length;
+
   return (
     <div>
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+      {/* Page Header */}
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "flex-start",
+          justifyContent: "space-between",
+          gap: 16,
+          marginBottom: 24,
+          flexWrap: "wrap",
+        }}
+      >
         <div>
-          <h2 className="text-2xl font-bold">{t("schedules.title")}</h2>
-          <p className="text-muted-foreground">
-            {t("schedules.manage")} ({meta?.total ?? schedules.length} total)
+          <h1
+            style={{
+              fontFamily: "'Bebas Neue', sans-serif",
+              fontSize: 36,
+              lineHeight: 1,
+              letterSpacing: "0.04em",
+              margin: 0,
+            }}
+          >
+            {t("schedules.title")}
+          </h1>
+          <p
+            style={{
+              fontFamily: "'JetBrains Mono', monospace",
+              fontSize: 9.5,
+              letterSpacing: "0.14em",
+              textTransform: "uppercase",
+              color: "var(--color-muted-foreground)",
+              marginTop: 6,
+            }}
+          >
+            {totalCount} ENTRIES · N–S LINE · SCHEDULE REGISTRY
           </p>
         </div>
-        <div className="flex flex-wrap gap-2">
-          <Button variant="outline" onClick={handleExport}>
+        <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+          <Button
+            variant="outline"
+            onClick={handleExport}
+            style={{
+              fontFamily: "'JetBrains Mono', monospace",
+              fontSize: 10,
+              letterSpacing: "0.08em",
+            }}
+          >
             <Download className="h-4 w-4 mr-2" />
             CSV
           </Button>
           {isAdmin && (
-            <Button onClick={openCreate}>
+            <Button
+              onClick={openCreate}
+              style={{
+                fontFamily: "'JetBrains Mono', monospace",
+                fontSize: 10,
+                letterSpacing: "0.08em",
+              }}
+            >
               <Plus className="h-4 w-4 mr-2" />
               {t("schedules.addSchedule")}
             </Button>
@@ -260,19 +345,42 @@ export default function SchedulesPage() {
         </div>
       </div>
 
-      {/* Filters */}
-      <div className="flex flex-col sm:flex-row gap-3 mb-6">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+      {/* Filter Bar */}
+      <div
+        style={{
+          background: "var(--color-card)",
+          border: "1px solid var(--color-border)",
+          borderRadius: 12,
+          padding: "16px 20px",
+          marginBottom: 20,
+          display: "flex",
+          gap: 12,
+          flexWrap: "wrap",
+          alignItems: "center",
+        }}
+      >
+        <div style={{ position: "relative", flex: 1, minWidth: 200 }}>
+          <Search
+            className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4"
+            style={{ color: "var(--color-muted-foreground)" }}
+          />
           <Input
             placeholder={t("common.search")}
             value={search}
             onChange={(e) => handleSearchChange(e.target.value)}
             className="pl-9"
+            style={{ fontFamily: "'Sora', sans-serif", fontSize: 13 }}
           />
         </div>
         <Select value={dayTypeFilter} onValueChange={handleDayTypeChange}>
-          <SelectTrigger className="w-35">
+          <SelectTrigger
+            className="w-35"
+            style={{
+              fontFamily: "'JetBrains Mono', monospace",
+              fontSize: 10,
+              letterSpacing: "0.08em",
+            }}
+          >
             <SelectValue placeholder="Day Type" />
           </SelectTrigger>
           <SelectContent>
@@ -283,7 +391,14 @@ export default function SchedulesPage() {
           </SelectContent>
         </Select>
         <Select value={statusFilter} onValueChange={handleStatusChange}>
-          <SelectTrigger className="w-35">
+          <SelectTrigger
+            className="w-35"
+            style={{
+              fontFamily: "'JetBrains Mono', monospace",
+              fontSize: 10,
+              letterSpacing: "0.08em",
+            }}
+          >
             <SelectValue placeholder="Status" />
           </SelectTrigger>
           <SelectContent>
@@ -298,192 +413,375 @@ export default function SchedulesPage() {
       {/* Schedules View */}
       <Tabs defaultValue="table" className="mb-4">
         <TabsList>
-          <TabsTrigger value="table">Table</TabsTrigger>
-          <TabsTrigger value="calendar">Timeline</TabsTrigger>
+          <TabsTrigger
+            value="table"
+            style={{
+              fontFamily: "'JetBrains Mono', monospace",
+              fontSize: 10,
+              letterSpacing: "0.1em",
+            }}
+          >
+            TABLE
+          </TabsTrigger>
+          <TabsTrigger
+            value="calendar"
+            style={{
+              fontFamily: "'JetBrains Mono', monospace",
+              fontSize: 10,
+              letterSpacing: "0.1em",
+            }}
+          >
+            TIMELINE
+          </TabsTrigger>
         </TabsList>
+
         <TabsContent value="calendar">
-          <Card>
-            <CardContent className="p-0">
-              <ScheduleCalendar schedules={sortedSchedules} />
-            </CardContent>
-          </Card>
+          <div
+            style={{
+              background: "var(--color-card)",
+              border: "1px solid var(--color-border)",
+              borderRadius: 12,
+              overflow: "hidden",
+            }}
+          >
+            <div
+              style={{
+                padding: "18px 24px 14px",
+                borderBottom: "1px solid var(--color-border)",
+              }}
+            >
+              <p
+                style={{
+                  fontFamily: "'Bebas Neue', sans-serif",
+                  fontSize: 20,
+                  letterSpacing: "0.05em",
+                  margin: 0,
+                  lineHeight: 1,
+                }}
+              >
+                TIMELINE VIEW
+              </p>
+              <p
+                style={{
+                  fontFamily: "'JetBrains Mono', monospace",
+                  fontSize: 9.5,
+                  letterSpacing: "0.14em",
+                  textTransform: "uppercase",
+                  color: "var(--color-muted-foreground)",
+                  marginTop: 4,
+                }}
+              >
+                SCHEDULE CALENDAR
+              </p>
+            </div>
+            <ScheduleCalendar schedules={sortedSchedules} />
+          </div>
         </TabsContent>
+
         <TabsContent value="table">
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3 }}
           >
-            <Card>
-              <CardContent className="p-0">
-                <div className="overflow-x-auto">
-                  <Table>
-                    <TableHeader>
-                      <TableRow className="bg-muted/50">
-                        <SortableTableHead<Schedule>
-                          label={t("schedules.trainNumber")}
-                          sortKey="trainNumber"
-                          sortConfig={sortConfig}
-                          onSort={requestSort}
-                        />
-                        <TableHead>{t("schedules.route")}</TableHead>
-                        <SortableTableHead<Schedule>
-                          label={t("schedules.time")}
-                          sortKey="departureTime"
-                          sortConfig={sortConfig}
-                          onSort={requestSort}
-                          className="hidden sm:table-cell"
-                        />
-                        <SortableTableHead<Schedule>
-                          label={t("schedules.dayType")}
-                          sortKey="dayType"
-                          sortConfig={sortConfig}
-                          onSort={requestSort}
-                        />
-                        <SortableTableHead<Schedule>
-                          label={t("stations.status")}
-                          sortKey="status"
-                          sortConfig={sortConfig}
-                          onSort={requestSort}
-                        />
-                        {isAdmin && (
-                          <TableHead className="text-right w-25">
-                            {t("common.actions")}
-                          </TableHead>
-                        )}
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {isLoading
-                        ? Array.from({ length: 5 }).map((_, i) => (
-                            <TableRow key={i}>
+            <div
+              style={{
+                background: "var(--color-card)",
+                border: "1px solid var(--color-border)",
+                borderRadius: 12,
+                overflow: "hidden",
+              }}
+            >
+              <div
+                style={{
+                  padding: "18px 24px 14px",
+                  borderBottom: "1px solid var(--color-border)",
+                }}
+              >
+                <p
+                  style={{
+                    fontFamily: "'Bebas Neue', sans-serif",
+                    fontSize: 20,
+                    letterSpacing: "0.05em",
+                    margin: 0,
+                    lineHeight: 1,
+                  }}
+                >
+                  SCHEDULE REGISTRY
+                </p>
+                <p
+                  style={{
+                    fontFamily: "'JetBrains Mono', monospace",
+                    fontSize: 9.5,
+                    letterSpacing: "0.14em",
+                    textTransform: "uppercase",
+                    color: "var(--color-muted-foreground)",
+                    marginTop: 4,
+                  }}
+                >
+                  {totalCount} RECORDS · NORTH–SOUTH LINE
+                </p>
+              </div>
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow className="bg-muted/50">
+                      <SortableTableHead<Schedule>
+                        label={t("schedules.trainNumber")}
+                        sortKey="trainNumber"
+                        sortConfig={sortConfig}
+                        onSort={requestSort}
+                        style={{
+                          fontFamily: "'JetBrains Mono', monospace",
+                          fontSize: 9.5,
+                          letterSpacing: "0.14em",
+                          textTransform: "uppercase",
+                          color: "var(--color-muted-foreground)",
+                        }}
+                      />
+                      <TableHead
+                        style={{
+                          fontFamily: "'JetBrains Mono', monospace",
+                          fontSize: 9.5,
+                          letterSpacing: "0.14em",
+                          textTransform: "uppercase",
+                          color: "var(--color-muted-foreground)",
+                        }}
+                      >
+                        {t("schedules.route")}
+                      </TableHead>
+                      <SortableTableHead<Schedule>
+                        label={t("schedules.time")}
+                        sortKey="departureTime"
+                        sortConfig={sortConfig}
+                        onSort={requestSort}
+                        className="hidden sm:table-cell"
+                        style={{
+                          fontFamily: "'JetBrains Mono', monospace",
+                          fontSize: 9.5,
+                          letterSpacing: "0.14em",
+                          textTransform: "uppercase",
+                          color: "var(--color-muted-foreground)",
+                        }}
+                      />
+                      <SortableTableHead<Schedule>
+                        label={t("schedules.dayType")}
+                        sortKey="dayType"
+                        sortConfig={sortConfig}
+                        onSort={requestSort}
+                        style={{
+                          fontFamily: "'JetBrains Mono', monospace",
+                          fontSize: 9.5,
+                          letterSpacing: "0.14em",
+                          textTransform: "uppercase",
+                          color: "var(--color-muted-foreground)",
+                        }}
+                      />
+                      <SortableTableHead<Schedule>
+                        label={t("stations.status")}
+                        sortKey="status"
+                        sortConfig={sortConfig}
+                        onSort={requestSort}
+                        style={{
+                          fontFamily: "'JetBrains Mono', monospace",
+                          fontSize: 9.5,
+                          letterSpacing: "0.14em",
+                          textTransform: "uppercase",
+                          color: "var(--color-muted-foreground)",
+                        }}
+                      />
+                      {isAdmin && (
+                        <TableHead
+                          className="text-right w-25"
+                          style={{
+                            fontFamily: "'JetBrains Mono', monospace",
+                            fontSize: 9.5,
+                            letterSpacing: "0.14em",
+                            textTransform: "uppercase",
+                            color: "var(--color-muted-foreground)",
+                          }}
+                        >
+                          {t("common.actions")}
+                        </TableHead>
+                      )}
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {isLoading
+                      ? Array.from({ length: 5 }).map((_, i) => (
+                          <TableRow key={i}>
+                            <TableCell>
+                              <Skeleton className="h-4 w-24" />
+                            </TableCell>
+                            <TableCell>
+                              <Skeleton className="h-4 w-40" />
+                            </TableCell>
+                            <TableCell className="hidden sm:table-cell">
+                              <Skeleton className="h-4 w-28" />
+                            </TableCell>
+                            <TableCell>
+                              <Skeleton className="h-5 w-16 rounded-full" />
+                            </TableCell>
+                            <TableCell>
+                              <Skeleton className="h-5 w-16 rounded-full" />
+                            </TableCell>
+                            {isAdmin && (
                               <TableCell>
-                                <Skeleton className="h-4 w-24" />
+                                <Skeleton className="h-8 w-16 ml-auto" />
                               </TableCell>
-                              <TableCell>
-                                <Skeleton className="h-4 w-40" />
-                              </TableCell>
-                              <TableCell className="hidden sm:table-cell">
-                                <Skeleton className="h-4 w-28" />
-                              </TableCell>
-                              <TableCell>
-                                <Skeleton className="h-5 w-16 rounded-full" />
-                              </TableCell>
-                              <TableCell>
-                                <Skeleton className="h-5 w-16 rounded-full" />
-                              </TableCell>
-                              {isAdmin && (
-                                <TableCell>
-                                  <Skeleton className="h-8 w-16 ml-auto" />
-                                </TableCell>
-                              )}
-                            </TableRow>
-                          ))
-                        : sortedSchedules.map((schedule) => (
-                            <TableRow key={schedule.id}>
-                              <TableCell>
-                                <p className="font-medium font-mono">
-                                  {schedule.trainNumber}
-                                </p>
-                              </TableCell>
-                              <TableCell>
-                                <div className="flex items-center gap-2">
-                                  <div>
-                                    <p className="text-sm font-medium">
-                                      {schedule.departureStation?.code}
-                                    </p>
-                                    <p className="text-xs text-muted-foreground sm:hidden">
-                                      {schedule.departureTime}
-                                    </p>
-                                  </div>
-                                  <ArrowRight className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
-                                  <div>
-                                    <p className="text-sm font-medium">
-                                      {schedule.arrivalStation?.code}
-                                    </p>
-                                    <p className="text-xs text-muted-foreground sm:hidden">
-                                      {schedule.arrivalTime}
-                                    </p>
-                                  </div>
-                                </div>
-                                <p className="text-xs text-muted-foreground mt-0.5">
-                                  {schedule.departureStation?.name} →{" "}
-                                  {schedule.arrivalStation?.name}
-                                </p>
-                              </TableCell>
-                              <TableCell className="hidden sm:table-cell">
-                                <p className="font-mono text-sm">
-                                  {schedule.departureTime} —{" "}
-                                  {schedule.arrivalTime}
-                                </p>
-                              </TableCell>
-                              <TableCell>
-                                <Badge variant="secondary">
-                                  {schedule.dayType}
-                                </Badge>
-                              </TableCell>
-                              <TableCell>
-                                <Badge
-                                  variant={
-                                    schedule.status === "ACTIVE"
-                                      ? "success"
-                                      : schedule.status === "DELAYED"
-                                        ? "warning"
-                                        : "destructive"
-                                  }
+                            )}
+                          </TableRow>
+                        ))
+                      : sortedSchedules.map((schedule) => (
+                          <TableRow key={schedule.id}>
+                            <TableCell>
+                              <span
+                                style={{
+                                  fontFamily: "'JetBrains Mono', monospace",
+                                  fontSize: 12,
+                                  fontWeight: 600,
+                                }}
+                              >
+                                {schedule.trainNumber}
+                              </span>
+                            </TableCell>
+                            <TableCell>
+                              <div
+                                style={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                  gap: 6,
+                                }}
+                              >
+                                <span
+                                  style={{
+                                    fontFamily: "'Sora', sans-serif",
+                                    fontSize: 13,
+                                  }}
                                 >
-                                  {schedule.status}
-                                </Badge>
+                                  {schedule.departureStation?.code}
+                                </span>
+                                <span
+                                  style={{
+                                    fontFamily: "'JetBrains Mono', monospace",
+                                    fontSize: 11,
+                                    color: "var(--color-muted-foreground)",
+                                  }}
+                                >
+                                  →
+                                </span>
+                                <span
+                                  style={{
+                                    fontFamily: "'Sora', sans-serif",
+                                    fontSize: 13,
+                                  }}
+                                >
+                                  {schedule.arrivalStation?.code}
+                                </span>
+                              </div>
+                              <p
+                                style={{
+                                  fontFamily: "'Sora', sans-serif",
+                                  fontSize: 11,
+                                  color: "var(--color-muted-foreground)",
+                                  marginTop: 2,
+                                }}
+                              >
+                                {schedule.departureStation?.name}
+                                <span
+                                  style={{
+                                    fontFamily: "'JetBrains Mono', monospace",
+                                    margin: "0 4px",
+                                    color: "var(--color-muted-foreground)",
+                                  }}
+                                >
+                                  →
+                                </span>
+                                {schedule.arrivalStation?.name}
+                              </p>
+                            </TableCell>
+                            <TableCell className="hidden sm:table-cell">
+                              <span
+                                style={{
+                                  fontFamily: "'JetBrains Mono', monospace",
+                                  fontSize: 11,
+                                }}
+                              >
+                                {schedule.departureTime}
+                                {" — "}
+                                {schedule.arrivalTime}
+                              </span>
+                            </TableCell>
+                            <TableCell>
+                              <span
+                                style={{
+                                  fontFamily: "'JetBrains Mono', monospace",
+                                  fontSize: 10,
+                                  letterSpacing: "0.08em",
+                                  textTransform: "uppercase",
+                                  color: "var(--color-muted-foreground)",
+                                }}
+                              >
+                                {schedule.dayType}
+                              </span>
+                            </TableCell>
+                            <TableCell>
+                              <StatusLED status={schedule.status} />
+                            </TableCell>
+                            {isAdmin && (
+                              <TableCell className="text-right">
+                                <div
+                                  style={{
+                                    display: "flex",
+                                    justifyContent: "flex-end",
+                                    gap: 4,
+                                  }}
+                                >
+                                  <TooltipProvider>
+                                    <Tooltip>
+                                      <TooltipTrigger asChild>
+                                        <Button
+                                          variant="ghost"
+                                          size="icon"
+                                          className="h-8 w-8"
+                                          onClick={() => openEdit(schedule)}
+                                        >
+                                          <Pencil className="h-3.5 w-3.5" />
+                                        </Button>
+                                      </TooltipTrigger>
+                                      <TooltipContent>
+                                        {t("schedules.editSchedule")}
+                                      </TooltipContent>
+                                    </Tooltip>
+                                  </TooltipProvider>
+                                  <TooltipProvider>
+                                    <Tooltip>
+                                      <TooltipTrigger asChild>
+                                        <Button
+                                          variant="ghost"
+                                          size="icon"
+                                          className="h-8 w-8 text-destructive hover:text-destructive"
+                                          onClick={() =>
+                                            setDeleteConfirm(schedule.id)
+                                          }
+                                        >
+                                          <Trash2 className="h-3.5 w-3.5" />
+                                        </Button>
+                                      </TooltipTrigger>
+                                      <TooltipContent>
+                                        {t("schedules.deleteSchedule")}
+                                      </TooltipContent>
+                                    </Tooltip>
+                                  </TooltipProvider>
+                                </div>
                               </TableCell>
-                              {isAdmin && (
-                                <TableCell className="text-right">
-                                  <div className="flex justify-end gap-1">
-                                    <TooltipProvider>
-                                      <Tooltip>
-                                        <TooltipTrigger asChild>
-                                          <Button
-                                            variant="ghost"
-                                            size="icon"
-                                            className="h-8 w-8"
-                                            onClick={() => openEdit(schedule)}
-                                          >
-                                            <Pencil className="h-3.5 w-3.5" />
-                                          </Button>
-                                        </TooltipTrigger>
-                                        <TooltipContent>
-                                          {t("schedules.editSchedule")}
-                                        </TooltipContent>
-                                      </Tooltip>
-                                    </TooltipProvider>
-                                    <TooltipProvider>
-                                      <Tooltip>
-                                        <TooltipTrigger asChild>
-                                          <Button
-                                            variant="ghost"
-                                            size="icon"
-                                            className="h-8 w-8 text-destructive hover:text-destructive"
-                                            onClick={() =>
-                                              setDeleteConfirm(schedule.id)
-                                            }
-                                          >
-                                            <Trash2 className="h-3.5 w-3.5" />
-                                          </Button>
-                                        </TooltipTrigger>
-                                        <TooltipContent>
-                                          {t("schedules.deleteSchedule")}
-                                        </TooltipContent>
-                                      </Tooltip>
-                                    </TooltipProvider>
-                                  </div>
-                                </TableCell>
-                              )}
-                            </TableRow>
-                          ))}
-                    </TableBody>
-                  </Table>
-                </div>
-              </CardContent>
-            </Card>
+                            )}
+                          </TableRow>
+                        ))}
+                  </TableBody>
+                </Table>
+              </div>
+            </div>
           </motion.div>
         </TabsContent>
       </Tabs>
@@ -519,24 +817,49 @@ export default function SchedulesPage() {
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>
+            <DialogTitle
+              style={{
+                fontFamily: "'Bebas Neue', sans-serif",
+                fontSize: 28,
+                letterSpacing: "0.04em",
+                lineHeight: 1,
+              }}
+            >
               {editingSchedule
                 ? t("schedules.editSchedule")
                 : t("schedules.addSchedule")}
             </DialogTitle>
-            <DialogDescription>
+            <DialogDescription
+              style={{
+                fontFamily: "'JetBrains Mono', monospace",
+                fontSize: 10,
+                letterSpacing: "0.1em",
+                textTransform: "uppercase",
+              }}
+            >
               {editingSchedule
-                ? "Update the schedule details below."
-                : "Fill in the details to create a new schedule."}
+                ? "UPDATE THE SCHEDULE DETAILS BELOW."
+                : "FILL IN THE DETAILS TO CREATE A NEW SCHEDULE."}
             </DialogDescription>
           </DialogHeader>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="trainNumber">{t("schedules.trainNumber")}</Label>
+              <Label
+                htmlFor="trainNumber"
+                style={{
+                  fontFamily: "'JetBrains Mono', monospace",
+                  fontSize: 9.5,
+                  letterSpacing: "0.12em",
+                  textTransform: "uppercase",
+                }}
+              >
+                {t("schedules.trainNumber")}
+              </Label>
               <Input
                 id="trainNumber"
                 {...register("trainNumber")}
                 placeholder="MRT-0600-NS"
+                style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 13 }}
               />
               {errors.trainNumber && (
                 <p className="text-xs text-destructive">
@@ -547,7 +870,16 @@ export default function SchedulesPage() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label>{t("schedules.departureStation")}</Label>
+                <Label
+                  style={{
+                    fontFamily: "'JetBrains Mono', monospace",
+                    fontSize: 9.5,
+                    letterSpacing: "0.12em",
+                    textTransform: "uppercase",
+                  }}
+                >
+                  {t("schedules.departureStation")}
+                </Label>
                 <Select
                   defaultValue={editingSchedule?.departureStationId}
                   onValueChange={(val) => setValue("departureStationId", val)}
@@ -570,7 +902,16 @@ export default function SchedulesPage() {
                 )}
               </div>
               <div className="space-y-2">
-                <Label>{t("schedules.arrivalStation")}</Label>
+                <Label
+                  style={{
+                    fontFamily: "'JetBrains Mono', monospace",
+                    fontSize: 9.5,
+                    letterSpacing: "0.12em",
+                    textTransform: "uppercase",
+                  }}
+                >
+                  {t("schedules.arrivalStation")}
+                </Label>
                 <Select
                   defaultValue={editingSchedule?.arrivalStationId}
                   onValueChange={(val) => setValue("arrivalStationId", val)}
@@ -596,7 +937,15 @@ export default function SchedulesPage() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="departureTime">
+                <Label
+                  htmlFor="departureTime"
+                  style={{
+                    fontFamily: "'JetBrains Mono', monospace",
+                    fontSize: 9.5,
+                    letterSpacing: "0.12em",
+                    textTransform: "uppercase",
+                  }}
+                >
                   {t("schedules.departureTime")}
                 </Label>
                 <div className="relative">
@@ -604,6 +953,7 @@ export default function SchedulesPage() {
                     id="departureTime"
                     type="time"
                     className="w-full pr-10 [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:inset-0 [&::-webkit-calendar-picker-indicator]:w-full [&::-webkit-calendar-picker-indicator]:cursor-pointer"
+                    style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 13 }}
                     {...register("departureTime")}
                   />
                   <Clock className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -615,7 +965,15 @@ export default function SchedulesPage() {
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="arrivalTime">
+                <Label
+                  htmlFor="arrivalTime"
+                  style={{
+                    fontFamily: "'JetBrains Mono', monospace",
+                    fontSize: 9.5,
+                    letterSpacing: "0.12em",
+                    textTransform: "uppercase",
+                  }}
+                >
                   {t("schedules.arrivalTime")}
                 </Label>
                 <div className="relative">
@@ -623,6 +981,7 @@ export default function SchedulesPage() {
                     id="arrivalTime"
                     type="time"
                     className="w-full pr-10 [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:inset-0 [&::-webkit-calendar-picker-indicator]:w-full [&::-webkit-calendar-picker-indicator]:cursor-pointer"
+                    style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 13 }}
                     {...register("arrivalTime")}
                   />
                   <Clock className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -637,7 +996,16 @@ export default function SchedulesPage() {
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label>{t("schedules.dayType")}</Label>
+                <Label
+                  style={{
+                    fontFamily: "'JetBrains Mono', monospace",
+                    fontSize: 9.5,
+                    letterSpacing: "0.12em",
+                    textTransform: "uppercase",
+                  }}
+                >
+                  {t("schedules.dayType")}
+                </Label>
                 <Select
                   defaultValue={editingSchedule?.dayType || "WEEKDAY"}
                   onValueChange={(val) =>
@@ -658,7 +1026,16 @@ export default function SchedulesPage() {
                 </Select>
               </div>
               <div className="space-y-2">
-                <Label>{t("stations.status")}</Label>
+                <Label
+                  style={{
+                    fontFamily: "'JetBrains Mono', monospace",
+                    fontSize: 9.5,
+                    letterSpacing: "0.12em",
+                    textTransform: "uppercase",
+                  }}
+                >
+                  {t("stations.status")}
+                </Label>
                 <Select
                   defaultValue={editingSchedule?.status || "ACTIVE"}
                   onValueChange={(val) =>
@@ -680,15 +1057,35 @@ export default function SchedulesPage() {
               </div>
             </div>
 
-            <div className="flex justify-end gap-3 pt-2">
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "flex-end",
+                gap: 12,
+                paddingTop: 8,
+              }}
+            >
               <Button
                 type="button"
                 variant="outline"
                 onClick={() => setDialogOpen(false)}
+                style={{
+                  fontFamily: "'JetBrains Mono', monospace",
+                  fontSize: 10,
+                  letterSpacing: "0.08em",
+                }}
               >
                 {t("common.cancel")}
               </Button>
-              <Button type="submit" disabled={isMutating}>
+              <Button
+                type="submit"
+                disabled={isMutating}
+                style={{
+                  fontFamily: "'JetBrains Mono', monospace",
+                  fontSize: 10,
+                  letterSpacing: "0.08em",
+                }}
+              >
                 {isMutating
                   ? t("common.loading")
                   : editingSchedule

@@ -1,12 +1,8 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { motion } from "framer-motion";
-import { ArrowLeft, MapPin, Clock, Navigation, Copy } from "lucide-react";
+import { ArrowLeft, MapPin, Navigation, Copy, Clock } from "lucide-react";
 import { toast } from "sonner";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   Table,
@@ -19,6 +15,54 @@ import {
 import { StationMap } from "@/components/StationMap";
 import { useStation } from "@/hooks/use-stations";
 import { useSchedules } from "@/hooks/use-schedules";
+
+const statusLED = (status: string) => {
+  if (status === "ACTIVE")
+    return {
+      color: "#22c55e",
+      shadow: "0 0 6px 2px rgba(34,197,94,0.4)",
+    };
+  if (status === "MAINTENANCE")
+    return {
+      color: "#f59e0b",
+      shadow: "0 0 6px 2px rgba(245,158,11,0.4)",
+    };
+  return { color: "#ef4444", shadow: "0 0 6px 2px rgba(239,68,68,0.4)" };
+};
+
+const scheduleStatusLED = (status: string) => {
+  if (status === "ACTIVE")
+    return {
+      color: "#22c55e",
+      shadow: "0 0 6px 2px rgba(34,197,94,0.4)",
+    };
+  if (status === "DELAYED")
+    return {
+      color: "#f59e0b",
+      shadow: "0 0 6px 2px rgba(245,158,11,0.4)",
+    };
+  return { color: "#ef4444", shadow: "0 0 6px 2px rgba(239,68,68,0.4)" };
+};
+
+const cardStyle: React.CSSProperties = {
+  background: "var(--color-card)",
+  border: "1px solid var(--color-border)",
+  borderRadius: 12,
+  overflow: "hidden",
+};
+
+const cardHeaderStyle: React.CSSProperties = {
+  padding: "18px 24px 14px",
+  borderBottom: "1px solid var(--color-border)",
+};
+
+const thStyle: React.CSSProperties = {
+  fontFamily: "'JetBrains Mono', monospace",
+  fontSize: 9.5,
+  textTransform: "uppercase",
+  letterSpacing: "0.14em",
+  color: "var(--color-muted-foreground)",
+};
 
 export default function StationDetailPage() {
   const { t } = useTranslation();
@@ -36,202 +80,513 @@ export default function StationDetailPage() {
       </div>
     );
   if (!station)
-    return <p className="text-muted-foreground">Station not found.</p>;
+    return (
+      <p style={{ fontFamily: "'Sora', sans-serif", color: "var(--color-muted-foreground)" }}>
+        Station not found.
+      </p>
+    );
+
+  const led = statusLED(station.status);
 
   return (
     <div>
-      <Button
-        variant="ghost"
-        size="sm"
+      <button
         onClick={() => navigate("/stations")}
-        className="mb-4"
+        style={{
+          display: "inline-flex",
+          alignItems: "center",
+          gap: 6,
+          fontFamily: "'JetBrains Mono', monospace",
+          fontSize: 11,
+          letterSpacing: "0.08em",
+          color: "var(--color-muted-foreground)",
+          background: "none",
+          border: "none",
+          cursor: "pointer",
+          marginBottom: 20,
+          padding: "4px 0",
+        }}
       >
-        <ArrowLeft className="h-4 w-4 mr-2" />
+        <ArrowLeft size={14} />
         {t("stations.title")}
-      </Button>
+      </button>
 
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-      >
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+        {/* Page header */}
+        <div style={{ marginBottom: 28 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap" }}>
+            <h1
+              style={{
+                fontFamily: "'Bebas Neue', sans-serif",
+                fontSize: 40,
+                letterSpacing: "0.04em",
+                lineHeight: 1,
+                color: "var(--color-foreground)",
+                margin: 0,
+              }}
+            >
+              {station.name}
+            </h1>
+            <span
+              style={{
+                background: "rgba(29,111,232,0.12)",
+                border: "1px solid rgba(29,111,232,0.2)",
+                borderRadius: 4,
+                padding: "3px 10px",
+                fontFamily: "'Bebas Neue', sans-serif",
+                fontSize: 14,
+                letterSpacing: "0.1em",
+                color: "#60a5fa",
+                display: "inline-block",
+              }}
+            >
+              {station.code}
+            </span>
+          </div>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 8,
+              marginTop: 8,
+            }}
+          >
+            <div
+              style={{
+                width: 7,
+                height: 7,
+                borderRadius: "50%",
+                background: led.color,
+                boxShadow: led.shadow,
+                flexShrink: 0,
+              }}
+            />
+            <span
+              style={{
+                fontFamily: "'JetBrains Mono', monospace",
+                fontSize: 11,
+                letterSpacing: "0.1em",
+                color: "var(--color-muted-foreground)",
+              }}
+            >
+              {station.status}
+            </span>
+          </div>
+        </div>
+
         <div className="grid gap-6 lg:grid-cols-[1fr_350px]">
           {/* Main */}
-          <div className="space-y-6">
-            <Card>
-              <CardHeader>
-                <div
+          <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+            {/* Info card */}
+            <div style={cardStyle}>
+              <div style={cardHeaderStyle}>
+                <p
                   style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    alignItems: "center",
-                    gap: "1rem",
+                    fontFamily: "'Bebas Neue', sans-serif",
+                    fontSize: 16,
+                    letterSpacing: "0.1em",
+                    color: "var(--color-foreground)",
+                    margin: 0,
                   }}
                 >
-                  <button
-                    className="h-14 w-14 rounded-xl bg-primary/10 flex items-center justify-center text-xl font-bold text-primary hover:bg-primary/20 transition-colors"
-                    onClick={() => {
-                      navigator.clipboard.writeText(station.code);
-                      toast.success(`Copied: ${station.code}`);
+                  STATION INFO
+                </p>
+                <p
+                  style={{
+                    fontFamily: "'JetBrains Mono', monospace",
+                    fontSize: 9.5,
+                    letterSpacing: "0.14em",
+                    color: "var(--color-muted-foreground)",
+                    textTransform: "uppercase",
+                    margin: "4px 0 0",
+                  }}
+                >
+                  Station details &amp; metadata
+                </p>
+              </div>
+              <div
+                style={{
+                  padding: "20px 24px",
+                  display: "grid",
+                  gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))",
+                  gap: 20,
+                }}
+              >
+                {/* Order */}
+                <div
+                  style={{
+                    background: "var(--color-background)",
+                    border: "1px solid var(--color-border)",
+                    borderRadius: 8,
+                    padding: "12px 16px",
+                  }}
+                >
+                  <p
+                    style={{
+                      fontFamily: "'Bebas Neue', sans-serif",
+                      fontSize: 11,
+                      letterSpacing: "0.12em",
+                      color: "var(--color-muted-foreground)",
+                      margin: "0 0 6px",
                     }}
                   >
-                    {station.code}
-                  </button>
-                  <div>
-                    <CardTitle className="text-xl">{station.name}</CardTitle>
-                    <div
-                      style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        alignItems: "center",
-                        gap: "0.5rem",
-                        marginTop: "0.25rem",
-                      }}
-                    >
-                      <Badge
-                        variant={
-                          station.status === "ACTIVE"
-                            ? "success"
-                            : station.status === "MAINTENANCE"
-                              ? "warning"
-                              : "destructive"
-                        }
-                      >
-                        {station.status}
-                      </Badge>
-                      <span className="text-sm text-muted-foreground">
-                        {t("stations.order")}: {station.order}
-                      </span>
-                    </div>
-                  </div>
+                    {t("stations.order").toUpperCase()}
+                  </p>
+                  <p
+                    style={{
+                      fontFamily: "'JetBrains Mono', monospace",
+                      fontSize: 22,
+                      color: "var(--color-foreground)",
+                      margin: 0,
+                      lineHeight: 1,
+                    }}
+                  >
+                    {String(station.order).padStart(2, "0")}
+                  </p>
                 </div>
-              </CardHeader>
-              <Separator />
-              <CardContent className="pt-6 space-y-3">
+
+                {/* Location */}
                 <div
                   style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    alignItems: "center",
-                    gap: "0.5rem",
+                    background: "var(--color-background)",
+                    border: "1px solid var(--color-border)",
+                    borderRadius: 8,
+                    padding: "12px 16px",
                   }}
-                  className="text-sm"
                 >
-                  <MapPin className="h-4 w-4 text-muted-foreground" />
-                  {station.location}
-                </div>
-                {station.latitude && station.longitude && (
+                  <p
+                    style={{
+                      fontFamily: "'Bebas Neue', sans-serif",
+                      fontSize: 11,
+                      letterSpacing: "0.12em",
+                      color: "var(--color-muted-foreground)",
+                      margin: "0 0 6px",
+                    }}
+                  >
+                    LOCATION
+                  </p>
                   <div
                     style={{
                       display: "flex",
-                      flexDirection: "row",
-                      alignItems: "center",
-                      gap: "0.5rem",
+                      alignItems: "flex-start",
+                      gap: 6,
                     }}
-                    className="text-sm"
                   >
-                    <Navigation className="h-4 w-4 text-muted-foreground" />
-                    <span className="font-mono text-xs">
-                      {station.latitude.toFixed(6)},{" "}
-                      {station.longitude.toFixed(6)}
-                    </span>
-                    <button
-                      className="text-muted-foreground hover:text-foreground"
-                      onClick={() => {
-                        navigator.clipboard.writeText(
-                          `${station.latitude}, ${station.longitude}`,
-                        );
-                        toast.success("Coordinates copied");
+                    <MapPin size={13} style={{ color: "var(--color-muted-foreground)", marginTop: 2, flexShrink: 0 }} />
+                    <p
+                      style={{
+                        fontFamily: "'Sora', sans-serif",
+                        fontSize: 13,
+                        color: "var(--color-foreground)",
+                        margin: 0,
+                        lineHeight: 1.4,
                       }}
                     >
-                      <Copy className="h-3 w-3" />
-                    </button>
+                      {station.location}
+                    </p>
                   </div>
-                )}
-              </CardContent>
-            </Card>
+                </div>
 
-            {/* Schedules at this station */}
-            <Card>
-              <CardHeader>
-                <CardTitle
-                  className="text-lg"
+                {/* Status */}
+                <div
                   style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    alignItems: "center",
-                    gap: "0.5rem",
+                    background: "var(--color-background)",
+                    border: "1px solid var(--color-border)",
+                    borderRadius: 8,
+                    padding: "12px 16px",
                   }}
                 >
-                  <Clock className="h-4 w-4" />
-                  {t("schedules.title")} ({schedules.length})
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="p-0">
-                <Table>
-                  <TableHeader>
-                    <TableRow className="bg-muted/50">
-                      <TableHead>{t("schedules.trainNumber")}</TableHead>
-                      <TableHead>{t("schedules.route")}</TableHead>
-                      <TableHead>{t("schedules.time")}</TableHead>
-                      <TableHead>{t("stations.status")}</TableHead>
+                  <p
+                    style={{
+                      fontFamily: "'Bebas Neue', sans-serif",
+                      fontSize: 11,
+                      letterSpacing: "0.12em",
+                      color: "var(--color-muted-foreground)",
+                      margin: "0 0 6px",
+                    }}
+                  >
+                    {t("stations.status").toUpperCase()}
+                  </p>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                    <div
+                      style={{
+                        width: 7,
+                        height: 7,
+                        borderRadius: "50%",
+                        background: led.color,
+                        boxShadow: led.shadow,
+                        flexShrink: 0,
+                      }}
+                    />
+                    <span
+                      style={{
+                        fontFamily: "'JetBrains Mono', monospace",
+                        fontSize: 12,
+                        letterSpacing: "0.08em",
+                        color: "var(--color-foreground)",
+                      }}
+                    >
+                      {station.status}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Coordinates */}
+                {station.latitude && station.longitude && (
+                  <div
+                    style={{
+                      background: "var(--color-background)",
+                      border: "1px solid var(--color-border)",
+                      borderRadius: 8,
+                      padding: "12px 16px",
+                    }}
+                  >
+                    <p
+                      style={{
+                        fontFamily: "'Bebas Neue', sans-serif",
+                        fontSize: 11,
+                        letterSpacing: "0.12em",
+                        color: "var(--color-muted-foreground)",
+                        margin: "0 0 6px",
+                      }}
+                    >
+                      COORDINATES
+                    </p>
+                    <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                      <Navigation size={13} style={{ color: "var(--color-muted-foreground)", flexShrink: 0 }} />
+                      <span
+                        style={{
+                          fontFamily: "'JetBrains Mono', monospace",
+                          fontSize: 11,
+                          color: "var(--color-foreground)",
+                        }}
+                      >
+                        {station.latitude.toFixed(6)}, {station.longitude.toFixed(6)}
+                      </span>
+                      <button
+                        onClick={() => {
+                          navigator.clipboard.writeText(
+                            `${station.latitude}, ${station.longitude}`,
+                          );
+                          toast.success("Coordinates copied");
+                        }}
+                        style={{
+                          background: "none",
+                          border: "1px solid var(--color-border)",
+                          borderRadius: 4,
+                          padding: "2px 6px",
+                          cursor: "pointer",
+                          fontFamily: "'JetBrains Mono', monospace",
+                          fontSize: 9,
+                          letterSpacing: "0.08em",
+                          color: "var(--color-muted-foreground)",
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 3,
+                          flexShrink: 0,
+                        }}
+                      >
+                        <Copy size={9} />
+                        COPY
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Schedules card */}
+            <div style={cardStyle}>
+              <div style={cardHeaderStyle}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  <Clock size={14} style={{ color: "var(--color-muted-foreground)" }} />
+                  <p
+                    style={{
+                      fontFamily: "'Bebas Neue', sans-serif",
+                      fontSize: 16,
+                      letterSpacing: "0.1em",
+                      color: "var(--color-foreground)",
+                      margin: 0,
+                    }}
+                  >
+                    {t("schedules.title")}
+                  </p>
+                  <span
+                    style={{
+                      fontFamily: "'JetBrains Mono', monospace",
+                      fontSize: 10,
+                      letterSpacing: "0.08em",
+                      color: "var(--color-muted-foreground)",
+                      background: "var(--color-muted)",
+                      borderRadius: 4,
+                      padding: "2px 7px",
+                    }}
+                  >
+                    {schedules.length}
+                  </span>
+                </div>
+                <p
+                  style={{
+                    fontFamily: "'JetBrains Mono', monospace",
+                    fontSize: 9.5,
+                    letterSpacing: "0.14em",
+                    color: "var(--color-muted-foreground)",
+                    textTransform: "uppercase",
+                    margin: "4px 0 0",
+                  }}
+                >
+                  Train schedules at this station
+                </p>
+              </div>
+              <Table>
+                <TableHeader>
+                  <TableRow style={{ background: "var(--color-muted)" }}>
+                    <TableHead style={thStyle}>{t("schedules.trainNumber")}</TableHead>
+                    <TableHead style={thStyle}>{t("schedules.route")}</TableHead>
+                    <TableHead style={thStyle}>{t("schedules.time")}</TableHead>
+                    <TableHead style={thStyle}>{t("stations.status")}</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {schedules.length === 0 ? (
+                    <TableRow>
+                      <TableCell
+                        colSpan={4}
+                        style={{
+                          textAlign: "center",
+                          padding: "32px 0",
+                          fontFamily: "'JetBrains Mono', monospace",
+                          fontSize: 11,
+                          letterSpacing: "0.08em",
+                          color: "var(--color-muted-foreground)",
+                        }}
+                      >
+                        NO SCHEDULES FOUND
+                      </TableCell>
                     </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {schedules.length === 0 ? (
-                      <TableRow>
-                        <TableCell
-                          colSpan={4}
-                          className="text-center text-muted-foreground py-8"
-                        >
-                          No schedules
-                        </TableCell>
-                      </TableRow>
-                    ) : (
-                      schedules.map((s) => (
+                  ) : (
+                    schedules.map((s) => {
+                      const sled = scheduleStatusLED(s.status);
+                      return (
                         <TableRow key={s.id}>
-                          <TableCell className="font-mono font-medium">
+                          <TableCell
+                            style={{
+                              fontFamily: "'JetBrains Mono', monospace",
+                              fontSize: 12,
+                              fontWeight: 600,
+                            }}
+                          >
                             {s.trainNumber}
                           </TableCell>
-                          <TableCell>
-                            {s.departureStation?.code} →{" "}
-                            {s.arrivalStation?.code}
+                          <TableCell
+                            style={{
+                              fontFamily: "'JetBrains Mono', monospace",
+                              fontSize: 11,
+                            }}
+                          >
+                            {s.departureStation?.code} → {s.arrivalStation?.code}
                           </TableCell>
-                          <TableCell className="font-mono text-sm">
+                          <TableCell
+                            style={{
+                              fontFamily: "'JetBrains Mono', monospace",
+                              fontSize: 11,
+                            }}
+                          >
                             {s.departureTime} — {s.arrivalTime}
                           </TableCell>
                           <TableCell>
-                            <Badge
-                              variant={
-                                s.status === "ACTIVE"
-                                  ? "success"
-                                  : s.status === "DELAYED"
-                                    ? "warning"
-                                    : "destructive"
-                              }
-                            >
-                              {s.status}
-                            </Badge>
+                            <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                              <div
+                                style={{
+                                  width: 7,
+                                  height: 7,
+                                  borderRadius: "50%",
+                                  background: sled.color,
+                                  boxShadow: sled.shadow,
+                                  flexShrink: 0,
+                                }}
+                              />
+                              <span
+                                style={{
+                                  fontFamily: "'JetBrains Mono', monospace",
+                                  fontSize: 10,
+                                  letterSpacing: "0.08em",
+                                  color: "var(--color-foreground)",
+                                }}
+                              >
+                                {s.status}
+                              </span>
+                            </div>
                           </TableCell>
                         </TableRow>
-                      ))
-                    )}
-                  </TableBody>
-                </Table>
-              </CardContent>
-            </Card>
+                      );
+                    })
+                  )}
+                </TableBody>
+              </Table>
+            </div>
           </div>
 
           {/* Sidebar Map */}
           <div>
             {station.latitude && station.longitude && (
-              <Card className="overflow-hidden">
-                <div className="h-64">
-                  <StationMap
-                    stations={[station]}
-                    selectedStationId={station.id}
-                  />
+              <div style={{ ...cardStyle }}>
+                <div style={cardHeaderStyle}>
+                  <p
+                    style={{
+                      fontFamily: "'Bebas Neue', sans-serif",
+                      fontSize: 16,
+                      letterSpacing: "0.1em",
+                      color: "var(--color-foreground)",
+                      margin: 0,
+                    }}
+                  >
+                    MAP LOCATION
+                  </p>
+                  <p
+                    style={{
+                      fontFamily: "'JetBrains Mono', monospace",
+                      fontSize: 9.5,
+                      letterSpacing: "0.14em",
+                      color: "var(--color-muted-foreground)",
+                      textTransform: "uppercase",
+                      margin: "4px 0 0",
+                    }}
+                  >
+                    {station.latitude.toFixed(4)}, {station.longitude.toFixed(4)}
+                  </p>
                 </div>
-              </Card>
+                <div style={{ height: 256 }}>
+                  <StationMap stations={[station]} selectedStationId={station.id} />
+                </div>
+                <div style={{ padding: "12px 24px" }}>
+                  <button
+                    onClick={() => {
+                      navigator.clipboard.writeText(station.code);
+                      toast.success(`Copied: ${station.code}`);
+                    }}
+                    style={{
+                      width: "100%",
+                      background: "rgba(29,111,232,0.08)",
+                      border: "1px solid rgba(29,111,232,0.2)",
+                      borderRadius: 6,
+                      padding: "8px 16px",
+                      cursor: "pointer",
+                      fontFamily: "'JetBrains Mono', monospace",
+                      fontSize: 11,
+                      letterSpacing: "0.1em",
+                      color: "#60a5fa",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      gap: 6,
+                    }}
+                  >
+                    <Copy size={11} />
+                    COPY STATION CODE — {station.code}
+                  </button>
+                </div>
+              </div>
             )}
           </div>
         </div>

@@ -2,7 +2,6 @@ import { useState, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { motion } from "framer-motion";
 import { ArrowRight, Clock, Train } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {
   Select,
@@ -11,7 +10,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Separator } from "@/components/ui/separator";
 import {
   Table,
   TableBody,
@@ -20,9 +18,36 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { EmptyState } from "@/components/EmptyState";
 import { useStations } from "@/hooks/use-stations";
 import { useSchedules } from "@/hooks/use-schedules";
+
+const statusLED = (status: string) => {
+  if (status === "ACTIVE")
+    return { color: "#22c55e", shadow: "0 0 6px 2px rgba(34,197,94,0.4)" };
+  if (status === "DELAYED")
+    return { color: "#f59e0b", shadow: "0 0 6px 2px rgba(245,158,11,0.4)" };
+  return { color: "#ef4444", shadow: "0 0 6px 2px rgba(239,68,68,0.4)" };
+};
+
+const cardStyle: React.CSSProperties = {
+  background: "var(--color-card)",
+  border: "1px solid var(--color-border)",
+  borderRadius: 12,
+  overflow: "hidden",
+};
+
+const cardHeaderStyle: React.CSSProperties = {
+  padding: "18px 24px 14px",
+  borderBottom: "1px solid var(--color-border)",
+};
+
+const thStyle: React.CSSProperties = {
+  fontFamily: "'JetBrains Mono', monospace",
+  fontSize: 9.5,
+  textTransform: "uppercase" as const,
+  letterSpacing: "0.14em",
+  color: "var(--color-muted-foreground)",
+};
 
 export default function RoutePlannerPage() {
   const { t } = useTranslation();
@@ -46,142 +71,416 @@ export default function RoutePlannerPage() {
 
   return (
     <div>
-      <div className="mb-6">
-        <h2 className="text-2xl font-bold tracking-tight">Route Planner</h2>
-        <p className="text-muted-foreground">
+      {/* Page header */}
+      <div style={{ marginBottom: 28 }}>
+        <h1
+          style={{
+            fontFamily: "'Bebas Neue', sans-serif",
+            fontSize: 36,
+            letterSpacing: "0.04em",
+            lineHeight: 1,
+            color: "var(--color-foreground)",
+            margin: 0,
+          }}
+        >
+          ROUTE PLANNER
+        </h1>
+        <p
+          style={{
+            fontFamily: "'JetBrains Mono', monospace",
+            fontSize: 9.5,
+            letterSpacing: "0.14em",
+            color: "var(--color-muted-foreground)",
+            textTransform: "uppercase",
+            margin: "6px 0 0",
+          }}
+        >
           Find available schedules between stations
         </p>
       </div>
 
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-      >
-        <Card className="mb-6 shadow-sm">
-          <CardContent className="p-6">
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+        {/* Terminal-style form card */}
+        <div
+          style={{
+            ...cardStyle,
+            marginBottom: 24,
+            background: "var(--color-card)",
+          }}
+        >
+          <div style={cardHeaderStyle}>
+            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <Train size={14} style={{ color: "var(--color-muted-foreground)" }} />
+              <p
+                style={{
+                  fontFamily: "'Bebas Neue', sans-serif",
+                  fontSize: 16,
+                  letterSpacing: "0.1em",
+                  color: "var(--color-foreground)",
+                  margin: 0,
+                }}
+              >
+                PLAN YOUR ROUTE
+              </p>
+            </div>
+            <p
+              style={{
+                fontFamily: "'JetBrains Mono', monospace",
+                fontSize: 9.5,
+                letterSpacing: "0.14em",
+                color: "var(--color-muted-foreground)",
+                textTransform: "uppercase",
+                margin: "4px 0 0",
+              }}
+            >
+              Select origin and destination
+            </p>
+          </div>
+
+          <div
+            style={{
+              padding: "20px 24px",
+              background: "rgba(0,0,0,0.04)",
+            }}
+          >
             <div
               style={{
                 display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-                gap: "1rem",
-                flexWrap: "wrap",
+                flexDirection: "row" as const,
+                alignItems: "flex-end",
+                gap: 16,
+                flexWrap: "wrap" as const,
               }}
             >
-              <div className="flex-1 min-w-50">
-                <p className="text-xs font-medium text-muted-foreground mb-1.5">
+              {/* FROM */}
+              <div style={{ flex: 1, minWidth: 200 }}>
+                <div
+                  style={{
+                    fontFamily: "'JetBrains Mono', monospace",
+                    fontSize: 9.5,
+                    letterSpacing: "0.14em",
+                    textTransform: "uppercase" as const,
+                    color: "var(--color-muted-foreground)",
+                    marginBottom: 8,
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 6,
+                  }}
+                >
+                  <span
+                    style={{
+                      background: "rgba(29,111,232,0.12)",
+                      border: "1px solid rgba(29,111,232,0.2)",
+                      borderRadius: 3,
+                      padding: "1px 6px",
+                      color: "#60a5fa",
+                      fontSize: 9,
+                    }}
+                  >
+                    FROM
+                  </span>
                   {t("schedules.departureStation")}
-                </p>
+                </div>
                 <Select value={fromId} onValueChange={setFromId}>
                   <SelectTrigger>
-                    <SelectValue placeholder="Select station" />
+                    <SelectValue placeholder="Select departure station" />
                   </SelectTrigger>
                   <SelectContent>
                     {stations.map((s) => (
                       <SelectItem key={s.id} value={s.id}>
-                        {s.code} - {s.name}
+                        {s.code} — {s.name}
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
               </div>
-              <ArrowRight className="h-5 w-5 text-muted-foreground shrink-0 mt-5" />
-              <div className="flex-1 min-w-50">
-                <p className="text-xs font-medium text-muted-foreground mb-1.5">
+
+              {/* Connector */}
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column" as const,
+                  alignItems: "center",
+                  paddingBottom: 10,
+                  flexShrink: 0,
+                }}
+              >
+                <ArrowRight
+                  size={18}
+                  style={{ color: "var(--color-primary)" }}
+                />
+              </div>
+
+              {/* TO */}
+              <div style={{ flex: 1, minWidth: 200 }}>
+                <div
+                  style={{
+                    fontFamily: "'JetBrains Mono', monospace",
+                    fontSize: 9.5,
+                    letterSpacing: "0.14em",
+                    textTransform: "uppercase" as const,
+                    color: "var(--color-muted-foreground)",
+                    marginBottom: 8,
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 6,
+                  }}
+                >
+                  <span
+                    style={{
+                      background: "rgba(34,197,94,0.1)",
+                      border: "1px solid rgba(34,197,94,0.2)",
+                      borderRadius: 3,
+                      padding: "1px 6px",
+                      color: "#22c55e",
+                      fontSize: 9,
+                    }}
+                  >
+                    TO
+                  </span>
                   {t("schedules.arrivalStation")}
-                </p>
+                </div>
                 <Select value={toId} onValueChange={setToId}>
                   <SelectTrigger>
-                    <SelectValue placeholder="Select station" />
+                    <SelectValue placeholder="Select arrival station" />
                   </SelectTrigger>
                   <SelectContent>
                     {stations.map((s) => (
                       <SelectItem key={s.id} value={s.id}>
-                        {s.code} - {s.name}
+                        {s.code} — {s.name}
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
               </div>
             </div>
-          </CardContent>
-        </Card>
 
-        {fromId && toId && fromId !== toId && (
-          <Card className="shadow-sm">
-            <CardHeader>
-              <CardTitle
-                className="text-lg"
+            {/* Route preview when both selected */}
+            {fromStation && toStation && fromId !== toId && (
+              <div
                 style={{
+                  marginTop: 16,
+                  padding: "10px 16px",
+                  background: "rgba(29,111,232,0.06)",
+                  border: "1px solid rgba(29,111,232,0.15)",
+                  borderRadius: 8,
                   display: "flex",
-                  flexDirection: "row",
                   alignItems: "center",
-                  gap: "0.5rem",
+                  gap: 10,
                 }}
               >
-                <Train className="h-4 w-4" />
-                {fromStation?.code} → {toStation?.code} ({results.length}{" "}
-                schedules)
-              </CardTitle>
-            </CardHeader>
-            <Separator />
+                <span
+                  style={{
+                    fontFamily: "'Bebas Neue', sans-serif",
+                    fontSize: 14,
+                    letterSpacing: "0.1em",
+                    color: "#60a5fa",
+                  }}
+                >
+                  {fromStation.code}
+                </span>
+                <span
+                  style={{
+                    fontFamily: "'JetBrains Mono', monospace",
+                    fontSize: 10,
+                    color: "var(--color-muted-foreground)",
+                  }}
+                >
+                  ——————————————
+                </span>
+                <ArrowRight size={12} style={{ color: "var(--color-primary)" }} />
+                <span
+                  style={{
+                    fontFamily: "'JetBrains Mono', monospace",
+                    fontSize: 10,
+                    color: "var(--color-muted-foreground)",
+                  }}
+                >
+                  ——————————————
+                </span>
+                <span
+                  style={{
+                    fontFamily: "'Bebas Neue', sans-serif",
+                    fontSize: 14,
+                    letterSpacing: "0.1em",
+                    color: "#22c55e",
+                  }}
+                >
+                  {toStation.code}
+                </span>
+                <span
+                  style={{
+                    marginLeft: "auto",
+                    fontFamily: "'JetBrains Mono', monospace",
+                    fontSize: 10,
+                    letterSpacing: "0.08em",
+                    color: "var(--color-muted-foreground)",
+                  }}
+                >
+                  {results.length} SCHEDULES
+                </span>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Results */}
+        {fromId && toId && fromId !== toId && (
+          <div style={cardStyle}>
+            <div style={cardHeaderStyle}>
+              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <Clock size={14} style={{ color: "var(--color-muted-foreground)" }} />
+                <p
+                  style={{
+                    fontFamily: "'Bebas Neue', sans-serif",
+                    fontSize: 16,
+                    letterSpacing: "0.1em",
+                    color: "var(--color-foreground)",
+                    margin: 0,
+                  }}
+                >
+                  {fromStation?.code} → {toStation?.code}
+                </p>
+                <span
+                  style={{
+                    fontFamily: "'JetBrains Mono', monospace",
+                    fontSize: 10,
+                    letterSpacing: "0.08em",
+                    color: "var(--color-muted-foreground)",
+                    background: "var(--color-muted)",
+                    borderRadius: 4,
+                    padding: "2px 7px",
+                  }}
+                >
+                  {results.length}
+                </span>
+              </div>
+              <p
+                style={{
+                  fontFamily: "'JetBrains Mono', monospace",
+                  fontSize: 9.5,
+                  letterSpacing: "0.14em",
+                  color: "var(--color-muted-foreground)",
+                  textTransform: "uppercase",
+                  margin: "4px 0 0",
+                }}
+              >
+                Direct schedule results
+              </p>
+            </div>
+
             {results.length === 0 ? (
-              <EmptyState
-                icon={Clock}
-                title="No direct routes"
-                description={`No direct schedules from ${fromStation?.name} to ${toStation?.name}.`}
-              />
+              <div
+                style={{
+                  padding: "60px 24px",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  gap: 10,
+                }}
+              >
+                <Clock size={32} style={{ color: "var(--color-muted-foreground)", opacity: 0.4 }} />
+                <p
+                  style={{
+                    fontFamily: "'Bebas Neue', sans-serif",
+                    fontSize: 22,
+                    letterSpacing: "0.08em",
+                    color: "var(--color-muted-foreground)",
+                    margin: 0,
+                  }}
+                >
+                  NO ROUTES FOUND
+                </p>
+                <p
+                  style={{
+                    fontFamily: "'JetBrains Mono', monospace",
+                    fontSize: 10,
+                    letterSpacing: "0.1em",
+                    color: "var(--color-muted-foreground)",
+                    textTransform: "uppercase",
+                    margin: 0,
+                    textAlign: "center",
+                  }}
+                >
+                  No direct schedules from {fromStation?.name} to {toStation?.name}
+                </p>
+              </div>
             ) : (
-              <CardContent className="p-0">
-                <Table>
-                  <TableHeader>
-                    <TableRow className="bg-muted/50">
-                      <TableHead>{t("schedules.trainNumber")}</TableHead>
-                      <TableHead>{t("schedules.departureTime")}</TableHead>
-                      <TableHead>{t("schedules.arrivalTime")}</TableHead>
-                      <TableHead>{t("schedules.dayType")}</TableHead>
-                      <TableHead>{t("stations.status")}</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {results
-                      .sort((a, b) =>
-                        a.departureTime.localeCompare(b.departureTime),
-                      )
-                      .map((s) => (
+              <Table>
+                <TableHeader>
+                  <TableRow style={{ background: "var(--color-muted)" }}>
+                    <TableHead style={thStyle}>{t("schedules.trainNumber")}</TableHead>
+                    <TableHead style={thStyle}>{t("schedules.departureTime")}</TableHead>
+                    <TableHead style={thStyle}>{t("schedules.arrivalTime")}</TableHead>
+                    <TableHead style={thStyle}>{t("schedules.dayType")}</TableHead>
+                    <TableHead style={thStyle}>{t("stations.status")}</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {results
+                    .sort((a, b) => a.departureTime.localeCompare(b.departureTime))
+                    .map((s) => {
+                      const led = statusLED(s.status);
+                      return (
                         <TableRow key={s.id}>
-                          <TableCell className="font-mono font-medium">
+                          <TableCell
+                            style={{
+                              fontFamily: "'JetBrains Mono', monospace",
+                              fontSize: 12,
+                              fontWeight: 600,
+                            }}
+                          >
                             {s.trainNumber}
                           </TableCell>
-                          <TableCell className="font-mono">
+                          <TableCell
+                            style={{
+                              fontFamily: "'JetBrains Mono', monospace",
+                              fontSize: 12,
+                            }}
+                          >
                             {s.departureTime}
                           </TableCell>
-                          <TableCell className="font-mono">
+                          <TableCell
+                            style={{
+                              fontFamily: "'JetBrains Mono', monospace",
+                              fontSize: 12,
+                            }}
+                          >
                             {s.arrivalTime}
                           </TableCell>
                           <TableCell>
                             <Badge variant="secondary">{s.dayType}</Badge>
                           </TableCell>
                           <TableCell>
-                            <Badge
-                              variant={
-                                s.status === "ACTIVE"
-                                  ? "success"
-                                  : s.status === "DELAYED"
-                                    ? "warning"
-                                    : "destructive"
-                              }
-                            >
-                              {s.status}
-                            </Badge>
+                            <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                              <div
+                                style={{
+                                  width: 7,
+                                  height: 7,
+                                  borderRadius: "50%",
+                                  background: led.color,
+                                  boxShadow: led.shadow,
+                                  flexShrink: 0,
+                                }}
+                              />
+                              <span
+                                style={{
+                                  fontFamily: "'JetBrains Mono', monospace",
+                                  fontSize: 10,
+                                  letterSpacing: "0.08em",
+                                }}
+                              >
+                                {s.status}
+                              </span>
+                            </div>
                           </TableCell>
                         </TableRow>
-                      ))}
-                  </TableBody>
-                </Table>
-              </CardContent>
+                      );
+                    })}
+                </TableBody>
+              </Table>
             )}
-          </Card>
+          </div>
         )}
       </motion.div>
     </div>

@@ -18,16 +18,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { toast } from "sonner";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -49,6 +41,64 @@ const passwordSchema = z
   });
 
 type PasswordFormData = z.infer<typeof passwordSchema>;
+
+const chipStyle: React.CSSProperties = {
+  background: "rgba(59,130,246,0.1)",
+  border: "1px solid rgba(59,130,246,0.2)",
+  borderRadius: 3,
+  padding: "3px 8px",
+  fontFamily: "'JetBrains Mono', monospace",
+  fontSize: 9.5,
+  color: "#60a5fa",
+};
+
+const permChipStyle: React.CSSProperties = {
+  background: "rgba(59,130,246,0.08)",
+  border: "1px solid rgba(59,130,246,0.18)",
+  borderRadius: 3,
+  padding: "3px 8px",
+  fontFamily: "'JetBrains Mono', monospace",
+  fontSize: 9,
+  color: "#60a5fa",
+};
+
+const cardStyle: React.CSSProperties = {
+  background: "var(--color-card)",
+  border: "1px solid var(--color-border)",
+  borderRadius: 12,
+  overflow: "hidden",
+};
+
+const cardHeaderStyle: React.CSSProperties = {
+  padding: "18px 24px 14px",
+  borderBottom: "1px solid var(--color-border)",
+};
+
+const cardTitleStyle: React.CSSProperties = {
+  fontFamily: "'Bebas Neue', sans-serif",
+  fontSize: 18,
+  letterSpacing: "0.05em",
+  color: "var(--color-foreground)",
+  display: "flex",
+  alignItems: "center",
+  gap: 8,
+};
+
+const cardSubtitleStyle: React.CSSProperties = {
+  fontFamily: "'JetBrains Mono', monospace",
+  fontSize: 10,
+  letterSpacing: "0.08em",
+  color: "var(--color-muted-foreground)",
+  marginTop: 4,
+};
+
+const monoLabelStyle: React.CSSProperties = {
+  fontFamily: "'JetBrains Mono', monospace",
+  fontSize: 10,
+  textTransform: "uppercase" as const,
+  letterSpacing: "0.08em",
+  color: "var(--color-muted-foreground)",
+};
 
 export default function ProfilePage() {
   const { t, i18n } = useTranslation();
@@ -176,32 +226,44 @@ export default function ProfilePage() {
 
   return (
     <div>
-      <div className="mb-6">
-        <h2 className="text-2xl font-bold tracking-tight">
-          {t("profile.title")}
+      <div style={{ marginBottom: 24 }}>
+        <h2
+          style={{
+            fontFamily: "'Bebas Neue', sans-serif",
+            fontSize: 36,
+            letterSpacing: "0.04em",
+            lineHeight: 1,
+            color: "var(--color-foreground)",
+            margin: 0,
+          }}
+        >
+          PROFILE
         </h2>
-        <p className="text-muted-foreground">{t("profile.subtitle")}</p>
+        <p
+          style={{
+            fontFamily: "'JetBrains Mono', monospace",
+            fontSize: 9.5,
+            letterSpacing: "0.1em",
+            color: "var(--color-muted-foreground)",
+            marginTop: 4,
+          }}
+        >
+          {user.role} · {t("profile.subtitle")}
+        </p>
       </div>
 
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
       >
-        <div className="grid gap-6 lg:grid-cols-2">
+        <div style={{ display: "grid", gap: 24, gridTemplateColumns: "repeat(auto-fit, minmax(340px, 1fr))" }}>
           {/* Left Column */}
-          <div className="space-y-6">
+          <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
             {/* Profile Info */}
-            <Card>
-              <CardHeader>
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    alignItems: "center",
-                    gap: "1rem",
-                  }}
-                >
-                  <Avatar className="h-16 w-16">
+            <div style={cardStyle}>
+              <div style={{ ...cardHeaderStyle, padding: "20px 24px 16px" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+                  <Avatar style={{ width: 64, height: 64 }}>
                     <AvatarImage
                       src={`https://api.dicebear.com/9.x/initials/svg?seed=${encodeURIComponent(user.name)}`}
                       alt={user.name}
@@ -211,172 +273,175 @@ export default function ProfilePage() {
                     </AvatarFallback>
                   </Avatar>
                   <div>
-                    <CardTitle className="text-xl">{user.name}</CardTitle>
+                    <div
+                      style={{
+                        fontFamily: "'Bebas Neue', sans-serif",
+                        fontSize: 28,
+                        letterSpacing: "0.03em",
+                        lineHeight: 1.1,
+                        color: "var(--color-foreground)",
+                      }}
+                    >
+                      {user.name}
+                    </div>
                     <div
                       style={{
                         display: "flex",
-                        flexDirection: "row",
                         alignItems: "center",
-                        gap: "0.5rem",
-                        marginTop: "0.25rem",
+                        gap: 8,
+                        marginTop: 4,
                       }}
                     >
-                      <Badge
-                        variant={
-                          user.role === "ADMIN" ? "default" : "secondary"
-                        }
-                      >
+                      <Badge variant={user.role === "ADMIN" ? "default" : "secondary"}>
                         {user.role}
                       </Badge>
-                      <span className="text-sm text-muted-foreground">
+                      <span
+                        style={{
+                          fontFamily: "'JetBrains Mono', monospace",
+                          fontSize: 11,
+                          color: "var(--color-muted-foreground)",
+                        }}
+                      >
                         {user.email}
                       </span>
                     </div>
                   </div>
                 </div>
-              </CardHeader>
-              <Separator />
-              <CardContent className="pt-6">
-                <div className="space-y-3">
-                  {profileItems.map((item) => {
-                    const Icon = item.icon;
-                    return (
+              </div>
+              <div style={{ padding: "16px 24px 20px" }}>
+                {profileItems.map((item) => {
+                  const Icon = item.icon;
+                  return (
+                    <div
+                      key={item.label}
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 12,
+                        padding: "8px 0",
+                        borderBottom: "1px solid var(--color-border)",
+                      }}
+                    >
                       <div
-                        key={item.label}
                         style={{
+                          width: 36,
+                          height: 36,
+                          borderRadius: 8,
+                          background: "var(--color-muted)",
                           display: "flex",
-                          flexDirection: "row",
                           alignItems: "center",
-                          gap: "0.75rem",
-                          padding: "0.5rem 0",
+                          justifyContent: "center",
+                          flexShrink: 0,
                         }}
                       >
-                        <div className="h-9 w-9 rounded-lg bg-muted flex items-center justify-center shrink-0">
-                          <Icon className="h-4 w-4 text-muted-foreground" />
-                        </div>
-                        <div>
-                          <p className="text-[11px] text-muted-foreground uppercase tracking-wide">
-                            {item.label}
-                          </p>
-                          <p className="text-sm font-medium">{item.value}</p>
-                        </div>
+                        <Icon size={15} style={{ color: "var(--color-muted-foreground)" }} />
                       </div>
-                    );
-                  })}
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Preferences */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Preferences</CardTitle>
-              </CardHeader>
-              <Separator />
-              <CardContent className="pt-6">
-                <div className="space-y-3">
-                  {preferencesItems.map((item) => {
-                    const Icon = item.icon;
-                    return (
-                      <div
-                        key={item.label}
-                        style={{
-                          display: "flex",
-                          flexDirection: "row",
-                          alignItems: "center",
-                          justifyContent: "space-between",
-                          padding: "0.5rem 0",
-                        }}
-                      >
+                      <div>
+                        <div style={monoLabelStyle}>{item.label}</div>
                         <div
                           style={{
-                            display: "flex",
-                            flexDirection: "row",
-                            alignItems: "center",
-                            gap: "0.75rem",
+                            fontFamily: "'Sora', sans-serif",
+                            fontSize: 13,
+                            fontWeight: 500,
+                            color: "var(--color-foreground)",
+                            marginTop: 1,
                           }}
                         >
-                          <Icon className="h-4 w-4 text-muted-foreground" />
-                          <span className="text-sm">{item.label}</span>
+                          {item.value}
                         </div>
-                        <Badge variant="outline">{item.value}</Badge>
                       </div>
-                    );
-                  })}
-                </div>
-              </CardContent>
-            </Card>
-            {/* Permissions */}
-            <Card>
-              <CardHeader>
-                <CardTitle
-                  className="text-lg"
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    alignItems: "center",
-                    gap: "0.5rem",
-                  }}
-                >
-                  <Shield className="h-4 w-4" />
-                  Permissions
-                </CardTitle>
-                <CardDescription>
-                  {permissions.length} permissions granted
-                </CardDescription>
-              </CardHeader>
-              <Separator />
-              <CardContent className="pt-4">
-                <div className="flex flex-wrap gap-1.5">
-                  {permissions.map((perm) => (
-                    <Badge
-                      key={perm}
-                      variant="outline"
-                      className="text-xs font-mono"
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Preferences */}
+            <div style={cardStyle}>
+              <div style={cardHeaderStyle}>
+                <div style={cardTitleStyle}>PREFERENCES</div>
+                <div style={cardSubtitleStyle}>Current environment settings</div>
+              </div>
+              <div style={{ padding: "8px 0" }}>
+                {preferencesItems.map((item) => {
+                  const Icon = item.icon;
+                  return (
+                    <div
+                      key={item.label}
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                        padding: "10px 24px",
+                        borderBottom: "1px solid var(--color-border)",
+                      }}
                     >
+                      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                        <Icon size={14} style={{ color: "var(--color-muted-foreground)" }} />
+                        <span style={{ fontFamily: "'Sora', sans-serif", fontSize: 13 }}>
+                          {item.label}
+                        </span>
+                      </div>
+                      <Badge variant="outline">{item.value}</Badge>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Permissions */}
+            <div style={cardStyle}>
+              <div style={cardHeaderStyle}>
+                <div style={cardTitleStyle}>
+                  <Shield size={15} />
+                  PERMISSIONS
+                </div>
+                <div style={cardSubtitleStyle}>{permissions.length} permissions granted</div>
+              </div>
+              <div style={{ padding: "16px 24px 20px" }}>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                  {permissions.map((perm) => (
+                    <span key={perm} style={permChipStyle}>
                       {perm}
-                    </Badge>
+                    </span>
                   ))}
                   {permissions.length === 0 && (
-                    <p className="text-sm text-muted-foreground">
+                    <p
+                      style={{
+                        fontFamily: "'Sora', sans-serif",
+                        fontSize: 13,
+                        color: "var(--color-muted-foreground)",
+                      }}
+                    >
                       No permissions assigned
                     </p>
                   )}
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           </div>
 
           {/* Right Column */}
-          <div className="space-y-6">
+          <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
             {/* Change Password */}
-            <Card>
-              <CardHeader>
-                <CardTitle
-                  className="text-lg"
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    alignItems: "center",
-                    gap: "0.5rem",
-                  }}
-                >
-                  <Lock className="h-4 w-4" />
-                  {t("profile.changePassword")}
-                </CardTitle>
-                <CardDescription>{t("profile.updatePassword")}</CardDescription>
-              </CardHeader>
-              <Separator />
-              <CardContent className="pt-6">
-                <form
-                  onSubmit={handleSubmit(onPasswordChange)}
-                  className="space-y-4"
-                >
-                  <div className="space-y-2">
-                    <Label htmlFor="currentPassword">
+            <div style={cardStyle}>
+              <div style={cardHeaderStyle}>
+                <div style={cardTitleStyle}>
+                  <Lock size={15} />
+                  {t("profile.changePassword").toUpperCase()}
+                </div>
+                <div style={cardSubtitleStyle}>{t("profile.updatePassword")}</div>
+              </div>
+              <div style={{ padding: "20px 24px" }}>
+                <form onSubmit={handleSubmit(onPasswordChange)} style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                    <Label
+                      htmlFor="currentPassword"
+                      style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, textTransform: "uppercase", letterSpacing: "0.08em" }}
+                    >
                       {t("profile.currentPassword")}
                     </Label>
-                    <div className="relative">
+                    <div style={{ position: "relative" }}>
                       <Input
                         id="currentPassword"
                         type={showCurrent ? "text" : "password"}
@@ -386,28 +451,27 @@ export default function ProfilePage() {
                         type="button"
                         variant="ghost"
                         size="icon"
-                        className="absolute right-0 top-0 h-full w-10"
+                        style={{ position: "absolute", right: 0, top: 0, height: "100%", width: 40 }}
                         tabIndex={-1}
                         onClick={() => setShowCurrent(!showCurrent)}
                       >
-                        {showCurrent ? (
-                          <EyeOff className="h-4 w-4" />
-                        ) : (
-                          <Eye className="h-4 w-4" />
-                        )}
+                        {showCurrent ? <EyeOff size={14} /> : <Eye size={14} />}
                       </Button>
                     </div>
                     {errors.currentPassword && (
-                      <p className="text-xs text-destructive">
+                      <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: "var(--color-destructive)" }}>
                         {errors.currentPassword.message}
                       </p>
                     )}
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="newPassword">
+                  <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                    <Label
+                      htmlFor="newPassword"
+                      style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, textTransform: "uppercase", letterSpacing: "0.08em" }}
+                    >
                       {t("profile.newPassword")}
                     </Label>
-                    <div className="relative">
+                    <div style={{ position: "relative" }}>
                       <Input
                         id="newPassword"
                         type={showNew ? "text" : "password"}
@@ -417,25 +481,24 @@ export default function ProfilePage() {
                         type="button"
                         variant="ghost"
                         size="icon"
-                        className="absolute right-0 top-0 h-full w-10"
+                        style={{ position: "absolute", right: 0, top: 0, height: "100%", width: 40 }}
                         tabIndex={-1}
                         onClick={() => setShowNew(!showNew)}
                       >
-                        {showNew ? (
-                          <EyeOff className="h-4 w-4" />
-                        ) : (
-                          <Eye className="h-4 w-4" />
-                        )}
+                        {showNew ? <EyeOff size={14} /> : <Eye size={14} />}
                       </Button>
                     </div>
                     {errors.newPassword && (
-                      <p className="text-xs text-destructive">
+                      <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: "var(--color-destructive)" }}>
                         {errors.newPassword.message}
                       </p>
                     )}
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="confirmPassword">
+                  <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                    <Label
+                      htmlFor="confirmPassword"
+                      style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, textTransform: "uppercase", letterSpacing: "0.08em" }}
+                    >
                       {t("profile.confirmPassword")}
                     </Label>
                     <Input
@@ -444,89 +507,63 @@ export default function ProfilePage() {
                       {...register("confirmPassword")}
                     />
                     {errors.confirmPassword && (
-                      <p className="text-xs text-destructive">
+                      <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: "var(--color-destructive)" }}>
                         {errors.confirmPassword.message}
                       </p>
                     )}
                   </div>
                   <Button type="submit" disabled={isSubmitting} size="sm">
-                    {isSubmitting
-                      ? t("profile.changing")
-                      : t("profile.changePassword")}
+                    {isSubmitting ? t("profile.changing") : t("profile.changePassword")}
                   </Button>
                 </form>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
 
             {/* Tech Stack */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">
-                  {t("profile.techStack")}
-                </CardTitle>
-                <CardDescription>
-                  {frontendStack.length +
-                    backendStack.length +
-                    infraStack.length +
-                    testingStack.length}{" "}
-                  technologies
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
+            <div style={cardStyle}>
+              <div style={cardHeaderStyle}>
+                <div style={cardTitleStyle}>{t("profile.techStack").toUpperCase()}</div>
+                <div style={cardSubtitleStyle}>
+                  {frontendStack.length + backendStack.length + infraStack.length + testingStack.length} technologies
+                </div>
+              </div>
+              <div style={{ padding: "16px 24px 20px" }}>
                 <Tabs defaultValue="frontend">
-                  <TabsList className="mb-4 w-full">
-                    <TabsTrigger value="frontend" className="flex-1">
+                  <TabsList
+                    style={{ width: "100%", marginBottom: 16, fontFamily: "'JetBrains Mono', monospace" }}
+                  >
+                    <TabsTrigger value="frontend" style={{ flex: 1, fontFamily: "'JetBrains Mono', monospace", fontSize: 10 }}>
                       Frontend
                     </TabsTrigger>
-                    <TabsTrigger value="backend" className="flex-1">
+                    <TabsTrigger value="backend" style={{ flex: 1, fontFamily: "'JetBrains Mono', monospace", fontSize: 10 }}>
                       Backend
                     </TabsTrigger>
-                    <TabsTrigger value="infra" className="flex-1">
+                    <TabsTrigger value="infra" style={{ flex: 1, fontFamily: "'JetBrains Mono', monospace", fontSize: 10 }}>
                       Infra
                     </TabsTrigger>
-                    <TabsTrigger value="testing" className="flex-1">
+                    <TabsTrigger value="testing" style={{ flex: 1, fontFamily: "'JetBrains Mono', monospace", fontSize: 10 }}>
                       Testing
                     </TabsTrigger>
                   </TabsList>
-                  <TabsContent value="frontend">
-                    <div className="flex flex-wrap gap-2">
-                      {frontendStack.map((tech) => (
-                        <Badge key={tech} variant="outline">
-                          {tech}
-                        </Badge>
-                      ))}
-                    </div>
-                  </TabsContent>
-                  <TabsContent value="backend">
-                    <div className="flex flex-wrap gap-2">
-                      {backendStack.map((tech) => (
-                        <Badge key={tech} variant="outline">
-                          {tech}
-                        </Badge>
-                      ))}
-                    </div>
-                  </TabsContent>
-                  <TabsContent value="infra">
-                    <div className="flex flex-wrap gap-2">
-                      {infraStack.map((tech) => (
-                        <Badge key={tech} variant="outline">
-                          {tech}
-                        </Badge>
-                      ))}
-                    </div>
-                  </TabsContent>
-                  <TabsContent value="testing">
-                    <div className="flex flex-wrap gap-2">
-                      {testingStack.map((tech) => (
-                        <Badge key={tech} variant="outline">
-                          {tech}
-                        </Badge>
-                      ))}
-                    </div>
-                  </TabsContent>
+                  {[
+                    { value: "frontend", stack: frontendStack },
+                    { value: "backend", stack: backendStack },
+                    { value: "infra", stack: infraStack },
+                    { value: "testing", stack: testingStack },
+                  ].map(({ value, stack }) => (
+                    <TabsContent key={value} value={value}>
+                      <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                        {stack.map((tech) => (
+                          <span key={tech} style={chipStyle}>
+                            {tech}
+                          </span>
+                        ))}
+                      </div>
+                    </TabsContent>
+                  ))}
                 </Tabs>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           </div>
         </div>
       </motion.div>

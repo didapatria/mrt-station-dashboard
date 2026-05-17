@@ -14,9 +14,6 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   Select,
   SelectContent,
@@ -29,23 +26,33 @@ import { Pagination } from "@/components/ui/pagination";
 import { EmptyState } from "@/components/EmptyState";
 import { useActivityLogs } from "@/hooks/use-activity-logs";
 
-const actionIcons = {
-  CREATE: Plus,
-  UPDATE: Pencil,
-  DELETE: Trash2,
+const ACTION_STYLES: Record<
+  string,
+  { bg: string; color: string; Icon: typeof Activity }
+> = {
+  CREATE: { bg: "rgba(34,197,94,0.12)", color: "#22c55e", Icon: Plus },
+  UPDATE: { bg: "rgba(59,130,246,0.12)", color: "#3b82f6", Icon: Pencil },
+  DELETE: { bg: "rgba(239,68,68,0.12)", color: "#ef4444", Icon: Trash2 },
 };
 
-const actionColors = {
-  CREATE:
-    "text-emerald-600 bg-emerald-100 dark:text-emerald-400 dark:bg-emerald-950",
-  UPDATE: "text-blue-600 bg-blue-100 dark:text-blue-400 dark:bg-blue-950",
-  DELETE: "text-red-600 bg-red-100 dark:text-red-400 dark:bg-red-950",
-};
-
-const entityIcons = {
+const ENTITY_ICONS: Record<string, typeof Activity> = {
   Station: MapPin,
   Schedule: Clock,
   User: Users,
+};
+
+const ENTITY_CHIP: React.CSSProperties = {
+  fontFamily: "'JetBrains Mono', monospace",
+  fontSize: 8.5,
+  letterSpacing: "0.1em",
+  textTransform: "uppercase" as const,
+  padding: "2px 7px",
+  borderRadius: 2,
+  border: "1px solid var(--color-border)",
+  color: "var(--color-muted-foreground)",
+  display: "inline-flex",
+  alignItems: "center",
+  gap: 4,
 };
 
 export default function ActivityLogPage() {
@@ -100,14 +107,69 @@ export default function ActivityLogPage() {
 
   return (
     <div>
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
-        <div>
-          <h2 className="text-2xl font-bold tracking-tight">
-            {t("activity.title")}
-          </h2>
-          <p className="text-muted-foreground">{t("activity.subtitle")}</p>
+      {/* Page Header */}
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "flex-start",
+          justifyContent: "space-between",
+          gap: 16,
+          marginBottom: 28,
+          flexWrap: "wrap",
+        }}
+      >
+        <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+          <h1
+            style={{
+              fontFamily: "'Bebas Neue', sans-serif",
+              fontSize: 36,
+              letterSpacing: "0.04em",
+              lineHeight: 1,
+              margin: 0,
+            }}
+          >
+            ACTIVITY LOG
+          </h1>
+          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+            <span
+              style={{
+                fontFamily: "'JetBrains Mono', monospace",
+                fontSize: 9.5,
+                letterSpacing: "0.14em",
+                textTransform: "uppercase",
+                color: "var(--color-muted-foreground)",
+              }}
+            >
+              Audit Trail · System Events
+            </span>
+            <span
+              style={{
+                fontFamily: "'JetBrains Mono', monospace",
+                fontSize: 9.5,
+                letterSpacing: "0.08em",
+                color: "var(--color-muted-foreground)",
+                opacity: 0.6,
+              }}
+            >
+              {meta?.total ?? logs.length} entries
+            </span>
+          </div>
         </div>
-        <div style={{ display: "flex", flexDirection: "row", gap: "0.5rem" }}>
+
+        {/* Filter + Export strip */}
+        <div
+          style={{
+            background: "var(--color-card)",
+            border: "1px solid var(--color-border)",
+            borderRadius: 10,
+            padding: "10px 14px",
+            display: "flex",
+            flexDirection: "row",
+            gap: 8,
+            alignItems: "center",
+          }}
+        >
           <Button
             variant="outline"
             size="sm"
@@ -147,82 +209,197 @@ export default function ActivityLogPage() {
         </div>
       </div>
 
+      {/* Log List */}
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3 }}
-        className="space-y-3"
       >
-        {isLoading
-          ? Array.from({ length: 5 }).map((_, i) => (
-              <Card key={i} className="shadow-sm">
-                <CardContent className="p-4">
-                  <div className="flex items-start gap-4">
-                    <Skeleton className="h-10 w-10 rounded-full" />
-                    <div className="flex-1 space-y-2">
-                      <Skeleton className="h-4 w-64" />
-                      <Skeleton className="h-3 w-40" />
-                    </div>
-                    <Skeleton className="h-4 w-16" />
-                  </div>
-                </CardContent>
-              </Card>
-            ))
-          : logs.map((log) => {
-              const ActionIcon =
-                actionIcons[log.action as keyof typeof actionIcons] ?? Activity;
-              const actionColor =
-                actionColors[log.action as keyof typeof actionColors] ??
-                "text-muted-foreground bg-muted";
-              const EntityIcon =
-                entityIcons[log.entity as keyof typeof entityIcons] ?? Activity;
+        <div
+          style={{
+            background: "var(--color-card)",
+            border: "1px solid var(--color-border)",
+            borderRadius: 12,
+            overflow: "hidden",
+          }}
+        >
+          {/* Card section header */}
+          <div
+            style={{
+              padding: "18px 24px 14px",
+              borderBottom: "1px solid var(--color-border)",
+              display: "flex",
+              alignItems: "baseline",
+              gap: 10,
+            }}
+          >
+            <span
+              style={{
+                fontFamily: "'Bebas Neue', sans-serif",
+                fontSize: 20,
+                letterSpacing: "0.05em",
+                lineHeight: 1,
+              }}
+            >
+              EVENTS
+            </span>
+            <span
+              style={{
+                fontFamily: "'JetBrains Mono', monospace",
+                fontSize: 9.5,
+                letterSpacing: "0.14em",
+                textTransform: "uppercase",
+                color: "var(--color-muted-foreground)",
+              }}
+            >
+              Most Recent First
+            </span>
+          </div>
 
-              return (
-                <Card
-                  key={log.id}
-                  className="shadow-sm hover:shadow-md transition-shadow"
+          {isLoading
+            ? Array.from({ length: 5 }).map((_, i) => (
+                <div
+                  key={i}
+                  style={{
+                    padding: "14px 20px",
+                    borderBottom: "1px solid var(--color-border)",
+                    display: "flex",
+                    alignItems: "flex-start",
+                    gap: 12,
+                  }}
                 >
-                  <CardContent className="p-4">
-                    <div className="flex items-start gap-4">
-                      <div
-                        className={`h-10 w-10 rounded-full flex items-center justify-center shrink-0 ${actionColor}`}
-                      >
-                        <ActionIcon className="h-4.5 w-4.5" />
-                      </div>
+                  <Skeleton className="h-8 w-8 rounded-full shrink-0" />
+                  <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 6 }}>
+                    <Skeleton className="h-4 w-64" />
+                    <Skeleton className="h-3 w-40" />
+                  </div>
+                  <Skeleton className="h-3 w-16 shrink-0" />
+                </div>
+              ))
+            : logs.map((log, idx) => {
+                const actionStyle =
+                  ACTION_STYLES[log.action as keyof typeof ACTION_STYLES] ?? {
+                    bg: "rgba(100,116,139,0.1)",
+                    color: "var(--color-muted-foreground)",
+                    Icon: Activity,
+                  };
+                const { bg, color, Icon: ActionIcon } = actionStyle;
+                const EntityIcon =
+                  ENTITY_ICONS[log.entity as keyof typeof ENTITY_ICONS] ??
+                  Activity;
 
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 flex-wrap">
-                          <Avatar className="h-5 w-5">
-                            <AvatarFallback className="text-[9px] bg-primary/10 text-primary font-bold">
-                              {log.user.name.charAt(0)}
-                            </AvatarFallback>
-                          </Avatar>
-                          <span className="text-sm font-semibold">
-                            {log.user.name}
-                          </span>
-                          <span className="text-sm text-muted-foreground">
-                            {log.action.toLowerCase()}d a
-                          </span>
-                          <Badge variant="secondary" className="gap-1 text-xs">
-                            <EntityIcon className="h-3 w-3" />
-                            {log.entity}
-                          </Badge>
-                        </div>
+                return (
+                  <div
+                    key={log.id}
+                    style={{
+                      padding: "14px 20px",
+                      borderBottom:
+                        idx < logs.length - 1
+                          ? "1px solid var(--color-border)"
+                          : "none",
+                      display: "flex",
+                      alignItems: "flex-start",
+                      gap: 12,
+                    }}
+                  >
+                    {/* Action icon circle */}
+                    <div
+                      style={{
+                        width: 32,
+                        height: 32,
+                        borderRadius: "50%",
+                        background: bg,
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        flexShrink: 0,
+                      }}
+                    >
+                      <ActionIcon
+                        style={{ width: 14, height: 14, color }}
+                      />
+                    </div>
+
+                    {/* Content */}
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 8,
+                          flexWrap: "wrap",
+                        }}
+                      >
+                        <span
+                          style={{
+                            fontFamily: "'Sora', sans-serif",
+                            fontSize: 13,
+                            fontWeight: 500,
+                          }}
+                        >
+                          {log.action.charAt(0) +
+                            log.action.slice(1).toLowerCase()}
+                          d a
+                        </span>
+                        <span style={ENTITY_CHIP}>
+                          <EntityIcon style={{ width: 9, height: 9 }} />
+                          {log.entity}
+                        </span>
+                      </div>
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 6,
+                          marginTop: 3,
+                          flexWrap: "wrap",
+                        }}
+                      >
+                        <span
+                          style={{
+                            fontFamily: "'JetBrains Mono', monospace",
+                            fontSize: 11,
+                            color: "var(--color-muted-foreground)",
+                          }}
+                        >
+                          {log.user.name}
+                        </span>
                         {log.details && (
-                          <p className="text-sm text-muted-foreground mt-1 truncate">
-                            {log.details}
-                          </p>
+                          <span
+                            style={{
+                              fontFamily: "'Sora', sans-serif",
+                              fontSize: 11.5,
+                              color: "var(--color-muted-foreground)",
+                              overflow: "hidden",
+                              textOverflow: "ellipsis",
+                              whiteSpace: "nowrap",
+                              maxWidth: 280,
+                            }}
+                          >
+                            — {log.details}
+                          </span>
                         )}
                       </div>
-
-                      <span className="text-xs text-muted-foreground whitespace-nowrap shrink-0">
-                        {formatTime(log.createdAt)}
-                      </span>
                     </div>
-                  </CardContent>
-                </Card>
-              );
-            })}
+
+                    {/* Timestamp */}
+                    <span
+                      style={{
+                        fontFamily: "'JetBrains Mono', monospace",
+                        fontSize: 10,
+                        color: "var(--color-muted-foreground)",
+                        opacity: 0.45,
+                        whiteSpace: "nowrap",
+                        flexShrink: 0,
+                        marginTop: 2,
+                      }}
+                    >
+                      {formatTime(log.createdAt)}
+                    </span>
+                  </div>
+                );
+              })}
+        </div>
       </motion.div>
 
       {logs.length === 0 && !isLoading && (

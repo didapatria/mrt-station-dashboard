@@ -1,9 +1,7 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { motion } from "framer-motion";
-import { ArrowLeftRight } from "lucide-react";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { MapPin, Navigation, Hash, Calendar } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -11,9 +9,225 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Separator } from "@/components/ui/separator";
 import { useStations } from "@/hooks/use-stations";
 import { useSchedules } from "@/hooks/use-schedules";
+import type { Station } from "@/types";
+
+const statusLED = (status: string) => {
+  if (status === "ACTIVE")
+    return { color: "#22c55e", shadow: "0 0 6px 2px rgba(34,197,94,0.4)" };
+  if (status === "MAINTENANCE")
+    return { color: "#f59e0b", shadow: "0 0 6px 2px rgba(245,158,11,0.4)" };
+  return { color: "#ef4444", shadow: "0 0 6px 2px rgba(239,68,68,0.4)" };
+};
+
+const cardStyle: React.CSSProperties = {
+  background: "var(--color-card)",
+  border: "1px solid var(--color-border)",
+  borderRadius: 12,
+  overflow: "hidden",
+};
+
+const cardHeaderStyle: React.CSSProperties = {
+  padding: "18px 24px 14px",
+  borderBottom: "1px solid var(--color-border)",
+};
+
+interface StationCardProps {
+  station: Station | undefined;
+  scheduleCount: number;
+  otherScheduleCount: number;
+}
+
+function StationCard({ station, scheduleCount, otherScheduleCount }: StationCardProps) {
+  if (!station) {
+    return (
+      <div style={cardStyle}>
+        <div
+          style={{
+            padding: "60px 24px",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 12,
+          }}
+        >
+          <p
+            style={{
+              fontFamily: "'Bebas Neue', sans-serif",
+              fontSize: 18,
+              letterSpacing: "0.1em",
+              color: "var(--color-muted-foreground)",
+              margin: 0,
+            }}
+          >
+            SELECT A STATION
+          </p>
+          <p
+            style={{
+              fontFamily: "'JetBrains Mono', monospace",
+              fontSize: 10,
+              letterSpacing: "0.1em",
+              color: "var(--color-muted-foreground)",
+              margin: 0,
+              textTransform: "uppercase",
+            }}
+          >
+            Choose from the dropdown above
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  const led = statusLED(station.status);
+  const schedulesWin = scheduleCount >= otherScheduleCount;
+
+  const rows: { icon: React.ReactNode; label: string; value: React.ReactNode; highlight?: boolean }[] = [
+    {
+      icon: <Hash size={13} style={{ color: "var(--color-muted-foreground)" }} />,
+      label: "ORDER",
+      value: (
+        <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 14 }}>
+          {String(station.order).padStart(2, "0")}
+        </span>
+      ),
+    },
+    {
+      icon: <div style={{ width: 7, height: 7, borderRadius: "50%", background: led.color, boxShadow: led.shadow, flexShrink: 0 }} />,
+      label: "STATUS",
+      value: (
+        <span
+          style={{
+            fontFamily: "'JetBrains Mono', monospace",
+            fontSize: 11,
+            letterSpacing: "0.08em",
+          }}
+        >
+          {station.status}
+        </span>
+      ),
+    },
+    {
+      icon: <Calendar size={13} style={{ color: "var(--color-muted-foreground)" }} />,
+      label: "SCHEDULES",
+      value: (
+        <span
+          style={{
+            fontFamily: "'JetBrains Mono', monospace",
+            fontSize: 14,
+            color: schedulesWin ? "#22c55e" : "var(--color-foreground)",
+            fontWeight: schedulesWin ? 700 : 400,
+          }}
+        >
+          {scheduleCount}
+        </span>
+      ),
+      highlight: schedulesWin,
+    },
+    {
+      icon: <MapPin size={13} style={{ color: "var(--color-muted-foreground)" }} />,
+      label: "LOCATION",
+      value: (
+        <span style={{ fontFamily: "'Sora', sans-serif", fontSize: 12 }}>
+          {station.location}
+        </span>
+      ),
+    },
+    {
+      icon: <Navigation size={13} style={{ color: "var(--color-muted-foreground)" }} />,
+      label: "COORDINATES",
+      value: (
+        <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10 }}>
+          {station.latitude?.toFixed(4)}, {station.longitude?.toFixed(4)}
+        </span>
+      ),
+    },
+  ];
+
+  return (
+    <div style={cardStyle}>
+      <div style={cardHeaderStyle}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <span
+            style={{
+              background: "rgba(29,111,232,0.12)",
+              border: "1px solid rgba(29,111,232,0.2)",
+              borderRadius: 4,
+              padding: "3px 10px",
+              fontFamily: "'Bebas Neue', sans-serif",
+              fontSize: 14,
+              letterSpacing: "0.1em",
+              color: "#60a5fa",
+              display: "inline-block",
+            }}
+          >
+            {station.code}
+          </span>
+        </div>
+        <p
+          style={{
+            fontFamily: "'Bebas Neue', sans-serif",
+            fontSize: 20,
+            letterSpacing: "0.04em",
+            color: "var(--color-foreground)",
+            margin: "6px 0 0",
+            lineHeight: 1.1,
+          }}
+        >
+          {station.name}
+        </p>
+        <p
+          style={{
+            fontFamily: "'JetBrains Mono', monospace",
+            fontSize: 9.5,
+            letterSpacing: "0.14em",
+            color: "var(--color-muted-foreground)",
+            textTransform: "uppercase",
+            margin: "4px 0 0",
+          }}
+        >
+          {station.location}
+        </p>
+      </div>
+      <div style={{ padding: "16px 24px", display: "flex", flexDirection: "column", gap: 0 }}>
+        {rows.map((row, i) => (
+          <div
+            key={i}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 10,
+              padding: "12px 0",
+              borderBottom: i < rows.length - 1 ? "1px solid var(--color-border)" : "none",
+              background: row.highlight ? "rgba(34,197,94,0.04)" : "transparent",
+              borderRadius: row.highlight ? 4 : 0,
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: 6, width: 100, flexShrink: 0 }}>
+              {row.icon}
+              <span
+                style={{
+                  fontFamily: "'JetBrains Mono', monospace",
+                  fontSize: 9.5,
+                  letterSpacing: "0.14em",
+                  textTransform: "uppercase",
+                  color: "var(--color-muted-foreground)",
+                }}
+              >
+                {row.label}
+              </span>
+            </div>
+            <div style={{ flex: 1, color: "var(--color-foreground)" }}>
+              {row.value}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 export default function StationComparePage() {
   useTranslation();
@@ -33,82 +247,69 @@ export default function StationComparePage() {
 
   const left = stations.find((s) => s.id === leftId);
   const right = stations.find((s) => s.id === rightId);
-
-  const renderStation = (
-    station: typeof left,
-    schedules: typeof leftSchedules,
-  ) => {
-    if (!station)
-      return (
-        <div className="flex items-center justify-center h-40 text-muted-foreground">
-          Select a station
-        </div>
-      );
-    const count = schedules?.schedules?.length ?? 0;
-    return (
-      <div className="space-y-4">
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
-            gap: "0.75rem",
-          }}
-        >
-          <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center text-lg font-bold text-primary">
-            {station.code}
-          </div>
-          <div>
-            <p className="font-semibold">{station.name}</p>
-            <p className="text-xs text-muted-foreground">{station.location}</p>
-          </div>
-        </div>
-        <Separator />
-        <div className="grid grid-cols-2 gap-3 text-sm">
-          <div>
-            <p className="text-muted-foreground text-xs">Status</p>
-            <Badge
-              variant={station.status === "ACTIVE" ? "success" : "warning"}
-            >
-              {station.status}
-            </Badge>
-          </div>
-          <div>
-            <p className="text-muted-foreground text-xs">Order</p>
-            <p className="font-medium">{station.order}</p>
-          </div>
-          <div>
-            <p className="text-muted-foreground text-xs">Schedules</p>
-            <p className="font-medium">{count}</p>
-          </div>
-          <div>
-            <p className="text-muted-foreground text-xs">Coordinates</p>
-            <p className="font-mono text-xs">
-              {station.latitude?.toFixed(4)}, {station.longitude?.toFixed(4)}
-            </p>
-          </div>
-        </div>
-      </div>
-    );
-  };
+  const leftCount = leftSchedules?.schedules?.length ?? 0;
+  const rightCount = rightSchedules?.schedules?.length ?? 0;
 
   return (
     <div>
-      <div className="mb-6">
-        <h2 className="text-2xl font-bold tracking-tight">
-          Station Comparison
-        </h2>
-        <p className="text-muted-foreground">
-          Compare two stations side by side
+      {/* Page header */}
+      <div style={{ marginBottom: 28 }}>
+        <h1
+          style={{
+            fontFamily: "'Bebas Neue', sans-serif",
+            fontSize: 36,
+            letterSpacing: "0.04em",
+            lineHeight: 1,
+            color: "var(--color-foreground)",
+            margin: 0,
+          }}
+        >
+          STATION COMPARE
+        </h1>
+        <p
+          style={{
+            fontFamily: "'JetBrains Mono', monospace",
+            fontSize: 9.5,
+            letterSpacing: "0.14em",
+            color: "var(--color-muted-foreground)",
+            textTransform: "uppercase",
+            margin: "6px 0 0",
+          }}
+        >
+          Side-by-side station analysis
         </p>
       </div>
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-      >
-        <div className="grid gap-6 lg:grid-cols-[1fr_auto_1fr] items-start">
-          <Card>
-            <CardHeader>
+
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+        {/* Selector area */}
+        <div
+          style={{
+            ...cardStyle,
+            marginBottom: 24,
+            padding: "20px 24px",
+          }}
+        >
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1fr auto 1fr",
+              alignItems: "center",
+              gap: 16,
+            }}
+          >
+            <div>
+              <p
+                style={{
+                  fontFamily: "'JetBrains Mono', monospace",
+                  fontSize: 9.5,
+                  letterSpacing: "0.14em",
+                  textTransform: "uppercase",
+                  color: "var(--color-muted-foreground)",
+                  margin: "0 0 8px",
+                }}
+              >
+                Station A
+              </p>
               <Select value={leftId} onValueChange={setLeftId}>
                 <SelectTrigger>
                   <SelectValue placeholder="Select station" />
@@ -116,19 +317,41 @@ export default function StationComparePage() {
                 <SelectContent>
                   {stations.map((s) => (
                     <SelectItem key={s.id} value={s.id}>
-                      {s.code} - {s.name}
+                      {s.code} — {s.name}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
-            </CardHeader>
-            <CardContent>{renderStation(left, leftSchedules)}</CardContent>
-          </Card>
-          <div className="flex items-center justify-center pt-12">
-            <ArrowLeftRight className="h-6 w-6 text-muted-foreground" />
-          </div>
-          <Card>
-            <CardHeader>
+            </div>
+
+            <div style={{ textAlign: "center", padding: "0 8px", paddingTop: 20 }}>
+              <p
+                style={{
+                  fontFamily: "'Bebas Neue', sans-serif",
+                  fontSize: 28,
+                  letterSpacing: "0.08em",
+                  color: "var(--color-muted-foreground)",
+                  margin: 0,
+                  lineHeight: 1,
+                }}
+              >
+                VS
+              </p>
+            </div>
+
+            <div>
+              <p
+                style={{
+                  fontFamily: "'JetBrains Mono', monospace",
+                  fontSize: 9.5,
+                  letterSpacing: "0.14em",
+                  textTransform: "uppercase",
+                  color: "var(--color-muted-foreground)",
+                  margin: "0 0 8px",
+                }}
+              >
+                Station B
+              </p>
               <Select value={rightId} onValueChange={setRightId}>
                 <SelectTrigger>
                   <SelectValue placeholder="Select station" />
@@ -136,14 +359,25 @@ export default function StationComparePage() {
                 <SelectContent>
                   {stations.map((s) => (
                     <SelectItem key={s.id} value={s.id}>
-                      {s.code} - {s.name}
+                      {s.code} — {s.name}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
-            </CardHeader>
-            <CardContent>{renderStation(right, rightSchedules)}</CardContent>
-          </Card>
+            </div>
+          </div>
+        </div>
+
+        {/* Comparison cards */}
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr",
+            gap: 16,
+          }}
+        >
+          <StationCard station={left} scheduleCount={leftCount} otherScheduleCount={rightCount} />
+          <StationCard station={right} scheduleCount={rightCount} otherScheduleCount={leftCount} />
         </div>
       </motion.div>
     </div>

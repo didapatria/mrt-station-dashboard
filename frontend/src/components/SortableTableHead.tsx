@@ -24,7 +24,10 @@ export function SortableTableHead<T extends object>({
   const isActive = sortConfig.key === sortKey;
 
   return (
-    <TableHead className={cn("cursor-pointer select-none", className)} style={style}>
+    <TableHead
+      className={cn("cursor-pointer select-none", className)}
+      style={style}
+    >
       <button
         className="flex items-center gap-1.5 hover:text-foreground transition-colors -ml-1 px-1 py-0.5 rounded"
         onClick={() => onSort(sortKey)}

@@ -1,14 +1,6 @@
 import { Navigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ShieldCheck, Shield, Check, X } from "lucide-react";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import {
   Table,
@@ -23,6 +15,22 @@ import { useAllPermissions } from "@/hooks/use-permissions";
 import { useRole } from "@/hooks/use-role";
 
 const ROLES = ["ADMIN", "OPERATOR"];
+
+const ROLE_CONFIG: Record<
+  string,
+  { accentColor: string; bgColor: string; description: string }
+> = {
+  ADMIN: {
+    accentColor: "#3b82f6",
+    bgColor: "rgba(59,130,246,0.1)",
+    description: "Full access to all features and management",
+  },
+  OPERATOR: {
+    accentColor: "#10b981",
+    bgColor: "rgba(16,185,129,0.1)",
+    description: "Read-only access to operational data",
+  },
+};
 
 export default function AccessManagementPage() {
   const { isAdmin } = useRole();
@@ -41,163 +49,367 @@ export default function AccessManagementPage() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <p className="text-muted-foreground">Loading permissions...</p>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          height: 256,
+        }}
+      >
+        <p
+          style={{
+            fontFamily: "'JetBrains Mono', monospace",
+            fontSize: 11,
+            letterSpacing: "0.1em",
+            color: "var(--color-muted-foreground)",
+          }}
+        >
+          LOADING PERMISSIONS...
+        </p>
       </div>
     );
   }
 
   return (
     <div>
-      <div className="mb-6">
-        <h2 className="text-2xl font-bold tracking-tight">
-          User Access Management
-        </h2>
-        <p className="text-muted-foreground">
-          Role-based permissions and access control matrix
-        </p>
+      {/* Page Header */}
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: 4,
+          marginBottom: 28,
+        }}
+      >
+        <h1
+          style={{
+            fontFamily: "'Bebas Neue', sans-serif",
+            fontSize: 36,
+            letterSpacing: "0.04em",
+            lineHeight: 1,
+            margin: 0,
+          }}
+        >
+          ACCESS CONTROL
+        </h1>
+        <span
+          style={{
+            fontFamily: "'JetBrains Mono', monospace",
+            fontSize: 9.5,
+            letterSpacing: "0.14em",
+            textTransform: "uppercase",
+            color: "var(--color-muted-foreground)",
+          }}
+        >
+          RBAC · Permission Matrix
+        </span>
       </div>
 
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="space-y-6"
+        style={{ display: "flex", flexDirection: "column", gap: 24 }}
       >
         {/* Role Summary Cards */}
-        <div className="grid gap-4 md:grid-cols-2">
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+            gap: 16,
+          }}
+        >
           {ROLES.map((role) => {
             const rolePerms = getRolePermissions(role);
+            const cfg = ROLE_CONFIG[role];
             return (
-              <Card key={role}>
-                <CardHeader>
+              <div
+                key={role}
+                style={{
+                  background: "var(--color-card)",
+                  border: "1px solid var(--color-border)",
+                  borderRadius: 12,
+                  overflow: "hidden",
+                  borderLeft: `3px solid ${cfg.accentColor}`,
+                }}
+              >
+                {/* Card header */}
+                <div style={{ padding: "18px 20px 14px" }}>
                   <div
                     style={{
                       display: "flex",
                       flexDirection: "row",
                       alignItems: "center",
-                      gap: "0.75rem",
+                      gap: 12,
                     }}
                   >
-                    {role === "ADMIN" ? (
-                      <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                        <ShieldCheck className="h-5 w-5 text-primary" />
-                      </div>
-                    ) : (
-                      <div className="h-10 w-10 rounded-lg bg-muted flex items-center justify-center">
-                        <Shield className="h-5 w-5 text-muted-foreground" />
-                      </div>
-                    )}
+                    <div
+                      style={{
+                        width: 40,
+                        height: 40,
+                        borderRadius: 8,
+                        background: cfg.bgColor,
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        flexShrink: 0,
+                      }}
+                    >
+                      {role === "ADMIN" ? (
+                        <ShieldCheck
+                          style={{ width: 20, height: 20, color: cfg.accentColor }}
+                        />
+                      ) : (
+                        <Shield
+                          style={{ width: 20, height: 20, color: cfg.accentColor }}
+                        />
+                      )}
+                    </div>
                     <div>
-                      <CardTitle className="text-lg">{role}</CardTitle>
-                      <CardDescription>
-                        {role === "ADMIN"
-                          ? "Full access to all features and management"
-                          : "Read-only access to operational data"}
-                      </CardDescription>
+                      <p
+                        style={{
+                          fontFamily: "'Bebas Neue', sans-serif",
+                          fontSize: 18,
+                          letterSpacing: "0.06em",
+                          lineHeight: 1,
+                          margin: 0,
+                        }}
+                      >
+                        {role}
+                      </p>
+                      <p
+                        style={{
+                          fontFamily: "'Sora', sans-serif",
+                          fontSize: 12,
+                          color: "var(--color-muted-foreground)",
+                          margin: "3px 0 0",
+                        }}
+                      >
+                        {cfg.description}
+                      </p>
                     </div>
                   </div>
-                </CardHeader>
+                </div>
+
                 <Separator />
-                <CardContent className="pt-4">
-                  <div className="flex flex-wrap gap-1.5">
+
+                {/* Permissions list */}
+                <div style={{ padding: "14px 20px 18px" }}>
+                  <div
+                    style={{ display: "flex", flexWrap: "wrap", gap: 5 }}
+                  >
                     {rolePerms.map((perm) => (
-                      <Badge
+                      <span
                         key={perm}
-                        variant={role === "ADMIN" ? "default" : "secondary"}
-                        className="text-xs"
+                        style={{
+                          background: `${cfg.bgColor}`,
+                          border: `1px solid ${cfg.accentColor}30`,
+                          color: cfg.accentColor,
+                          fontFamily: "'JetBrains Mono', monospace",
+                          fontSize: 9,
+                          padding: "2px 7px",
+                          borderRadius: 3,
+                          letterSpacing: "0.08em",
+                          textTransform: "uppercase",
+                        }}
                       >
                         {PERMISSION_LABELS[perm] ?? perm}
-                      </Badge>
+                      </span>
                     ))}
                   </div>
-                  <p className="text-xs text-muted-foreground mt-3">
+                  <p
+                    style={{
+                      fontFamily: "'JetBrains Mono', monospace",
+                      fontSize: 10,
+                      color: "var(--color-muted-foreground)",
+                      marginTop: 10,
+                      opacity: 0.7,
+                    }}
+                  >
                     {rolePerms.length} permissions assigned
                   </p>
-                </CardContent>
-              </Card>
+                </div>
+              </div>
             );
           })}
         </div>
 
         {/* Permission Matrix */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Permission Matrix</CardTitle>
-            <CardDescription>
-              Detailed comparison of role permissions across all modules
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="p-0">
-            <div className="w-full overflow-x-auto">
-              <Table className="w-full table-fixed">
-                <colgroup>
-                  <col style={{ width: "22%" }} />
-                  <col style={{ width: "44%" }} />
-                  {ROLES.map((role) => (
-                    <col
-                      key={role}
-                      style={{ width: `${34 / ROLES.length}%` }}
-                    />
-                  ))}
-                </colgroup>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Module</TableHead>
-                    <TableHead>Permission</TableHead>
-                    {ROLES.map((role) => (
-                      <TableHead key={role} className="text-center">
+        <div
+          style={{
+            background: "var(--color-card)",
+            border: "1px solid var(--color-border)",
+            borderRadius: 12,
+            overflow: "hidden",
+          }}
+        >
+          {/* Card section header */}
+          <div
+            style={{
+              padding: "18px 24px 14px",
+              borderBottom: "1px solid var(--color-border)",
+              display: "flex",
+              alignItems: "baseline",
+              gap: 10,
+            }}
+          >
+            <span
+              style={{
+                fontFamily: "'Bebas Neue', sans-serif",
+                fontSize: 20,
+                letterSpacing: "0.05em",
+                lineHeight: 1,
+              }}
+            >
+              PERMISSION MATRIX
+            </span>
+            <span
+              style={{
+                fontFamily: "'JetBrains Mono', monospace",
+                fontSize: 9.5,
+                letterSpacing: "0.14em",
+                textTransform: "uppercase",
+                color: "var(--color-muted-foreground)",
+              }}
+            >
+              Detailed comparison across modules
+            </span>
+          </div>
+
+          <div style={{ width: "100%", overflowX: "auto" }}>
+            <Table style={{ width: "100%", tableLayout: "fixed" }}>
+              <colgroup>
+                <col style={{ width: "22%" }} />
+                <col style={{ width: "44%" }} />
+                {ROLES.map((role) => (
+                  <col
+                    key={role}
+                    style={{ width: `${34 / ROLES.length}%` }}
+                  />
+                ))}
+              </colgroup>
+              <TableHeader>
+                <TableRow style={{ background: "rgba(0,0,0,0.02)" }}>
+                  <TableHead
+                    style={{
+                      fontFamily: "'JetBrains Mono', monospace",
+                      fontSize: 9.5,
+                      letterSpacing: "0.14em",
+                      textTransform: "uppercase",
+                      color: "var(--color-muted-foreground)",
+                    }}
+                  >
+                    Module
+                  </TableHead>
+                  <TableHead
+                    style={{
+                      fontFamily: "'JetBrains Mono', monospace",
+                      fontSize: 9.5,
+                      letterSpacing: "0.14em",
+                      textTransform: "uppercase",
+                      color: "var(--color-muted-foreground)",
+                    }}
+                  >
+                    Permission
+                  </TableHead>
+                  {ROLES.map((role) => {
+                    const cfg = ROLE_CONFIG[role];
+                    return (
+                      <TableHead
+                        key={role}
+                        style={{
+                          textAlign: "center",
+                          fontFamily: "'JetBrains Mono', monospace",
+                          fontSize: 9.5,
+                          letterSpacing: "0.14em",
+                          textTransform: "uppercase",
+                          color: cfg.accentColor,
+                        }}
+                      >
                         <div
                           style={{
                             display: "flex",
                             flexDirection: "row",
                             alignItems: "center",
                             justifyContent: "center",
-                            gap: "0.375rem",
+                            gap: 6,
                           }}
                         >
                           {role === "ADMIN" ? (
-                            <ShieldCheck className="h-3.5 w-3.5" />
+                            <ShieldCheck style={{ width: 12, height: 12 }} />
                           ) : (
-                            <Shield className="h-3.5 w-3.5" />
+                            <Shield style={{ width: 12, height: 12 }} />
                           )}
                           {role}
                         </div>
                       </TableHead>
-                    ))}
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {PERMISSION_GROUPS.map((group) =>
-                    group.permissions.map((perm, idx) => (
-                      <TableRow key={perm}>
-                        {idx === 0 && (
-                          <TableCell
-                            rowSpan={group.permissions.length}
-                            className="font-medium align-top border-r bg-muted/30"
-                          >
-                            {group.group}
-                          </TableCell>
-                        )}
-                        <TableCell className="text-sm">
-                          {PERMISSION_LABELS[perm] ?? perm}
+                    );
+                  })}
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {PERMISSION_GROUPS.map((group) =>
+                  group.permissions.map((perm, idx) => (
+                    <TableRow key={perm}>
+                      {idx === 0 && (
+                        <TableCell
+                          rowSpan={group.permissions.length}
+                          style={{
+                            fontFamily: "'JetBrains Mono', monospace",
+                            fontSize: 10,
+                            letterSpacing: "0.08em",
+                            textTransform: "uppercase",
+                            verticalAlign: "top",
+                            borderRight: "1px solid var(--color-border)",
+                            background: "rgba(0,0,0,0.015)",
+                            color: "var(--color-muted-foreground)",
+                          }}
+                        >
+                          {group.group}
                         </TableCell>
-                        {ROLES.map((role) => (
-                          <TableCell key={role} className="text-center">
-                            {hasRole(role, perm) ? (
-                              <Check className="h-4 w-4 text-success mx-auto" />
-                            ) : (
-                              <X className="h-4 w-4 text-muted-foreground/40 mx-auto" />
-                            )}
-                          </TableCell>
-                        ))}
-                      </TableRow>
-                    )),
-                  )}
-                </TableBody>
-              </Table>
-            </div>
-          </CardContent>
-        </Card>
+                      )}
+                      <TableCell
+                        style={{
+                          fontFamily: "'JetBrains Mono', monospace",
+                          fontSize: 11,
+                        }}
+                      >
+                        {PERMISSION_LABELS[perm] ?? perm}
+                      </TableCell>
+                      {ROLES.map((role) => (
+                        <TableCell
+                          key={role}
+                          style={{ textAlign: "center" }}
+                        >
+                          {hasRole(role, perm) ? (
+                            <Check
+                              style={{
+                                width: 15,
+                                height: 15,
+                                color: "#22c55e",
+                                margin: "0 auto",
+                              }}
+                            />
+                          ) : (
+                            <X
+                              style={{
+                                width: 15,
+                                height: 15,
+                                color: "#ef4444",
+                                opacity: 0.35,
+                                margin: "0 auto",
+                              }}
+                            />
+                          )}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  )),
+                )}
+              </TableBody>
+            </Table>
+          </div>
+        </div>
       </motion.div>
     </div>
   );
