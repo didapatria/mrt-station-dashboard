@@ -48,6 +48,7 @@ import { useSchedules } from "@/hooks/use-schedules";
 import { useDashboardStats, useSchedulesByHour } from "@/hooks/use-dashboard";
 import { dashboardService } from "@/services/dashboard.service";
 import { useAuthStore } from "@/store/auth.store";
+import { useThemeStore } from "@/store/theme.store";
 import { exportDashboardPDF } from "@/lib/export-pdf";
 
 const container = {
@@ -66,6 +67,8 @@ const item = {
 export default function DashboardPage() {
   const { t } = useTranslation();
   const user = useAuthStore((s) => s.user);
+  const { theme } = useThemeStore();
+  const isDark = theme === "dark";
   const { data: stationsData } = useStations({ limit: 100 });
   const { data: schedulesData } = useSchedules({ limit: 10 });
   const { data: stats, isLoading: statsLoading } = useDashboardStats();
@@ -153,24 +156,30 @@ export default function DashboardPage() {
       <div
         className="mb-6 rounded-xl overflow-hidden relative"
         style={{
-          background: "linear-gradient(135deg, #0a1628 0%, #0d2248 40%, #0a1a3a 100%)",
-          boxShadow: "0 4px 24px rgba(10, 22, 40, 0.3)",
+          background: isDark
+            ? "linear-gradient(135deg, #0a1628 0%, #0d2248 40%, #0a1a3a 100%)"
+            : "linear-gradient(135deg, #1e3a8a 0%, #1d4ed8 45%, #2563eb 100%)",
+          boxShadow: isDark
+            ? "0 4px 24px rgba(10, 22, 40, 0.4)"
+            : "0 4px 20px rgba(29, 78, 216, 0.25)",
         }}
       >
         {/* Grid texture */}
         <div
-          className="absolute inset-0 opacity-[0.05]"
+          className="absolute inset-0"
           style={{
             backgroundImage:
-              "linear-gradient(#60a5fa 1px, transparent 1px), linear-gradient(90deg, #60a5fa 1px, transparent 1px)",
+              "linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.06) 1px, transparent 1px)",
             backgroundSize: "32px 32px",
           }}
         />
         {/* Glowing accent */}
         <div
-          className="absolute right-0 top-0 w-64 h-full opacity-15 pointer-events-none"
+          className="absolute right-0 top-0 w-64 h-full pointer-events-none"
           style={{
-            background: "radial-gradient(ellipse at right center, #3b82f6 0%, transparent 70%)",
+            background: isDark
+              ? "radial-gradient(ellipse at right center, rgba(59,130,246,0.18) 0%, transparent 70%)"
+              : "radial-gradient(ellipse at right center, rgba(255,255,255,0.15) 0%, transparent 70%)",
           }}
         />
         <div className="relative p-6" style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
@@ -180,7 +189,7 @@ export default function DashboardPage() {
                 fontFamily: "'JetBrains Mono', monospace",
                 fontSize: 10,
                 letterSpacing: "0.12em",
-                color: "rgba(96, 165, 250, 0.7)",
+                color: "rgba(186, 230, 253, 0.8)",
                 textTransform: "uppercase",
                 marginBottom: 4,
               }}
@@ -193,7 +202,7 @@ export default function DashboardPage() {
             >
               {greeting.toUpperCase()}, {user?.name?.split(" ")[0]?.toUpperCase()}
             </h2>
-            <p style={{ color: "rgba(148, 163, 184, 0.7)", fontSize: 13, marginTop: 4 }}>
+            <p style={{ color: "rgba(219, 234, 254, 0.75)", fontSize: 13, marginTop: 4 }}>
               {t("dashboard.subtitle")}
             </p>
           </div>
@@ -206,18 +215,18 @@ export default function DashboardPage() {
                 >
                   {stats.totalStations}
                 </p>
-                <p style={{ fontSize: 10, color: "rgba(148, 163, 184, 0.6)", letterSpacing: "0.08em", textTransform: "uppercase", marginTop: 2 }}>
+                <p style={{ fontSize: 10, color: "rgba(219, 234, 254, 0.65)", letterSpacing: "0.08em", textTransform: "uppercase", marginTop: 2 }}>
                   {t("dashboard.totalStations")}
                 </p>
               </div>
               <div>
                 <p
                   className="font-display"
-                  style={{ fontSize: 36, color: "#60a5fa", lineHeight: 1 }}
+                  style={{ fontSize: 36, color: isDark ? "#60a5fa" : "#bfdbfe", lineHeight: 1 }}
                 >
                   {stats.activeSchedules}
                 </p>
-                <p style={{ fontSize: 10, color: "rgba(148, 163, 184, 0.6)", letterSpacing: "0.08em", textTransform: "uppercase", marginTop: 2 }}>
+                <p style={{ fontSize: 10, color: "rgba(219, 234, 254, 0.65)", letterSpacing: "0.08em", textTransform: "uppercase", marginTop: 2 }}>
                   {t("dashboard.activeSchedules")}
                 </p>
               </div>

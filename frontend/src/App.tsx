@@ -5,6 +5,7 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { useAuthStore } from "@/store/auth.store";
 import { useThemeStore } from "@/store/theme.store";
+import { permissionService } from "@/services/permission.service";
 import { Toaster } from "@/components/ui/toaster";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -53,13 +54,25 @@ function PageLoader() {
 }
 
 function App() {
-  const { initFromStorage } = useAuthStore();
+  const { initFromStorage, token, permissions, setPermissions } = useAuthStore();
   const { initTheme } = useThemeStore();
 
   useEffect(() => {
     initFromStorage();
     initTheme();
   }, [initFromStorage, initTheme]);
+
+  // Fetch permissions from API when user is logged in but permissions not yet in localStorage
+  useEffect(() => {
+    if (token && permissions.length === 0) {
+      permissionService.getMyPermissions().then((perms) => {
+        if (perms.length > 0) {
+          setPermissions(perms);
+          localStorage.setItem("permissions", JSON.stringify(perms));
+        }
+      }).catch(() => {});
+    }
+  }, [token, permissions.length, setPermissions]);
 
   return (
     <ErrorBoundary>

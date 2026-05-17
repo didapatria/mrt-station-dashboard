@@ -95,9 +95,9 @@ export default function AccessManagementPage() {
             <CardTitle>Permission Matrix</CardTitle>
             <CardDescription>Detailed comparison of role permissions across all modules</CardDescription>
           </CardHeader>
-          <CardContent>
-            <div className="rounded-md border overflow-x-auto">
-              <Table>
+          <CardContent className="p-0">
+            <div className="w-full overflow-x-auto">
+              <Table className="w-full">
                 <TableHeader>
                   <TableRow>
                     <TableHead className="w-48">Module</TableHead>

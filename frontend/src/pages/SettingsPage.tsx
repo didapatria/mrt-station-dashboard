@@ -80,9 +80,12 @@ export default function SettingsPage() {
           </CardHeader>
           <Separator />
           <CardContent className="pt-6 space-y-2 text-sm">
-            <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}><span className="text-muted-foreground">Version</span><span className="font-mono">2.1.0</span></div>
-            <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}><span className="text-muted-foreground">Stack</span><span>React 19 + Express.js 5</span></div>
-            <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}><span className="text-muted-foreground">Database</span><span>PostgreSQL + Prisma</span></div>
+            <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}><span className="text-muted-foreground">Version</span><span className="font-mono font-semibold">2.10.0</span></div>
+            <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}><span className="text-muted-foreground">Frontend</span><span>React 19 + Vite 8 + Tailwind 4</span></div>
+            <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}><span className="text-muted-foreground">Backend</span><span>Express.js 5 + TypeScript</span></div>
+            <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}><span className="text-muted-foreground">Database</span><span>PostgreSQL + Prisma ORM</span></div>
+            <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}><span className="text-muted-foreground">Auth</span><span>JWT + Google OAuth</span></div>
+            <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}><span className="text-muted-foreground">E2E Tests</span><span>93 Playwright tests</span></div>
           </CardContent>
         </Card>
       </motion.div>
