@@ -11,9 +11,7 @@ test.describe("Login Page", () => {
     await expect(page.locator("text=Sign In").first()).toBeVisible();
     await expect(page.locator("#email")).toBeVisible();
     await expect(page.locator("#password")).toBeVisible();
-    await expect(
-      page.getByRole("button", { name: /sign in/i })
-    ).toBeVisible();
+    await expect(page.locator("button[type='submit']").first()).toBeVisible();
   });
 
   test("should show validation errors on empty submit", async ({ page }) => {
@@ -115,6 +113,6 @@ test.describe("Auth Guard", () => {
 test.describe("404 Page", () => {
   test("should show 404 for unknown routes", async ({ page }) => {
     await page.goto("/nonexistent-page");
-    await expect(page.locator("text=404")).toBeVisible();
+    await expect(page.locator("text=404").first()).toBeVisible();
   });
 });

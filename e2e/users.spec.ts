@@ -32,7 +32,7 @@ test.describe("Access Management Page", () => {
   test("should display permission matrix for admin", async ({ adminPage: page }) => {
     await navigateTo(page, "/access");
 
-    await expect(page.locator("text=/User Access Management/i").first()).toBeVisible();
+    await expect(page.locator("text=/ACCESS CONTROL/i").first()).toBeVisible();
     await expect(page.locator("text=/Permission Matrix/i").first()).toBeVisible();
 
     // Should show both roles

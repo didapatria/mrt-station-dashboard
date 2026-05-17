@@ -172,7 +172,7 @@ test.describe("Mobile — Auth", () => {
 
     await emailInput.fill("admin@mrtjakarta.co.id");
     await page.locator("input[type='password']").first().fill("admin123");
-    await page.getByRole("button", { name: /login|sign in/i }).tap();
+    await page.locator("button[type='submit']").first().tap();
     await page.waitForTimeout(3000);
 
     await expect(page).toHaveURL(/dashboard/, { timeout: 10000 });

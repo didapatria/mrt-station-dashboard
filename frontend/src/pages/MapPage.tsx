@@ -150,7 +150,7 @@ export default function MapPage() {
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "1fr 320px",
+          gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
           gap: 20,
           alignItems: "start",
         }}

@@ -1,6 +1,16 @@
 # MRT Jakarta - Station Management Dashboard
 
 <p align="left">
+  <a href="https://github.com/didapatria/mrt-station-dashboard/actions/workflows/ci.yml">
+    <img src="https://github.com/didapatria/mrt-station-dashboard/actions/workflows/ci.yml/badge.svg" alt="CI" />
+  </a>
+  <a href="https://didapatria.github.io/mrt-station-dashboard/">
+    <img src="https://img.shields.io/badge/E2E%20Report-GitHub%20Pages-0969da?logo=github&logoColor=white" alt="E2E Report" />
+  </a>
+  <img src="https://img.shields.io/badge/version-2.12.0-blue" />
+</p>
+
+<p align="left">
   <img src="https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=white" />
   <img src="https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white" />
   <img src="https://img.shields.io/badge/Node.js-339933?logo=node.js&logoColor=white" />
@@ -8,9 +18,10 @@
   <img src="https://img.shields.io/badge/PostgreSQL-4169E1?logo=postgresql&logoColor=white" />
   <img src="https://img.shields.io/badge/Prisma-2D3748?logo=prisma&logoColor=white" />
   <img src="https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=white" />
+  <img src="https://img.shields.io/badge/Playwright-45ba4b?logo=playwright&logoColor=white" />
 </p>
 
-Full-stack web application for managing MRT Jakarta stations and train schedules. Built with modern web technologies focusing on clean architecture, type safety, and great developer experience.
+Full-stack web application for managing MRT Jakarta stations and train schedules. Built with modern web technologies focusing on clean architecture, type safety, and great developer experience. Features a cohesive **Operations Terminal** design system — Bebas Neue display type, JetBrains Mono data labels, LED status indicators, and an editorial card layout.
 
 ## Live Deployment
 
@@ -23,20 +34,20 @@ Full-stack web application for managing MRT Jakarta stations and train schedules
 
 ## Highlights
 
-- 🚉 Full-stack enterprise dashboard application
-- 🔐 JWT Authentication + Google OAuth
-- 🗺 Interactive map with Leaflet
-- 🧪 Unit + E2E testing with Vitest & Playwright
-- 📦 Dockerized development environment
-- 🌐 Internationalization (EN/ID)
-- 📱 Responsive + PWA support
+- 🚉 Full-stack enterprise dashboard — 14 pages, 40+ features, 120+ commits
+- 🎨 **Operations Terminal** design system — Bebas Neue + JetBrains Mono + Sora, LED status dots, editorial cards
+- 🔐 JWT Authentication + Google OAuth + Spatie-style 5-table RBAC
+- 🗺 Interactive map with Leaflet (station markers + location picker)
+- 🧪 106 E2E Playwright tests — screenshots on every test, report on [GitHub Pages](https://didapatria.github.io/mrt-station-dashboard/)
+- 📦 Dockerized with GitHub Actions CI/CD (lint, typecheck, unit, E2E, deploy)
+- 🌐 Internationalization (EN/ID) + PWA + Real-time SSE notifications
 
 ## Tech Stack
 
 ### Frontend
 - **React 19** + TypeScript (Vite 8)
 - **Tailwind CSS** + **Shadcn UI** - Styling & UI components
-- **Sora** + **Bebas Neue** + **JetBrains Mono** - Custom font system
+- **Sora** + **Bebas Neue** + **JetBrains Mono** - Operations Terminal design system
 - **Zustand** - Client state management
 - **TanStack Query** - Server state management
 - **React Hook Form** + **Zod** - Form handling & validation
@@ -148,7 +159,7 @@ React Page → TanStack Query Hook → API Service (axios) → Express Route →
 - **Role-Based Access Control** - Spatie-style 5-table RBAC (`roles`, `permissions`, `model_has_roles`, `model_has_permissions`, `role_has_permissions`), `GET /api/permissions/me` returns user permissions on login, stored in Zustand, no hardcoded frontend config
 - **CI/CD** - GitHub Actions pipeline with lint, type check, test, and build
 - **Unit Testing** - Vitest + React Testing Library + Supertest
-- **E2E Testing** - Playwright (93 tests across 19 spec files, including mobile viewport and UI design checks)
+- **E2E Testing** - Playwright (106 tests across 20 spec files, including mobile viewport, UI design, and full-page UI screenshot capture)
 - **Real-time Notifications** - Server-Sent Events with notification center
 - **i18n** - English and Indonesian language support
 - **Route Planner** - Find schedules between stations
@@ -283,6 +294,12 @@ Operator: operator@mrtjakarta.co.id / operator123
 | `/api/docs` | Swagger UI (interactive API docs) |
 | `/api/docs.json` | OpenAPI JSON spec |
 
+## UI Screenshots
+
+Every Playwright test captures a screenshot (`screenshot: "on"`). After each CI run, the full HTML report — including all screenshots for every passing and failing test — is automatically deployed to **[GitHub Pages](https://didapatria.github.io/mrt-station-dashboard/)**.
+
+Browse the report to see live UI screenshots of every page in the application.
+
 ## E2E Testing (Playwright)
 
 ### Prerequisites
@@ -319,7 +336,7 @@ npx playwright test --debug
 npm run e2e:report
 ```
 
-### Test Coverage (93 tests)
+### Test Coverage (106 tests)
 | Spec File | Tests | What's Tested |
 |-----------|-------|---------------|
 | `auth.spec.ts` | 13 | Login, register, Google OAuth, validation, auth guard, 404 |
@@ -340,9 +357,10 @@ npm run e2e:report
 | `ux-auth.spec.ts` | 4 | Password toggle, tab order, validation UX |
 | `ux.spec.ts` | 8 | Forms, breadcrumbs, empty states, sidebar |
 | `mobile.spec.ts` | 15 | Viewport overflow, sidebar toggle, nav, auth, map, profile, changelog — Pixel 7 |
-| `ux-design.spec.ts` | 6 | Auth panel branding, rail line SVG, mobile hidden check, dashboard banner, stat cards (admin-tests only) |
+| `ux-design.spec.ts` | 6 | Auth panel branding, rail line SVG, mobile hidden check, dashboard banner, stat cards |
+| `ui-screenshots.spec.ts` | 13 | Full-page UI screenshots of all 13 pages (Dashboard→404) — appear in GitHub Pages report |
 
-> **UI Screenshots**: Every test captures a screenshot (`screenshot: "on"`). After CI passes, the full HTML report with all screenshots is deployed to **[GitHub Pages](https://didapatria.github.io/mrt-station-dashboard/)** — browse passing tests to see live UI screenshots for each page.
+> **UI Screenshots**: Every test captures a screenshot (`screenshot: "on"`). `ui-screenshots.spec.ts` additionally saves full-page PNGs to `playwright-report/screenshots/`. After CI passes, the full HTML report with all screenshots is deployed to **[GitHub Pages](https://didapatria.github.io/mrt-station-dashboard/)**.
 
 ## Database Schema
 
@@ -432,7 +450,7 @@ Or connect GitHub repo in [vercel.com](https://vercel.com) dashboard:
 GitHub Actions runs on every push to `main`:
 - Frontend: lint, type check, unit tests (Vitest + RTL), build
 - Backend: unit tests (Supertest), build
-- E2E: Playwright (93 tests across 19 spec files, `screenshot: "on"` for all tests) against local services + postgres — report with UI screenshots deployed to **[GitHub Pages](https://didapatria.github.io/mrt-station-dashboard/)**
+- E2E: Playwright (106 tests across 20 spec files, `screenshot: "on"` + `video: "retain-on-failure"`) against local services + postgres — HTML report with screenshots deployed to **[GitHub Pages](https://didapatria.github.io/mrt-station-dashboard/)**
 - Docker: `docker compose build` validation
 
 ## License

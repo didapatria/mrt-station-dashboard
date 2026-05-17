@@ -3,6 +3,38 @@ import { GitCommit } from "lucide-react";
 
 const changelog = [
   {
+    version: "2.12.0",
+    date: "18 May 2026",
+    commits: [
+      "f32f1db",
+      "7835b47",
+      "40c87f1",
+      "31bfc13",
+      "21f754c",
+      "8ff2062",
+      "2d0a7c7",
+      "4d1344a",
+      "186c6f4",
+      "d6e28ee",
+      "76b22e6",
+      "0986185",
+    ],
+    items: [
+      "APEX SIGNAL design elevation — top accent gradient lines on all cards, horizontal fade lines on page headers, animated pulse on ACTIVE status LEDs, sidebar dot-grid texture",
+      "Operations Terminal design system across all 13 dashboard pages — Bebas Neue section headers, JetBrains Mono data labels, LED status dots with glow, card containers",
+      "Station Register aesthetic — code plate badges with glow, order circle badges (terminal stations 24px+glow), AnimatePresence floating bulk action bar",
+      "Control Terminal auth redesign — dark left panel with MRT route diagram, live clock with blinking colons, scanline overlay, corner bracket decorations",
+      "MERIDIAN dashboard redesign — dot-matrix + diagonal stripe welcome banner, pulsing stat accent bars, ghost icons, real-time Operations Center label",
+      "DashboardLayout — sidebar dot-grid texture overlay, SYS ONLINE footer strip with version, gradient logo border, 0.25s snappy page transitions",
+      "ThemeToggle split — desktop from AuthLayout, mobile from LoginPage/RegisterPage header row (no duplicate)",
+      "LanguageToggle desktop fix — invalid xs: breakpoint replaced with sm:",
+      "Auth store sync init — synchronous localStorage read prevents login redirect flash",
+      "/access route guard — non-admin redirects to /dashboard before render",
+      "React Compiler warnings resolved — useWatch() replacing watch(), if/else for void ternary",
+      "Prettier formatting applied across 54 frontend files",
+    ],
+  },
+  {
     version: "2.11.0",
     date: "17 May 2026",
     commits: ["09df222", "387cba4", "fc17cc7"],

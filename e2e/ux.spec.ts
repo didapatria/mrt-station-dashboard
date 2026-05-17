@@ -64,7 +64,7 @@ test.describe("UX: Navigation", () => {
     await navigateTo(page, "/stations");
     const stationsLink = page.locator("a[href='/stations']").first();
     const classes = await stationsLink.getAttribute("class");
-    expect(classes).toMatch(/bg-primary|bg-muted|active|font-medium/);
+    expect(classes).toMatch(/bg-primary|bg-muted|active|font-medium|font-semibold/);
   });
 
   test("breadcrumb should show current page", async ({ adminPage: page }) => {
