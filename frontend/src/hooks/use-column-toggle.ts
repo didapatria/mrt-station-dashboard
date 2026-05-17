@@ -6,7 +6,7 @@ export function useColumnToggle(defaultColumns: string[]) {
   const toggle = (col: string) => {
     setVisible((prev) => {
       const next = new Set(prev);
-      next.has(col) ? next.delete(col) : next.add(col);
+      if (next.has(col)) { next.delete(col); } else { next.add(col); }
       return next;
     });
   };

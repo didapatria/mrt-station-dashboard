@@ -7,7 +7,7 @@ describe("cn utility", () => {
   });
 
   it("should handle conditional classes", () => {
-    expect(cn("base", false && "hidden", "visible")).toBe("base visible");
+    expect(cn("base", (false as boolean) && "hidden", "visible")).toBe("base visible");
   });
 
   it("should handle undefined and null", () => {
@@ -21,7 +21,7 @@ describe("cn utility", () => {
   it("should merge tailwind with conditionals", () => {
     const isActive = true;
     expect(cn("text-sm", isActive && "text-primary")).toBe(
-      "text-sm text-primary"
+      "text-sm text-primary",
     );
   });
 });

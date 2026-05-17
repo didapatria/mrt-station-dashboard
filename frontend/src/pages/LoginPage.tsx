@@ -9,7 +9,13 @@ import { useLogin, useGoogleLogin } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Train, Eye, EyeOff } from "lucide-react";
 
@@ -27,29 +33,48 @@ export default function LoginPage() {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
 
-  const { register, handleSubmit, formState: { errors } } = useForm<LoginFormData>({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
   });
 
   const onSubmit = async (data: LoginFormData) => {
     try {
-      await loginMutation.mutateAsync({ email: data.email, password: data.password });
+      await loginMutation.mutateAsync({
+        email: data.email,
+        password: data.password,
+      });
       navigate("/dashboard");
-    } catch { /* handled by mutation */ }
+    } catch {
+      /* handled by mutation */
+    }
   };
 
-  const handleGoogleSuccess = async (credentialResponse: { credential?: string }) => {
+  const handleGoogleSuccess = async (credentialResponse: {
+    credential?: string;
+  }) => {
     if (!credentialResponse.credential) return;
     try {
       await googleLoginMutation.mutateAsync(credentialResponse.credential);
       navigate("/dashboard");
-    } catch { /* handled by mutation */ }
+    } catch {
+      /* handled by mutation */
+    }
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const errorMessage = loginMutation.error ? (loginMutation.error as any)?.response?.data?.error || loginMutation.error.message : null;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const googleError = googleLoginMutation.error ? (googleLoginMutation.error as any)?.response?.data?.error || googleLoginMutation.error.message : null;
+  type ApiError = { response?: { data?: { error?: string } } };
+  const errorMessage = loginMutation.error
+    ? (loginMutation.error as ApiError)?.response?.data?.error ||
+      loginMutation.error.message
+    : null;
+
+  const googleError = googleLoginMutation.error
+    ? (googleLoginMutation.error as ApiError)?.response?.data?.error ||
+      googleLoginMutation.error.message
+    : null;
 
   return (
     <>
@@ -64,31 +89,88 @@ export default function LoginPage() {
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            {errorMessage && <div className="bg-destructive/10 text-destructive text-sm p-3 rounded-md" onClick={() => loginMutation.reset()}>{errorMessage}</div>}
-            {googleError && <div className="bg-destructive/10 text-destructive text-sm p-3 rounded-md" onClick={() => googleLoginMutation.reset()}>{googleError}</div>}
+            {errorMessage && (
+              <div
+                className="bg-destructive/10 text-destructive text-sm p-3 rounded-md"
+                onClick={() => loginMutation.reset()}
+              >
+                {errorMessage}
+              </div>
+            )}
+            {googleError && (
+              <div
+                className="bg-destructive/10 text-destructive text-sm p-3 rounded-md"
+                onClick={() => googleLoginMutation.reset()}
+              >
+                {googleError}
+              </div>
+            )}
             <div className="space-y-2">
               <Label htmlFor="email">{t("auth.email")}</Label>
-              <Input id="email" type="email" placeholder="admin@mrtjakarta.co.id" {...register("email")} />
-              {errors.email && <p className="text-sm text-destructive">{errors.email.message}</p>}
+              <Input
+                id="email"
+                type="email"
+                placeholder="admin@mrtjakarta.co.id"
+                {...register("email")}
+              />
+              {errors.email && (
+                <p className="text-sm text-destructive">
+                  {errors.email.message}
+                </p>
+              )}
             </div>
             <div className="space-y-2">
               <Label htmlFor="password">{t("auth.password")}</Label>
               <div className="relative">
-                <Input id="password" type={showPassword ? "text" : "password"} placeholder="Enter your password" {...register("password")} />
-                <Button type="button" variant="ghost" size="icon" className="absolute right-0 top-0 h-full w-10" tabIndex={-1} onClick={() => setShowPassword(!showPassword)}>
-                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                <Input
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Enter your password"
+                  {...register("password")}
+                />
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  className="absolute right-0 top-0 h-full w-10"
+                  tabIndex={-1}
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? (
+                    <EyeOff className="h-4 w-4" />
+                  ) : (
+                    <Eye className="h-4 w-4" />
+                  )}
                 </Button>
               </div>
-              {errors.password && <p className="text-sm text-destructive">{errors.password.message}</p>}
+              {errors.password && (
+                <p className="text-sm text-destructive">
+                  {errors.password.message}
+                </p>
+              )}
             </div>
-            <Button type="submit" className="w-full" disabled={loginMutation.isPending}>
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={loginMutation.isPending}
+            >
               {loginMutation.isPending ? t("auth.signingIn") : t("auth.signIn")}
             </Button>
           </form>
 
-          <div className="my-4" style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "0.75rem" }}>
+          <div
+            className="my-4"
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              gap: "0.75rem",
+            }}
+          >
             <Separator className="flex-1" />
-            <span className="text-xs text-muted-foreground uppercase">{t("auth.orContinueWith")}</span>
+            <span className="text-xs text-muted-foreground uppercase">
+              {t("auth.orContinueWith")}
+            </span>
             <Separator className="flex-1" />
           </div>
 
@@ -104,7 +186,9 @@ export default function LoginPage() {
 
           <p className="text-center text-sm text-muted-foreground mt-4">
             {t("auth.noAccount")}{" "}
-            <Link to="/register" className="text-primary hover:underline">{t("auth.signUp")}</Link>
+            <Link to="/register" className="text-primary hover:underline">
+              {t("auth.signUp")}
+            </Link>
           </p>
         </CardContent>
       </Card>

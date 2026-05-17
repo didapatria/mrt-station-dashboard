@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useSearchParams, Link } from "react-router-dom";
-import { useForm, type Resolver } from "react-hook-form";
+import { useForm, useWatch, type Resolver } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { motion } from "framer-motion";
@@ -104,7 +104,13 @@ export default function StationsPage() {
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [bulkDeleteOpen, setBulkDeleteOpen] = useState(false);
   const [csvImportOpen, setCsvImportOpen] = useState(false);
-  const columns = useColumnToggle(["order", "name", "location", "coordinates", "status"]);
+  const columns = useColumnToggle([
+    "order",
+    "name",
+    "location",
+    "coordinates",
+    "status",
+  ]);
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
 
   const debouncedSearch = useDebounce(search, 300);
@@ -156,12 +162,14 @@ export default function StationsPage() {
     handleSubmit,
     reset,
     setValue,
-    watch,
+    control,
     formState: { errors },
   } = useForm<StationFormData>({
     resolver: zodResolver(stationSchema) as Resolver<StationFormData>,
     defaultValues: { status: "ACTIVE", order: 1 },
   });
+  const watchedLatitude = useWatch({ control, name: "latitude" });
+  const watchedLongitude = useWatch({ control, name: "longitude" });
 
   const openCreate = () => {
     setEditingStation(null);
@@ -252,7 +260,9 @@ export default function StationsPage() {
 
   const handleBulkDelete = async () => {
     try {
-      await Promise.all([...selectedIds].map((id) => deleteMutation.mutateAsync(id)));
+      await Promise.all(
+        [...selectedIds].map((id) => deleteMutation.mutateAsync(id)),
+      );
       setSelectedIds(new Set());
       setBulkDeleteOpen(false);
       toast.success(`${selectedIds.size} stations deleted`);
@@ -272,12 +282,25 @@ export default function StationsPage() {
         </div>
         <div className="flex flex-wrap gap-2">
           {isAdmin && selectedIds.size > 0 && (
-            <Button variant="destructive" size="sm" onClick={() => setBulkDeleteOpen(true)}>
+            <Button
+              variant="destructive"
+              size="sm"
+              onClick={() => setBulkDeleteOpen(true)}
+            >
               <Trash2 className="h-4 w-4 mr-2" />
               {t("common.delete")} ({selectedIds.size})
             </Button>
           )}
-          <ColumnToggle columns={[{ key: "order", label: "Order" }, { key: "location", label: "Location" }, { key: "coordinates", label: "Coordinates" }, { key: "status", label: "Status" }]} isVisible={columns.isVisible} toggle={columns.toggle} />
+          <ColumnToggle
+            columns={[
+              { key: "order", label: "Order" },
+              { key: "location", label: "Location" },
+              { key: "coordinates", label: "Coordinates" },
+              { key: "status", label: "Status" },
+            ]}
+            isVisible={columns.isVisible}
+            toggle={columns.toggle}
+          />
           <Button variant="outline" onClick={handleExport}>
             <Download className="h-4 w-4 mr-2" />
             CSV
@@ -329,189 +352,212 @@ export default function StationsPage() {
         <Card>
           <CardContent className="p-0">
             <div className="overflow-x-auto">
-            <Table>
-              <TableHeader>
-                <TableRow className="bg-muted/50">
-                  {isAdmin && (
-                    <TableHead className="w-10">
-                      <input type="checkbox" checked={selectedIds.size === sortedStations.length && sortedStations.length > 0} onChange={toggleSelectAll} className="rounded border-border" />
+              <Table>
+                <TableHeader>
+                  <TableRow className="bg-muted/50">
+                    {isAdmin && (
+                      <TableHead className="w-10">
+                        <input
+                          type="checkbox"
+                          checked={
+                            selectedIds.size === sortedStations.length &&
+                            sortedStations.length > 0
+                          }
+                          onChange={toggleSelectAll}
+                          className="rounded border-border"
+                        />
+                      </TableHead>
+                    )}
+                    <SortableTableHead<Station>
+                      label={t("stations.order")}
+                      sortKey="order"
+                      sortConfig={sortConfig}
+                      onSort={requestSort}
+                      className="w-15"
+                    />
+                    <SortableTableHead<Station>
+                      label={t("stations.stationName")}
+                      sortKey="name"
+                      sortConfig={sortConfig}
+                      onSort={requestSort}
+                    />
+                    <SortableTableHead<Station>
+                      label={t("stations.location")}
+                      sortKey="location"
+                      sortConfig={sortConfig}
+                      onSort={requestSort}
+                      className="hidden md:table-cell"
+                    />
+                    <TableHead className="hidden lg:table-cell">
+                      {t("stations.coordinates")}
                     </TableHead>
-                  )}
-                  <SortableTableHead<Station>
-                    label={t("stations.order")}
-                    sortKey="order"
-                    sortConfig={sortConfig}
-                    onSort={requestSort}
-                    className="w-15"
-                  />
-                  <SortableTableHead<Station>
-                    label={t("stations.stationName")}
-                    sortKey="name"
-                    sortConfig={sortConfig}
-                    onSort={requestSort}
-                  />
-                  <SortableTableHead<Station>
-                    label={t("stations.location")}
-                    sortKey="location"
-                    sortConfig={sortConfig}
-                    onSort={requestSort}
-                    className="hidden md:table-cell"
-                  />
-                  <TableHead className="hidden lg:table-cell">
-                    {t("stations.coordinates")}
-                  </TableHead>
-                  <SortableTableHead<Station>
-                    label={t("stations.status")}
-                    sortKey="status"
-                    sortConfig={sortConfig}
-                    onSort={requestSort}
-                  />
-                  {isAdmin && (
-                    <TableHead className="text-right w-25">
-                      {t("common.actions")}
-                    </TableHead>
-                  )}
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {isLoading
-                  ? Array.from({ length: 5 }).map((_, i) => (
-                      <TableRow key={i}>
-                        <TableCell>
-                          <Skeleton className="h-4 w-6" />
-                        </TableCell>
-                        <TableCell>
-                          <div className="flex items-center gap-3">
-                            <Skeleton className="h-9 w-9 rounded-lg" />
-                            <Skeleton className="h-4 w-32" />
-                          </div>
-                        </TableCell>
-                        <TableCell className="hidden md:table-cell">
-                          <Skeleton className="h-4 w-24" />
-                        </TableCell>
-                        <TableCell className="hidden lg:table-cell">
-                          <Skeleton className="h-4 w-28" />
-                        </TableCell>
-                        <TableCell>
-                          <Skeleton className="h-5 w-16 rounded-full" />
-                        </TableCell>
-                        {isAdmin && (
+                    <SortableTableHead<Station>
+                      label={t("stations.status")}
+                      sortKey="status"
+                      sortConfig={sortConfig}
+                      onSort={requestSort}
+                    />
+                    {isAdmin && (
+                      <TableHead className="text-right w-25">
+                        {t("common.actions")}
+                      </TableHead>
+                    )}
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {isLoading
+                    ? Array.from({ length: 5 }).map((_, i) => (
+                        <TableRow key={i}>
                           <TableCell>
-                            <Skeleton className="h-8 w-16 ml-auto" />
+                            <Skeleton className="h-4 w-6" />
                           </TableCell>
-                        )}
-                      </TableRow>
-                    ))
-                  : sortedStations.map((station) => (
-                      <TableRow key={station.id} className={selectedIds.has(station.id) ? "bg-primary/5" : ""}>
-                        {isAdmin && (
                           <TableCell>
-                            <input type="checkbox" checked={selectedIds.has(station.id)} onChange={() => toggleSelect(station.id)} className="rounded border-border" />
+                            <div className="flex items-center gap-3">
+                              <Skeleton className="h-9 w-9 rounded-lg" />
+                              <Skeleton className="h-4 w-32" />
+                            </div>
                           </TableCell>
-                        )}
-                        <TableCell className="font-mono text-muted-foreground">
-                          {station.order}
-                        </TableCell>
-                        <TableCell>
-                          <div className="flex items-center gap-3">
-                            <div className="h-9 w-9 rounded-lg bg-primary/10 flex items-center justify-center text-xs font-bold text-primary shrink-0">
-                              {station.code}
-                            </div>
-                            <div>
-                              <Link to={`/stations/${station.id}`} className="font-medium hover:text-primary hover:underline">{station.name}</Link>
-                              <p className="text-xs text-muted-foreground md:hidden">
-                                {station.location}
-                              </p>
-                            </div>
-                          </div>
-                        </TableCell>
-                        <TableCell className="hidden md:table-cell text-muted-foreground">
-                          {station.location}
-                        </TableCell>
-                        <TableCell className="hidden lg:table-cell">
-                          {station.latitude && station.longitude ? (
-                            <TooltipProvider>
-                              <Tooltip>
-                                <TooltipTrigger asChild>
-                                  <span className="text-xs text-muted-foreground inline-flex items-center gap-1 cursor-help">
-                                    <MapPin className="h-3 w-3" />
-                                    {station.latitude.toFixed(4)},{" "}
-                                    {station.longitude.toFixed(4)}
-                                  </span>
-                                </TooltipTrigger>
-                                <TooltipContent>
-                                  <p>
-                                    Lat: {station.latitude}, Lng:{" "}
-                                    {station.longitude}
-                                  </p>
-                                </TooltipContent>
-                              </Tooltip>
-                            </TooltipProvider>
-                          ) : (
-                            <span className="text-xs text-muted-foreground">
-                              —
-                            </span>
+                          <TableCell className="hidden md:table-cell">
+                            <Skeleton className="h-4 w-24" />
+                          </TableCell>
+                          <TableCell className="hidden lg:table-cell">
+                            <Skeleton className="h-4 w-28" />
+                          </TableCell>
+                          <TableCell>
+                            <Skeleton className="h-5 w-16 rounded-full" />
+                          </TableCell>
+                          {isAdmin && (
+                            <TableCell>
+                              <Skeleton className="h-8 w-16 ml-auto" />
+                            </TableCell>
                           )}
-                        </TableCell>
-                        <TableCell>
-                          <Badge
-                            variant={
-                              station.status === "ACTIVE"
-                                ? "success"
-                                : station.status === "MAINTENANCE"
-                                  ? "warning"
-                                  : "destructive"
-                            }
-                          >
-                            {station.status}
-                          </Badge>
-                        </TableCell>
-                        {isAdmin && (
-                          <TableCell className="text-right">
-                            <div className="flex justify-end gap-1">
-                              <TooltipProvider>
-                                <Tooltip>
-                                  <TooltipTrigger asChild>
-                                    <Button
-                                      variant="ghost"
-                                      size="icon"
-                                      className="h-8 w-8"
-                                      onClick={() => openEdit(station)}
-                                    >
-                                      <Pencil className="h-3.5 w-3.5" />
-                                    </Button>
-                                  </TooltipTrigger>
-                                  <TooltipContent>
-                                    {t("stations.editStation")}
-                                  </TooltipContent>
-                                </Tooltip>
-                              </TooltipProvider>
-                              <TooltipProvider>
-                                <Tooltip>
-                                  <TooltipTrigger asChild>
-                                    <Button
-                                      variant="ghost"
-                                      size="icon"
-                                      className="h-8 w-8 text-destructive hover:text-destructive"
-                                      onClick={() =>
-                                        setDeleteConfirm(station.id)
-                                      }
-                                    >
-                                      <Trash2 className="h-3.5 w-3.5" />
-                                    </Button>
-                                  </TooltipTrigger>
-                                  <TooltipContent>
-                                    {t("stations.deleteStation")}
-                                  </TooltipContent>
-                                </Tooltip>
-                              </TooltipProvider>
+                        </TableRow>
+                      ))
+                    : sortedStations.map((station) => (
+                        <TableRow
+                          key={station.id}
+                          className={
+                            selectedIds.has(station.id) ? "bg-primary/5" : ""
+                          }
+                        >
+                          {isAdmin && (
+                            <TableCell>
+                              <input
+                                type="checkbox"
+                                checked={selectedIds.has(station.id)}
+                                onChange={() => toggleSelect(station.id)}
+                                className="rounded border-border"
+                              />
+                            </TableCell>
+                          )}
+                          <TableCell className="font-mono text-muted-foreground">
+                            {station.order}
+                          </TableCell>
+                          <TableCell>
+                            <div className="flex items-center gap-3">
+                              <div className="h-9 w-9 rounded-lg bg-primary/10 flex items-center justify-center text-xs font-bold text-primary shrink-0">
+                                {station.code}
+                              </div>
+                              <div>
+                                <Link
+                                  to={`/stations/${station.id}`}
+                                  className="font-medium hover:text-primary hover:underline"
+                                >
+                                  {station.name}
+                                </Link>
+                                <p className="text-xs text-muted-foreground md:hidden">
+                                  {station.location}
+                                </p>
+                              </div>
                             </div>
                           </TableCell>
-                        )}
-                      </TableRow>
-                    ))}
-              </TableBody>
-            </Table>
+                          <TableCell className="hidden md:table-cell text-muted-foreground">
+                            {station.location}
+                          </TableCell>
+                          <TableCell className="hidden lg:table-cell">
+                            {station.latitude && station.longitude ? (
+                              <TooltipProvider>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <span className="text-xs text-muted-foreground inline-flex items-center gap-1 cursor-help">
+                                      <MapPin className="h-3 w-3" />
+                                      {station.latitude.toFixed(4)},{" "}
+                                      {station.longitude.toFixed(4)}
+                                    </span>
+                                  </TooltipTrigger>
+                                  <TooltipContent>
+                                    <p>
+                                      Lat: {station.latitude}, Lng:{" "}
+                                      {station.longitude}
+                                    </p>
+                                  </TooltipContent>
+                                </Tooltip>
+                              </TooltipProvider>
+                            ) : (
+                              <span className="text-xs text-muted-foreground">
+                                —
+                              </span>
+                            )}
+                          </TableCell>
+                          <TableCell>
+                            <Badge
+                              variant={
+                                station.status === "ACTIVE"
+                                  ? "success"
+                                  : station.status === "MAINTENANCE"
+                                    ? "warning"
+                                    : "destructive"
+                              }
+                            >
+                              {station.status}
+                            </Badge>
+                          </TableCell>
+                          {isAdmin && (
+                            <TableCell className="text-right">
+                              <div className="flex justify-end gap-1">
+                                <TooltipProvider>
+                                  <Tooltip>
+                                    <TooltipTrigger asChild>
+                                      <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        className="h-8 w-8"
+                                        onClick={() => openEdit(station)}
+                                      >
+                                        <Pencil className="h-3.5 w-3.5" />
+                                      </Button>
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                      {t("stations.editStation")}
+                                    </TooltipContent>
+                                  </Tooltip>
+                                </TooltipProvider>
+                                <TooltipProvider>
+                                  <Tooltip>
+                                    <TooltipTrigger asChild>
+                                      <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        className="h-8 w-8 text-destructive hover:text-destructive"
+                                        onClick={() =>
+                                          setDeleteConfirm(station.id)
+                                        }
+                                      >
+                                        <Trash2 className="h-3.5 w-3.5" />
+                                      </Button>
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                      {t("stations.deleteStation")}
+                                    </TooltipContent>
+                                  </Tooltip>
+                                </TooltipProvider>
+                              </div>
+                            </TableCell>
+                          )}
+                        </TableRow>
+                      ))}
+                </TableBody>
+              </Table>
             </div>
           </CardContent>
         </Card>
@@ -594,8 +640,8 @@ export default function StationsPage() {
             <div className="space-y-2">
               <Label>{t("stations.coordinates")}</Label>
               <MapLocationPicker
-                latitude={watch("latitude")}
-                longitude={watch("longitude")}
+                latitude={watchedLatitude}
+                longitude={watchedLongitude}
                 onPick={(lat, lng) => {
                   setValue("latitude", lat);
                   setValue("longitude", lng);
@@ -603,7 +649,12 @@ export default function StationsPage() {
               />
               <div className="grid grid-cols-3 gap-2">
                 <div className="space-y-1">
-                  <Label htmlFor="latitude" className="text-xs text-muted-foreground">{t("stations.latitude")}</Label>
+                  <Label
+                    htmlFor="latitude"
+                    className="text-xs text-muted-foreground"
+                  >
+                    {t("stations.latitude")}
+                  </Label>
                   <Input
                     id="latitude"
                     type="number"
@@ -613,7 +664,12 @@ export default function StationsPage() {
                   />
                 </div>
                 <div className="space-y-1">
-                  <Label htmlFor="longitude" className="text-xs text-muted-foreground">{t("stations.longitude")}</Label>
+                  <Label
+                    htmlFor="longitude"
+                    className="text-xs text-muted-foreground"
+                  >
+                    {t("stations.longitude")}
+                  </Label>
                   <Input
                     id="longitude"
                     type="number"
@@ -623,8 +679,18 @@ export default function StationsPage() {
                   />
                 </div>
                 <div className="space-y-1">
-                  <Label htmlFor="order" className="text-xs text-muted-foreground">{t("stations.order")}</Label>
-                  <Input id="order" type="number" className="h-8 text-xs" {...register("order")} />
+                  <Label
+                    htmlFor="order"
+                    className="text-xs text-muted-foreground"
+                  >
+                    {t("stations.order")}
+                  </Label>
+                  <Input
+                    id="order"
+                    type="number"
+                    className="h-8 text-xs"
+                    {...register("order")}
+                  />
                   {errors.order && (
                     <p className="text-xs text-destructive">
                       {errors.order.message}
@@ -707,15 +773,23 @@ export default function StationsPage() {
       <AlertDialog open={bulkDeleteOpen} onOpenChange={setBulkDeleteOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>{t("common.delete")} ({selectedIds.size})</AlertDialogTitle>
+            <AlertDialogTitle>
+              {t("common.delete")} ({selectedIds.size})
+            </AlertDialogTitle>
             <AlertDialogDescription>
               {t("stations.deleteConfirm")}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>{t("common.cancel")}</AlertDialogCancel>
-            <AlertDialogAction className="bg-destructive text-destructive-foreground hover:bg-destructive/90" onClick={handleBulkDelete} disabled={deleteMutation.isPending}>
-              {deleteMutation.isPending ? t("common.loading") : `${t("common.delete")} (${selectedIds.size})`}
+            <AlertDialogAction
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              onClick={handleBulkDelete}
+              disabled={deleteMutation.isPending}
+            >
+              {deleteMutation.isPending
+                ? t("common.loading")
+                : `${t("common.delete")} (${selectedIds.size})`}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
