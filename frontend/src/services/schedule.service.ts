@@ -24,17 +24,14 @@ export const scheduleService = {
   },
 
   async create(data: Partial<Schedule>) {
-    const response = await api.post<ApiResponse<Schedule>>(
-      "/schedules",
-      data
-    );
+    const response = await api.post<ApiResponse<Schedule>>("/schedules", data);
     return response.data;
   },
 
   async update(id: string, data: Partial<Schedule>) {
     const response = await api.put<ApiResponse<Schedule>>(
       `/schedules/${id}`,
-      data
+      data,
     );
     return response.data;
   },

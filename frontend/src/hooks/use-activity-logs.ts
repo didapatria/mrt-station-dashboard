@@ -11,8 +11,7 @@ interface LogFilters {
 export const activityLogKeys = {
   all: ["activity-logs"] as const,
   lists: () => [...activityLogKeys.all, "list"] as const,
-  list: (filters: LogFilters) =>
-    [...activityLogKeys.lists(), filters] as const,
+  list: (filters: LogFilters) => [...activityLogKeys.lists(), filters] as const,
 };
 
 export function useActivityLogs(filters: LogFilters = {}) {

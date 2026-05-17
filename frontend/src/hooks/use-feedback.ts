@@ -1,5 +1,8 @@
 import { useMutation } from "@tanstack/react-query";
-import { feedbackService, type FeedbackPayload } from "@/services/feedback.service";
+import {
+  feedbackService,
+  type FeedbackPayload,
+} from "@/services/feedback.service";
 
 export function useSubmitFeedback() {
   return useMutation({

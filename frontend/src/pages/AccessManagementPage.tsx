@@ -1,7 +1,13 @@
 import { Navigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ShieldCheck, Shield, Check, X } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import {
@@ -44,11 +50,19 @@ export default function AccessManagementPage() {
   return (
     <div>
       <div className="mb-6">
-        <h2 className="text-2xl font-bold tracking-tight">User Access Management</h2>
-        <p className="text-muted-foreground">Role-based permissions and access control matrix</p>
+        <h2 className="text-2xl font-bold tracking-tight">
+          User Access Management
+        </h2>
+        <p className="text-muted-foreground">
+          Role-based permissions and access control matrix
+        </p>
       </div>
 
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="space-y-6"
+      >
         {/* Role Summary Cards */}
         <div className="grid gap-4 md:grid-cols-2">
           {ROLES.map((role) => {
@@ -56,7 +70,14 @@ export default function AccessManagementPage() {
             return (
               <Card key={role}>
                 <CardHeader>
-                  <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "0.75rem" }}>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      alignItems: "center",
+                      gap: "0.75rem",
+                    }}
+                  >
                     {role === "ADMIN" ? (
                       <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center">
                         <ShieldCheck className="h-5 w-5 text-primary" />
@@ -80,7 +101,11 @@ export default function AccessManagementPage() {
                 <CardContent className="pt-4">
                   <div className="flex flex-wrap gap-1.5">
                     {rolePerms.map((perm) => (
-                      <Badge key={perm} variant={role === "ADMIN" ? "default" : "secondary"} className="text-xs">
+                      <Badge
+                        key={perm}
+                        variant={role === "ADMIN" ? "default" : "secondary"}
+                        className="text-xs"
+                      >
                         {PERMISSION_LABELS[perm] ?? perm}
                       </Badge>
                     ))}
@@ -98,7 +123,9 @@ export default function AccessManagementPage() {
         <Card>
           <CardHeader>
             <CardTitle>Permission Matrix</CardTitle>
-            <CardDescription>Detailed comparison of role permissions across all modules</CardDescription>
+            <CardDescription>
+              Detailed comparison of role permissions across all modules
+            </CardDescription>
           </CardHeader>
           <CardContent className="p-0">
             <div className="w-full overflow-x-auto">
@@ -106,7 +133,12 @@ export default function AccessManagementPage() {
                 <colgroup>
                   <col style={{ width: "22%" }} />
                   <col style={{ width: "44%" }} />
-                  {ROLES.map((role) => <col key={role} style={{ width: `${34 / ROLES.length}%` }} />)}
+                  {ROLES.map((role) => (
+                    <col
+                      key={role}
+                      style={{ width: `${34 / ROLES.length}%` }}
+                    />
+                  ))}
                 </colgroup>
                 <TableHeader>
                   <TableRow>
@@ -114,8 +146,20 @@ export default function AccessManagementPage() {
                     <TableHead>Permission</TableHead>
                     {ROLES.map((role) => (
                       <TableHead key={role} className="text-center">
-                        <div style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "center", gap: "0.375rem" }}>
-                          {role === "ADMIN" ? <ShieldCheck className="h-3.5 w-3.5" /> : <Shield className="h-3.5 w-3.5" />}
+                        <div
+                          style={{
+                            display: "flex",
+                            flexDirection: "row",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            gap: "0.375rem",
+                          }}
+                        >
+                          {role === "ADMIN" ? (
+                            <ShieldCheck className="h-3.5 w-3.5" />
+                          ) : (
+                            <Shield className="h-3.5 w-3.5" />
+                          )}
                           {role}
                         </div>
                       </TableHead>
@@ -127,11 +171,16 @@ export default function AccessManagementPage() {
                     group.permissions.map((perm, idx) => (
                       <TableRow key={perm}>
                         {idx === 0 && (
-                          <TableCell rowSpan={group.permissions.length} className="font-medium align-top border-r bg-muted/30">
+                          <TableCell
+                            rowSpan={group.permissions.length}
+                            className="font-medium align-top border-r bg-muted/30"
+                          >
                             {group.group}
                           </TableCell>
                         )}
-                        <TableCell className="text-sm">{PERMISSION_LABELS[perm] ?? perm}</TableCell>
+                        <TableCell className="text-sm">
+                          {PERMISSION_LABELS[perm] ?? perm}
+                        </TableCell>
                         {ROLES.map((role) => (
                           <TableCell key={role} className="text-center">
                             {hasRole(role, perm) ? (
@@ -142,7 +191,7 @@ export default function AccessManagementPage() {
                           </TableCell>
                         ))}
                       </TableRow>
-                    ))
+                    )),
                   )}
                 </TableBody>
               </Table>

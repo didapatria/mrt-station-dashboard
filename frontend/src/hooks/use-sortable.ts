@@ -10,7 +10,7 @@ export interface SortConfig<T> {
 export function useSortable<T extends object>(
   data: T[],
   defaultKey?: keyof T,
-  defaultDirection: SortDirection = "asc"
+  defaultDirection: SortDirection = "asc",
 ) {
   const [sortConfig, setSortConfig] = useState<SortConfig<T>>({
     key: defaultKey ?? null,
@@ -44,8 +44,7 @@ export function useSortable<T extends object>(
   const requestSort = (key: keyof T) => {
     setSortConfig((prev) => ({
       key,
-      direction:
-        prev.key === key && prev.direction === "asc" ? "desc" : "asc",
+      direction: prev.key === key && prev.direction === "asc" ? "desc" : "asc",
     }));
   };
 

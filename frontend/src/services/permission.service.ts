@@ -16,7 +16,8 @@ export const permissionService = {
   },
 
   async getAllPermissions(): Promise<PermissionWithRoles[]> {
-    const res = await api.get<ApiResponse<PermissionWithRoles[]>>("/permissions");
+    const res =
+      await api.get<ApiResponse<PermissionWithRoles[]>>("/permissions");
     return res.data.data ?? [];
   },
 };

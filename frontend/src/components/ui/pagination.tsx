@@ -7,7 +7,11 @@ interface PaginationProps {
   onPageChange: (page: number) => void;
 }
 
-export function Pagination({ page, totalPages, onPageChange }: PaginationProps) {
+export function Pagination({
+  page,
+  totalPages,
+  onPageChange,
+}: PaginationProps) {
   if (totalPages <= 1) return null;
 
   const pages: (number | string)[] = [];
@@ -17,7 +21,11 @@ export function Pagination({ page, totalPages, onPageChange }: PaginationProps) 
   } else {
     pages.push(1);
     if (page > 3) pages.push("...");
-    for (let i = Math.max(2, page - 1); i <= Math.min(totalPages - 1, page + 1); i++) {
+    for (
+      let i = Math.max(2, page - 1);
+      i <= Math.min(totalPages - 1, page + 1);
+      i++
+    ) {
       pages.push(i);
     }
     if (page < totalPages - 2) pages.push("...");
@@ -51,7 +59,7 @@ export function Pagination({ page, totalPages, onPageChange }: PaginationProps) 
           >
             {p}
           </Button>
-        )
+        ),
       )}
 
       <Button

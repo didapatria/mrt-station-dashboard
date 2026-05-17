@@ -108,25 +108,42 @@ export default function ActivityLogPage() {
           <p className="text-muted-foreground">{t("activity.subtitle")}</p>
         </div>
         <div style={{ display: "flex", flexDirection: "row", gap: "0.5rem" }}>
-        <Button variant="outline" size="sm" onClick={() => {
-          const csv = ["Time,User,Action,Entity,Details", ...logs.map((l) => `${l.createdAt},${l.user.name},${l.action},${l.entity},"${l.details || ""}"`).join("\n")].join("\n");
-          const blob = new Blob([csv], { type: "text/csv" });
-          const url = URL.createObjectURL(blob);
-          const a = document.createElement("a"); a.href = url; a.download = "activity-log.csv"; a.click(); URL.revokeObjectURL(url);
-          toast.success("Activity log exported");
-        }}>
-          <Download className="h-4 w-4 mr-2" />CSV
-        </Button>
-        <Select value={entityFilter} onValueChange={handleEntityFilterChange}>
-          <SelectTrigger className="w-40">
-            <SelectValue placeholder="Filter by type" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="ALL">{t("activity.allTypes")}</SelectItem>
-            <SelectItem value="Station">Stations</SelectItem>
-            <SelectItem value="Schedule">Schedules</SelectItem>
-          </SelectContent>
-        </Select>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              const csv = [
+                "Time,User,Action,Entity,Details",
+                ...logs
+                  .map(
+                    (l) =>
+                      `${l.createdAt},${l.user.name},${l.action},${l.entity},"${l.details || ""}"`,
+                  )
+                  .join("\n"),
+              ].join("\n");
+              const blob = new Blob([csv], { type: "text/csv" });
+              const url = URL.createObjectURL(blob);
+              const a = document.createElement("a");
+              a.href = url;
+              a.download = "activity-log.csv";
+              a.click();
+              URL.revokeObjectURL(url);
+              toast.success("Activity log exported");
+            }}
+          >
+            <Download className="h-4 w-4 mr-2" />
+            CSV
+          </Button>
+          <Select value={entityFilter} onValueChange={handleEntityFilterChange}>
+            <SelectTrigger className="w-40">
+              <SelectValue placeholder="Filter by type" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="ALL">{t("activity.allTypes")}</SelectItem>
+              <SelectItem value="Station">Stations</SelectItem>
+              <SelectItem value="Schedule">Schedules</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
       </div>
 

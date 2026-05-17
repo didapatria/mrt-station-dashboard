@@ -22,14 +22,18 @@ export default function MapPage() {
     if (!mapSearch.trim()) return stations;
     const q = mapSearch.toLowerCase();
     return stations.filter(
-      (s) => s.name.toLowerCase().includes(q) || s.code.toLowerCase().includes(q) || s.location.toLowerCase().includes(q)
+      (s) =>
+        s.name.toLowerCase().includes(q) ||
+        s.code.toLowerCase().includes(q) ||
+        s.location.toLowerCase().includes(q),
     );
   }, [stations, mapSearch]);
 
   const withCoords = filteredStations.filter((s) => s.latitude && s.longitude);
   const statusCounts = {
     active: filteredStations.filter((s) => s.status === "ACTIVE").length,
-    maintenance: filteredStations.filter((s) => s.status === "MAINTENANCE").length,
+    maintenance: filteredStations.filter((s) => s.status === "MAINTENANCE")
+      .length,
     inactive: filteredStations.filter((s) => s.status === "INACTIVE").length,
   };
 
@@ -39,8 +43,7 @@ export default function MapPage() {
         <div>
           <h2 className="text-2xl font-bold">{t("map.title")}</h2>
           <p className="text-muted-foreground">
-            {t("map.subtitle")} ({withCoords.length}{" "}
-            {t("map.mapped")})
+            {t("map.subtitle")} ({withCoords.length} {t("map.mapped")})
           </p>
         </div>
         <div className="flex gap-2">
@@ -99,7 +102,12 @@ export default function MapPage() {
             <div className="px-3 py-2 border-b">
               <div className="relative">
                 <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
-                <Input placeholder={t("common.search")} value={mapSearch} onChange={(e) => setMapSearch(e.target.value)} className="h-8 pl-8 text-sm" />
+                <Input
+                  placeholder={t("common.search")}
+                  value={mapSearch}
+                  onChange={(e) => setMapSearch(e.target.value)}
+                  className="h-8 pl-8 text-sm"
+                />
               </div>
             </div>
             <CardContent className="flex-1 overflow-y-auto p-0">
@@ -129,8 +137,9 @@ export default function MapPage() {
                             }`}
                           />
                           {index <
-                            filteredStations.filter((s) => s.latitude && s.longitude)
-                              .length -
+                            filteredStations.filter(
+                              (s) => s.latitude && s.longitude,
+                            ).length -
                               1 && <div className="w-px h-4 bg-border mt-1" />}
                         </div>
                         <div className="flex-1 min-w-0">

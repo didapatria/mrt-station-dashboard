@@ -20,15 +20,14 @@ export interface HourlySchedule {
 
 export const dashboardService = {
   async getStats() {
-    const response = await api.get<ApiResponse<DashboardStats>>(
-      "/dashboard/stats"
-    );
+    const response =
+      await api.get<ApiResponse<DashboardStats>>("/dashboard/stats");
     return response.data;
   },
 
   async getSchedulesByHour() {
     const response = await api.get<ApiResponse<HourlySchedule[]>>(
-      "/dashboard/schedules-by-hour"
+      "/dashboard/schedules-by-hour",
     );
     return response.data;
   },

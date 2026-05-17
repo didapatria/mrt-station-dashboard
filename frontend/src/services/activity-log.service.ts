@@ -28,7 +28,7 @@ export const activityLogApiService = {
   async getAll(params?: GetLogsParams) {
     const response = await api.get<ApiResponse<ActivityLog[]>>(
       "/activity-logs",
-      { params }
+      { params },
     );
     return response.data;
   },

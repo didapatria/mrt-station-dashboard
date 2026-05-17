@@ -18,7 +18,11 @@ interface AuthState {
   setPermissions: (permissions: string[]) => void;
 }
 
-function getInitialAuthState(): { token: string | null; user: User | null; permissions: string[] } {
+function getInitialAuthState(): {
+  token: string | null;
+  user: User | null;
+  permissions: string[];
+} {
   try {
     const token = localStorage.getItem("token");
     const userStr = localStorage.getItem("user");
@@ -90,7 +94,7 @@ export const useAuthStore = create<AuthState>((set) => ({
       try {
         const user = JSON.parse(userStr) as User;
         const permsStr = localStorage.getItem("permissions");
-        const permissions = permsStr ? JSON.parse(permsStr) as string[] : [];
+        const permissions = permsStr ? (JSON.parse(permsStr) as string[]) : [];
         set({ user, token, permissions });
       } catch {
         localStorage.removeItem("token");

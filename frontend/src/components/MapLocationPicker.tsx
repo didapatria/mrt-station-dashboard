@@ -49,8 +49,14 @@ export function MapLocationPicker({
   longitude,
   onPick,
 }: MapLocationPickerProps) {
-  const lat = typeof latitude === "number" ? latitude : parseFloat(String(latitude ?? "")) || null;
-  const lng = typeof longitude === "number" ? longitude : parseFloat(String(longitude ?? "")) || null;
+  const lat =
+    typeof latitude === "number"
+      ? latitude
+      : parseFloat(String(latitude ?? "")) || null;
+  const lng =
+    typeof longitude === "number"
+      ? longitude
+      : parseFloat(String(longitude ?? "")) || null;
   const hasCoords = lat !== null && lng !== null && !isNaN(lat) && !isNaN(lng);
 
   const center: [number, number] = hasCoords ? [lat!, lng!] : MRT_CENTER;
@@ -58,7 +64,12 @@ export function MapLocationPicker({
   return (
     <div className="space-y-1">
       <div
-        style={{ height: "200px", borderRadius: "8px", overflow: "hidden", border: "1px solid hsl(var(--border))" }}
+        style={{
+          height: "200px",
+          borderRadius: "8px",
+          overflow: "hidden",
+          border: "1px solid hsl(var(--border))",
+        }}
       >
         <MapContainer
           center={center}
@@ -68,9 +79,7 @@ export function MapLocationPicker({
         >
           <TileLayer url="https://mt1.google.com/vt/lyrs=r&x={x}&y={y}&z={z}" />
           <ClickHandler onPick={onPick} />
-          {hasCoords && (
-            <Marker position={[lat!, lng!]} icon={pickerIcon} />
-          )}
+          {hasCoords && <Marker position={[lat!, lng!]} icon={pickerIcon} />}
         </MapContainer>
       </div>
       <p className="text-xs text-muted-foreground flex items-center gap-1">

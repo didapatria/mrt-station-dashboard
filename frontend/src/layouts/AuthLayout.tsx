@@ -31,7 +31,8 @@ export default function AuthLayout() {
       <div
         className="hidden lg:flex lg:w-[46%] relative overflow-hidden flex-col"
         style={{
-          background: "linear-gradient(160deg, #0a1628 0%, #0d1f3c 50%, #091525 100%)",
+          background:
+            "linear-gradient(160deg, #0a1628 0%, #0d1f3c 50%, #091525 100%)",
         }}
       >
         {/* Subtle grid overlay */}
@@ -46,13 +47,13 @@ export default function AuthLayout() {
 
         {/* Glowing orb */}
         <div
-          className="absolute top-[-80px] left-[-80px] w-[400px] h-[400px] rounded-full opacity-10 pointer-events-none"
+          className="absolute -top-20 -left-20 w-100 h-100 rounded-full opacity-10 pointer-events-none"
           style={{
             background: "radial-gradient(circle, #3b82f6 0%, transparent 70%)",
           }}
         />
         <div
-          className="absolute bottom-[-60px] right-[-60px] w-[300px] h-[300px] rounded-full opacity-8 pointer-events-none"
+          className="absolute -bottom-15 -right-15 w-75 h-75 rounded-full opacity-8 pointer-events-none"
           style={{
             background: "radial-gradient(circle, #0ea5e9 0%, transparent 70%)",
           }}
@@ -79,7 +80,16 @@ export default function AuthLayout() {
                 boxShadow: "0 0 16px rgba(59, 130, 246, 0.4)",
               }}
             >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="white"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
                 <path d="M3 17l4-8 4 4 4-6 4 10" />
                 <circle cx="3" cy="17" r="1.5" fill="white" stroke="none" />
                 <circle cx="19" cy="17" r="1.5" fill="white" stroke="none" />
@@ -142,22 +152,35 @@ export default function AuthLayout() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1, delay: 0.3 }}
-            style={{ display: "flex", gap: 24, alignItems: "flex-start", paddingBottom: 8 }}
+            style={{
+              display: "flex",
+              gap: 24,
+              alignItems: "flex-start",
+              paddingBottom: 8,
+            }}
           >
             {/* SVG Line */}
             <div style={{ paddingTop: 4, flexShrink: 0 }}>
-              <svg width="16" height={MRT_STATIONS.length * 20} viewBox={`0 0 16 ${MRT_STATIONS.length * 20}`}>
+              <svg
+                width="16"
+                height={MRT_STATIONS.length * 20}
+                viewBox={`0 0 16 ${MRT_STATIONS.length * 20}`}
+              >
                 {/* Track line */}
                 <line
-                  x1="8" y1="6"
-                  x2="8" y2={MRT_STATIONS.length * 20 - 6}
+                  x1="8"
+                  y1="6"
+                  x2="8"
+                  y2={MRT_STATIONS.length * 20 - 6}
                   stroke="#1e3a5f"
                   strokeWidth="2"
                 />
                 <line
                   className="mrt-line"
-                  x1="8" y1="6"
-                  x2="8" y2={MRT_STATIONS.length * 20 - 6}
+                  x1="8"
+                  y1="6"
+                  x2="8"
+                  y2={MRT_STATIONS.length * 20 - 6}
                   stroke="#3b82f6"
                   strokeWidth="2"
                   strokeLinecap="round"
@@ -169,7 +192,11 @@ export default function AuthLayout() {
                     cx="8"
                     cy={6 + i * 20}
                     r={i === 0 || i === MRT_STATIONS.length - 1 ? 4.5 : 3}
-                    fill={i === 0 || i === MRT_STATIONS.length - 1 ? "#3b82f6" : "#0a1628"}
+                    fill={
+                      i === 0 || i === MRT_STATIONS.length - 1
+                        ? "#3b82f6"
+                        : "#0a1628"
+                    }
                     stroke="#3b82f6"
                     strokeWidth="2"
                     className={i % 3 === 0 ? "station-dot" : ""}
@@ -195,9 +222,13 @@ export default function AuthLayout() {
                     style={{
                       fontFamily: "'JetBrains Mono', monospace",
                       fontSize: 10.5,
-                      color: i === 0 || i === MRT_STATIONS.length - 1 ? "#60a5fa" : "rgba(148, 163, 184, 0.8)",
+                      color:
+                        i === 0 || i === MRT_STATIONS.length - 1
+                          ? "#60a5fa"
+                          : "rgba(148, 163, 184, 0.8)",
                       letterSpacing: "0.04em",
-                      fontWeight: i === 0 || i === MRT_STATIONS.length - 1 ? 600 : 400,
+                      fontWeight:
+                        i === 0 || i === MRT_STATIONS.length - 1 ? 600 : 400,
                     }}
                   >
                     {station.toUpperCase()}

@@ -1,7 +1,11 @@
 import { useState, useEffect, useCallback } from "react";
 import { Bell } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Separator } from "@/components/ui/separator";
 
 interface Notification {
@@ -16,7 +20,12 @@ export function NotificationCenter() {
   const [unread, setUnread] = useState(0);
 
   const addNotification = useCallback((msg: string, detail?: string) => {
-    const n: Notification = { id: crypto.randomUUID(), message: msg, detail, time: new Date() };
+    const n: Notification = {
+      id: crypto.randomUUID(),
+      message: msg,
+      detail,
+      time: new Date(),
+    };
     setNotifications((prev) => [n, ...prev].slice(0, 20));
     setUnread((prev) => prev + 1);
   }, []);
@@ -27,8 +36,13 @@ export function NotificationCenter() {
     es.addEventListener("activity", (e) => {
       try {
         const data = JSON.parse(e.data);
-        addNotification(`${data.user.name} ${data.action.toLowerCase()}d a ${data.entity}`, data.details);
-      } catch { /* ignore */ }
+        addNotification(
+          `${data.user.name} ${data.action.toLowerCase()}d a ${data.entity}`,
+          data.details,
+        );
+      } catch {
+        /* ignore */
+      }
     });
     es.onerror = () => es.close();
     return () => es.close();
@@ -42,15 +56,22 @@ export function NotificationCenter() {
     return () => clearInterval(interval);
   }, []);
 
-  const timeAgo = useCallback((d: Date) => {
-    const s = Math.floor((now - d.getTime()) / 1000);
-    if (s < 60) return "just now";
-    if (s < 3600) return `${Math.floor(s / 60)}m ago`;
-    return `${Math.floor(s / 3600)}h ago`;
-  }, [now]);
+  const timeAgo = useCallback(
+    (d: Date) => {
+      const s = Math.floor((now - d.getTime()) / 1000);
+      if (s < 60) return "just now";
+      if (s < 3600) return `${Math.floor(s / 60)}m ago`;
+      return `${Math.floor(s / 3600)}h ago`;
+    },
+    [now],
+  );
 
   return (
-    <DropdownMenu onOpenChange={(open) => { if (open) markRead(); }}>
+    <DropdownMenu
+      onOpenChange={(open) => {
+        if (open) markRead();
+      }}
+    >
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" size="icon" className="h-8 w-8 relative">
           <Bell className="h-4 w-4" />
@@ -66,13 +87,24 @@ export function NotificationCenter() {
         <Separator />
         <div className="max-h-64 overflow-y-auto">
           {notifications.length === 0 ? (
-            <p className="text-sm text-muted-foreground text-center py-6">No notifications yet</p>
+            <p className="text-sm text-muted-foreground text-center py-6">
+              No notifications yet
+            </p>
           ) : (
             notifications.map((n) => (
-              <div key={n.id} className="px-3 py-2.5 border-b last:border-0 hover:bg-muted/50">
+              <div
+                key={n.id}
+                className="px-3 py-2.5 border-b last:border-0 hover:bg-muted/50"
+              >
                 <p className="text-sm font-medium">{n.message}</p>
-                {n.detail && <p className="text-xs text-muted-foreground mt-0.5 truncate">{n.detail}</p>}
-                <p className="text-[10px] text-muted-foreground mt-1">{timeAgo(n.time)}</p>
+                {n.detail && (
+                  <p className="text-xs text-muted-foreground mt-0.5 truncate">
+                    {n.detail}
+                  </p>
+                )}
+                <p className="text-[10px] text-muted-foreground mt-1">
+                  {timeAgo(n.time)}
+                </p>
               </div>
             ))
           )}

@@ -6,7 +6,5 @@
   "background_color": "#ffffff",
   "display": "standalone",
   "start_url": "/",
-  "icons": [
-    { "src": "/favicon.ico", "sizes": "64x64", "type": "image/x-icon" }
-  ]
+  "icons": [{ "src": "/favicon.ico", "sizes": "64x64", "type": "image/x-icon" }]
 }

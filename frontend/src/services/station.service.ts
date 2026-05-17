@@ -29,7 +29,7 @@ export const stationService = {
   async update(id: string, data: Partial<Station>) {
     const response = await api.put<ApiResponse<Station>>(
       `/stations/${id}`,
-      data
+      data,
     );
     return response.data;
   },

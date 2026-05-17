@@ -54,7 +54,8 @@ function PageLoader() {
 }
 
 function App() {
-  const { initFromStorage, token, permissions, setPermissions } = useAuthStore();
+  const { initFromStorage, token, permissions, setPermissions } =
+    useAuthStore();
   const { initTheme } = useThemeStore();
 
   useEffect(() => {
@@ -65,57 +66,65 @@ function App() {
   // Fetch permissions from API when user is logged in but permissions not yet in localStorage
   useEffect(() => {
     if (token && permissions.length === 0) {
-      permissionService.getMyPermissions().then((perms) => {
-        if (perms.length > 0) {
-          setPermissions(perms);
-          localStorage.setItem("permissions", JSON.stringify(perms));
-        }
-      }).catch(() => {});
+      permissionService
+        .getMyPermissions()
+        .then((perms) => {
+          if (perms.length > 0) {
+            setPermissions(perms);
+            localStorage.setItem("permissions", JSON.stringify(perms));
+          }
+        })
+        .catch(() => {});
     }
   }, [token, permissions.length, setPermissions]);
 
   return (
     <ErrorBoundary>
-      <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID || ""}>
-      <QueryClientProvider client={queryClient}>
-        <BrowserRouter>
-          <Suspense fallback={<PageLoader />}>
-            <Routes>
-              {/* Auth routes */}
-              <Route element={<AuthLayout />}>
-                <Route path="/login" element={<LoginPage />} />
-                <Route path="/register" element={<RegisterPage />} />
-              </Route>
+      <GoogleOAuthProvider
+        clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID || ""}
+      >
+        <QueryClientProvider client={queryClient}>
+          <BrowserRouter>
+            <Suspense fallback={<PageLoader />}>
+              <Routes>
+                {/* Auth routes */}
+                <Route element={<AuthLayout />}>
+                  <Route path="/login" element={<LoginPage />} />
+                  <Route path="/register" element={<RegisterPage />} />
+                </Route>
 
-              {/* Dashboard routes */}
-              <Route element={<DashboardLayout />}>
-                <Route path="/dashboard" element={<DashboardPage />} />
-                <Route path="/stations" element={<StationsPage />} />
-                <Route path="/stations/:id" element={<StationDetailPage />} />
-                <Route path="/schedules" element={<SchedulesPage />} />
-                <Route path="/map" element={<MapPage />} />
-                <Route path="/route-planner" element={<RoutePlannerPage />} />
-                <Route path="/compare" element={<StationComparePage />} />
-                <Route path="/users" element={<UsersPage />} />
-                <Route path="/access" element={<AccessManagementPage />} />
-                <Route path="/activity" element={<ActivityLogPage />} />
-                <Route path="/settings" element={<SettingsPage />} />
-                <Route path="/changelog" element={<ChangelogPage />} />
-                <Route path="/profile" element={<ProfilePage />} />
-              </Route>
+                {/* Dashboard routes */}
+                <Route element={<DashboardLayout />}>
+                  <Route path="/dashboard" element={<DashboardPage />} />
+                  <Route path="/stations" element={<StationsPage />} />
+                  <Route path="/stations/:id" element={<StationDetailPage />} />
+                  <Route path="/schedules" element={<SchedulesPage />} />
+                  <Route path="/map" element={<MapPage />} />
+                  <Route path="/route-planner" element={<RoutePlannerPage />} />
+                  <Route path="/compare" element={<StationComparePage />} />
+                  <Route path="/users" element={<UsersPage />} />
+                  <Route path="/access" element={<AccessManagementPage />} />
+                  <Route path="/activity" element={<ActivityLogPage />} />
+                  <Route path="/settings" element={<SettingsPage />} />
+                  <Route path="/changelog" element={<ChangelogPage />} />
+                  <Route path="/profile" element={<ProfilePage />} />
+                </Route>
 
-              {/* 404 */}
-              <Route path="/404" element={<NotFoundPage />} />
+                {/* 404 */}
+                <Route path="/404" element={<NotFoundPage />} />
 
-              {/* Default redirect */}
-              <Route path="/" element={<Navigate to="/dashboard" replace />} />
-              <Route path="*" element={<Navigate to="/404" replace />} />
-            </Routes>
-          </Suspense>
-          <Toaster />
-        </BrowserRouter>
-        <ReactQueryDevtools initialIsOpen={false} />
-      </QueryClientProvider>
+                {/* Default redirect */}
+                <Route
+                  path="/"
+                  element={<Navigate to="/dashboard" replace />}
+                />
+                <Route path="*" element={<Navigate to="/404" replace />} />
+              </Routes>
+            </Suspense>
+            <Toaster />
+          </BrowserRouter>
+          <ReactQueryDevtools initialIsOpen={false} />
+        </QueryClientProvider>
       </GoogleOAuthProvider>
     </ErrorBoundary>
   );

@@ -6,11 +6,15 @@ self.addEventListener("install", (event) => {
 
 self.addEventListener("activate", (event) => {
   event.waitUntil(
-    caches.keys().then((names) =>
-      Promise.all(
-        names.filter((name) => name !== CACHE_NAME).map((name) => caches.delete(name))
-      )
-    )
+    caches
+      .keys()
+      .then((names) =>
+        Promise.all(
+          names
+            .filter((name) => name !== CACHE_NAME)
+            .map((name) => caches.delete(name)),
+        ),
+      ),
   );
 });
 
@@ -19,12 +23,14 @@ self.addEventListener("fetch", (event) => {
     event.respondWith(
       caches.open(CACHE_NAME).then((cache) =>
         cache.match(event.request).then(
-          (cached) => cached || fetch(event.request).then((response) => {
-            cache.put(event.request, response.clone());
-            return response;
-          })
-        )
-      )
+          (cached) =>
+            cached ||
+            fetch(event.request).then((response) => {
+              cache.put(event.request, response.clone());
+              return response;
+            }),
+        ),
+      ),
     );
   }
 });

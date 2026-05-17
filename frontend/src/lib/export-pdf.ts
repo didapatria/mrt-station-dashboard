@@ -6,7 +6,7 @@ import type { DashboardStats } from "@/services/dashboard.service";
 export function exportDashboardPDF(
   stats: DashboardStats,
   stations: Station[],
-  schedules: Schedule[]
+  schedules: Schedule[],
 ) {
   const doc = new jsPDF();
   const now = new Date().toLocaleDateString("en-US", {
@@ -53,7 +53,9 @@ export function exportDashboardPDF(
   });
 
   // Stations table
-  const stationsY = (doc as unknown as { lastAutoTable: { finalY: number } }).lastAutoTable.finalY + 12;
+  const stationsY =
+    (doc as unknown as { lastAutoTable: { finalY: number } }).lastAutoTable
+      .finalY + 12;
   doc.setFontSize(14);
   doc.setFont("helvetica", "bold");
   doc.text("Stations", 14, stationsY);
@@ -74,7 +76,9 @@ export function exportDashboardPDF(
   });
 
   // Schedules table (new page if needed)
-  const schedulesY = (doc as unknown as { lastAutoTable: { finalY: number } }).lastAutoTable.finalY + 12;
+  const schedulesY =
+    (doc as unknown as { lastAutoTable: { finalY: number } }).lastAutoTable
+      .finalY + 12;
   if (schedulesY > 250) doc.addPage();
   const sY = schedulesY > 250 ? 20 : schedulesY;
 
@@ -85,15 +89,17 @@ export function exportDashboardPDF(
   autoTable(doc, {
     startY: sY + 4,
     head: [["Train", "From", "To", "Departure", "Arrival", "Day", "Status"]],
-    body: schedules.slice(0, 50).map((s) => [
-      s.trainNumber,
-      s.departureStation?.code || s.departureStationId,
-      s.arrivalStation?.code || s.arrivalStationId,
-      s.departureTime,
-      s.arrivalTime,
-      s.dayType,
-      s.status,
-    ]),
+    body: schedules
+      .slice(0, 50)
+      .map((s) => [
+        s.trainNumber,
+        s.departureStation?.code || s.departureStationId,
+        s.arrivalStation?.code || s.arrivalStationId,
+        s.departureTime,
+        s.arrivalTime,
+        s.dayType,
+        s.status,
+      ]),
     theme: "grid",
     headStyles: { fillColor: [0, 102, 204] },
     styles: { fontSize: 7 },

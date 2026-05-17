@@ -1,6 +1,11 @@
 import { Columns3 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuCheckboxItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuCheckboxItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 interface ColumnToggleProps {
   columns: { key: string; label: string }[];
@@ -8,7 +13,11 @@ interface ColumnToggleProps {
   toggle: (key: string) => void;
 }
 
-export function ColumnToggle({ columns, isVisible, toggle }: ColumnToggleProps) {
+export function ColumnToggle({
+  columns,
+  isVisible,
+  toggle,
+}: ColumnToggleProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -19,7 +28,11 @@ export function ColumnToggle({ columns, isVisible, toggle }: ColumnToggleProps) 
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         {columns.map((col) => (
-          <DropdownMenuCheckboxItem key={col.key} checked={isVisible(col.key)} onCheckedChange={() => toggle(col.key)}>
+          <DropdownMenuCheckboxItem
+            key={col.key}
+            checked={isVisible(col.key)}
+            onCheckedChange={() => toggle(col.key)}
+          >
             {col.label}
           </DropdownMenuCheckboxItem>
         ))}

@@ -182,7 +182,15 @@ export default function DashboardPage() {
               : "radial-gradient(ellipse at right center, rgba(255,255,255,0.15) 0%, transparent 70%)",
           }}
         />
-        <div className="relative p-6" style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+        <div
+          className="relative p-6"
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
           <div>
             <p
               style={{
@@ -198,11 +206,23 @@ export default function DashboardPage() {
             </p>
             <h2
               className="font-display"
-              style={{ fontSize: 28, color: "white", lineHeight: 1.1, letterSpacing: "0.01em" }}
+              style={{
+                fontSize: 28,
+                color: "white",
+                lineHeight: 1.1,
+                letterSpacing: "0.01em",
+              }}
             >
-              {greeting.toUpperCase()}, {user?.name?.split(" ")[0]?.toUpperCase()}
+              {greeting.toUpperCase()},{" "}
+              {user?.name?.split(" ")[0]?.toUpperCase()}
             </h2>
-            <p style={{ color: "rgba(219, 234, 254, 0.75)", fontSize: 13, marginTop: 4 }}>
+            <p
+              style={{
+                color: "rgba(219, 234, 254, 0.75)",
+                fontSize: 13,
+                marginTop: 4,
+              }}
+            >
               {t("dashboard.subtitle")}
             </p>
           </div>
@@ -215,18 +235,38 @@ export default function DashboardPage() {
                 >
                   {stats.totalStations}
                 </p>
-                <p style={{ fontSize: 10, color: "rgba(219, 234, 254, 0.65)", letterSpacing: "0.08em", textTransform: "uppercase", marginTop: 2 }}>
+                <p
+                  style={{
+                    fontSize: 10,
+                    color: "rgba(219, 234, 254, 0.65)",
+                    letterSpacing: "0.08em",
+                    textTransform: "uppercase",
+                    marginTop: 2,
+                  }}
+                >
                   {t("dashboard.totalStations")}
                 </p>
               </div>
               <div>
                 <p
                   className="font-display"
-                  style={{ fontSize: 36, color: isDark ? "#60a5fa" : "#bfdbfe", lineHeight: 1 }}
+                  style={{
+                    fontSize: 36,
+                    color: isDark ? "#60a5fa" : "#bfdbfe",
+                    lineHeight: 1,
+                  }}
                 >
                   {stats.activeSchedules}
                 </p>
-                <p style={{ fontSize: 10, color: "rgba(219, 234, 254, 0.65)", letterSpacing: "0.08em", textTransform: "uppercase", marginTop: 2 }}>
+                <p
+                  style={{
+                    fontSize: 10,
+                    color: "rgba(219, 234, 254, 0.65)",
+                    letterSpacing: "0.08em",
+                    textTransform: "uppercase",
+                    marginTop: 2,
+                  }}
+                >
                   {t("dashboard.activeSchedules")}
                 </p>
               </div>
@@ -240,7 +280,9 @@ export default function DashboardPage() {
           <h2 className="font-display text-3xl tracking-tight">
             {t("dashboard.title")}
           </h2>
-          <p className="text-muted-foreground text-sm mt-0.5">{t("dashboard.subtitle")}</p>
+          <p className="text-muted-foreground text-sm mt-0.5">
+            {t("dashboard.subtitle")}
+          </p>
         </div>
         <div className="flex flex-wrap gap-2">
           {stats && (
@@ -302,12 +344,18 @@ export default function DashboardPage() {
                         </p>
                         <p
                           className="font-display mt-1"
-                          style={{ fontSize: 40, lineHeight: 1, letterSpacing: "-0.01em" }}
+                          style={{
+                            fontSize: 40,
+                            lineHeight: 1,
+                            letterSpacing: "-0.01em",
+                          }}
                         >
                           {stat.value}
                         </p>
                       </div>
-                      <div className={`${stat.bg} p-3 rounded-xl shadow-sm group-hover:scale-110 transition-transform duration-200`}>
+                      <div
+                        className={`${stat.bg} p-3 rounded-xl shadow-sm group-hover:scale-110 transition-transform duration-200`}
+                      >
                         <stat.icon className={`h-5 w-5 ${stat.color}`} />
                       </div>
                     </div>
@@ -469,48 +517,51 @@ export default function DashboardPage() {
             <Card className="shadow-sm">
               <CardContent className="p-0">
                 <div className="overflow-x-auto">
-                <Table>
-                  <TableHeader>
-                    <TableRow className="bg-muted/50">
-                      <TableHead className="w-15">Code</TableHead>
-                      <TableHead>Name</TableHead>
-                      <TableHead className="hidden sm:table-cell">
-                        Location
-                      </TableHead>
-                      <TableHead className="text-right">Status</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {stations.slice(0, 10).map((station) => (
-                      <TableRow key={station.id} className="hover:bg-muted/30">
-                        <TableCell>
-                          <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center text-xs font-bold text-primary">
-                            {station.code}
-                          </div>
-                        </TableCell>
-                        <TableCell className="font-medium">
-                          {station.name}
-                        </TableCell>
-                        <TableCell className="hidden sm:table-cell text-muted-foreground">
-                          {station.location}
-                        </TableCell>
-                        <TableCell className="text-right">
-                          <Badge
-                            variant={
-                              station.status === "ACTIVE"
-                                ? "success"
-                                : station.status === "MAINTENANCE"
-                                  ? "warning"
-                                  : "destructive"
-                            }
-                          >
-                            {station.status}
-                          </Badge>
-                        </TableCell>
+                  <Table>
+                    <TableHeader>
+                      <TableRow className="bg-muted/50">
+                        <TableHead className="w-15">Code</TableHead>
+                        <TableHead>Name</TableHead>
+                        <TableHead className="hidden sm:table-cell">
+                          Location
+                        </TableHead>
+                        <TableHead className="text-right">Status</TableHead>
                       </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
+                    </TableHeader>
+                    <TableBody>
+                      {stations.slice(0, 10).map((station) => (
+                        <TableRow
+                          key={station.id}
+                          className="hover:bg-muted/30"
+                        >
+                          <TableCell>
+                            <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center text-xs font-bold text-primary">
+                              {station.code}
+                            </div>
+                          </TableCell>
+                          <TableCell className="font-medium">
+                            {station.name}
+                          </TableCell>
+                          <TableCell className="hidden sm:table-cell text-muted-foreground">
+                            {station.location}
+                          </TableCell>
+                          <TableCell className="text-right">
+                            <Badge
+                              variant={
+                                station.status === "ACTIVE"
+                                  ? "success"
+                                  : station.status === "MAINTENANCE"
+                                    ? "warning"
+                                    : "destructive"
+                              }
+                            >
+                              {station.status}
+                            </Badge>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
                 </div>
               </CardContent>
             </Card>
@@ -520,49 +571,52 @@ export default function DashboardPage() {
             <Card className="shadow-sm">
               <CardContent className="p-0">
                 <div className="overflow-x-auto">
-                <Table>
-                  <TableHeader>
-                    <TableRow className="bg-muted/50">
-                      <TableHead>Train</TableHead>
-                      <TableHead>Route</TableHead>
-                      <TableHead className="hidden sm:table-cell">
-                        Time
-                      </TableHead>
-                      <TableHead className="text-right">Status</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {schedules.slice(0, 10).map((schedule) => (
-                      <TableRow key={schedule.id} className="hover:bg-muted/30">
-                        <TableCell className="font-medium font-mono">
-                          {schedule.trainNumber}
-                        </TableCell>
-                        <TableCell>
-                          <p className="text-sm">
-                            {schedule.departureStation?.name} →{" "}
-                            {schedule.arrivalStation?.name}
-                          </p>
-                        </TableCell>
-                        <TableCell className="hidden sm:table-cell font-mono text-sm text-muted-foreground">
-                          {schedule.departureTime} — {schedule.arrivalTime}
-                        </TableCell>
-                        <TableCell className="text-right">
-                          <Badge
-                            variant={
-                              schedule.status === "ACTIVE"
-                                ? "success"
-                                : schedule.status === "DELAYED"
-                                  ? "warning"
-                                  : "destructive"
-                            }
-                          >
-                            {schedule.status}
-                          </Badge>
-                        </TableCell>
+                  <Table>
+                    <TableHeader>
+                      <TableRow className="bg-muted/50">
+                        <TableHead>Train</TableHead>
+                        <TableHead>Route</TableHead>
+                        <TableHead className="hidden sm:table-cell">
+                          Time
+                        </TableHead>
+                        <TableHead className="text-right">Status</TableHead>
                       </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
+                    </TableHeader>
+                    <TableBody>
+                      {schedules.slice(0, 10).map((schedule) => (
+                        <TableRow
+                          key={schedule.id}
+                          className="hover:bg-muted/30"
+                        >
+                          <TableCell className="font-medium font-mono">
+                            {schedule.trainNumber}
+                          </TableCell>
+                          <TableCell>
+                            <p className="text-sm">
+                              {schedule.departureStation?.name} →{" "}
+                              {schedule.arrivalStation?.name}
+                            </p>
+                          </TableCell>
+                          <TableCell className="hidden sm:table-cell font-mono text-sm text-muted-foreground">
+                            {schedule.departureTime} — {schedule.arrivalTime}
+                          </TableCell>
+                          <TableCell className="text-right">
+                            <Badge
+                              variant={
+                                schedule.status === "ACTIVE"
+                                  ? "success"
+                                  : schedule.status === "DELAYED"
+                                    ? "warning"
+                                    : "destructive"
+                              }
+                            >
+                              {schedule.status}
+                            </Badge>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
                 </div>
               </CardContent>
             </Card>

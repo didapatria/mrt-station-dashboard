@@ -309,22 +309,38 @@ export default function ProfilePage() {
             {/* Permissions */}
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg" style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "0.5rem" }}>
+                <CardTitle
+                  className="text-lg"
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    alignItems: "center",
+                    gap: "0.5rem",
+                  }}
+                >
                   <Shield className="h-4 w-4" />
                   Permissions
                 </CardTitle>
-                <CardDescription>{permissions.length} permissions granted</CardDescription>
+                <CardDescription>
+                  {permissions.length} permissions granted
+                </CardDescription>
               </CardHeader>
               <Separator />
               <CardContent className="pt-4">
                 <div className="flex flex-wrap gap-1.5">
                   {permissions.map((perm) => (
-                    <Badge key={perm} variant="outline" className="text-xs font-mono">
+                    <Badge
+                      key={perm}
+                      variant="outline"
+                      className="text-xs font-mono"
+                    >
                       {perm}
                     </Badge>
                   ))}
                   {permissions.length === 0 && (
-                    <p className="text-sm text-muted-foreground">No permissions assigned</p>
+                    <p className="text-sm text-muted-foreground">
+                      No permissions assigned
+                    </p>
                   )}
                 </div>
               </CardContent>

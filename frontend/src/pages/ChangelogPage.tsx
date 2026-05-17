@@ -69,7 +69,15 @@ const changelog = [
   {
     version: "2.7.0",
     date: "14 May 2026",
-    commits: ["16aa9d8", "13949a0", "fc1c219", "55cd598", "fc6a2e3", "0b7604d", "393c4e8"],
+    commits: [
+      "16aa9d8",
+      "13949a0",
+      "fc1c219",
+      "55cd598",
+      "fc6a2e3",
+      "0b7604d",
+      "393c4e8",
+    ],
     items: [
       "Spatie-style 5-table RBAC — roles, permissions, model_has_roles, model_has_permissions, role_has_permissions",
       "permissionService.getPermissionsForUser() merges role + direct permissions (Set dedup)",
@@ -237,23 +245,62 @@ export default function ChangelogPage() {
     <div>
       <div className="mb-6">
         <h2 className="text-2xl font-bold tracking-tight">Changelog</h2>
-        <p className="text-muted-foreground">Version history and release notes</p>
+        <p className="text-muted-foreground">
+          Version history and release notes
+        </p>
       </div>
 
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="space-y-6"
+      >
         {changelog.map((release, i) => (
           <Card key={release.version} className="shadow-sm">
             <CardContent className="p-6">
-              <div style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "0.5rem", marginBottom: "1rem" }}>
-                <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "0.75rem" }}>
-                  <Badge variant={i === 0 ? "default" : "outline"} className="text-sm px-3 py-1">
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  flexWrap: "wrap",
+                  gap: "0.5rem",
+                  marginBottom: "1rem",
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    alignItems: "center",
+                    gap: "0.75rem",
+                  }}
+                >
+                  <Badge
+                    variant={i === 0 ? "default" : "outline"}
+                    className="text-sm px-3 py-1"
+                  >
                     v{release.version}
                   </Badge>
-                  <span className="text-sm text-muted-foreground">{release.date}</span>
-                  {i === 0 && <Badge variant="success" className="text-[10px]">Latest</Badge>}
+                  <span className="text-sm text-muted-foreground">
+                    {release.date}
+                  </span>
+                  {i === 0 && (
+                    <Badge variant="success" className="text-[10px]">
+                      Latest
+                    </Badge>
+                  )}
                 </div>
                 {release.commits && release.commits.length > 0 && (
-                  <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap", gap: "0.25rem" }}>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      flexWrap: "wrap",
+                      gap: "0.25rem",
+                    }}
+                  >
                     {release.commits.map((hash) => (
                       <a
                         key={hash}
