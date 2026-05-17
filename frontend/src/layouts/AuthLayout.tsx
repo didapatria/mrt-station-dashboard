@@ -2,6 +2,7 @@ import { Outlet, Navigate } from "react-router-dom";
 import { useAuthStore } from "@/store/auth.store";
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 const MRT_STATIONS = [
   "Lebak Bulus Grab",
@@ -398,9 +399,7 @@ export default function AuthLayout() {
                     key={i}
                     cx="8"
                     cy={6 + i * 20}
-                    r={
-                      i === 0 || i === MRT_STATIONS.length - 1 ? 4.5 : 3
-                    }
+                    r={i === 0 || i === MRT_STATIONS.length - 1 ? 4.5 : 3}
                     fill={
                       i === 0 || i === MRT_STATIONS.length - 1
                         ? ACCENT
@@ -408,7 +407,6 @@ export default function AuthLayout() {
                     }
                     stroke={ACCENT}
                     strokeWidth="2"
-                    className={i % 3 === 0 ? "station-dot" : ""}
                     style={{ animationDelay: `${i * 0.2}s` }}
                   />
                 ))}
@@ -417,7 +415,12 @@ export default function AuthLayout() {
 
             {/* Station names */}
             <div
-              style={{ display: "flex", flexDirection: "column", gap: 0, flex: 1 }}
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: 0,
+                flex: 1,
+              }}
             >
               {MRT_STATIONS.map((station, i) => (
                 <motion.div
@@ -443,9 +446,7 @@ export default function AuthLayout() {
                           : "rgba(148,163,184,0.55)",
                       letterSpacing: "0.05em",
                       fontWeight:
-                        i === 0 || i === MRT_STATIONS.length - 1
-                          ? 600
-                          : 400,
+                        i === 0 || i === MRT_STATIONS.length - 1 ? 600 : 400,
                     }}
                   >
                     {station.toUpperCase()}
@@ -526,6 +527,19 @@ export default function AuthLayout() {
             pointerEvents: "none",
           }}
         />
+
+        {/* Theme toggle — top right */}
+        <div
+          style={{
+            position: "absolute",
+            top: 16,
+            right: 16,
+            zIndex: 10,
+            opacity: 0.6,
+          }}
+        >
+          <ThemeToggle />
+        </div>
         <motion.div
           initial={{ opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
