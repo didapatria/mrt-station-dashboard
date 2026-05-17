@@ -9,6 +9,7 @@ import {
   Download,
   BarChart3,
   TrendingUp,
+  FileText,
 } from "lucide-react";
 import { toast } from "sonner";
 import {
@@ -23,17 +24,9 @@ import {
   Pie,
   Cell,
 } from "recharts";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Table,
@@ -51,18 +44,23 @@ import { useAuthStore } from "@/store/auth.store";
 import { useThemeStore } from "@/store/theme.store";
 import { exportDashboardPDF } from "@/lib/export-pdf";
 
-const container = {
+const stagger = {
   hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: { staggerChildren: 0.08 },
-  },
+  show: { opacity: 1, transition: { staggerChildren: 0.06 } },
+};
+const fadeUp = {
+  hidden: { opacity: 0, y: 14 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.35 } },
 };
 
-const item = {
-  hidden: { opacity: 0, y: 20 },
-  show: { opacity: 1, y: 0 },
-};
+const ACCENT_COLORS = [
+  "#3b82f6",
+  "#10b981",
+  "#06b6d4",
+  "#8b5cf6",
+  "#f59e0b",
+  "#ec4899",
+];
 
 export default function DashboardPage() {
   const { t } = useTranslation();
@@ -76,7 +74,6 @@ export default function DashboardPage() {
 
   const stations = stationsData?.stations ?? [];
   const schedules = schedulesData?.schedules ?? [];
-  const isLoading = statsLoading;
 
   const handleExportStations = async () => {
     try {
@@ -102,43 +99,37 @@ export default function DashboardPage() {
           title: t("dashboard.totalStations"),
           value: stats.totalStations,
           icon: MapPin,
-          color: "text-blue-600 dark:text-blue-400",
-          bg: "bg-blue-100 dark:bg-blue-950",
+          accent: ACCENT_COLORS[0],
         },
         {
           title: t("dashboard.activeStations"),
           value: stats.activeStations,
           icon: TrainFront,
-          color: "text-emerald-600 dark:text-emerald-400",
-          bg: "bg-emerald-100 dark:bg-emerald-950",
+          accent: ACCENT_COLORS[1],
         },
         {
           title: t("dashboard.totalUsers"),
           value: stats.totalUsers,
           icon: Users,
-          color: "text-cyan-600 dark:text-cyan-400",
-          bg: "bg-cyan-100 dark:bg-cyan-950",
+          accent: ACCENT_COLORS[2],
         },
         {
           title: t("dashboard.activeSchedules"),
           value: stats.activeSchedules,
           icon: Clock,
-          color: "text-violet-600 dark:text-violet-400",
-          bg: "bg-violet-100 dark:bg-violet-950",
+          accent: ACCENT_COLORS[3],
         },
         {
           title: t("dashboard.delayedMaintenance"),
           value: stats.delayedSchedules + stats.maintenanceStations,
           icon: AlertTriangle,
-          color: "text-amber-600 dark:text-amber-400",
-          bg: "bg-amber-100 dark:bg-amber-950",
+          accent: ACCENT_COLORS[4],
         },
         {
           title: t("dashboard.totalSchedules"),
           value: stats.totalSchedules,
           icon: BarChart3,
-          color: "text-pink-600 dark:text-pink-400",
-          bg: "bg-pink-100 dark:bg-pink-950",
+          accent: ACCENT_COLORS[5],
         },
       ]
     : [];
@@ -150,476 +141,877 @@ export default function DashboardPage() {
     return "Good Evening";
   })();
 
+  const firstName = user?.name?.split(" ")[0]?.toUpperCase() ?? "";
+
+  const tooltipStyle = {
+    background: isDark ? "#0f172a" : "#ffffff",
+    border: `1px solid ${isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.08)"}`,
+    borderRadius: 6,
+    boxShadow: "0 8px 24px rgba(0,0,0,0.15)",
+    fontFamily: "'JetBrains Mono', monospace",
+    fontSize: 11,
+  };
+
   return (
     <div>
-      {/* Welcome Banner */}
-      <div
-        className="mb-6 rounded-xl overflow-hidden relative"
+      {/* ── Welcome Banner ── */}
+      <motion.div
+        initial={{ opacity: 0, y: -8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.45 }}
+        className="mb-8 relative overflow-hidden rounded-xl"
         style={{
           background: isDark
-            ? "linear-gradient(135deg, #0a1628 0%, #0d2248 40%, #0a1a3a 100%)"
-            : "linear-gradient(135deg, #1e3a8a 0%, #1d4ed8 45%, #2563eb 100%)",
-          boxShadow: isDark
-            ? "0 4px 24px rgba(10, 22, 40, 0.4)"
-            : "0 4px 20px rgba(29, 78, 216, 0.25)",
+            ? "linear-gradient(125deg, #050d1a 0%, #091a35 55%, #0a1628 100%)"
+            : "linear-gradient(125deg, #0f2057 0%, #1d4ed8 55%, #2563eb 100%)",
+          minHeight: 160,
         }}
       >
-        {/* Grid texture */}
+        {/* Dot matrix background */}
         <div
-          className="absolute inset-0"
           style={{
+            position: "absolute",
+            inset: 0,
+            opacity: isDark ? 0.08 : 0.12,
             backgroundImage:
-              "linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.06) 1px, transparent 1px)",
-            backgroundSize: "32px 32px",
+              "radial-gradient(circle, rgba(255,255,255,0.7) 1px, transparent 1px)",
+            backgroundSize: "28px 28px",
+            pointerEvents: "none",
           }}
         />
-        {/* Glowing accent */}
+        {/* Right glow */}
         <div
-          className="absolute right-0 top-0 w-64 h-full pointer-events-none"
           style={{
+            position: "absolute",
+            right: 0,
+            top: 0,
+            bottom: 0,
+            width: "40%",
             background: isDark
-              ? "radial-gradient(ellipse at right center, rgba(59,130,246,0.18) 0%, transparent 70%)"
-              : "radial-gradient(ellipse at right center, rgba(255,255,255,0.15) 0%, transparent 70%)",
+              ? "radial-gradient(ellipse at right, rgba(59,130,246,0.14) 0%, transparent 70%)"
+              : "radial-gradient(ellipse at right, rgba(255,255,255,0.18) 0%, transparent 70%)",
+            pointerEvents: "none",
           }}
         />
+        {/* Bottom edge line */}
         <div
-          className="relative p-6"
+          style={{
+            position: "absolute",
+            bottom: 0,
+            left: 0,
+            right: 0,
+            height: 1,
+            background:
+              "linear-gradient(90deg, rgba(59,130,246,0.6) 0%, rgba(59,130,246,0.1) 100%)",
+          }}
+        />
+
+        <div
+          className="relative"
           style={{
             display: "flex",
             flexDirection: "row",
             alignItems: "center",
             justifyContent: "space-between",
+            padding: "28px 32px",
+            gap: 24,
           }}
         >
-          <div>
-            <p
+          {/* Left: greeting */}
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div
               style={{
                 fontFamily: "'JetBrains Mono', monospace",
-                fontSize: 10,
-                letterSpacing: "0.12em",
-                color: "rgba(186, 230, 253, 0.8)",
+                fontSize: 9.5,
+                letterSpacing: "0.2em",
+                color: "rgba(186,230,253,0.65)",
                 textTransform: "uppercase",
-                marginBottom: 4,
+                marginBottom: 8,
+                display: "flex",
+                alignItems: "center",
+                gap: 8,
               }}
             >
-              Operations Center
-            </p>
-            <h2
-              className="font-display"
+              <span
+                style={{
+                  display: "inline-block",
+                  width: 6,
+                  height: 6,
+                  borderRadius: "50%",
+                  background: "#22c55e",
+                  boxShadow: "0 0 6px rgba(34,197,94,0.8)",
+                }}
+              />
+              Operations Center · Live
+            </div>
+            <div
               style={{
-                fontSize: 28,
+                fontFamily: "'Bebas Neue', sans-serif",
+                fontSize: "clamp(28px, 3.5vw, 44px)",
                 color: "white",
-                lineHeight: 1.1,
-                letterSpacing: "0.01em",
+                lineHeight: 1,
+                letterSpacing: "0.03em",
+                marginBottom: 8,
               }}
             >
-              {greeting.toUpperCase()},{" "}
-              {user?.name?.split(" ")[0]?.toUpperCase()}
-            </h2>
+              {greeting},{" "}
+              <span style={{ color: "#93c5fd" }}>{firstName}</span>
+            </div>
             <p
               style={{
-                color: "rgba(219, 234, 254, 0.75)",
-                fontSize: 13,
-                marginTop: 4,
+                fontFamily: "'Sora', sans-serif",
+                fontSize: 12.5,
+                color: "rgba(219,234,254,0.6)",
+                lineHeight: 1.5,
+                maxWidth: 380,
               }}
             >
               {t("dashboard.subtitle")}
             </p>
           </div>
+
+          {/* Right: big inline stats */}
           {stats && (
-            <div className="hidden sm:flex gap-8 text-right">
-              <div>
-                <p
-                  className="font-display"
-                  style={{ fontSize: 36, color: "white", lineHeight: 1 }}
-                >
-                  {stats.totalStations}
-                </p>
-                <p
+            <div
+              className="hidden sm:flex"
+              style={{ gap: 0, flexShrink: 0, alignSelf: "stretch" }}
+            >
+              {[
+                {
+                  n: stats.totalStations,
+                  label: t("dashboard.totalStations"),
+                  color: "#93c5fd",
+                },
+                {
+                  n: stats.activeSchedules,
+                  label: t("dashboard.activeSchedules"),
+                  color: "white",
+                },
+              ].map(({ n, label, color }, i) => (
+                <div
+                  key={label}
                   style={{
-                    fontSize: 10,
-                    color: "rgba(219, 234, 254, 0.65)",
-                    letterSpacing: "0.08em",
-                    textTransform: "uppercase",
-                    marginTop: 2,
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    textAlign: "right",
+                    padding: "0 28px",
+                    borderLeft:
+                      i > 0 ? "1px solid rgba(255,255,255,0.1)" : "none",
                   }}
                 >
-                  {t("dashboard.totalStations")}
-                </p>
-              </div>
-              <div>
-                <p
-                  className="font-display"
-                  style={{
-                    fontSize: 36,
-                    color: isDark ? "#60a5fa" : "#bfdbfe",
-                    lineHeight: 1,
-                  }}
-                >
-                  {stats.activeSchedules}
-                </p>
-                <p
-                  style={{
-                    fontSize: 10,
-                    color: "rgba(219, 234, 254, 0.65)",
-                    letterSpacing: "0.08em",
-                    textTransform: "uppercase",
-                    marginTop: 2,
-                  }}
-                >
-                  {t("dashboard.activeSchedules")}
-                </p>
-              </div>
+                  <div
+                    style={{
+                      fontFamily: "'Bebas Neue', sans-serif",
+                      fontSize: 52,
+                      color,
+                      lineHeight: 1,
+                      letterSpacing: "0.02em",
+                    }}
+                  >
+                    {n}
+                  </div>
+                  <div
+                    style={{
+                      fontFamily: "'JetBrains Mono', monospace",
+                      fontSize: 8.5,
+                      color: "rgba(186,230,253,0.5)",
+                      letterSpacing: "0.14em",
+                      textTransform: "uppercase",
+                      marginTop: 3,
+                    }}
+                  >
+                    {label}
+                  </div>
+                </div>
+              ))}
             </div>
           )}
         </div>
-      </div>
+      </motion.div>
 
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+      {/* ── Page header + export actions ── */}
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "flex-end",
+          justifyContent: "space-between",
+          gap: 16,
+          marginBottom: 32,
+          flexWrap: "wrap",
+        }}
+      >
         <div>
-          <h2 className="font-display text-3xl tracking-tight">
+          <h2
+            className="font-display"
+            style={{ fontSize: 28, letterSpacing: "0.03em", lineHeight: 1 }}
+          >
             {t("dashboard.title")}
           </h2>
-          <p className="text-muted-foreground text-sm mt-0.5">
-            {t("dashboard.subtitle")}
+          <p
+            style={{
+              fontFamily: "'JetBrains Mono', monospace",
+              fontSize: 10.5,
+              color: "var(--color-muted-foreground)",
+              letterSpacing: "0.1em",
+              textTransform: "uppercase",
+              marginTop: 5,
+            }}
+          >
+            N–S Line · Real-time Overview
           </p>
         </div>
-        <div className="flex flex-wrap gap-2">
+        <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
           {stats && (
             <Button
               variant="outline"
               size="sm"
               onClick={() => exportDashboardPDF(stats, stations, schedules)}
+              style={{
+                fontFamily: "'JetBrains Mono', monospace",
+                fontSize: 10,
+                letterSpacing: "0.08em",
+              }}
             >
-              <Download className="h-4 w-4 mr-2" />
-              PDF Report
+              <FileText className="h-3.5 w-3.5 mr-1.5" />
+              PDF
             </Button>
           )}
-          <Button variant="outline" size="sm" onClick={handleExportStations}>
-            <Download className="h-4 w-4 mr-2" />
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleExportStations}
+            style={{
+              fontFamily: "'JetBrains Mono', monospace",
+              fontSize: 10,
+              letterSpacing: "0.08em",
+            }}
+          >
+            <Download className="h-3.5 w-3.5 mr-1.5" />
             {t("dashboard.exportStations")}
           </Button>
-          <Button variant="outline" size="sm" onClick={handleExportSchedules}>
-            <Download className="h-4 w-4 mr-2" />
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleExportSchedules}
+            style={{
+              fontFamily: "'JetBrains Mono', monospace",
+              fontSize: 10,
+              letterSpacing: "0.08em",
+            }}
+          >
+            <Download className="h-3.5 w-3.5 mr-1.5" />
             {t("dashboard.exportSchedules")}
           </Button>
         </div>
       </div>
 
-      {/* Stats Cards */}
-      {isLoading ? (
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 mb-8">
+      {/* ── Stat blocks ── */}
+      {statsLoading ? (
+        <div className="grid gap-px md:grid-cols-2 lg:grid-cols-3 mb-8">
           {Array.from({ length: 6 }).map((_, i) => (
-            <Card key={i}>
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between">
-                  <div className="space-y-2">
-                    <Skeleton className="h-4 w-24" />
-                    <Skeleton className="h-8 w-16" />
-                  </div>
-                  <Skeleton className="h-12 w-12 rounded-xl" />
-                </div>
-              </CardContent>
-            </Card>
+            <Skeleton key={i} className="h-28 rounded-none first:rounded-tl-xl last:rounded-br-xl" />
           ))}
         </div>
       ) : (
         <motion.div
-          variants={container}
+          variants={stagger}
           initial="hidden"
           animate="show"
-          className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 mb-8"
+          className="grid gap-px md:grid-cols-2 lg:grid-cols-3 mb-8"
+          style={{
+            background: "var(--color-border)",
+            borderRadius: 12,
+            overflow: "hidden",
+          }}
         >
-          {statCards.map((stat) => (
-            <motion.div key={stat.title} variants={item}>
-              <Card className="hover:shadow-md transition-all duration-200 overflow-hidden group hover:-translate-y-0.5">
-                <CardContent className="p-0">
-                  <div className="flex items-stretch">
-                    {/* Left accent bar */}
-                    <div className={`w-1 shrink-0 ${stat.bg} opacity-80`} />
-                    <div className="flex items-center justify-between flex-1 p-5">
-                      <div>
-                        <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                          {stat.title}
-                        </p>
-                        <p
-                          className="font-display mt-1"
-                          style={{
-                            fontSize: 40,
-                            lineHeight: 1,
-                            letterSpacing: "-0.01em",
-                          }}
-                        >
-                          {stat.value}
-                        </p>
-                      </div>
-                      <div
-                        className={`${stat.bg} p-3 rounded-xl shadow-sm group-hover:scale-110 transition-transform duration-200`}
-                      >
-                        <stat.icon className={`h-5 w-5 ${stat.color}`} />
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
-          ))}
+          {statCards.map((stat, idx) => {
+            const Icon = stat.icon;
+            const isFirst = idx === 0;
+            const isLast = idx === statCards.length - 1;
+            return (
+              <motion.div
+                key={stat.title}
+                variants={fadeUp}
+                style={{
+                  background: "var(--color-card)",
+                  position: "relative",
+                  padding: "22px 24px",
+                  overflow: "hidden",
+                  cursor: "default",
+                  borderRadius: isFirst ? "11px 0 0 0" : isLast ? "0 0 11px 0" : 0,
+                  transition: "background 0.15s ease",
+                }}
+                whileHover={{ backgroundColor: isDark ? "rgba(255,255,255,0.02)" : "rgba(0,0,0,0.01)" }}
+              >
+                {/* Left accent bar */}
+                <div
+                  style={{
+                    position: "absolute",
+                    left: 0,
+                    top: 0,
+                    bottom: 0,
+                    width: 3,
+                    background: stat.accent,
+                    opacity: 0.85,
+                  }}
+                />
+                {/* Ghost icon */}
+                <Icon
+                  style={{
+                    position: "absolute",
+                    right: 16,
+                    bottom: 12,
+                    width: 44,
+                    height: 44,
+                    opacity: isDark ? 0.045 : 0.065,
+                    color: stat.accent,
+                  }}
+                />
+                <div style={{ paddingLeft: 14 }}>
+                  <p
+                    style={{
+                      fontFamily: "'JetBrains Mono', monospace",
+                      fontSize: 9.5,
+                      color: "var(--color-muted-foreground)",
+                      letterSpacing: "0.14em",
+                      textTransform: "uppercase",
+                      marginBottom: 6,
+                    }}
+                  >
+                    {stat.title}
+                  </p>
+                  <p
+                    style={{
+                      fontFamily: "'Bebas Neue', sans-serif",
+                      fontSize: 52,
+                      lineHeight: 1,
+                      letterSpacing: "0.02em",
+                      color: "var(--color-foreground)",
+                    }}
+                  >
+                    {stat.value}
+                  </p>
+                  {/* Accent underline */}
+                  <div
+                    style={{
+                      height: 1.5,
+                      width: 28,
+                      background: stat.accent,
+                      marginTop: 10,
+                      opacity: 0.5,
+                      borderRadius: 1,
+                    }}
+                  />
+                </div>
+              </motion.div>
+            );
+          })}
         </motion.div>
       )}
 
-      {/* Pie Charts */}
+      {/* ── Pie charts ── */}
       {stats && (
         <div className="grid gap-6 lg:grid-cols-2 mb-8">
-          <Card className="shadow-sm overflow-hidden">
-            <CardHeader className="pb-3">
-              <CardTitle className="font-display text-xl tracking-wide">
-                {t("dashboard.totalStations")} Breakdown
-              </CardTitle>
-            </CardHeader>
-            <Separator />
-            <CardContent className="pt-6">
-              <ResponsiveContainer width="100%" height={220}>
-                <PieChart>
-                  <Pie
-                    data={[
-                      { name: "Active", value: stats.activeStations },
-                      { name: "Maintenance", value: stats.maintenanceStations },
-                      { name: "Inactive", value: stats.inactiveStations },
-                    ].filter((d) => d.value > 0)}
-                    cx="50%"
-                    cy="50%"
-                    innerRadius={50}
-                    outerRadius={80}
-                    paddingAngle={4}
-                    dataKey="value"
-                    label={({ name, value }) => `${name}: ${value}`}
-                  >
-                    <Cell fill="#22c55e" />
-                    <Cell fill="#f59e0b" />
-                    <Cell fill="#ef4444" />
-                  </Pie>
-                  <RechartsTooltip />
-                </PieChart>
-              </ResponsiveContainer>
-            </CardContent>
-          </Card>
-          <Card className="shadow-sm overflow-hidden">
-            <CardHeader className="pb-3">
-              <CardTitle className="font-display text-xl tracking-wide">
-                {t("dashboard.totalSchedules")} Breakdown
-              </CardTitle>
-            </CardHeader>
-            <Separator />
-            <CardContent className="pt-6">
-              <ResponsiveContainer width="100%" height={220}>
-                <PieChart>
-                  <Pie
-                    data={[
-                      { name: "Active", value: stats.activeSchedules },
-                      { name: "Delayed", value: stats.delayedSchedules },
-                      { name: "Cancelled", value: stats.cancelledSchedules },
-                    ].filter((d) => d.value > 0)}
-                    cx="50%"
-                    cy="50%"
-                    innerRadius={50}
-                    outerRadius={80}
-                    paddingAngle={4}
-                    dataKey="value"
-                    label={({ name, value }) => `${name}: ${value}`}
-                  >
-                    <Cell fill="#22c55e" />
-                    <Cell fill="#f59e0b" />
-                    <Cell fill="#ef4444" />
-                  </Pie>
-                  <RechartsTooltip />
-                </PieChart>
-              </ResponsiveContainer>
-            </CardContent>
-          </Card>
+          {[
+            {
+              title: `${t("dashboard.totalStations")} Breakdown`,
+              data: [
+                { name: "Active", value: stats.activeStations },
+                { name: "Maintenance", value: stats.maintenanceStations },
+                { name: "Inactive", value: stats.inactiveStations },
+              ].filter((d) => d.value > 0),
+              colors: ["#22c55e", "#f59e0b", "#ef4444"],
+            },
+            {
+              title: `${t("dashboard.totalSchedules")} Breakdown`,
+              data: [
+                { name: "Active", value: stats.activeSchedules },
+                { name: "Delayed", value: stats.delayedSchedules },
+                { name: "Cancelled", value: stats.cancelledSchedules },
+              ].filter((d) => d.value > 0),
+              colors: ["#3b82f6", "#f59e0b", "#ef4444"],
+            },
+          ].map(({ title, data, colors }) => (
+            <div
+              key={title}
+              style={{
+                background: "var(--color-card)",
+                border: "1px solid var(--color-border)",
+                borderRadius: 12,
+                overflow: "hidden",
+              }}
+            >
+              <div
+                style={{
+                  padding: "18px 24px 14px",
+                  borderBottom: "1px solid var(--color-border)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
+              >
+                <h3
+                  style={{
+                    fontFamily: "'Bebas Neue', sans-serif",
+                    fontSize: 18,
+                    letterSpacing: "0.05em",
+                    color: "var(--color-foreground)",
+                  }}
+                >
+                  {title}
+                </h3>
+                <div style={{ display: "flex", gap: 12 }}>
+                  {data.map((d, i) => (
+                    <div
+                      key={d.name}
+                      style={{ display: "flex", alignItems: "center", gap: 5 }}
+                    >
+                      <div
+                        style={{
+                          width: 7,
+                          height: 7,
+                          borderRadius: "50%",
+                          background: colors[i],
+                          flexShrink: 0,
+                        }}
+                      />
+                      <span
+                        style={{
+                          fontFamily: "'JetBrains Mono', monospace",
+                          fontSize: 9.5,
+                          color: "var(--color-muted-foreground)",
+                          letterSpacing: "0.06em",
+                        }}
+                      >
+                        {d.name}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div style={{ padding: "12px 0" }}>
+                <ResponsiveContainer width="100%" height={200}>
+                  <PieChart>
+                    <Pie
+                      data={data}
+                      cx="50%"
+                      cy="50%"
+                      innerRadius={52}
+                      outerRadius={78}
+                      paddingAngle={3}
+                      dataKey="value"
+                      strokeWidth={0}
+                    >
+                      {data.map((_, i) => (
+                        <Cell key={i} fill={colors[i]} opacity={0.88} />
+                      ))}
+                    </Pie>
+                    <RechartsTooltip
+                      contentStyle={tooltipStyle}
+                      itemStyle={{
+                        color: isDark ? "#e2e8f0" : "#1e293b",
+                        fontFamily: "'JetBrains Mono', monospace",
+                        fontSize: 11,
+                      }}
+                    />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+          ))}
         </div>
       )}
 
-      {/* Hourly Schedule Chart with Recharts */}
+      {/* ── Hourly bar chart ── */}
       {hourlyData.length > 0 && (
-        <motion.div variants={item} initial="hidden" animate="show">
-          <Card className="mb-8 shadow-sm overflow-hidden">
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <div>
-                  <CardTitle className="font-display text-xl tracking-wide">
-                    {t("dashboard.weekdayDistribution")}
-                  </CardTitle>
-                  <CardDescription>
-                    {t("dashboard.schedulesPerHour")}
-                  </CardDescription>
-                </div>
-                <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
-                  <TrendingUp className="h-4 w-4" />
-                  <span>
-                    {hourlyData.reduce((a, b) => a + b.count, 0)} total
-                  </span>
-                </div>
+        <motion.div variants={fadeUp} initial="hidden" animate="show">
+          <div
+            className="mb-8"
+            style={{
+              background: "var(--color-card)",
+              border: "1px solid var(--color-border)",
+              borderRadius: 12,
+              overflow: "hidden",
+            }}
+          >
+            <div
+              style={{
+                padding: "18px 24px 14px",
+                borderBottom: "1px solid var(--color-border)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
+              <div>
+                <h3
+                  style={{
+                    fontFamily: "'Bebas Neue', sans-serif",
+                    fontSize: 18,
+                    letterSpacing: "0.05em",
+                    color: "var(--color-foreground)",
+                    marginBottom: 2,
+                  }}
+                >
+                  {t("dashboard.weekdayDistribution")}
+                </h3>
+                <p
+                  style={{
+                    fontFamily: "'JetBrains Mono', monospace",
+                    fontSize: 9.5,
+                    color: "var(--color-muted-foreground)",
+                    letterSpacing: "0.1em",
+                    textTransform: "uppercase",
+                  }}
+                >
+                  {t("dashboard.schedulesPerHour")}
+                </p>
               </div>
-            </CardHeader>
-            <Separator />
-            <CardContent className="pt-6">
-              <ResponsiveContainer width="100%" height={280}>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 6,
+                  background: "var(--color-muted)",
+                  borderRadius: 6,
+                  padding: "5px 10px",
+                }}
+              >
+                <TrendingUp
+                  style={{ width: 12, height: 12, color: "var(--color-muted-foreground)" }}
+                />
+                <span
+                  style={{
+                    fontFamily: "'JetBrains Mono', monospace",
+                    fontSize: 10.5,
+                    color: "var(--color-muted-foreground)",
+                    letterSpacing: "0.06em",
+                  }}
+                >
+                  {hourlyData.reduce((a, b) => a + b.count, 0)} total
+                </span>
+              </div>
+            </div>
+            <div style={{ padding: "20px 16px 12px 8px" }}>
+              <ResponsiveContainer width="100%" height={260}>
                 <BarChart
                   data={hourlyData}
-                  margin={{ top: 5, right: 5, left: -20, bottom: 5 }}
+                  margin={{ top: 4, right: 8, left: -22, bottom: 4 }}
                 >
                   <CartesianGrid
-                    strokeDasharray="3 3"
-                    className="stroke-border"
+                    strokeDasharray="2 4"
+                    stroke={isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.06)"}
+                    vertical={false}
                   />
                   <XAxis
                     dataKey="hour"
-                    tickFormatter={(v) => v.replace(":00", "")}
-                    className="text-xs fill-muted-foreground"
-                    tick={{ fontSize: 12 }}
+                    tickFormatter={(v) => v.replace(":00", "h")}
+                    tick={{
+                      fontSize: 10,
+                      fontFamily: "'JetBrains Mono', monospace",
+                      fill: isDark ? "rgba(148,163,184,0.6)" : "rgba(71,85,105,0.7)",
+                    }}
+                    axisLine={false}
+                    tickLine={false}
                   />
                   <YAxis
-                    className="text-xs fill-muted-foreground"
-                    tick={{ fontSize: 12 }}
+                    tick={{
+                      fontSize: 10,
+                      fontFamily: "'JetBrains Mono', monospace",
+                      fill: isDark ? "rgba(148,163,184,0.6)" : "rgba(71,85,105,0.7)",
+                    }}
+                    axisLine={false}
+                    tickLine={false}
                     allowDecimals={false}
                   />
                   <RechartsTooltip
-                    contentStyle={{
-                      borderRadius: "8px",
-                      border: "1px solid hsl(var(--border))",
-                      boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
+                    contentStyle={tooltipStyle}
+                    itemStyle={{
+                      color: isDark ? "#e2e8f0" : "#1e293b",
+                      fontFamily: "'JetBrains Mono', monospace",
+                      fontSize: 11,
+                    }}
+                    cursor={{
+                      fill: isDark ? "rgba(255,255,255,0.04)" : "rgba(0,0,0,0.04)",
+                      radius: 4,
                     }}
                     labelFormatter={(v) => `${v}`}
                     formatter={(value) => [`${value} schedules`, "Count"]}
                   />
                   <Bar
                     dataKey="count"
-                    fill="oklch(0.505 0.155 246.87)"
-                    radius={[6, 6, 0, 0]}
-                    className="fill-primary"
+                    fill="#3b82f6"
+                    radius={[4, 4, 0, 0]}
+                    opacity={0.85}
                   />
                 </BarChart>
               </ResponsiveContainer>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </motion.div>
       )}
 
-      {/* Station & Schedule Data */}
-      <motion.div variants={item} initial="hidden" animate="show">
+      {/* ── Station & Schedule tables ── */}
+      <motion.div variants={fadeUp} initial="hidden" animate="show">
         <Tabs defaultValue="stations">
-          <TabsList className="mb-4">
-            <TabsTrigger value="stations">Stations</TabsTrigger>
-            <TabsTrigger value="schedules">Recent Schedules</TabsTrigger>
-          </TabsList>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              marginBottom: 16,
+            }}
+          >
+            <TabsList>
+              <TabsTrigger value="stations">
+                <MapPin style={{ width: 13, height: 13, marginRight: 6 }} />
+                Stations
+              </TabsTrigger>
+              <TabsTrigger value="schedules">
+                <Clock style={{ width: 13, height: 13, marginRight: 6 }} />
+                Schedules
+              </TabsTrigger>
+            </TabsList>
+          </div>
 
           <TabsContent value="stations">
-            <Card className="shadow-sm">
-              <CardContent className="p-0">
-                <div className="overflow-x-auto">
-                  <Table>
-                    <TableHeader>
-                      <TableRow className="bg-muted/50">
-                        <TableHead className="w-15">Code</TableHead>
-                        <TableHead>Name</TableHead>
-                        <TableHead className="hidden sm:table-cell">
-                          Location
-                        </TableHead>
-                        <TableHead className="text-right">Status</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {stations.slice(0, 10).map((station) => (
-                        <TableRow
-                          key={station.id}
-                          className="hover:bg-muted/30"
+            <div
+              style={{
+                background: "var(--color-card)",
+                border: "1px solid var(--color-border)",
+                borderRadius: 12,
+                overflow: "hidden",
+              }}
+            >
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow
+                      style={{
+                        borderBottom: "1px solid var(--color-border)",
+                      }}
+                    >
+                      <TableHead
+                        style={{
+                          fontFamily: "'JetBrains Mono', monospace",
+                          fontSize: 9.5,
+                          letterSpacing: "0.14em",
+                          textTransform: "uppercase",
+                          color: "var(--color-muted-foreground)",
+                          padding: "12px 16px",
+                        }}
+                      >
+                        Code
+                      </TableHead>
+                      <TableHead
+                        style={{
+                          fontFamily: "'JetBrains Mono', monospace",
+                          fontSize: 9.5,
+                          letterSpacing: "0.14em",
+                          textTransform: "uppercase",
+                          color: "var(--color-muted-foreground)",
+                        }}
+                      >
+                        Name
+                      </TableHead>
+                      <TableHead
+                        className="hidden sm:table-cell"
+                        style={{
+                          fontFamily: "'JetBrains Mono', monospace",
+                          fontSize: 9.5,
+                          letterSpacing: "0.14em",
+                          textTransform: "uppercase",
+                          color: "var(--color-muted-foreground)",
+                        }}
+                      >
+                        Location
+                      </TableHead>
+                      <TableHead
+                        style={{
+                          textAlign: "right",
+                          fontFamily: "'JetBrains Mono', monospace",
+                          fontSize: 9.5,
+                          letterSpacing: "0.14em",
+                          textTransform: "uppercase",
+                          color: "var(--color-muted-foreground)",
+                          padding: "12px 16px",
+                        }}
+                      >
+                        Status
+                      </TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {stations.slice(0, 10).map((station) => (
+                      <TableRow key={station.id} className="hover:bg-muted/30">
+                        <TableCell style={{ padding: "12px 16px" }}>
+                          <div
+                            style={{
+                              height: 30,
+                              width: 30,
+                              borderRadius: 6,
+                              background: "color-mix(in oklch, var(--color-primary) 10%, transparent)",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              fontFamily: "'JetBrains Mono', monospace",
+                              fontSize: 10,
+                              fontWeight: 700,
+                              color: "var(--color-primary)",
+                              letterSpacing: "-0.02em",
+                            }}
+                          >
+                            {station.code}
+                          </div>
+                        </TableCell>
+                        <TableCell
+                          style={{
+                            fontFamily: "'Sora', sans-serif",
+                            fontSize: 13.5,
+                            fontWeight: 500,
+                          }}
                         >
-                          <TableCell>
-                            <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center text-xs font-bold text-primary">
-                              {station.code}
-                            </div>
-                          </TableCell>
-                          <TableCell className="font-medium">
-                            {station.name}
-                          </TableCell>
-                          <TableCell className="hidden sm:table-cell text-muted-foreground">
-                            {station.location}
-                          </TableCell>
-                          <TableCell className="text-right">
-                            <Badge
-                              variant={
-                                station.status === "ACTIVE"
-                                  ? "success"
-                                  : station.status === "MAINTENANCE"
-                                    ? "warning"
-                                    : "destructive"
-                              }
-                            >
-                              {station.status}
-                            </Badge>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </div>
-              </CardContent>
-            </Card>
+                          {station.name}
+                        </TableCell>
+                        <TableCell
+                          className="hidden sm:table-cell"
+                          style={{
+                            fontFamily: "'JetBrains Mono', monospace",
+                            fontSize: 11,
+                            color: "var(--color-muted-foreground)",
+                            letterSpacing: "0.02em",
+                          }}
+                        >
+                          {station.location}
+                        </TableCell>
+                        <TableCell style={{ textAlign: "right", padding: "12px 16px" }}>
+                          <Badge
+                            variant={
+                              station.status === "ACTIVE"
+                                ? "success"
+                                : station.status === "MAINTENANCE"
+                                  ? "warning"
+                                  : "destructive"
+                            }
+                          >
+                            {station.status}
+                          </Badge>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            </div>
           </TabsContent>
 
           <TabsContent value="schedules">
-            <Card className="shadow-sm">
-              <CardContent className="p-0">
-                <div className="overflow-x-auto">
-                  <Table>
-                    <TableHeader>
-                      <TableRow className="bg-muted/50">
-                        <TableHead>Train</TableHead>
-                        <TableHead>Route</TableHead>
-                        <TableHead className="hidden sm:table-cell">
-                          Time
-                        </TableHead>
-                        <TableHead className="text-right">Status</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {schedules.slice(0, 10).map((schedule) => (
-                        <TableRow
-                          key={schedule.id}
-                          className="hover:bg-muted/30"
+            <div
+              style={{
+                background: "var(--color-card)",
+                border: "1px solid var(--color-border)",
+                borderRadius: 12,
+                overflow: "hidden",
+              }}
+            >
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow
+                      style={{
+                        borderBottom: "1px solid var(--color-border)",
+                      }}
+                    >
+                      {["Train", "Route", "Time", "Status"].map((h, i) => (
+                        <TableHead
+                          key={h}
+                          className={i === 2 ? "hidden sm:table-cell" : ""}
+                          style={{
+                            fontFamily: "'JetBrains Mono', monospace",
+                            fontSize: 9.5,
+                            letterSpacing: "0.14em",
+                            textTransform: "uppercase",
+                            color: "var(--color-muted-foreground)",
+                            padding: i === 0 || i === 3 ? "12px 16px" : undefined,
+                            textAlign: i === 3 ? "right" : undefined,
+                          }}
                         >
-                          <TableCell className="font-medium font-mono">
-                            {schedule.trainNumber}
-                          </TableCell>
-                          <TableCell>
-                            <p className="text-sm">
-                              {schedule.departureStation?.name} →{" "}
-                              {schedule.arrivalStation?.name}
-                            </p>
-                          </TableCell>
-                          <TableCell className="hidden sm:table-cell font-mono text-sm text-muted-foreground">
-                            {schedule.departureTime} — {schedule.arrivalTime}
-                          </TableCell>
-                          <TableCell className="text-right">
-                            <Badge
-                              variant={
-                                schedule.status === "ACTIVE"
-                                  ? "success"
-                                  : schedule.status === "DELAYED"
-                                    ? "warning"
-                                    : "destructive"
-                              }
-                            >
-                              {schedule.status}
-                            </Badge>
-                          </TableCell>
-                        </TableRow>
+                          {h}
+                        </TableHead>
                       ))}
-                    </TableBody>
-                  </Table>
-                </div>
-              </CardContent>
-            </Card>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {schedules.slice(0, 10).map((schedule) => (
+                      <TableRow key={schedule.id} className="hover:bg-muted/30">
+                        <TableCell
+                          style={{
+                            padding: "12px 16px",
+                            fontFamily: "'JetBrains Mono', monospace",
+                            fontSize: 12,
+                            fontWeight: 600,
+                            letterSpacing: "0.04em",
+                          }}
+                        >
+                          {schedule.trainNumber}
+                        </TableCell>
+                        <TableCell
+                          style={{
+                            fontFamily: "'Sora', sans-serif",
+                            fontSize: 13,
+                          }}
+                        >
+                          <span style={{ color: "var(--color-foreground)" }}>
+                            {schedule.departureStation?.name}
+                          </span>
+                          <span
+                            style={{
+                              color: "var(--color-muted-foreground)",
+                              margin: "0 6px",
+                              fontFamily: "'JetBrains Mono', monospace",
+                              fontSize: 11,
+                            }}
+                          >
+                            →
+                          </span>
+                          <span style={{ color: "var(--color-foreground)" }}>
+                            {schedule.arrivalStation?.name}
+                          </span>
+                        </TableCell>
+                        <TableCell
+                          className="hidden sm:table-cell"
+                          style={{
+                            fontFamily: "'JetBrains Mono', monospace",
+                            fontSize: 11,
+                            color: "var(--color-muted-foreground)",
+                            letterSpacing: "0.04em",
+                          }}
+                        >
+                          {schedule.departureTime}
+                          <span style={{ margin: "0 4px", opacity: 0.4 }}>—</span>
+                          {schedule.arrivalTime}
+                        </TableCell>
+                        <TableCell style={{ textAlign: "right", padding: "12px 16px" }}>
+                          <Badge
+                            variant={
+                              schedule.status === "ACTIVE"
+                                ? "success"
+                                : schedule.status === "DELAYED"
+                                  ? "warning"
+                                  : "destructive"
+                            }
+                          >
+                            {schedule.status}
+                          </Badge>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            </div>
           </TabsContent>
         </Tabs>
       </motion.div>
