@@ -101,7 +101,6 @@ export default function LoginPage() {
         >
           MRT JAKARTA
         </span>
-
       </div>
 
       {/* Heading */}
