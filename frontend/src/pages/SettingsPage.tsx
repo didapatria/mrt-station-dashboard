@@ -29,9 +29,7 @@ export default function SettingsPage() {
 
   const cardWithAccent: React.CSSProperties = {
     ...cardStyle,
-    borderLeft: "3px solid transparent",
-    borderImage:
-      "linear-gradient(180deg, #3b82f6 0%, rgba(59,130,246,0.2) 100%) 1",
+    boxShadow: "inset 3px 0 0 rgba(59,130,246,0.55)",
   };
 
   const cardHeaderStyle: React.CSSProperties = {
@@ -118,7 +116,7 @@ export default function SettingsPage() {
         style={{
           display: "grid",
           gap: 24,
-          gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
+          gridTemplateColumns: "repeat(2, 1fr)",
         }}
       >
         {/* Language */}
