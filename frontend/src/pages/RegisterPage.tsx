@@ -112,7 +112,7 @@ export default function RegisterPage() {
         >
           MRT JAKARTA
         </span>
-        <div style={{ marginLeft: "auto" }}>
+        <div style={{ marginLeft: "auto", color: "rgba(255,255,255,0.75)" }}>
           <ThemeToggle />
         </div>
       </div>

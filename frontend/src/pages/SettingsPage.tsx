@@ -298,12 +298,12 @@ export default function SettingsPage() {
             }}
           >
             {[
-              { key: "VERSION", value: "2.11.0" },
+              { key: "VERSION", value: "2.12.0" },
               { key: "FRONTEND", value: "React 19 + Vite 8 + Tailwind 4" },
               { key: "BACKEND", value: "Express.js 5 + TypeScript" },
               { key: "DATABASE", value: "PostgreSQL + Prisma ORM" },
               { key: "AUTH", value: "JWT + Google OAuth" },
-              { key: "E2E TESTS", value: "93 Playwright tests" },
+              { key: "E2E TESTS", value: "106 Playwright tests" },
             ].map(({ key, value }, idx, arr) => (
               <div
                 key={key}
