@@ -1,7 +1,14 @@
 import { test, expect } from "@playwright/test";
-import { navigateTo } from "./fixtures/auth";
 
 test.describe("Design — Auth Page", () => {
+  test.beforeEach(async ({ page }) => {
+    // Clear auth state so /login is accessible even when storageState is set
+    await page.goto("/login");
+    await page.evaluate(() => { localStorage.clear(); sessionStorage.clear(); });
+    await page.goto("/login");
+    await page.waitForLoadState("domcontentloaded");
+  });
+
   test("left panel should be visible on desktop and contain branding text", async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 800 });
     await page.goto("/login");
@@ -48,7 +55,7 @@ test.describe("Design — Dashboard", () => {
   test.use({ storageState: "e2e/.auth/admin.json" });
 
   test("welcome banner should show Operations Center label and uppercase greeting", async ({ page }) => {
-    await navigateTo(page, "/dashboard");
+    await page.goto("/dashboard");
     await page.waitForTimeout(2000);
 
     await expect(page.locator("text=Operations Center").first()).toBeVisible();
@@ -58,7 +65,7 @@ test.describe("Design — Dashboard", () => {
   });
 
   test("stat cards should have accent bar and font-display number", async ({ page }) => {
-    await navigateTo(page, "/dashboard");
+    await page.goto("/dashboard");
     await page.waitForTimeout(2000);
 
     const accentBar = page.locator("div.w-1").first();

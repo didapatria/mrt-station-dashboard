@@ -97,13 +97,18 @@ export default function AccessManagementPage() {
           </CardHeader>
           <CardContent className="p-0">
             <div className="w-full overflow-x-auto">
-              <Table className="w-full">
+              <Table className="w-full table-fixed">
+                <colgroup>
+                  <col style={{ width: "22%" }} />
+                  <col style={{ width: "44%" }} />
+                  {ROLES.map((role) => <col key={role} style={{ width: `${34 / ROLES.length}%` }} />)}
+                </colgroup>
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="w-48">Module</TableHead>
-                    <TableHead className="w-56">Permission</TableHead>
+                    <TableHead>Module</TableHead>
+                    <TableHead>Permission</TableHead>
                     {ROLES.map((role) => (
-                      <TableHead key={role} className="text-center w-32">
+                      <TableHead key={role} className="text-center">
                         <div style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "center", gap: "0.375rem" }}>
                           {role === "ADMIN" ? <ShieldCheck className="h-3.5 w-3.5" /> : <Shield className="h-3.5 w-3.5" />}
                           {role}

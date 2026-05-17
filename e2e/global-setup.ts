@@ -21,7 +21,18 @@ async function loginAndSave(
   await page.locator("#password").fill(password);
   await page.click("button[type='submit']");
   await page.waitForURL(/dashboard/, { timeout: 30000 });
-  await page.waitForTimeout(1000);
+  // Wait for permissions to be persisted to localStorage (non-empty array)
+  // so storageState won't trigger a fresh fetch on every test load
+  await page.waitForFunction(
+    () => {
+      const p = localStorage.getItem("permissions");
+      if (!p) return false;
+      try { return JSON.parse(p).length > 0; } catch { return false; }
+    },
+    { timeout: 8000 }
+  ).catch(async () => {
+    await page.waitForTimeout(2000);
+  });
 
   await context.storageState({ path: storagePath });
   await browser.close();
