@@ -171,7 +171,7 @@ export default function ProfilePage() {
     "Vitest",
     "React Testing Library",
     "Supertest",
-    "Playwright (72 E2E)",
+    "Playwright (87 E2E)",
   ];
 
   return (

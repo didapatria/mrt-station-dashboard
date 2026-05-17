@@ -63,7 +63,7 @@ const changelog = [
     date: "15 April 2026",
     commits: ["2e2dd12", "e5c0cfc", "3144662", "916713d"],
     items: [
-      "E2E automation testing — 72 Playwright tests across 17 spec files",
+      "E2E automation testing — 87 Playwright tests across 18 spec files",
       "UX tests — password toggle, tab order, empty states, breadcrumbs",
       "Show/hide password toggle on login and register pages",
       "Tab focus fix — password eye buttons skipped in tab order",

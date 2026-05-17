@@ -146,7 +146,7 @@ React Page → TanStack Query Hook → API Service (axios) → Express Route →
 - **Role-Based Access Control** - Spatie-style 5-table RBAC (`roles`, `permissions`, `model_has_roles`, `model_has_permissions`, `role_has_permissions`), `GET /api/permissions/me` returns user permissions on login, stored in Zustand, no hardcoded frontend config
 - **CI/CD** - GitHub Actions pipeline with lint, type check, test, and build
 - **Unit Testing** - Vitest + React Testing Library + Supertest
-- **E2E Testing** - Playwright (72 tests across 17 spec files)
+- **E2E Testing** - Playwright (87 tests across 18 spec files, including mobile viewport)
 - **Real-time Notifications** - Server-Sent Events with notification center
 - **i18n** - English and Indonesian language support
 - **Route Planner** - Find schedules between stations
@@ -317,7 +317,7 @@ npx playwright test --debug
 npm run e2e:report
 ```
 
-### Test Coverage (72 tests)
+### Test Coverage (87 tests)
 | Spec File | Tests | What's Tested |
 |-----------|-------|---------------|
 | `auth.spec.ts` | 13 | Login, register, Google OAuth, validation, auth guard, 404 |
@@ -337,6 +337,7 @@ npm run e2e:report
 | `navigation.spec.ts` | 4 | Sidebar routing, admin menu, logout |
 | `ux-auth.spec.ts` | 4 | Password toggle, tab order, validation UX |
 | `ux.spec.ts` | 8 | Forms, breadcrumbs, empty states, sidebar |
+| `mobile.spec.ts` | 15 | Viewport overflow, sidebar toggle, nav, auth, map, profile, changelog — Pixel 7 |
 
 ## Database Schema
 

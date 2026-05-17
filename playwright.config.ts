@@ -27,9 +27,17 @@ export default defineConfig({
     },
     {
       name: "admin-tests",
-      testIgnore: /auth.*\.spec\.ts/,
+      testIgnore: /auth.*\.spec\.ts|mobile.*\.spec\.ts/,
       use: {
         ...devices["Desktop Chrome"],
+        storageState: "e2e/.auth/admin.json",
+      },
+    },
+    {
+      name: "mobile-tests",
+      testMatch: /mobile.*\.spec\.ts/,
+      use: {
+        ...devices["Pixel 7"],
         storageState: "e2e/.auth/admin.json",
       },
     },
