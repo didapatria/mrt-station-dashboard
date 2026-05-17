@@ -6,6 +6,20 @@ import { GitCommit } from "lucide-react";
 
 const changelog = [
   {
+    version: "2.8.0",
+    date: "17 May 2026",
+    commits: ["19ac23a", "87a082e"],
+    items: [
+      "Mobile E2E tests — 15 Playwright tests on Pixel 7 viewport (412×915)",
+      "Mobile viewport overflow checks across all pages",
+      "Mobile sidebar toggle, tap-based navigation",
+      "Mobile auth — login form full-width, submit via tap",
+      "Mobile map — Leaflet renders full-width on small screen",
+      "Live deployment links added to README (Vercel, Fly.io, GitHub Pages)",
+      "Vercel production redeployed with all May 2026 changes",
+    ],
+  },
+  {
     version: "2.7.0",
     date: "14 May 2026",
     commits: ["16aa9d8", "13949a0", "fc1c219", "55cd598", "fc6a2e3", "0b7604d", "393c4e8"],

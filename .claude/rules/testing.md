@@ -29,4 +29,8 @@ paths:
 - For dialogs: use `page.locator("[role='dialog']")`
 - For ambiguous locators: always add `.first()` to avoid strict mode errors
 - Global setup (`e2e/global-setup.ts`) logs in and saves storageState for both roles
-- Config uses two projects: `auth-tests` (no auth) and `admin-tests` (with storageState)
+- Config uses three projects: `auth-tests` (no auth), `admin-tests` (storageState), `mobile-tests` (Pixel 7 storageState)
+- Mobile tests live in `e2e/mobile.spec.ts`, matched by `mobile.*\.spec\.ts` pattern
+- Mobile tests use `page.tap()` not `page.click()` for touch interactions
+- Mobile overflow check pattern: `document.body.scrollWidth <= window.innerWidth + 10`
+- `screenshot: "on"` captures every test — visible in GitHub Pages report at https://didapatria.github.io/mrt-station-dashboard/
