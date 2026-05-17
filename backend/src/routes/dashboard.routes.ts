@@ -53,4 +53,7 @@ dashboardRouter.get("/stations-summary", dashboardController.getStationSummary);
  *       200:
  *         description: Schedule count per hour
  */
-dashboardRouter.get("/schedules-by-hour", dashboardController.getSchedulesByHour);
+dashboardRouter.get(
+  "/schedules-by-hour",
+  dashboardController.getSchedulesByHour,
+);

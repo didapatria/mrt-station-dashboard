@@ -31,7 +31,11 @@ export const permissionRouter = Router();
  *       401:
  *         description: Unauthorized
  */
-permissionRouter.get("/me", authMiddleware, permissionController.getMyPermissions);
+permissionRouter.get(
+  "/me",
+  authMiddleware,
+  permissionController.getMyPermissions,
+);
 
 /**
  * @swagger
@@ -60,4 +64,9 @@ permissionRouter.get("/me", authMiddleware, permissionController.getMyPermission
  *       403:
  *         description: Forbidden - Admin only
  */
-permissionRouter.get("/", authMiddleware, adminMiddleware, permissionController.getAllPermissions);
+permissionRouter.get(
+  "/",
+  authMiddleware,
+  adminMiddleware,
+  permissionController.getAllPermissions,
+);

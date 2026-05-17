@@ -26,12 +26,14 @@ const PORT = process.env.PORT || 3000;
 
 // Middlewares
 app.use(helmet({ contentSecurityPolicy: false }));
-app.use(cors({
-  origin: process.env.CORS_ORIGIN
-    ? process.env.CORS_ORIGIN.split(",").map((o) => o.trim())
-    : "http://localhost:5173",
-  credentials: true,
-}));
+app.use(
+  cors({
+    origin: process.env.CORS_ORIGIN
+      ? process.env.CORS_ORIGIN.split(",").map((o) => o.trim())
+      : "http://localhost:5173",
+    credentials: true,
+  }),
+);
 app.use(morgan("dev"));
 app.use(express.json());
 
@@ -42,24 +44,34 @@ const apiLimiter = rateLimit({
   limit: isDev ? 1000 : 100,
   standardHeaders: "draft-7",
   legacyHeaders: false,
-  message: { success: false, error: "Too many requests, please try again later." },
+  message: {
+    success: false,
+    error: "Too many requests, please try again later.",
+  },
 });
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   limit: isDev ? 100 : 20,
   standardHeaders: "draft-7",
   legacyHeaders: false,
-  message: { success: false, error: "Too many login attempts, please try again later." },
+  message: {
+    success: false,
+    error: "Too many login attempts, please try again later.",
+  },
 });
 app.use("/api/auth/login", authLimiter);
 app.use("/api/auth/register", authLimiter);
 app.use("/api", apiLimiter);
 
 // Swagger UI
-app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
-  customCss: ".swagger-ui .topbar { display: none }",
-  customSiteTitle: "MRT Jakarta API Documentation",
-}));
+app.use(
+  "/api/docs",
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerSpec, {
+    customCss: ".swagger-ui .topbar { display: none }",
+    customSiteTitle: "MRT Jakarta API Documentation",
+  }),
+);
 
 // Swagger JSON
 app.get("/api/docs.json", (_req, res) => {
@@ -90,7 +102,10 @@ app.get("/api/system/status", authMiddleware, (_req, res) => {
       memoryUsage: process.memoryUsage(),
       nodeVersion: process.version,
       platform: process.platform,
-      rateLimit: { api: { windowMs: 900000, limit: isDev ? 1000 : 100 }, auth: { windowMs: 900000, limit: isDev ? 100 : 20 } },
+      rateLimit: {
+        api: { windowMs: 900000, limit: isDev ? 1000 : 100 },
+        auth: { windowMs: 900000, limit: isDev ? 100 : 20 },
+      },
       sseClients: sseService.getClientCount(),
     },
   });

@@ -115,7 +115,12 @@ scheduleRouter.get("/:id", scheduleController.getById);
  *       422:
  *         description: Validation error
  */
-scheduleRouter.post("/", adminMiddleware, validate(createScheduleSchema), scheduleController.create);
+scheduleRouter.post(
+  "/",
+  adminMiddleware,
+  validate(createScheduleSchema),
+  scheduleController.create,
+);
 
 /**
  * @swagger
@@ -142,7 +147,12 @@ scheduleRouter.post("/", adminMiddleware, validate(createScheduleSchema), schedu
  *       404:
  *         description: Schedule not found
  */
-scheduleRouter.put("/:id", adminMiddleware, validate(updateScheduleSchema), scheduleController.update);
+scheduleRouter.put(
+  "/:id",
+  adminMiddleware,
+  validate(updateScheduleSchema),
+  scheduleController.update,
+);
 
 /**
  * @swagger

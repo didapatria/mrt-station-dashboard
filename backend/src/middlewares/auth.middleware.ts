@@ -5,7 +5,7 @@ import { AuthRequest, JwtPayload } from "../types";
 export const authMiddleware = (
   req: AuthRequest,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ): void => {
   const authHeader = req.headers.authorization;
 
@@ -22,7 +22,7 @@ export const authMiddleware = (
   try {
     const decoded = jwt.verify(
       token,
-      process.env.JWT_SECRET || "fallback-secret"
+      process.env.JWT_SECRET || "fallback-secret",
     ) as JwtPayload;
 
     req.user = decoded;

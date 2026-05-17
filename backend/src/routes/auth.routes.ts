@@ -2,7 +2,11 @@ import { Router } from "express";
 import { authController } from "../controllers/auth.controller";
 import { authMiddleware } from "../middlewares/auth.middleware";
 import { validate } from "../middlewares/validate.middleware";
-import { registerSchema, loginSchema, googleAuthSchema } from "../validators/auth.validator";
+import {
+  registerSchema,
+  loginSchema,
+  googleAuthSchema,
+} from "../validators/auth.validator";
 
 export const authRouter = Router();
 
@@ -106,7 +110,11 @@ authRouter.post("/login", validate(loginSchema), authController.login);
  *       422:
  *         description: Validation error
  */
-authRouter.post("/google", validate(googleAuthSchema), authController.googleAuth);
+authRouter.post(
+  "/google",
+  validate(googleAuthSchema),
+  authController.googleAuth,
+);
 
 /**
  * @swagger
@@ -154,4 +162,8 @@ authRouter.get("/profile", authMiddleware, authController.getProfile);
  *       400:
  *         description: Current password incorrect
  */
-authRouter.post("/change-password", authMiddleware, authController.changePassword);
+authRouter.post(
+  "/change-password",
+  authMiddleware,
+  authController.changePassword,
+);

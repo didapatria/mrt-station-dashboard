@@ -94,4 +94,3 @@ ALTER TABLE "schedules" ADD CONSTRAINT "schedules_departure_station_id_fkey" FOR
 
 -- AddForeignKey
 ALTER TABLE "schedules" ADD CONSTRAINT "schedules_arrival_station_id_fkey" FOREIGN KEY ("arrival_station_id") REFERENCES "stations"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-

@@ -14,7 +14,8 @@ export const feedbackController = {
       });
       res.status(201).json({ success: true, data: feedback });
     } catch (error) {
-      const msg = error instanceof Error ? error.message : "Failed to submit feedback";
+      const msg =
+        error instanceof Error ? error.message : "Failed to submit feedback";
       res.status(500).json({ success: false, error: msg });
     }
   },
@@ -26,7 +27,8 @@ export const feedbackController = {
       const result = await feedbackService.getAll(page, limit);
       res.json({ success: true, data: result.feedbacks, meta: result.meta });
     } catch (error) {
-      const msg = error instanceof Error ? error.message : "Failed to fetch feedback";
+      const msg =
+        error instanceof Error ? error.message : "Failed to fetch feedback";
       res.status(500).json({ success: false, error: msg });
     }
   },

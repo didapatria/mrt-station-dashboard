@@ -5,10 +5,14 @@ import { AuthRequest } from "../types";
 export const permissionController = {
   async getMyPermissions(req: AuthRequest, res: Response): Promise<void> {
     try {
-      const permissions = await permissionService.getPermissionsForUser(req.user!.userId);
+      const permissions = await permissionService.getPermissionsForUser(
+        req.user!.userId,
+      );
       res.json({ success: true, data: permissions });
     } catch {
-      res.status(500).json({ success: false, error: "Failed to fetch permissions" });
+      res
+        .status(500)
+        .json({ success: false, error: "Failed to fetch permissions" });
     }
   },
 
@@ -17,7 +21,9 @@ export const permissionController = {
       const permissions = await permissionService.getAllPermissions();
       res.json({ success: true, data: permissions });
     } catch {
-      res.status(500).json({ success: false, error: "Failed to fetch permissions" });
+      res
+        .status(500)
+        .json({ success: false, error: "Failed to fetch permissions" });
     }
   },
 };

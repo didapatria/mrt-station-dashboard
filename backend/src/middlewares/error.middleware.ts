@@ -5,7 +5,7 @@ export const errorHandler = (
   err: Error,
   _req: Request,
   res: Response<ApiResponse>,
-  _next: NextFunction
+  _next: NextFunction,
 ): void => {
   console.error("Error:", err.message);
 

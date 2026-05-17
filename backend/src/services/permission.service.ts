@@ -34,7 +34,7 @@ export const permissionService = {
     ]);
 
     const fromRoles = rolePerms.flatMap((mr) =>
-      mr.role.rolePermissions.map((rp) => rp.permission.name)
+      mr.role.rolePermissions.map((rp) => rp.permission.name),
     );
     const fromDirect = directPerms.map((mp) => mp.permission.name);
 

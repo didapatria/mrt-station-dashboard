@@ -106,7 +106,9 @@ export const scheduleService = {
       },
     });
     if (conflict) {
-      throw new Error(`Schedule conflict: ${input.trainNumber} already departs at ${input.departureTime} on ${input.dayType}`);
+      throw new Error(
+        `Schedule conflict: ${input.trainNumber} already departs at ${input.departureTime} on ${input.dayType}`,
+      );
     }
 
     return prisma.schedule.create({

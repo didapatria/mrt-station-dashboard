@@ -207,7 +207,10 @@ const options: swaggerJsdoc.Options = {
             name: { type: "string", example: "stations.view" },
             label: { type: "string", example: "View Stations" },
             group: { type: "string", example: "Stations" },
-            roles: { type: "array", items: { type: "string", enum: ["ADMIN", "OPERATOR"] } },
+            roles: {
+              type: "array",
+              items: { type: "string", enum: ["ADMIN", "OPERATOR"] },
+            },
           },
         },
         Feedback: {
@@ -216,7 +219,11 @@ const options: swaggerJsdoc.Options = {
             id: { type: "string", format: "uuid" },
             userId: { type: "string", format: "uuid" },
             rating: { type: "integer", minimum: 1, maximum: 5, example: 4 },
-            category: { type: "string", enum: ["general", "bug", "feature", "ux"], example: "general" },
+            category: {
+              type: "string",
+              enum: ["general", "bug", "feature", "ux"],
+              example: "general",
+            },
             message: { type: "string", example: "Great dashboard!" },
             createdAt: { type: "string", format: "date-time" },
           },
@@ -226,7 +233,11 @@ const options: swaggerJsdoc.Options = {
           required: ["rating", "category", "message"],
           properties: {
             rating: { type: "integer", minimum: 1, maximum: 5, example: 4 },
-            category: { type: "string", enum: ["general", "bug", "feature", "ux"], example: "general" },
+            category: {
+              type: "string",
+              enum: ["general", "bug", "feature", "ux"],
+              example: "general",
+            },
             message: { type: "string", example: "Great dashboard!" },
           },
         },
@@ -238,7 +249,10 @@ const options: swaggerJsdoc.Options = {
             action: { type: "string", enum: ["CREATE", "UPDATE", "DELETE"] },
             entity: { type: "string", enum: ["Station", "Schedule", "User"] },
             entityId: { type: "string", format: "uuid" },
-            details: { type: "string", example: "Created station Lebak Bulus Grab (LBB)" },
+            details: {
+              type: "string",
+              example: "Created station Lebak Bulus Grab (LBB)",
+            },
             createdAt: { type: "string", format: "date-time" },
             user: { $ref: "#/components/schemas/User" },
           },
@@ -248,7 +262,11 @@ const options: swaggerJsdoc.Options = {
           required: ["currentPassword", "newPassword"],
           properties: {
             currentPassword: { type: "string", example: "admin123" },
-            newPassword: { type: "string", minLength: 6, example: "newpassword123" },
+            newPassword: {
+              type: "string",
+              minLength: 6,
+              example: "newpassword123",
+            },
           },
         },
         UpdateRoleRequest: {

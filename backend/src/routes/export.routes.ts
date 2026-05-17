@@ -33,19 +33,18 @@ exportRouter.get("/stations", async (_req: Request, res: Response) => {
     const rows = stations
       .map(
         (s) =>
-          `${s.code},"${s.name}","${s.location}",${s.status},${s.order},${s.latitude ?? ""},${s.longitude ?? ""}`
+          `${s.code},"${s.name}","${s.location}",${s.status},${s.order},${s.latitude ?? ""},${s.longitude ?? ""}`,
       )
       .join("\n");
 
     res.setHeader("Content-Type", "text/csv");
     res.setHeader(
       "Content-Disposition",
-      "attachment; filename=mrt-stations.csv"
+      "attachment; filename=mrt-stations.csv",
     );
     res.send(header + rows);
   } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "Export failed";
+    const message = error instanceof Error ? error.message : "Export failed";
     res.status(500).json({ success: false, error: message });
   }
 });
@@ -91,19 +90,18 @@ exportRouter.get("/schedules", async (req: Request, res: Response) => {
     const rows = schedules
       .map(
         (s) =>
-          `${s.trainNumber},"${s.departureStation.name} (${s.departureStation.code})","${s.arrivalStation.name} (${s.arrivalStation.code})",${s.departureTime},${s.arrivalTime},${s.dayType},${s.status}`
+          `${s.trainNumber},"${s.departureStation.name} (${s.departureStation.code})","${s.arrivalStation.name} (${s.arrivalStation.code})",${s.departureTime},${s.arrivalTime},${s.dayType},${s.status}`,
       )
       .join("\n");
 
     res.setHeader("Content-Type", "text/csv");
     res.setHeader(
       "Content-Disposition",
-      "attachment; filename=mrt-schedules.csv"
+      "attachment; filename=mrt-schedules.csv",
     );
     res.send(header + rows);
   } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "Export failed";
+    const message = error instanceof Error ? error.message : "Export failed";
     res.status(500).json({ success: false, error: message });
   }
 });

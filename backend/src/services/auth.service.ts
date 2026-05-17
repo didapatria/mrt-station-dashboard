@@ -82,7 +82,11 @@ export const authService = {
     };
   },
 
-  async changePassword(userId: string, currentPassword: string, newPassword: string) {
+  async changePassword(
+    userId: string,
+    currentPassword: string,
+    newPassword: string,
+  ) {
     const user = await prisma.user.findUnique({ where: { id: userId } });
     if (!user) throw new Error("User not found");
 
@@ -130,7 +134,14 @@ export const authService = {
 
     let user = await prisma.user.findUnique({
       where: { email },
-      select: { id: true, name: true, email: true, role: true, createdAt: true, password: true },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        role: true,
+        createdAt: true,
+        password: true,
+      },
     });
 
     if (!user) {
@@ -143,7 +154,14 @@ export const authService = {
           email,
           password: hashedPassword,
         },
-        select: { id: true, name: true, email: true, role: true, createdAt: true, password: true },
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          role: true,
+          createdAt: true,
+          password: true,
+        },
       });
     }
 

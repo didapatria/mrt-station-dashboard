@@ -111,7 +111,12 @@ stationRouter.get("/:id", stationController.getById);
  *       422:
  *         description: Validation error
  */
-stationRouter.post("/", adminMiddleware, validate(createStationSchema), stationController.create);
+stationRouter.post(
+  "/",
+  adminMiddleware,
+  validate(createStationSchema),
+  stationController.create,
+);
 
 /**
  * @swagger
@@ -140,7 +145,12 @@ stationRouter.post("/", adminMiddleware, validate(createStationSchema), stationC
  *       422:
  *         description: Validation error
  */
-stationRouter.put("/:id", adminMiddleware, validate(updateStationSchema), stationController.update);
+stationRouter.put(
+  "/:id",
+  adminMiddleware,
+  validate(updateStationSchema),
+  stationController.update,
+);
 
 /**
  * @swagger

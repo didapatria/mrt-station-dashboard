@@ -15,7 +15,9 @@ export const activityLogController = {
       res.json({ success: true, data: result.data, meta: result.meta });
     } catch (error) {
       const message =
-        error instanceof Error ? error.message : "Failed to fetch activity logs";
+        error instanceof Error
+          ? error.message
+          : "Failed to fetch activity logs";
       res.status(500).json({ success: false, error: message });
     }
   },

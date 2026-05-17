@@ -41,7 +41,7 @@ export const stationController = {
         "CREATE",
         "Station",
         station.id,
-        `Created station ${station.name} (${station.code})`
+        `Created station ${station.name} (${station.code})`,
       );
       res.status(201).json({
         success: true,
@@ -58,13 +58,16 @@ export const stationController = {
 
   async update(req: AuthRequest, res: Response): Promise<void> {
     try {
-      const station = await stationService.update(req.params.id as string, req.body);
+      const station = await stationService.update(
+        req.params.id as string,
+        req.body,
+      );
       await activityLogService.log(
         req.user!.userId,
         "UPDATE",
         "Station",
         station.id,
-        `Updated station ${station.name} (${station.code})`
+        `Updated station ${station.name} (${station.code})`,
       );
       res.json({
         success: true,
@@ -89,7 +92,7 @@ export const stationController = {
         "DELETE",
         "Station",
         id,
-        `Deleted station ${station.name} (${station.code})`
+        `Deleted station ${station.name} (${station.code})`,
       );
       res.json({ success: true, message: "Station deleted successfully" });
     } catch (error) {

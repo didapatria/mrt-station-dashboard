@@ -16,13 +16,22 @@ export const activityLogService = {
     action: string,
     entity: string,
     entityId: string,
-    details?: string
+    details?: string,
   ) {
     const log = await prisma.activityLog.create({
       data: { userId, action, entity, entityId, details },
-      include: { user: { select: { id: true, name: true, email: true, role: true } } },
+      include: {
+        user: { select: { id: true, name: true, email: true, role: true } },
+      },
     });
-    sseService.broadcast("activity", { action, entity, entityId, details, user: log.user, createdAt: log.createdAt });
+    sseService.broadcast("activity", {
+      action,
+      entity,
+      entityId,
+      details,
+      user: log.user,
+      createdAt: log.createdAt,
+    });
     return log;
   },
 

@@ -36,19 +36,110 @@ async function main() {
 
   // Create MRT Jakarta stations (North-South Line)
   const stationsData = [
-    { name: "Lebak Bulus Grab", code: "LBB", location: "Lebak Bulus, Jakarta Selatan", latitude: -6.2893, longitude: 106.7742, order: 1 },
-    { name: "Fatmawati Indomaret", code: "FTM", location: "Fatmawati, Jakarta Selatan", latitude: -6.2925, longitude: 106.7935, order: 2 },
-    { name: "Cipete Raya", code: "CPR", location: "Cipete, Jakarta Selatan", latitude: -6.2782, longitude: 106.7968, order: 3 },
-    { name: "Haji Nawi", code: "HJN", location: "Haji Nawi, Jakarta Selatan", latitude: -6.2665, longitude: 106.7971, order: 4 },
-    { name: "Blok A", code: "BLA", location: "Blok A, Jakarta Selatan", latitude: -6.2554, longitude: 106.7975, order: 5 },
-    { name: "Blok M BCA", code: "BLM", location: "Blok M, Jakarta Selatan", latitude: -6.2441, longitude: 106.7979, order: 6 },
-    { name: "ASEAN", code: "ASN", location: "Jl. Sisingamangaraja, Jakarta Selatan", latitude: -6.2384, longitude: 106.7984, order: 7 },
-    { name: "Senayan", code: "SNY", location: "Senayan, Jakarta Selatan", latitude: -6.2271, longitude: 106.8020, order: 8 },
-    { name: "Istora Mandiri", code: "IST", location: "Istora, Jakarta Pusat", latitude: -6.2222, longitude: 106.8092, order: 9 },
-    { name: "Bendungan Hilir", code: "BNH", location: "Bendungan Hilir, Jakarta Pusat", latitude: -6.2152, longitude: 106.8175, order: 10 },
-    { name: "Setiabudi Astra", code: "STB", location: "Setiabudi, Jakarta Selatan", latitude: -6.2095, longitude: 106.8223, order: 11 },
-    { name: "Dukuh Atas BNI", code: "DKA", location: "Dukuh Atas, Jakarta Pusat", latitude: -6.2006, longitude: 106.8228, order: 12 },
-    { name: "Bundaran HI", code: "BHI", location: "Bundaran HI, Jakarta Pusat", latitude: -6.1921, longitude: 106.8230, order: 13 },
+    {
+      name: "Lebak Bulus Grab",
+      code: "LBB",
+      location: "Lebak Bulus, Jakarta Selatan",
+      latitude: -6.2893,
+      longitude: 106.7742,
+      order: 1,
+    },
+    {
+      name: "Fatmawati Indomaret",
+      code: "FTM",
+      location: "Fatmawati, Jakarta Selatan",
+      latitude: -6.2925,
+      longitude: 106.7935,
+      order: 2,
+    },
+    {
+      name: "Cipete Raya",
+      code: "CPR",
+      location: "Cipete, Jakarta Selatan",
+      latitude: -6.2782,
+      longitude: 106.7968,
+      order: 3,
+    },
+    {
+      name: "Haji Nawi",
+      code: "HJN",
+      location: "Haji Nawi, Jakarta Selatan",
+      latitude: -6.2665,
+      longitude: 106.7971,
+      order: 4,
+    },
+    {
+      name: "Blok A",
+      code: "BLA",
+      location: "Blok A, Jakarta Selatan",
+      latitude: -6.2554,
+      longitude: 106.7975,
+      order: 5,
+    },
+    {
+      name: "Blok M BCA",
+      code: "BLM",
+      location: "Blok M, Jakarta Selatan",
+      latitude: -6.2441,
+      longitude: 106.7979,
+      order: 6,
+    },
+    {
+      name: "ASEAN",
+      code: "ASN",
+      location: "Jl. Sisingamangaraja, Jakarta Selatan",
+      latitude: -6.2384,
+      longitude: 106.7984,
+      order: 7,
+    },
+    {
+      name: "Senayan",
+      code: "SNY",
+      location: "Senayan, Jakarta Selatan",
+      latitude: -6.2271,
+      longitude: 106.802,
+      order: 8,
+    },
+    {
+      name: "Istora Mandiri",
+      code: "IST",
+      location: "Istora, Jakarta Pusat",
+      latitude: -6.2222,
+      longitude: 106.8092,
+      order: 9,
+    },
+    {
+      name: "Bendungan Hilir",
+      code: "BNH",
+      location: "Bendungan Hilir, Jakarta Pusat",
+      latitude: -6.2152,
+      longitude: 106.8175,
+      order: 10,
+    },
+    {
+      name: "Setiabudi Astra",
+      code: "STB",
+      location: "Setiabudi, Jakarta Selatan",
+      latitude: -6.2095,
+      longitude: 106.8223,
+      order: 11,
+    },
+    {
+      name: "Dukuh Atas BNI",
+      code: "DKA",
+      location: "Dukuh Atas, Jakarta Pusat",
+      latitude: -6.2006,
+      longitude: 106.8228,
+      order: 12,
+    },
+    {
+      name: "Bundaran HI",
+      code: "BHI",
+      location: "Bundaran HI, Jakarta Pusat",
+      latitude: -6.1921,
+      longitude: 106.823,
+      order: 13,
+    },
   ];
 
   const stations = [];
@@ -77,7 +168,9 @@ async function main() {
     `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
 
   // Full-line schedules: LBB → BHI (Northbound)
-  for (const hour of [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22]) {
+  for (const hour of [
+    5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22,
+  ]) {
     for (const minute of [0, 20, 40]) {
       const arrMin = minute + 30;
       const arrHour = hour + Math.floor(arrMin / 60);
@@ -95,7 +188,9 @@ async function main() {
   }
 
   // Full-line schedules: BHI → LBB (Southbound)
-  for (const hour of [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21]) {
+  for (const hour of [
+    6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
+  ]) {
     for (const minute of [10, 30, 50]) {
       const arrMin = minute + 30;
       const arrHour = hour + Math.floor(arrMin / 60);
@@ -171,7 +266,11 @@ async function main() {
   // Seed permissions
   const permissionsData = [
     { name: "dashboard.view", label: "View Dashboard", group: "Dashboard" },
-    { name: "dashboard.export", label: "Export Reports (CSV/PDF)", group: "Dashboard" },
+    {
+      name: "dashboard.export",
+      label: "Export Reports (CSV/PDF)",
+      group: "Dashboard",
+    },
     { name: "stations.view", label: "View Stations", group: "Stations" },
     { name: "stations.create", label: "Create Stations", group: "Stations" },
     { name: "stations.edit", label: "Edit Stations", group: "Stations" },
@@ -183,7 +282,11 @@ async function main() {
     { name: "users.view", label: "View Users", group: "Users" },
     { name: "users.edit_role", label: "Change User Roles", group: "Users" },
     { name: "users.delete", label: "Delete Users", group: "Users" },
-    { name: "activity_logs.view", label: "View Activity Logs", group: "Activity Logs" },
+    {
+      name: "activity_logs.view",
+      label: "View Activity Logs",
+      group: "Activity Logs",
+    },
     { name: "map.view", label: "View Station Map", group: "Map" },
     { name: "settings.view", label: "View Settings", group: "Settings" },
     { name: "settings.edit", label: "Change Settings", group: "Settings" },
@@ -215,20 +318,34 @@ async function main() {
 
   // Seed role_has_permissions
   const adminRole = await prisma.role.findUnique({ where: { name: "ADMIN" } });
-  const operatorRole = await prisma.role.findUnique({ where: { name: "OPERATOR" } });
+  const operatorRole = await prisma.role.findUnique({
+    where: { name: "OPERATOR" },
+  });
 
-  const adminPermNames = permissionsData.map(p => p.name);
+  const adminPermNames = permissionsData.map((p) => p.name);
   const operatorPermNames = [
-    "dashboard.view", "stations.view", "schedules.view",
-    "activity_logs.view", "map.view", "settings.view", "settings.edit",
+    "dashboard.view",
+    "stations.view",
+    "schedules.view",
+    "activity_logs.view",
+    "map.view",
+    "settings.view",
+    "settings.edit",
   ];
 
   if (adminRole) {
     for (const permName of adminPermNames) {
-      const perm = await prisma.permission.findUnique({ where: { name: permName } });
+      const perm = await prisma.permission.findUnique({
+        where: { name: permName },
+      });
       if (perm) {
         await prisma.roleHasPermission.upsert({
-          where: { roleId_permissionId: { roleId: adminRole.id, permissionId: perm.id } },
+          where: {
+            roleId_permissionId: {
+              roleId: adminRole.id,
+              permissionId: perm.id,
+            },
+          },
           update: {},
           create: { roleId: adminRole.id, permissionId: perm.id },
         });
@@ -238,10 +355,17 @@ async function main() {
 
   if (operatorRole) {
     for (const permName of operatorPermNames) {
-      const perm = await prisma.permission.findUnique({ where: { name: permName } });
+      const perm = await prisma.permission.findUnique({
+        where: { name: permName },
+      });
       if (perm) {
         await prisma.roleHasPermission.upsert({
-          where: { roleId_permissionId: { roleId: operatorRole.id, permissionId: perm.id } },
+          where: {
+            roleId_permissionId: {
+              roleId: operatorRole.id,
+              permissionId: perm.id,
+            },
+          },
           update: {},
           create: { roleId: operatorRole.id, permissionId: perm.id },
         });
@@ -251,7 +375,9 @@ async function main() {
   console.log("Seeded role_has_permissions");
 
   // Sync model_has_roles: assign roles to existing users based on their role enum
-  const allUsers = await prisma.user.findMany({ select: { id: true, role: true } });
+  const allUsers = await prisma.user.findMany({
+    select: { id: true, role: true },
+  });
   for (const u of allUsers) {
     const roleName = u.role as string;
     const role = await prisma.role.findUnique({ where: { name: roleName } });

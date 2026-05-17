@@ -43,7 +43,7 @@ export const scheduleController = {
         "CREATE",
         "Schedule",
         schedule.id,
-        `Created schedule ${schedule.trainNumber}`
+        `Created schedule ${schedule.trainNumber}`,
       );
       res.status(201).json({
         success: true,
@@ -61,14 +61,14 @@ export const scheduleController = {
     try {
       const schedule = await scheduleService.update(
         req.params.id as string,
-        req.body
+        req.body,
       );
       await activityLogService.log(
         req.user!.userId,
         "UPDATE",
         "Schedule",
         schedule.id,
-        `Updated schedule ${schedule.trainNumber}`
+        `Updated schedule ${schedule.trainNumber}`,
       );
       res.json({
         success: true,
@@ -93,7 +93,7 @@ export const scheduleController = {
         "DELETE",
         "Schedule",
         id,
-        `Deleted schedule ${schedule.trainNumber}`
+        `Deleted schedule ${schedule.trainNumber}`,
       );
       res.json({ success: true, message: "Schedule deleted successfully" });
     } catch (error) {

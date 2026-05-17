@@ -7,7 +7,7 @@ const prisma = new PrismaClient();
 export const adminMiddleware = async (
   req: AuthRequest,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ): Promise<void> => {
   if (!req.user) {
     res.status(401).json({ success: false, error: "Not authenticated" });

@@ -28,8 +28,7 @@ export const authController = {
         data: result,
       });
     } catch (error) {
-      const message =
-        error instanceof Error ? error.message : "Login failed";
+      const message = error instanceof Error ? error.message : "Login failed";
       res.status(401).json({ success: false, error: message });
     }
   },
@@ -52,10 +51,15 @@ export const authController = {
   async changePassword(req: AuthRequest, res: Response): Promise<void> {
     try {
       const { currentPassword, newPassword } = req.body;
-      await authService.changePassword(req.user!.userId, currentPassword, newPassword);
+      await authService.changePassword(
+        req.user!.userId,
+        currentPassword,
+        newPassword,
+      );
       res.json({ success: true, message: "Password changed successfully" });
     } catch (error) {
-      const message = error instanceof Error ? error.message : "Failed to change password";
+      const message =
+        error instanceof Error ? error.message : "Failed to change password";
       const status = message === "Current password is incorrect" ? 400 : 500;
       res.status(status).json({ success: false, error: message });
     }
