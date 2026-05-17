@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import { ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
 import { TableHead } from "@/components/ui/table";
 import type { SortConfig } from "@/hooks/use-sortable";
@@ -9,6 +10,7 @@ interface SortableTableHeadProps<T> {
   sortConfig: SortConfig<T>;
   onSort: (key: keyof T) => void;
   className?: string;
+  style?: CSSProperties;
 }
 
 export function SortableTableHead<T extends object>({
@@ -17,11 +19,12 @@ export function SortableTableHead<T extends object>({
   sortConfig,
   onSort,
   className,
+  style,
 }: SortableTableHeadProps<T>) {
   const isActive = sortConfig.key === sortKey;
 
   return (
-    <TableHead className={cn("cursor-pointer select-none", className)}>
+    <TableHead className={cn("cursor-pointer select-none", className)} style={style}>
       <button
         className="flex items-center gap-1.5 hover:text-foreground transition-colors -ml-1 px-1 py-0.5 rounded"
         onClick={() => onSort(sortKey)}

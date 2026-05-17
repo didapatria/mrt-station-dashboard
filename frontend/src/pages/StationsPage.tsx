@@ -4,7 +4,7 @@ import { useSearchParams, Link } from "react-router-dom";
 import { useForm, useWatch, type Resolver } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Plus,
   Pencil,
@@ -13,13 +13,12 @@ import {
   Download,
   MapPin,
   TrainFront,
+  X,
 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -76,6 +75,7 @@ import { ColumnToggle } from "@/components/ColumnToggle";
 import { useColumnToggle } from "@/hooks/use-column-toggle";
 import { useRole } from "@/hooks/use-role";
 import { MapLocationPicker } from "@/components/MapLocationPicker";
+import { useThemeStore } from "@/store/theme.store";
 import type { Station } from "@/types";
 
 const stationSchema = z.object({
@@ -90,9 +90,28 @@ const stationSchema = z.object({
 
 type StationFormData = z.infer<typeof stationSchema>;
 
+const STATUS_DOT: Record<
+  string,
+  { color: string; glow: string; label: string }
+> = {
+  ACTIVE: { color: "#22c55e", glow: "rgba(34,197,94,0.4)", label: "Active" },
+  MAINTENANCE: {
+    color: "#f59e0b",
+    glow: "rgba(245,158,11,0.4)",
+    label: "Maintenance",
+  },
+  INACTIVE: {
+    color: "#ef4444",
+    glow: "rgba(239,68,68,0.4)",
+    label: "Inactive",
+  },
+};
+
 export default function StationsPage() {
   const { t } = useTranslation();
   const { isAdmin } = useRole();
+  const { theme } = useThemeStore();
+  const isDark = theme === "dark";
   const [searchParams, setSearchParams] = useSearchParams();
   const [search, setSearch] = useState(searchParams.get("q") ?? "");
   const [page, setPage] = useState(Number(searchParams.get("page")) || 1);
@@ -205,7 +224,6 @@ export default function StationsPage() {
       longitude:
         typeof data.longitude === "number" ? data.longitude : undefined,
     };
-
     try {
       if (editingStation) {
         await updateMutation.mutateAsync({
@@ -245,7 +263,11 @@ export default function StationsPage() {
   const toggleSelect = (id: string) => {
     setSelectedIds((prev) => {
       const next = new Set(prev);
-      if (next.has(id)) { next.delete(id); } else { next.add(id); }
+      if (next.has(id)) {
+        next.delete(id);
+      } else {
+        next.add(id);
+      }
       return next;
     });
   };
@@ -271,26 +293,78 @@ export default function StationsPage() {
     }
   };
 
+  const thBg = isDark ? "rgba(255,255,255,0.03)" : "rgba(0,0,0,0.025)";
+
   return (
-    <div>
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+    <div style={{ position: "relative" }}>
+      {/* ── Page header ── */}
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "flex-start",
+          justifyContent: "space-between",
+          gap: 16,
+          marginBottom: 28,
+          flexWrap: "wrap",
+        }}
+      >
         <div>
-          <h2 className="text-2xl font-bold">{t("stations.title")}</h2>
-          <p className="text-muted-foreground">
-            {t("stations.manage")} ({meta?.total ?? stations.length} total)
+          <div
+            style={{
+              display: "flex",
+              alignItems: "baseline",
+              gap: 14,
+              marginBottom: 6,
+            }}
+          >
+            <h2
+              style={{
+                fontFamily: "'Bebas Neue', sans-serif",
+                fontSize: 36,
+                letterSpacing: "0.06em",
+                lineHeight: 1,
+                color: "var(--color-foreground)",
+              }}
+            >
+              {t("stations.title")}
+            </h2>
+            {meta && (
+              <span
+                style={{
+                  fontFamily: "'JetBrains Mono', monospace",
+                  fontSize: 11,
+                  color: "var(--color-muted-foreground)",
+                  letterSpacing: "0.06em",
+                  opacity: 0.7,
+                }}
+              >
+                {meta.total} entries
+              </span>
+            )}
+          </div>
+          <p
+            style={{
+              fontFamily: "'JetBrains Mono', monospace",
+              fontSize: 10,
+              color: "var(--color-muted-foreground)",
+              letterSpacing: "0.14em",
+              textTransform: "uppercase",
+            }}
+          >
+            N–S Line · Station Registry
           </p>
         </div>
-        <div className="flex flex-wrap gap-2">
-          {isAdmin && selectedIds.size > 0 && (
-            <Button
-              variant="destructive"
-              size="sm"
-              onClick={() => setBulkDeleteOpen(true)}
-            >
-              <Trash2 className="h-4 w-4 mr-2" />
-              {t("common.delete")} ({selectedIds.size})
-            </Button>
-          )}
+
+        {/* Actions */}
+        <div
+          style={{
+            display: "flex",
+            gap: 8,
+            flexWrap: "wrap",
+            alignItems: "center",
+          }}
+        >
           <ColumnToggle
             columns={[
               { key: "order", label: "Order" },
@@ -301,37 +375,101 @@ export default function StationsPage() {
             isVisible={columns.isVisible}
             toggle={columns.toggle}
           />
-          <Button variant="outline" onClick={handleExport}>
-            <Download className="h-4 w-4 mr-2" />
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleExport}
+            style={{
+              fontFamily: "'JetBrains Mono', monospace",
+              fontSize: 10,
+              letterSpacing: "0.08em",
+            }}
+          >
+            <Download className="h-3.5 w-3.5 mr-1.5" />
             CSV
           </Button>
           {isAdmin && (
-            <Button variant="outline" onClick={() => setCsvImportOpen(true)}>
-              Import CSV
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setCsvImportOpen(true)}
+              style={{
+                fontFamily: "'JetBrains Mono', monospace",
+                fontSize: 10,
+                letterSpacing: "0.08em",
+              }}
+            >
+              Import
             </Button>
           )}
           {isAdmin && (
-            <Button onClick={openCreate}>
-              <Plus className="h-4 w-4 mr-2" />
+            <Button
+              size="sm"
+              onClick={openCreate}
+              style={{
+                fontFamily: "'JetBrains Mono', monospace",
+                fontSize: 10,
+                letterSpacing: "0.08em",
+              }}
+            >
+              <Plus className="h-3.5 w-3.5 mr-1.5" />
               {t("stations.addStation")}
             </Button>
           )}
         </div>
       </div>
 
-      {/* Filters */}
-      <div className="flex flex-col sm:flex-row gap-3 mb-6">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+      {/* ── Filter strip ── */}
+      <div
+        style={{
+          display: "flex",
+          gap: 10,
+          marginBottom: 20,
+          flexWrap: "wrap",
+        }}
+      >
+        <div
+          style={{
+            position: "relative",
+            flex: 1,
+            minWidth: 200,
+          }}
+        >
+          <Search
+            style={{
+              position: "absolute",
+              left: 12,
+              top: "50%",
+              transform: "translateY(-50%)",
+              width: 13,
+              height: 13,
+              color: "var(--color-muted-foreground)",
+              opacity: 0.6,
+            }}
+          />
           <Input
             placeholder={t("common.search")}
             value={search}
             onChange={(e) => handleSearchChange(e.target.value)}
-            className="pl-9"
+            style={{
+              paddingLeft: 34,
+              fontFamily: "'Sora', sans-serif",
+              fontSize: 13,
+              height: 36,
+            }}
           />
         </div>
+
         <Select value={statusFilter} onValueChange={handleStatusChange}>
-          <SelectTrigger className="w-40">
+          <SelectTrigger
+            style={{
+              width: 148,
+              height: 36,
+              fontFamily: "'JetBrains Mono', monospace",
+              fontSize: 11,
+              letterSpacing: "0.06em",
+            }}
+          >
             <SelectValue placeholder="Status" />
           </SelectTrigger>
           <SelectContent>
@@ -343,226 +481,486 @@ export default function StationsPage() {
         </Select>
       </div>
 
-      {/* Stations Table */}
+      {/* ── Table ── */}
       <motion.div
-        initial={{ opacity: 0, y: 10 }}
+        initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3 }}
+        style={{
+          background: "var(--color-card)",
+          border: "1px solid var(--color-border)",
+          borderRadius: 12,
+          overflow: "hidden",
+          marginBottom: 20,
+        }}
       >
-        <Card>
-          <CardContent className="p-0">
-            <div className="overflow-x-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow className="bg-muted/50">
-                    {isAdmin && (
-                      <TableHead className="w-10">
-                        <input
-                          type="checkbox"
-                          checked={
-                            selectedIds.size === sortedStations.length &&
-                            sortedStations.length > 0
-                          }
-                          onChange={toggleSelectAll}
-                          className="rounded border-border"
-                        />
-                      </TableHead>
-                    )}
-                    <SortableTableHead<Station>
-                      label={t("stations.order")}
-                      sortKey="order"
-                      sortConfig={sortConfig}
-                      onSort={requestSort}
-                      className="w-15"
+        <div className="overflow-x-auto">
+          <Table>
+            <TableHeader>
+              <TableRow
+                style={{
+                  background: thBg,
+                  borderBottom: "1px solid var(--color-border)",
+                }}
+              >
+                {isAdmin && (
+                  <TableHead style={{ width: 44, padding: "0 16px" }}>
+                    <input
+                      type="checkbox"
+                      checked={
+                        selectedIds.size === sortedStations.length &&
+                        sortedStations.length > 0
+                      }
+                      onChange={toggleSelectAll}
+                      style={{
+                        width: 14,
+                        height: 14,
+                        cursor: "pointer",
+                        accentColor: "var(--color-primary)",
+                      }}
                     />
-                    <SortableTableHead<Station>
-                      label={t("stations.stationName")}
-                      sortKey="name"
-                      sortConfig={sortConfig}
-                      onSort={requestSort}
-                    />
-                    <SortableTableHead<Station>
-                      label={t("stations.location")}
-                      sortKey="location"
-                      sortConfig={sortConfig}
-                      onSort={requestSort}
-                      className="hidden md:table-cell"
-                    />
-                    <TableHead className="hidden lg:table-cell">
-                      {t("stations.coordinates")}
-                    </TableHead>
-                    <SortableTableHead<Station>
-                      label={t("stations.status")}
-                      sortKey="status"
-                      sortConfig={sortConfig}
-                      onSort={requestSort}
-                    />
-                    {isAdmin && (
-                      <TableHead className="text-right w-25">
-                        {t("common.actions")}
-                      </TableHead>
-                    )}
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {isLoading
-                    ? Array.from({ length: 5 }).map((_, i) => (
-                        <TableRow key={i}>
-                          <TableCell>
-                            <Skeleton className="h-4 w-6" />
-                          </TableCell>
-                          <TableCell>
-                            <div className="flex items-center gap-3">
-                              <Skeleton className="h-9 w-9 rounded-lg" />
-                              <Skeleton className="h-4 w-32" />
-                            </div>
-                          </TableCell>
-                          <TableCell className="hidden md:table-cell">
-                            <Skeleton className="h-4 w-24" />
-                          </TableCell>
-                          <TableCell className="hidden lg:table-cell">
-                            <Skeleton className="h-4 w-28" />
-                          </TableCell>
-                          <TableCell>
-                            <Skeleton className="h-5 w-16 rounded-full" />
-                          </TableCell>
-                          {isAdmin && (
-                            <TableCell>
-                              <Skeleton className="h-8 w-16 ml-auto" />
-                            </TableCell>
-                          )}
-                        </TableRow>
-                      ))
-                    : sortedStations.map((station) => (
-                        <TableRow
-                          key={station.id}
-                          className={
-                            selectedIds.has(station.id) ? "bg-primary/5" : ""
-                          }
+                  </TableHead>
+                )}
+                {columns.isVisible("order") && (
+                  <SortableTableHead<Station>
+                    label="#"
+                    sortKey="order"
+                    sortConfig={sortConfig}
+                    onSort={requestSort}
+                    className="w-12"
+                    style={{
+                      fontFamily: "'JetBrains Mono', monospace",
+                      fontSize: 9.5,
+                      letterSpacing: "0.16em",
+                      color: "var(--color-muted-foreground)",
+                      textTransform: "uppercase",
+                    }}
+                  />
+                )}
+                <SortableTableHead<Station>
+                  label={t("stations.stationName")}
+                  sortKey="name"
+                  sortConfig={sortConfig}
+                  onSort={requestSort}
+                  style={{
+                    fontFamily: "'JetBrains Mono', monospace",
+                    fontSize: 9.5,
+                    letterSpacing: "0.16em",
+                    color: "var(--color-muted-foreground)",
+                    textTransform: "uppercase",
+                  }}
+                />
+                {columns.isVisible("location") && (
+                  <SortableTableHead<Station>
+                    label={t("stations.location")}
+                    sortKey="location"
+                    sortConfig={sortConfig}
+                    onSort={requestSort}
+                    className="hidden md:table-cell"
+                    style={{
+                      fontFamily: "'JetBrains Mono', monospace",
+                      fontSize: 9.5,
+                      letterSpacing: "0.16em",
+                      color: "var(--color-muted-foreground)",
+                      textTransform: "uppercase",
+                    }}
+                  />
+                )}
+                {columns.isVisible("coordinates") && (
+                  <TableHead
+                    className="hidden lg:table-cell"
+                    style={{
+                      fontFamily: "'JetBrains Mono', monospace",
+                      fontSize: 9.5,
+                      letterSpacing: "0.16em",
+                      color: "var(--color-muted-foreground)",
+                      textTransform: "uppercase",
+                    }}
+                  >
+                    Coords
+                  </TableHead>
+                )}
+                {columns.isVisible("status") && (
+                  <SortableTableHead<Station>
+                    label={t("stations.status")}
+                    sortKey="status"
+                    sortConfig={sortConfig}
+                    onSort={requestSort}
+                    style={{
+                      fontFamily: "'JetBrains Mono', monospace",
+                      fontSize: 9.5,
+                      letterSpacing: "0.16em",
+                      color: "var(--color-muted-foreground)",
+                      textTransform: "uppercase",
+                    }}
+                  />
+                )}
+                {isAdmin && (
+                  <TableHead
+                    style={{
+                      textAlign: "right",
+                      fontFamily: "'JetBrains Mono', monospace",
+                      fontSize: 9.5,
+                      letterSpacing: "0.16em",
+                      color: "var(--color-muted-foreground)",
+                      textTransform: "uppercase",
+                      padding: "0 16px",
+                    }}
+                  >
+                    Actions
+                  </TableHead>
+                )}
+              </TableRow>
+            </TableHeader>
+
+            <TableBody>
+              {isLoading
+                ? Array.from({ length: 6 }).map((_, i) => (
+                    <TableRow key={i}>
+                      {isAdmin && (
+                        <TableCell>
+                          <Skeleton className="h-3.5 w-3.5" />
+                        </TableCell>
+                      )}
+                      <TableCell>
+                        <Skeleton className="h-6 w-6 rounded-full" />
+                      </TableCell>
+                      <TableCell>
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 12,
+                          }}
                         >
-                          {isAdmin && (
-                            <TableCell>
-                              <input
-                                type="checkbox"
-                                checked={selectedIds.has(station.id)}
-                                onChange={() => toggleSelect(station.id)}
-                                className="rounded border-border"
-                              />
-                            </TableCell>
-                          )}
-                          <TableCell className="font-mono text-muted-foreground">
-                            {station.order}
+                          <Skeleton className="h-7 w-14 rounded-md" />
+                          <Skeleton className="h-4 w-32" />
+                        </div>
+                      </TableCell>
+                      <TableCell className="hidden md:table-cell">
+                        <Skeleton className="h-4 w-24" />
+                      </TableCell>
+                      <TableCell className="hidden lg:table-cell">
+                        <Skeleton className="h-4 w-28" />
+                      </TableCell>
+                      <TableCell>
+                        <Skeleton className="h-4 w-16" />
+                      </TableCell>
+                      {isAdmin && (
+                        <TableCell>
+                          <Skeleton className="h-7 w-16 ml-auto" />
+                        </TableCell>
+                      )}
+                    </TableRow>
+                  ))
+                : sortedStations.map((station) => {
+                    const dot =
+                      STATUS_DOT[station.status] ?? STATUS_DOT.INACTIVE;
+                    const isSelected = selectedIds.has(station.id);
+                    return (
+                      <TableRow
+                        key={station.id}
+                        style={{
+                          borderLeft: isSelected
+                            ? "3px solid var(--color-primary)"
+                            : "3px solid transparent",
+                          background: isSelected
+                            ? isDark
+                              ? "rgba(29,111,232,0.06)"
+                              : "rgba(29,111,232,0.04)"
+                            : undefined,
+                          transition:
+                            "background 0.12s ease, border-color 0.12s ease",
+                        }}
+                      >
+                        {isAdmin && (
+                          <TableCell style={{ padding: "0 16px", width: 44 }}>
+                            <input
+                              type="checkbox"
+                              checked={isSelected}
+                              onChange={() => toggleSelect(station.id)}
+                              style={{
+                                width: 14,
+                                height: 14,
+                                cursor: "pointer",
+                                accentColor: "var(--color-primary)",
+                              }}
+                            />
                           </TableCell>
-                          <TableCell>
-                            <div className="flex items-center gap-3">
-                              <div className="h-9 w-9 rounded-lg bg-primary/10 flex items-center justify-center text-xs font-bold text-primary shrink-0">
-                                {station.code}
-                              </div>
-                              <div>
-                                <Link
-                                  to={`/stations/${station.id}`}
-                                  className="font-medium hover:text-primary hover:underline"
-                                >
-                                  {station.name}
-                                </Link>
-                                <p className="text-xs text-muted-foreground md:hidden">
-                                  {station.location}
-                                </p>
-                              </div>
+                        )}
+
+                        {/* Order: circle badge */}
+                        {columns.isVisible("order") && (
+                          <TableCell
+                            style={{ padding: "12px 16px", width: 44 }}
+                          >
+                            <div
+                              style={{
+                                width: 26,
+                                height: 26,
+                                borderRadius: "50%",
+                                background:
+                                  station.order === 1 ||
+                                  station.order === (meta?.total ?? 0)
+                                    ? "var(--color-primary)"
+                                    : "transparent",
+                                border:
+                                  station.order === 1 ||
+                                  station.order === (meta?.total ?? 0)
+                                    ? "none"
+                                    : "1.5px solid var(--color-border)",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                fontFamily: "'JetBrains Mono', monospace",
+                                fontSize: 10,
+                                fontWeight: 700,
+                                color:
+                                  station.order === 1 ||
+                                  station.order === (meta?.total ?? 0)
+                                    ? "white"
+                                    : "var(--color-muted-foreground)",
+                                letterSpacing: 0,
+                                flexShrink: 0,
+                              }}
+                            >
+                              {station.order}
                             </div>
                           </TableCell>
-                          <TableCell className="hidden md:table-cell text-muted-foreground">
+                        )}
+
+                        {/* Name + code */}
+                        <TableCell style={{ padding: "12px 16px" }}>
+                          <div
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: 12,
+                            }}
+                          >
+                            {/* Code plate */}
+                            <div
+                              style={{
+                                display: "inline-flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                padding: "2px 8px",
+                                borderRadius: 5,
+                                background: isDark
+                                  ? "rgba(29,111,232,0.12)"
+                                  : "rgba(29,111,232,0.08)",
+                                border: "1px solid rgba(29,111,232,0.2)",
+                                fontFamily: "'Bebas Neue', sans-serif",
+                                fontSize: 13,
+                                color: "var(--color-primary)",
+                                letterSpacing: "0.06em",
+                                flexShrink: 0,
+                                minWidth: 36,
+                              }}
+                            >
+                              {station.code}
+                            </div>
+                            <div>
+                              <Link
+                                to={`/stations/${station.id}`}
+                                style={{
+                                  fontFamily: "'Sora', sans-serif",
+                                  fontSize: 13.5,
+                                  fontWeight: 500,
+                                  color: "var(--color-foreground)",
+                                  textDecoration: "none",
+                                  transition: "color 0.12s ease",
+                                }}
+                                onMouseEnter={(e) =>
+                                  ((e.target as HTMLElement).style.color =
+                                    "var(--color-primary)")
+                                }
+                                onMouseLeave={(e) =>
+                                  ((e.target as HTMLElement).style.color =
+                                    "var(--color-foreground)")
+                                }
+                              >
+                                {station.name}
+                              </Link>
+                              <p
+                                className="md:hidden"
+                                style={{
+                                  fontFamily: "'JetBrains Mono', monospace",
+                                  fontSize: 10,
+                                  color: "var(--color-muted-foreground)",
+                                  marginTop: 2,
+                                  letterSpacing: "0.04em",
+                                }}
+                              >
+                                {station.location}
+                              </p>
+                            </div>
+                          </div>
+                        </TableCell>
+
+                        {/* Location */}
+                        {columns.isVisible("location") && (
+                          <TableCell
+                            className="hidden md:table-cell"
+                            style={{
+                              fontFamily: "'JetBrains Mono', monospace",
+                              fontSize: 11,
+                              color: "var(--color-muted-foreground)",
+                              letterSpacing: "0.03em",
+                            }}
+                          >
                             {station.location}
                           </TableCell>
+                        )}
+
+                        {/* Coordinates */}
+                        {columns.isVisible("coordinates") && (
                           <TableCell className="hidden lg:table-cell">
                             {station.latitude && station.longitude ? (
                               <TooltipProvider>
                                 <Tooltip>
                                   <TooltipTrigger asChild>
-                                    <span className="text-xs text-muted-foreground inline-flex items-center gap-1 cursor-help">
-                                      <MapPin className="h-3 w-3" />
+                                    <span
+                                      style={{
+                                        display: "inline-flex",
+                                        alignItems: "center",
+                                        gap: 4,
+                                        fontFamily:
+                                          "'JetBrains Mono', monospace",
+                                        fontSize: 10.5,
+                                        color: "var(--color-muted-foreground)",
+                                        cursor: "help",
+                                        letterSpacing: "0.02em",
+                                      }}
+                                    >
+                                      <MapPin
+                                        style={{
+                                          width: 10,
+                                          height: 10,
+                                          opacity: 0.5,
+                                        }}
+                                      />
                                       {station.latitude.toFixed(4)},{" "}
                                       {station.longitude.toFixed(4)}
                                     </span>
                                   </TooltipTrigger>
                                   <TooltipContent>
-                                    <p>
-                                      Lat: {station.latitude}, Lng:{" "}
-                                      {station.longitude}
-                                    </p>
+                                    Lat: {station.latitude} · Lng:{" "}
+                                    {station.longitude}
                                   </TooltipContent>
                                 </Tooltip>
                               </TooltipProvider>
                             ) : (
-                              <span className="text-xs text-muted-foreground">
+                              <span
+                                style={{
+                                  fontFamily: "'JetBrains Mono', monospace",
+                                  fontSize: 11,
+                                  color: "var(--color-muted-foreground)",
+                                  opacity: 0.35,
+                                }}
+                              >
                                 —
                               </span>
                             )}
                           </TableCell>
+                        )}
+
+                        {/* Status: LED dot */}
+                        {columns.isVisible("status") && (
                           <TableCell>
-                            <Badge
-                              variant={
-                                station.status === "ACTIVE"
-                                  ? "success"
-                                  : station.status === "MAINTENANCE"
-                                    ? "warning"
-                                    : "destructive"
-                              }
+                            <div
+                              style={{
+                                display: "inline-flex",
+                                alignItems: "center",
+                                gap: 7,
+                              }}
                             >
-                              {station.status}
-                            </Badge>
+                              <span
+                                style={{
+                                  display: "inline-block",
+                                  width: 7,
+                                  height: 7,
+                                  borderRadius: "50%",
+                                  background: dot.color,
+                                  boxShadow: `0 0 6px ${dot.glow}`,
+                                  flexShrink: 0,
+                                }}
+                              />
+                              <span
+                                style={{
+                                  fontFamily: "'JetBrains Mono', monospace",
+                                  fontSize: 10.5,
+                                  color: "var(--color-foreground)",
+                                  letterSpacing: "0.06em",
+                                  textTransform: "uppercase",
+                                }}
+                              >
+                                {dot.label}
+                              </span>
+                            </div>
                           </TableCell>
-                          {isAdmin && (
-                            <TableCell className="text-right">
-                              <div className="flex justify-end gap-1">
-                                <TooltipProvider>
-                                  <Tooltip>
-                                    <TooltipTrigger asChild>
-                                      <Button
-                                        variant="ghost"
-                                        size="icon"
-                                        className="h-8 w-8"
-                                        onClick={() => openEdit(station)}
-                                      >
-                                        <Pencil className="h-3.5 w-3.5" />
-                                      </Button>
-                                    </TooltipTrigger>
-                                    <TooltipContent>
-                                      {t("stations.editStation")}
-                                    </TooltipContent>
-                                  </Tooltip>
-                                </TooltipProvider>
-                                <TooltipProvider>
-                                  <Tooltip>
-                                    <TooltipTrigger asChild>
-                                      <Button
-                                        variant="ghost"
-                                        size="icon"
-                                        className="h-8 w-8 text-destructive hover:text-destructive"
-                                        onClick={() =>
-                                          setDeleteConfirm(station.id)
-                                        }
-                                      >
-                                        <Trash2 className="h-3.5 w-3.5" />
-                                      </Button>
-                                    </TooltipTrigger>
-                                    <TooltipContent>
-                                      {t("stations.deleteStation")}
-                                    </TooltipContent>
-                                  </Tooltip>
-                                </TooltipProvider>
-                              </div>
-                            </TableCell>
-                          )}
-                        </TableRow>
-                      ))}
-                </TableBody>
-              </Table>
-            </div>
-          </CardContent>
-        </Card>
+                        )}
+
+                        {/* Actions */}
+                        {isAdmin && (
+                          <TableCell
+                            style={{ textAlign: "right", padding: "8px 16px" }}
+                          >
+                            <div
+                              style={{
+                                display: "flex",
+                                justifyContent: "flex-end",
+                                gap: 2,
+                              }}
+                            >
+                              <TooltipProvider>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <Button
+                                      variant="ghost"
+                                      size="icon"
+                                      className="h-7 w-7"
+                                      onClick={() => openEdit(station)}
+                                    >
+                                      <Pencil className="h-3 w-3" />
+                                    </Button>
+                                  </TooltipTrigger>
+                                  <TooltipContent>
+                                    {t("stations.editStation")}
+                                  </TooltipContent>
+                                </Tooltip>
+                              </TooltipProvider>
+                              <TooltipProvider>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <Button
+                                      variant="ghost"
+                                      size="icon"
+                                      className="h-7 w-7 text-destructive hover:text-destructive"
+                                      onClick={() =>
+                                        setDeleteConfirm(station.id)
+                                      }
+                                    >
+                                      <Trash2 className="h-3 w-3" />
+                                    </Button>
+                                  </TooltipTrigger>
+                                  <TooltipContent>
+                                    {t("stations.deleteStation")}
+                                  </TooltipContent>
+                                </Tooltip>
+                              </TooltipProvider>
+                            </div>
+                          </TableCell>
+                        )}
+                      </TableRow>
+                    );
+                  })}
+            </TableBody>
+          </Table>
+        </div>
       </motion.div>
 
+      {/* Empty state */}
       {sortedStations.length === 0 && !isLoading && (
         <EmptyState
           icon={TrainFront}
@@ -590,16 +988,133 @@ export default function StationsPage() {
         />
       )}
 
-      {/* Create/Edit Dialog */}
+      {/* ── Floating bulk action bar ── */}
+      <AnimatePresence>
+        {isAdmin && selectedIds.size > 0 && (
+          <motion.div
+            initial={{ y: 72, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: 72, opacity: 0 }}
+            transition={{ type: "spring", stiffness: 380, damping: 30 }}
+            style={{
+              position: "fixed",
+              bottom: 28,
+              left: "50%",
+              transform: "translateX(-50%)",
+              zIndex: 50,
+              background: isDark ? "#0f172a" : "white",
+              border: "1px solid var(--color-border)",
+              borderRadius: 10,
+              padding: "10px 16px",
+              display: "flex",
+              alignItems: "center",
+              gap: 14,
+              boxShadow: isDark
+                ? "0 8px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.06)"
+                : "0 8px 40px rgba(0,0,0,0.12), 0 0 0 1px rgba(0,0,0,0.05)",
+              whiteSpace: "nowrap",
+            }}
+          >
+            <span
+              style={{
+                fontFamily: "'JetBrains Mono', monospace",
+                fontSize: 11,
+                color: "var(--color-foreground)",
+                letterSpacing: "0.06em",
+              }}
+            >
+              {selectedIds.size} selected
+            </span>
+            <div
+              style={{
+                width: 1,
+                height: 18,
+                background: "var(--color-border)",
+              }}
+            />
+            <button
+              onClick={() => setBulkDeleteOpen(true)}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 6,
+                background: "rgba(239,68,68,0.1)",
+                border: "1px solid rgba(239,68,68,0.25)",
+                borderRadius: 6,
+                padding: "5px 12px",
+                fontFamily: "'JetBrains Mono', monospace",
+                fontSize: 10.5,
+                fontWeight: 600,
+                color: "#ef4444",
+                letterSpacing: "0.1em",
+                cursor: "pointer",
+                transition: "background 0.12s ease",
+              }}
+              onMouseEnter={(e) =>
+                ((e.currentTarget as HTMLElement).style.background =
+                  "rgba(239,68,68,0.18)")
+              }
+              onMouseLeave={(e) =>
+                ((e.currentTarget as HTMLElement).style.background =
+                  "rgba(239,68,68,0.1)")
+              }
+            >
+              <Trash2 style={{ width: 11, height: 11 }} />
+              Delete
+            </button>
+            <button
+              onClick={() => setSelectedIds(new Set())}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width: 26,
+                height: 26,
+                borderRadius: 6,
+                background: "transparent",
+                border: "1px solid var(--color-border)",
+                cursor: "pointer",
+                color: "var(--color-muted-foreground)",
+                transition: "background 0.12s ease",
+              }}
+              onMouseEnter={(e) =>
+                ((e.currentTarget as HTMLElement).style.background =
+                  "var(--color-accent)")
+              }
+              onMouseLeave={(e) =>
+                ((e.currentTarget as HTMLElement).style.background =
+                  "transparent")
+              }
+            >
+              <X style={{ width: 12, height: 12 }} />
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* ── Create/Edit Dialog ── */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>
+            <DialogTitle
+              style={{
+                fontFamily: "'Bebas Neue', sans-serif",
+                fontSize: 22,
+                letterSpacing: "0.06em",
+                fontWeight: 400,
+              }}
+            >
               {editingStation
                 ? t("stations.editStation")
                 : t("stations.addStation")}
             </DialogTitle>
-            <DialogDescription>
+            <DialogDescription
+              style={{
+                fontFamily: "'JetBrains Mono', monospace",
+                fontSize: 10.5,
+                letterSpacing: "0.08em",
+              }}
+            >
               {editingStation
                 ? "Update the station details below."
                 : "Fill in the details to create a new station."}
@@ -742,7 +1257,7 @@ export default function StationsPage() {
         </DialogContent>
       </Dialog>
 
-      {/* Delete Confirmation */}
+      {/* Delete single */}
       <AlertDialog
         open={deleteConfirm !== null}
         onOpenChange={() => setDeleteConfirm(null)}
@@ -769,7 +1284,7 @@ export default function StationsPage() {
         </AlertDialogContent>
       </AlertDialog>
 
-      {/* Bulk Delete */}
+      {/* Bulk delete */}
       <AlertDialog open={bulkDeleteOpen} onOpenChange={setBulkDeleteOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
