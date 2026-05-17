@@ -302,6 +302,142 @@ tbody tr:hover::after {
     animation: draw-line 2s ease forwards;
 }
 
+/* ─── Auth page — Control Terminal ───────────────────────── */
+@keyframes status-pulse {
+    0%, 100% { opacity: 1; box-shadow: 0 0 4px rgba(16,185,129,0.6); }
+    50% { opacity: 0.4; box-shadow: 0 0 8px rgba(16,185,129,0.2); }
+}
+@keyframes colon-blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+}
+@keyframes scanline-move {
+    0% { transform: translateY(-100%); }
+    100% { transform: translateY(100vh); }
+}
+
+.auth-status-dot {
+    display: inline-block;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: #10b981;
+    animation: status-pulse 2.4s ease-in-out infinite;
+}
+
+.auth-clock-colon {
+    animation: colon-blink 1s step-end infinite;
+    display: inline-block;
+    width: 6px;
+    text-align: center;
+}
+
+.auth-scanlines {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 1;
+}
+.auth-scanlines::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 120px;
+    background: linear-gradient(
+        to bottom,
+        transparent 0%,
+        rgba(29,111,232,0.018) 50%,
+        transparent 100%
+    );
+    animation: scanline-move 8s linear infinite;
+}
+
+/* Bottom-border only inputs */
+.auth-input {
+    display: block;
+    width: 100%;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid rgba(148,163,184,0.15);
+    border-radius: 0;
+    padding: 10px 0;
+    color: rgba(226,232,240,0.9);
+    font-family: 'Sora', sans-serif;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s ease;
+    box-sizing: border-box;
+}
+.auth-input::placeholder {
+    color: rgba(148,163,184,0.2);
+    font-size: 13px;
+}
+.auth-input:focus {
+    border-bottom-color: #1d6fe8;
+    box-shadow: 0 1px 0 0 rgba(29,111,232,0.5);
+}
+
+.auth-label {
+    display: block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px;
+    color: rgba(148,163,184,0.5);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+}
+
+.auth-field-error {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: #f87171;
+    margin-top: 6px;
+    letter-spacing: 0.04em;
+}
+
+.auth-error-banner {
+    background: rgba(239,68,68,0.07);
+    border: 1px solid rgba(239,68,68,0.22);
+    border-radius: 4px;
+    padding: 10px 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: #f87171;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+}
+
+.auth-submit-btn {
+    display: block;
+    width: 100%;
+    padding: 13px 24px;
+    background: #1d6fe8;
+    border: none;
+    border-radius: 4px;
+    color: white;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    cursor: pointer;
+    transition: background 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+    box-shadow: 0 0 24px rgba(29,111,232,0.25);
+}
+.auth-submit-btn:hover:not(:disabled) {
+    background: #2563eb;
+    box-shadow: 0 0 32px rgba(29,111,232,0.4);
+}
+.auth-submit-btn:active:not(:disabled) {
+    background: #1a5cc7;
+}
+.auth-submit-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
 /* ─── Status badge polish ─────────────────────────────────── */
 .status-active {
     color: var(--color-success);
