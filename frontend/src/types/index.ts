@@ -4,6 +4,7 @@ export interface User {
   email: string;
   role: "ADMIN" | "OPERATOR";
   createdAt: string;
+  avatarUrl?: string;
 }
 
 export interface Station {

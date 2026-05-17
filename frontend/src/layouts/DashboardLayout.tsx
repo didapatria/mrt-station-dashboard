@@ -506,7 +506,7 @@ export default function DashboardLayout() {
               >
                 <Avatar className="h-7 w-7">
                   <AvatarImage
-                    src={`https://api.dicebear.com/9.x/initials/svg?seed=${encodeURIComponent(user?.name || "")}`}
+                    src={user?.avatarUrl || `https://api.dicebear.com/9.x/initials/svg?seed=${encodeURIComponent(user?.name || "")}`}
                   />
                   <AvatarFallback className="bg-primary text-primary-foreground text-[10px] font-bold">
                     {user?.name?.charAt(0).toUpperCase()}

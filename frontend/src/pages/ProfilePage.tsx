@@ -316,7 +316,7 @@ export default function ProfilePage() {
                   >
                     <Avatar style={{ width: 64, height: 64 }}>
                       <AvatarImage
-                        src={`https://api.dicebear.com/9.x/initials/svg?seed=${encodeURIComponent(user.name)}`}
+                        src={user.avatarUrl || `https://api.dicebear.com/9.x/initials/svg?seed=${encodeURIComponent(user.name)}`}
                         alt={user.name}
                       />
                       <AvatarFallback className="bg-primary text-primary-foreground text-2xl font-bold">
