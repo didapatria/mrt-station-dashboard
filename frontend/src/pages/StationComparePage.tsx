@@ -43,6 +43,7 @@ function StationCard({ station, scheduleCount, otherScheduleCount }: StationCard
   if (!station) {
     return (
       <div style={cardStyle}>
+        <div style={{ height: 2, background: "linear-gradient(90deg, #3b82f6 0%, transparent 100%)" }} />
         <div
           style={{
             padding: "60px 24px",
@@ -148,17 +149,18 @@ function StationCard({ station, scheduleCount, otherScheduleCount }: StationCard
 
   return (
     <div style={cardStyle}>
+      <div style={{ height: 2, background: "linear-gradient(90deg, #3b82f6 0%, transparent 100%)" }} />
       <div style={cardHeaderStyle}>
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
           <span
             style={{
-              background: "rgba(29,111,232,0.12)",
-              border: "1px solid rgba(29,111,232,0.2)",
+              background: "rgba(29,111,232,0.14)",
+              border: "1px solid rgba(29,111,232,0.25)",
               borderRadius: 4,
-              padding: "3px 10px",
+              padding: "4px 12px",
               fontFamily: "'Bebas Neue', sans-serif",
-              fontSize: 14,
-              letterSpacing: "0.1em",
+              fontSize: 16,
+              letterSpacing: "0.12em",
               color: "#60a5fa",
               display: "inline-block",
             }}
@@ -169,7 +171,7 @@ function StationCard({ station, scheduleCount, otherScheduleCount }: StationCard
         <p
           style={{
             fontFamily: "'Bebas Neue', sans-serif",
-            fontSize: 20,
+            fontSize: 22,
             letterSpacing: "0.04em",
             color: "var(--color-foreground)",
             margin: "6px 0 0",
@@ -199,9 +201,10 @@ function StationCard({ station, scheduleCount, otherScheduleCount }: StationCard
               display: "flex",
               alignItems: "center",
               gap: 10,
-              padding: "12px 0",
+              padding: "12px 8px",
               borderBottom: i < rows.length - 1 ? "1px solid var(--color-border)" : "none",
-              background: row.highlight ? "rgba(34,197,94,0.04)" : "transparent",
+              background: row.highlight ? "rgba(34,197,94,0.05)" : "transparent",
+              borderLeft: row.highlight ? "2px solid rgba(34,197,94,0.4)" : "2px solid transparent",
               borderRadius: row.highlight ? 4 : 0,
             }}
           >
@@ -278,6 +281,13 @@ export default function StationComparePage() {
         >
           Side-by-side station analysis
         </p>
+        <div
+          style={{
+            marginTop: 16,
+            height: 1,
+            background: "linear-gradient(90deg, var(--color-border) 0%, transparent 80%)",
+          }}
+        />
       </div>
 
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
@@ -286,84 +296,86 @@ export default function StationComparePage() {
           style={{
             ...cardStyle,
             marginBottom: 24,
-            padding: "20px 24px",
           }}
         >
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1fr auto 1fr",
-              alignItems: "center",
-              gap: 16,
-            }}
-          >
-            <div>
-              <p
-                style={{
-                  fontFamily: "'JetBrains Mono', monospace",
-                  fontSize: 9.5,
-                  letterSpacing: "0.14em",
-                  textTransform: "uppercase",
-                  color: "var(--color-muted-foreground)",
-                  margin: "0 0 8px",
-                }}
-              >
-                Station A
-              </p>
-              <Select value={leftId} onValueChange={setLeftId}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select station" />
-                </SelectTrigger>
-                <SelectContent>
-                  {stations.map((s) => (
-                    <SelectItem key={s.id} value={s.id}>
-                      {s.code} — {s.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+          <div style={{ height: 2, background: "linear-gradient(90deg, #3b82f6 0%, transparent 100%)" }} />
+          <div style={{ padding: "20px 24px" }}>
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "1fr auto 1fr",
+                alignItems: "center",
+                gap: 16,
+              }}
+            >
+              <div>
+                <p
+                  style={{
+                    fontFamily: "'JetBrains Mono', monospace",
+                    fontSize: 9.5,
+                    letterSpacing: "0.14em",
+                    textTransform: "uppercase",
+                    color: "var(--color-muted-foreground)",
+                    margin: "0 0 8px",
+                  }}
+                >
+                  Station A
+                </p>
+                <Select value={leftId} onValueChange={setLeftId}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select station" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {stations.map((s) => (
+                      <SelectItem key={s.id} value={s.id}>
+                        {s.code} — {s.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
 
-            <div style={{ textAlign: "center", padding: "0 8px", paddingTop: 20 }}>
-              <p
-                style={{
-                  fontFamily: "'Bebas Neue', sans-serif",
-                  fontSize: 28,
-                  letterSpacing: "0.08em",
-                  color: "var(--color-muted-foreground)",
-                  margin: 0,
-                  lineHeight: 1,
-                }}
-              >
-                VS
-              </p>
-            </div>
+              <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 4, flexShrink: 0, paddingTop: 20 }}>
+                <div style={{ width: 1, height: 20, background: "rgba(59,130,246,0.3)" }} />
+                <span
+                  style={{
+                    fontFamily: "'Bebas Neue', sans-serif",
+                    fontSize: 22,
+                    color: "rgba(148,163,184,0.4)",
+                    letterSpacing: "0.1em",
+                  }}
+                >
+                  VS
+                </span>
+                <div style={{ width: 1, height: 20, background: "rgba(59,130,246,0.3)" }} />
+              </div>
 
-            <div>
-              <p
-                style={{
-                  fontFamily: "'JetBrains Mono', monospace",
-                  fontSize: 9.5,
-                  letterSpacing: "0.14em",
-                  textTransform: "uppercase",
-                  color: "var(--color-muted-foreground)",
-                  margin: "0 0 8px",
-                }}
-              >
-                Station B
-              </p>
-              <Select value={rightId} onValueChange={setRightId}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select station" />
-                </SelectTrigger>
-                <SelectContent>
-                  {stations.map((s) => (
-                    <SelectItem key={s.id} value={s.id}>
-                      {s.code} — {s.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <div>
+                <p
+                  style={{
+                    fontFamily: "'JetBrains Mono', monospace",
+                    fontSize: 9.5,
+                    letterSpacing: "0.14em",
+                    textTransform: "uppercase",
+                    color: "var(--color-muted-foreground)",
+                    margin: "0 0 8px",
+                  }}
+                >
+                  Station B
+                </p>
+                <Select value={rightId} onValueChange={setRightId}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select station" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {stations.map((s) => (
+                      <SelectItem key={s.id} value={s.id}>
+                        {s.code} — {s.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
           </div>
         </div>

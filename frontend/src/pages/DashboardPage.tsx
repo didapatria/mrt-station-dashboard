@@ -154,6 +154,11 @@ export default function DashboardPage() {
 
   return (
     <div>
+      {/* Pulse bar keyframe */}
+      <style>{`
+        @keyframes pulse-bar { 0%, 100% { opacity: 0.85; } 50% { opacity: 0.5; } }
+      `}</style>
+
       {/* ── Welcome Banner ── */}
       <motion.div
         initial={{ opacity: 0, y: -8 }}
@@ -175,8 +180,19 @@ export default function DashboardPage() {
             opacity: isDark ? 0.08 : 0.12,
             backgroundImage:
               "radial-gradient(circle, rgba(255,255,255,0.7) 1px, transparent 1px)",
-            backgroundSize: "28px 28px",
+            backgroundSize: "32px 32px",
             pointerEvents: "none",
+          }}
+        />
+        {/* Secondary pattern: diagonal lines */}
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            pointerEvents: "none",
+            opacity: isDark ? 0.03 : 0.04,
+            backgroundImage:
+              "repeating-linear-gradient(45deg, rgba(255,255,255,0.5) 0px, rgba(255,255,255,0.5) 1px, transparent 1px, transparent 24px)",
           }}
         />
         {/* Right glow */}
@@ -359,7 +375,19 @@ export default function DashboardPage() {
               marginTop: 5,
             }}
           >
-            N–S Line · Real-time Overview
+            <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+              <span
+                style={{
+                  width: 5,
+                  height: 5,
+                  borderRadius: "50%",
+                  background: "#22c55e",
+                  boxShadow: "0 0 6px rgba(34,197,94,0.7)",
+                  flexShrink: 0,
+                }}
+              />
+              N–S Line · Real-time Overview
+            </span>
           </p>
         </div>
         <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
@@ -445,7 +473,7 @@ export default function DashboardPage() {
                 }}
                 whileHover={{ backgroundColor: isDark ? "rgba(255,255,255,0.02)" : "rgba(0,0,0,0.01)" }}
               >
-                {/* Left accent bar */}
+                {/* Left accent bar with pulse animation */}
                 <div
                   style={{
                     position: "absolute",
@@ -454,7 +482,7 @@ export default function DashboardPage() {
                     bottom: 0,
                     width: 3,
                     background: stat.accent,
-                    opacity: 0.85,
+                    animation: "pulse-bar 3s ease-in-out infinite",
                   }}
                 />
                 {/* Ghost icon */}
@@ -463,9 +491,9 @@ export default function DashboardPage() {
                     position: "absolute",
                     right: 16,
                     bottom: 12,
-                    width: 44,
-                    height: 44,
-                    opacity: isDark ? 0.045 : 0.065,
+                    width: 52,
+                    height: 52,
+                    opacity: isDark ? 0.05 : 0.07,
                     color: stat.accent,
                   }}
                 />
@@ -543,6 +571,14 @@ export default function DashboardPage() {
                 overflow: "hidden",
               }}
             >
+              {/* Top accent gradient line */}
+              <div
+                style={{
+                  height: 2,
+                  background: "linear-gradient(90deg, #3b82f6 0%, rgba(59,130,246,0.0) 100%)",
+                  borderRadius: "12px 12px 0 0",
+                }}
+              />
               <div
                 style={{
                   padding: "18px 24px 14px",
@@ -636,6 +672,14 @@ export default function DashboardPage() {
               overflow: "hidden",
             }}
           >
+            {/* Top accent gradient line */}
+            <div
+              style={{
+                height: 2,
+                background: "linear-gradient(90deg, #3b82f6 0%, rgba(59,130,246,0.0) 100%)",
+                borderRadius: "12px 12px 0 0",
+              }}
+            />
             <div
               style={{
                 padding: "18px 24px 14px",
@@ -785,6 +829,14 @@ export default function DashboardPage() {
                 overflow: "hidden",
               }}
             >
+              {/* Top accent gradient line */}
+              <div
+                style={{
+                  height: 2,
+                  background: "linear-gradient(90deg, #3b82f6 0%, rgba(59,130,246,0.0) 100%)",
+                  borderRadius: "12px 12px 0 0",
+                }}
+              />
               <div className="overflow-x-auto">
                 <Table>
                   <TableHeader>
@@ -916,6 +968,14 @@ export default function DashboardPage() {
                 overflow: "hidden",
               }}
             >
+              {/* Top accent gradient line */}
+              <div
+                style={{
+                  height: 2,
+                  background: "linear-gradient(90deg, #3b82f6 0%, rgba(59,130,246,0.0) 100%)",
+                  borderRadius: "12px 12px 0 0",
+                }}
+              />
               <div className="overflow-x-auto">
                 <Table>
                   <TableHeader>

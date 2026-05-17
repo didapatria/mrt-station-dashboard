@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { motion } from "framer-motion";
@@ -64,6 +65,39 @@ const thStyle: React.CSSProperties = {
   color: "var(--color-muted-foreground)",
 };
 
+const ACCENT_LINE = (
+  <div
+    style={{
+      height: 2,
+      background:
+        "linear-gradient(90deg, #3b82f6 0%, rgba(59,130,246,0) 100%)",
+    }}
+  />
+);
+
+function StatCard({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const [hovered, setHovered] = useState(false);
+  return (
+    <div
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        background: "var(--color-background)",
+        border: `1px solid ${hovered ? "rgba(59,130,246,0.3)" : "var(--color-border)"}`,
+        borderRadius: 8,
+        padding: "12px 16px",
+        transition: "all 0.15s ease",
+      }}
+    >
+      {children}
+    </div>
+  );
+}
+
 export default function StationDetailPage() {
   const { t } = useTranslation();
   const { id } = useParams<{ id: string }>();
@@ -81,7 +115,12 @@ export default function StationDetailPage() {
     );
   if (!station)
     return (
-      <p style={{ fontFamily: "'Sora', sans-serif", color: "var(--color-muted-foreground)" }}>
+      <p
+        style={{
+          fontFamily: "'Sora', sans-serif",
+          color: "var(--color-muted-foreground)",
+        }}
+      >
         Station not found.
       </p>
     );
@@ -113,8 +152,15 @@ export default function StationDetailPage() {
 
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
         {/* Page header */}
-        <div style={{ marginBottom: 28 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap" }}>
+        <div>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 14,
+              flexWrap: "wrap",
+            }}
+          >
             <h1
               style={{
                 fontFamily: "'Bebas Neue', sans-serif",
@@ -127,17 +173,19 @@ export default function StationDetailPage() {
             >
               {station.name}
             </h1>
+            {/* Station code badge — larger with glow */}
             <span
               style={{
                 background: "rgba(29,111,232,0.12)",
                 border: "1px solid rgba(29,111,232,0.2)",
                 borderRadius: 4,
-                padding: "3px 10px",
+                padding: "4px 12px",
                 fontFamily: "'Bebas Neue', sans-serif",
-                fontSize: 14,
+                fontSize: 16,
                 letterSpacing: "0.1em",
                 color: "#60a5fa",
                 display: "inline-block",
+                boxShadow: "0 0 12px rgba(29,111,232,0.25)",
               }}
             >
               {station.code}
@@ -172,6 +220,17 @@ export default function StationDetailPage() {
               {station.status}
             </span>
           </div>
+
+          {/* Horizontal fade line below header */}
+          <div
+            style={{
+              height: 1,
+              background:
+                "linear-gradient(90deg, rgba(59,130,246,0.5) 0%, transparent 60%)",
+              marginTop: 12,
+              marginBottom: 28,
+            }}
+          />
         </div>
 
         <div className="grid gap-6 lg:grid-cols-[1fr_350px]">
@@ -179,6 +238,7 @@ export default function StationDetailPage() {
           <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
             {/* Info card */}
             <div style={cardStyle}>
+              {ACCENT_LINE}
               <div style={cardHeaderStyle}>
                 <p
                   style={{
@@ -213,14 +273,7 @@ export default function StationDetailPage() {
                 }}
               >
                 {/* Order */}
-                <div
-                  style={{
-                    background: "var(--color-background)",
-                    border: "1px solid var(--color-border)",
-                    borderRadius: 8,
-                    padding: "12px 16px",
-                  }}
-                >
+                <StatCard>
                   <p
                     style={{
                       fontFamily: "'Bebas Neue', sans-serif",
@@ -243,17 +296,10 @@ export default function StationDetailPage() {
                   >
                     {String(station.order).padStart(2, "0")}
                   </p>
-                </div>
+                </StatCard>
 
                 {/* Location */}
-                <div
-                  style={{
-                    background: "var(--color-background)",
-                    border: "1px solid var(--color-border)",
-                    borderRadius: 8,
-                    padding: "12px 16px",
-                  }}
-                >
+                <StatCard>
                   <p
                     style={{
                       fontFamily: "'Bebas Neue', sans-serif",
@@ -272,7 +318,14 @@ export default function StationDetailPage() {
                       gap: 6,
                     }}
                   >
-                    <MapPin size={13} style={{ color: "var(--color-muted-foreground)", marginTop: 2, flexShrink: 0 }} />
+                    <MapPin
+                      size={13}
+                      style={{
+                        color: "var(--color-muted-foreground)",
+                        marginTop: 2,
+                        flexShrink: 0,
+                      }}
+                    />
                     <p
                       style={{
                         fontFamily: "'Sora', sans-serif",
@@ -285,17 +338,10 @@ export default function StationDetailPage() {
                       {station.location}
                     </p>
                   </div>
-                </div>
+                </StatCard>
 
                 {/* Status */}
-                <div
-                  style={{
-                    background: "var(--color-background)",
-                    border: "1px solid var(--color-border)",
-                    borderRadius: 8,
-                    padding: "12px 16px",
-                  }}
-                >
+                <StatCard>
                   <p
                     style={{
                       fontFamily: "'Bebas Neue', sans-serif",
@@ -307,7 +353,9 @@ export default function StationDetailPage() {
                   >
                     {t("stations.status").toUpperCase()}
                   </p>
-                  <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  <div
+                    style={{ display: "flex", alignItems: "center", gap: 8 }}
+                  >
                     <div
                       style={{
                         width: 7,
@@ -329,77 +377,122 @@ export default function StationDetailPage() {
                       {station.status}
                     </span>
                   </div>
-                </div>
+                </StatCard>
 
-                {/* Coordinates */}
+                {/* Coordinates — lat/lng on separate labeled lines */}
                 {station.latitude && station.longitude && (
-                  <div
-                    style={{
-                      background: "var(--color-background)",
-                      border: "1px solid var(--color-border)",
-                      borderRadius: 8,
-                      padding: "12px 16px",
-                    }}
-                  >
+                  <StatCard>
                     <p
                       style={{
                         fontFamily: "'Bebas Neue', sans-serif",
                         fontSize: 11,
                         letterSpacing: "0.12em",
                         color: "var(--color-muted-foreground)",
-                        margin: "0 0 6px",
+                        margin: "0 0 8px",
                       }}
                     >
                       COORDINATES
                     </p>
-                    <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                      <Navigation size={13} style={{ color: "var(--color-muted-foreground)", flexShrink: 0 }} />
-                      <span
-                        style={{
-                          fontFamily: "'JetBrains Mono', monospace",
-                          fontSize: 11,
-                          color: "var(--color-foreground)",
-                        }}
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: 4,
+                        marginBottom: 8,
+                      }}
+                    >
+                      <div
+                        style={{ display: "flex", alignItems: "baseline", gap: 6 }}
                       >
-                        {station.latitude.toFixed(6)}, {station.longitude.toFixed(6)}
-                      </span>
-                      <button
-                        onClick={() => {
-                          navigator.clipboard.writeText(
-                            `${station.latitude}, ${station.longitude}`,
-                          );
-                          toast.success("Coordinates copied");
-                        }}
-                        style={{
-                          background: "none",
-                          border: "1px solid var(--color-border)",
-                          borderRadius: 4,
-                          padding: "2px 6px",
-                          cursor: "pointer",
-                          fontFamily: "'JetBrains Mono', monospace",
-                          fontSize: 9,
-                          letterSpacing: "0.08em",
-                          color: "var(--color-muted-foreground)",
-                          display: "flex",
-                          alignItems: "center",
-                          gap: 3,
-                          flexShrink: 0,
-                        }}
+                        <span
+                          style={{
+                            fontFamily: "'JetBrains Mono', monospace",
+                            fontSize: 8,
+                            letterSpacing: "0.12em",
+                            color: "var(--color-muted-foreground)",
+                            opacity: 0.6,
+                            textTransform: "uppercase",
+                            flexShrink: 0,
+                          }}
+                        >
+                          LAT
+                        </span>
+                        <span
+                          style={{
+                            fontFamily: "'JetBrains Mono', monospace",
+                            fontSize: 11,
+                            color: "var(--color-foreground)",
+                          }}
+                        >
+                          {station.latitude.toFixed(6)}
+                        </span>
+                      </div>
+                      <div
+                        style={{ display: "flex", alignItems: "baseline", gap: 6 }}
                       >
-                        <Copy size={9} />
-                        COPY
-                      </button>
+                        <span
+                          style={{
+                            fontFamily: "'JetBrains Mono', monospace",
+                            fontSize: 8,
+                            letterSpacing: "0.12em",
+                            color: "var(--color-muted-foreground)",
+                            opacity: 0.6,
+                            textTransform: "uppercase",
+                            flexShrink: 0,
+                          }}
+                        >
+                          LNG
+                        </span>
+                        <span
+                          style={{
+                            fontFamily: "'JetBrains Mono', monospace",
+                            fontSize: 11,
+                            color: "var(--color-foreground)",
+                          }}
+                        >
+                          {station.longitude.toFixed(6)}
+                        </span>
+                      </div>
                     </div>
-                  </div>
+                    <button
+                      onClick={() => {
+                        navigator.clipboard.writeText(
+                          `${station.latitude}, ${station.longitude}`,
+                        );
+                        toast.success("Coordinates copied");
+                      }}
+                      style={{
+                        background: "none",
+                        border: "1px solid var(--color-border)",
+                        borderRadius: 4,
+                        padding: "2px 6px",
+                        cursor: "pointer",
+                        fontFamily: "'JetBrains Mono', monospace",
+                        fontSize: 9,
+                        letterSpacing: "0.08em",
+                        color: "var(--color-muted-foreground)",
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: 3,
+                      }}
+                    >
+                      <Copy size={9} />
+                      COPY
+                    </button>
+                  </StatCard>
                 )}
               </div>
             </div>
 
             {/* Schedules card */}
             <div style={cardStyle}>
+              {ACCENT_LINE}
               <div style={cardHeaderStyle}>
                 <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                  <Clock size={14} style={{ color: "var(--color-muted-foreground)" }} />
+                  <Clock
+                    size={14}
+                    style={{ color: "var(--color-muted-foreground)" }}
+                  />
                   <p
                     style={{
                       fontFamily: "'Bebas Neue', sans-serif",
@@ -441,10 +534,14 @@ export default function StationDetailPage() {
               <Table>
                 <TableHeader>
                   <TableRow style={{ background: "var(--color-muted)" }}>
-                    <TableHead style={thStyle}>{t("schedules.trainNumber")}</TableHead>
+                    <TableHead style={thStyle}>
+                      {t("schedules.trainNumber")}
+                    </TableHead>
                     <TableHead style={thStyle}>{t("schedules.route")}</TableHead>
                     <TableHead style={thStyle}>{t("schedules.time")}</TableHead>
-                    <TableHead style={thStyle}>{t("stations.status")}</TableHead>
+                    <TableHead style={thStyle}>
+                      {t("stations.status")}
+                    </TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -484,7 +581,8 @@ export default function StationDetailPage() {
                               fontSize: 11,
                             }}
                           >
-                            {s.departureStation?.code} → {s.arrivalStation?.code}
+                            {s.departureStation?.code} →{" "}
+                            {s.arrivalStation?.code}
                           </TableCell>
                           <TableCell
                             style={{
@@ -495,7 +593,13 @@ export default function StationDetailPage() {
                             {s.departureTime} — {s.arrivalTime}
                           </TableCell>
                           <TableCell>
-                            <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                            <div
+                              style={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: 6,
+                              }}
+                            >
                               <div
                                 style={{
                                   width: 7,
@@ -531,6 +635,7 @@ export default function StationDetailPage() {
           <div>
             {station.latitude && station.longitude && (
               <div style={{ ...cardStyle }}>
+                {ACCENT_LINE}
                 <div style={cardHeaderStyle}>
                   <p
                     style={{
@@ -553,11 +658,15 @@ export default function StationDetailPage() {
                       margin: "4px 0 0",
                     }}
                   >
-                    {station.latitude.toFixed(4)}, {station.longitude.toFixed(4)}
+                    {station.latitude.toFixed(4)},{" "}
+                    {station.longitude.toFixed(4)}
                   </p>
                 </div>
                 <div style={{ height: 256 }}>
-                  <StationMap stations={[station]} selectedStationId={station.id} />
+                  <StationMap
+                    stations={[station]}
+                    selectedStationId={station.id}
+                  />
                 </div>
                 <div style={{ padding: "12px 24px" }}>
                   <button
@@ -582,7 +691,7 @@ export default function StationDetailPage() {
                       gap: 6,
                     }}
                   >
-                    <Copy size={11} />
+                    <Navigation size={11} />
                     COPY STATION CODE — {station.code}
                   </button>
                 </div>

@@ -7,6 +7,7 @@ import { useTranslation } from "react-i18next";
 import { GoogleLogin } from "@react-oauth/google";
 import { useRegister, useGoogleLogin } from "@/hooks/use-auth";
 import { Eye, EyeOff, Train } from "lucide-react";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 const registerSchema = z
   .object({
@@ -111,6 +112,9 @@ export default function RegisterPage() {
         >
           MRT JAKARTA
         </span>
+        <div style={{ marginLeft: "auto" }}>
+          <ThemeToggle />
+        </div>
       </div>
 
       {/* Heading */}

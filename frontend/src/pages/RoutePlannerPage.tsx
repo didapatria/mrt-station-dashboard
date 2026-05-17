@@ -97,6 +97,13 @@ export default function RoutePlannerPage() {
         >
           Find available schedules between stations
         </p>
+        <div
+          style={{
+            marginTop: 16,
+            height: 1,
+            background: "linear-gradient(90deg, var(--color-border) 0%, transparent 80%)",
+          }}
+        />
       </div>
 
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
@@ -105,9 +112,9 @@ export default function RoutePlannerPage() {
           style={{
             ...cardStyle,
             marginBottom: 24,
-            background: "var(--color-card)",
           }}
         >
+          <div style={{ height: 2, background: "linear-gradient(90deg, #3b82f6 0%, transparent 100%)" }} />
           <div style={cardHeaderStyle}>
             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
               <Train size={14} style={{ color: "var(--color-muted-foreground)" }} />
@@ -195,20 +202,23 @@ export default function RoutePlannerPage() {
                 </Select>
               </div>
 
-              {/* Connector */}
+              {/* Animated dotted connector */}
               <div
                 style={{
                   display: "flex",
-                  flexDirection: "column" as const,
                   alignItems: "center",
+                  justifyContent: "center",
+                  padding: "4px 0",
                   paddingBottom: 10,
                   flexShrink: 0,
                 }}
               >
-                <ArrowRight
-                  size={18}
-                  style={{ color: "var(--color-primary)" }}
-                />
+                <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 2 }}>
+                  {Array.from({ length: 4 }).map((_, i) => (
+                    <div key={i} style={{ width: 1, height: 4, background: "rgba(59,130,246,0.4)", borderRadius: 1 }} />
+                  ))}
+                  <div style={{ color: "#3b82f6", fontSize: 10, lineHeight: 1 }}>▼</div>
+                </div>
               </div>
 
               {/* TO */}
@@ -327,6 +337,7 @@ export default function RoutePlannerPage() {
         {/* Results */}
         {fromId && toId && fromId !== toId && (
           <div style={cardStyle}>
+            <div style={{ height: 2, background: "linear-gradient(90deg, #3b82f6 0%, transparent 100%)" }} />
             <div style={cardHeaderStyle}>
               <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                 <Clock size={14} style={{ color: "var(--color-muted-foreground)" }} />
@@ -337,9 +348,14 @@ export default function RoutePlannerPage() {
                     letterSpacing: "0.1em",
                     color: "var(--color-foreground)",
                     margin: 0,
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 6,
                   }}
                 >
-                  {fromStation?.code} → {toStation?.code}
+                  <span>{fromStation?.code}</span>
+                  <span style={{ color: "#3b82f6", fontFamily: "'JetBrains Mono', monospace", fontSize: 13 }}>→</span>
+                  <span>{toStation?.code}</span>
                 </p>
                 <span
                   style={{
@@ -410,6 +426,7 @@ export default function RoutePlannerPage() {
                 <TableHeader>
                   <TableRow style={{ background: "var(--color-muted)" }}>
                     <TableHead style={thStyle}>{t("schedules.trainNumber")}</TableHead>
+                    <TableHead style={thStyle}>{t("schedules.route")}</TableHead>
                     <TableHead style={thStyle}>{t("schedules.departureTime")}</TableHead>
                     <TableHead style={thStyle}>{t("schedules.arrivalTime")}</TableHead>
                     <TableHead style={thStyle}>{t("schedules.dayType")}</TableHead>
@@ -431,6 +448,19 @@ export default function RoutePlannerPage() {
                             }}
                           >
                             {s.trainNumber}
+                          </TableCell>
+                          <TableCell>
+                            <div style={{ display: "flex", alignItems: "center" }}>
+                              <span style={{ fontFamily: "'Sora', sans-serif", fontSize: 13 }}>
+                                {fromStation?.name}
+                              </span>
+                              <span style={{ color: "#3b82f6", margin: "0 6px", fontFamily: "'JetBrains Mono', monospace" }}>
+                                →
+                              </span>
+                              <span style={{ fontFamily: "'Sora', sans-serif", fontSize: 13 }}>
+                                {toStation?.name}
+                              </span>
+                            </div>
                           </TableCell>
                           <TableCell
                             style={{

@@ -120,6 +120,8 @@ export default function UsersPage() {
     }
   };
 
+  const totalCount = meta?.total ?? users.length;
+
   return (
     <div>
       {/* Page Header */}
@@ -128,7 +130,6 @@ export default function UsersPage() {
           display: "flex",
           flexDirection: "column",
           gap: 4,
-          marginBottom: 28,
         }}
       >
         <h1
@@ -141,38 +142,46 @@ export default function UsersPage() {
           }}
         >
           USERS
+          <span
+            style={{
+              fontFamily: "'JetBrains Mono', monospace",
+              fontSize: 10,
+              background: "rgba(59,130,246,0.1)",
+              border: "1px solid rgba(59,130,246,0.2)",
+              color: "#60a5fa",
+              padding: "2px 8px",
+              borderRadius: 4,
+              letterSpacing: "0.08em",
+              marginLeft: 10,
+              verticalAlign: "middle",
+            }}
+          >
+            {totalCount} entries
+          </span>
         </h1>
-        <div
+        <span
           style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 12,
+            fontFamily: "'JetBrains Mono', monospace",
+            fontSize: 9.5,
+            letterSpacing: "0.14em",
+            textTransform: "uppercase",
+            color: "var(--color-muted-foreground)",
           }}
         >
-          <span
-            style={{
-              fontFamily: "'JetBrains Mono', monospace",
-              fontSize: 9.5,
-              letterSpacing: "0.14em",
-              textTransform: "uppercase",
-              color: "var(--color-muted-foreground)",
-            }}
-          >
-            User Registry · System Access
-          </span>
-          <span
-            style={{
-              fontFamily: "'JetBrains Mono', monospace",
-              fontSize: 9.5,
-              letterSpacing: "0.08em",
-              color: "var(--color-muted-foreground)",
-              opacity: 0.6,
-            }}
-          >
-            {meta?.total ?? users.length} entries
-          </span>
-        </div>
+          User Registry · System Access
+        </span>
       </div>
+
+      {/* Accent line */}
+      <div
+        style={{
+          height: 1,
+          background:
+            "linear-gradient(90deg, rgba(59,130,246,0.5) 0%, rgba(59,130,246,0.0) 60%)",
+          marginTop: 12,
+          marginBottom: 28,
+        }}
+      />
 
       {/* Filter Bar */}
       <div
@@ -234,6 +243,15 @@ export default function UsersPage() {
             overflow: "hidden",
           }}
         >
+          {/* Card top accent */}
+          <div
+            style={{
+              height: 2,
+              background:
+                "linear-gradient(90deg, #3b82f6 0%, rgba(59,130,246,0) 100%)",
+            }}
+          />
+
           {/* Card Section Header */}
           <div
             style={{
@@ -364,14 +382,27 @@ export default function UsersPage() {
                     </TableRow>
                   ))
                 : sortedUsers.map((user) => (
-                    <TableRow key={user.id} className="hover:bg-muted/30">
+                    <TableRow
+                      key={user.id}
+                      className="hover:bg-muted/30"
+                      style={{
+                        transition: "background 0.12s ease",
+                        borderLeft: user.role === "ADMIN"
+                          ? "2px solid rgba(59,130,246,0.3)"
+                          : undefined,
+                      }}
+                    >
                       <TableCell>
                         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                           <Avatar className="h-9 w-9">
                             <AvatarFallback
                               style={{
-                                background: "rgba(59,130,246,0.15)",
-                                color: "#3b82f6",
+                                background: user.role === "ADMIN"
+                                  ? "rgba(16,185,129,0.15)"
+                                  : "rgba(59,130,246,0.15)",
+                                color: user.role === "ADMIN"
+                                  ? "#10b981"
+                                  : "#60a5fa",
                                 fontFamily: "'JetBrains Mono', monospace",
                                 fontSize: 13,
                                 fontWeight: 700,

@@ -100,10 +100,20 @@ const monoLabelStyle: React.CSSProperties = {
   color: "var(--color-muted-foreground)",
 };
 
+const accentLine = (
+  <div
+    style={{
+      height: 2,
+      background: "linear-gradient(90deg, #3b82f6 0%, transparent 100%)",
+    }}
+  />
+);
+
 export default function ProfilePage() {
   const { t, i18n } = useTranslation();
   const { user } = useAuthStore();
   const { theme } = useThemeStore();
+  const isDark = theme === "dark";
   const { permissions } = usePermission();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showCurrent, setShowCurrent] = useState(false);
@@ -226,6 +236,7 @@ export default function ProfilePage() {
 
   return (
     <div>
+      {/* Page header */}
       <div style={{ marginBottom: 24 }}>
         <h2
           style={{
@@ -250,114 +261,163 @@ export default function ProfilePage() {
         >
           {user.role} · {t("profile.subtitle")}
         </p>
+        {/* Horizontal fade line */}
+        <div
+          style={{
+            height: 1,
+            background:
+              "linear-gradient(90deg, rgba(59,130,246,0.3) 0%, transparent 70%)",
+            marginTop: 14,
+          }}
+        />
       </div>
 
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
       >
-        <div style={{ display: "grid", gap: 24, gridTemplateColumns: "repeat(auto-fit, minmax(340px, 1fr))" }}>
+        <div
+          style={{
+            display: "grid",
+            gap: 24,
+            gridTemplateColumns: "repeat(auto-fit, minmax(340px, 1fr))",
+          }}
+        >
           {/* Left Column */}
           <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
-            {/* Profile Info */}
-            <div style={cardStyle}>
-              <div style={{ ...cardHeaderStyle, padding: "20px 24px 16px" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-                  <Avatar style={{ width: 64, height: 64 }}>
-                    <AvatarImage
-                      src={`https://api.dicebear.com/9.x/initials/svg?seed=${encodeURIComponent(user.name)}`}
-                      alt={user.name}
-                    />
-                    <AvatarFallback className="bg-primary text-primary-foreground text-2xl font-bold">
-                      {user.name.charAt(0).toUpperCase()}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div>
-                    <div
-                      style={{
-                        fontFamily: "'Bebas Neue', sans-serif",
-                        fontSize: 28,
-                        letterSpacing: "0.03em",
-                        lineHeight: 1.1,
-                        color: "var(--color-foreground)",
-                      }}
-                    >
-                      {user.name}
-                    </div>
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 8,
-                        marginTop: 4,
-                      }}
-                    >
-                      <Badge variant={user.role === "ADMIN" ? "default" : "secondary"}>
-                        {user.role}
-                      </Badge>
-                      <span
+            {/* Profile Info card with avatar gradient treatment */}
+            <div
+              style={{
+                ...cardStyle,
+                background: isDark
+                  ? "linear-gradient(135deg, rgba(59,130,246,0.06) 0%, rgba(59,130,246,0.02) 100%)"
+                  : "linear-gradient(135deg, rgba(59,130,246,0.04) 0%, transparent 100%)",
+              }}
+            >
+              {accentLine}
+              <div
+                style={{
+                  background: "var(--color-card)",
+                  border: "none",
+                  borderRadius: 0,
+                }}
+              >
+                <div
+                  style={{
+                    ...cardHeaderStyle,
+                    padding: "20px 24px 16px",
+                    background: isDark
+                      ? "linear-gradient(135deg, rgba(59,130,246,0.06) 0%, rgba(59,130,246,0.02) 100%)"
+                      : "linear-gradient(135deg, rgba(59,130,246,0.04) 0%, transparent 100%)",
+                  }}
+                >
+                  <div
+                    style={{ display: "flex", alignItems: "center", gap: 16 }}
+                  >
+                    <Avatar style={{ width: 64, height: 64 }}>
+                      <AvatarImage
+                        src={`https://api.dicebear.com/9.x/initials/svg?seed=${encodeURIComponent(user.name)}`}
+                        alt={user.name}
+                      />
+                      <AvatarFallback className="bg-primary text-primary-foreground text-2xl font-bold">
+                        {user.name.charAt(0).toUpperCase()}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div>
+                      <div
                         style={{
-                          fontFamily: "'JetBrains Mono', monospace",
-                          fontSize: 11,
-                          color: "var(--color-muted-foreground)",
+                          fontFamily: "'Bebas Neue', sans-serif",
+                          fontSize: 28,
+                          letterSpacing: "0.03em",
+                          lineHeight: 1.1,
+                          color: "var(--color-foreground)",
                         }}
                       >
-                        {user.email}
-                      </span>
+                        {user.name}
+                      </div>
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 8,
+                          marginTop: 4,
+                        }}
+                      >
+                        <Badge
+                          variant={
+                            user.role === "ADMIN" ? "default" : "secondary"
+                          }
+                        >
+                          {user.role}
+                        </Badge>
+                        <span
+                          style={{
+                            fontFamily: "'JetBrains Mono', monospace",
+                            fontSize: 11,
+                            color: "var(--color-muted-foreground)",
+                          }}
+                        >
+                          {user.email}
+                        </span>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-              <div style={{ padding: "16px 24px 20px" }}>
-                {profileItems.map((item) => {
-                  const Icon = item.icon;
-                  return (
-                    <div
-                      key={item.label}
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 12,
-                        padding: "8px 0",
-                        borderBottom: "1px solid var(--color-border)",
-                      }}
-                    >
+                <div style={{ padding: "16px 24px 20px" }}>
+                  {profileItems.map((item) => {
+                    const Icon = item.icon;
+                    return (
                       <div
+                        key={item.label}
                         style={{
-                          width: 36,
-                          height: 36,
-                          borderRadius: 8,
-                          background: "var(--color-muted)",
                           display: "flex",
                           alignItems: "center",
-                          justifyContent: "center",
-                          flexShrink: 0,
+                          gap: 12,
+                          padding: "8px 0",
+                          borderBottom: "1px solid var(--color-border)",
                         }}
                       >
-                        <Icon size={15} style={{ color: "var(--color-muted-foreground)" }} />
-                      </div>
-                      <div>
-                        <div style={monoLabelStyle}>{item.label}</div>
                         <div
                           style={{
-                            fontFamily: "'Sora', sans-serif",
-                            fontSize: 13,
-                            fontWeight: 500,
-                            color: "var(--color-foreground)",
-                            marginTop: 1,
+                            width: 36,
+                            height: 36,
+                            borderRadius: 8,
+                            background: "var(--color-muted)",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            flexShrink: 0,
                           }}
                         >
-                          {item.value}
+                          <Icon
+                            size={15}
+                            style={{ color: "var(--color-muted-foreground)" }}
+                          />
+                        </div>
+                        <div>
+                          <div style={monoLabelStyle}>{item.label}</div>
+                          <div
+                            style={{
+                              fontFamily: "'Sora', sans-serif",
+                              fontSize: 13,
+                              fontWeight: 500,
+                              color: "var(--color-foreground)",
+                              marginTop: 1,
+                            }}
+                          >
+                            {item.value}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  );
-                })}
+                    );
+                  })}
+                </div>
               </div>
             </div>
 
             {/* Preferences */}
             <div style={cardStyle}>
+              {accentLine}
               <div style={cardHeaderStyle}>
                 <div style={cardTitleStyle}>PREFERENCES</div>
                 <div style={cardSubtitleStyle}>Current environment settings</div>
@@ -376,9 +436,23 @@ export default function ProfilePage() {
                         borderBottom: "1px solid var(--color-border)",
                       }}
                     >
-                      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                        <Icon size={14} style={{ color: "var(--color-muted-foreground)" }} />
-                        <span style={{ fontFamily: "'Sora', sans-serif", fontSize: 13 }}>
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 10,
+                        }}
+                      >
+                        <Icon
+                          size={14}
+                          style={{ color: "var(--color-muted-foreground)" }}
+                        />
+                        <span
+                          style={{
+                            fontFamily: "'Sora', sans-serif",
+                            fontSize: 13,
+                          }}
+                        >
                           {item.label}
                         </span>
                       </div>
@@ -391,12 +465,15 @@ export default function ProfilePage() {
 
             {/* Permissions */}
             <div style={cardStyle}>
+              {accentLine}
               <div style={cardHeaderStyle}>
                 <div style={cardTitleStyle}>
                   <Shield size={15} />
                   PERMISSIONS
                 </div>
-                <div style={cardSubtitleStyle}>{permissions.length} permissions granted</div>
+                <div style={cardSubtitleStyle}>
+                  {permissions.length} permissions granted
+                </div>
               </div>
               <div style={{ padding: "16px 24px 20px" }}>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
@@ -425,19 +502,32 @@ export default function ProfilePage() {
           <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
             {/* Change Password */}
             <div style={cardStyle}>
+              {accentLine}
               <div style={cardHeaderStyle}>
                 <div style={cardTitleStyle}>
                   <Lock size={15} />
                   {t("profile.changePassword").toUpperCase()}
                 </div>
-                <div style={cardSubtitleStyle}>{t("profile.updatePassword")}</div>
+                <div style={cardSubtitleStyle}>
+                  {t("profile.updatePassword")}
+                </div>
               </div>
               <div style={{ padding: "20px 24px" }}>
-                <form onSubmit={handleSubmit(onPasswordChange)} style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-                  <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                <form
+                  onSubmit={handleSubmit(onPasswordChange)}
+                  style={{ display: "flex", flexDirection: "column", gap: 16 }}
+                >
+                  <div
+                    style={{ display: "flex", flexDirection: "column", gap: 6 }}
+                  >
                     <Label
                       htmlFor="currentPassword"
-                      style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, textTransform: "uppercase", letterSpacing: "0.08em" }}
+                      style={{
+                        fontFamily: "'JetBrains Mono', monospace",
+                        fontSize: 10,
+                        textTransform: "uppercase",
+                        letterSpacing: "0.08em",
+                      }}
                     >
                       {t("profile.currentPassword")}
                     </Label>
@@ -451,7 +541,13 @@ export default function ProfilePage() {
                         type="button"
                         variant="ghost"
                         size="icon"
-                        style={{ position: "absolute", right: 0, top: 0, height: "100%", width: 40 }}
+                        style={{
+                          position: "absolute",
+                          right: 0,
+                          top: 0,
+                          height: "100%",
+                          width: 40,
+                        }}
                         tabIndex={-1}
                         onClick={() => setShowCurrent(!showCurrent)}
                       >
@@ -459,15 +555,28 @@ export default function ProfilePage() {
                       </Button>
                     </div>
                     {errors.currentPassword && (
-                      <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: "var(--color-destructive)" }}>
+                      <p
+                        style={{
+                          fontFamily: "'JetBrains Mono', monospace",
+                          fontSize: 10,
+                          color: "var(--color-destructive)",
+                        }}
+                      >
                         {errors.currentPassword.message}
                       </p>
                     )}
                   </div>
-                  <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                  <div
+                    style={{ display: "flex", flexDirection: "column", gap: 6 }}
+                  >
                     <Label
                       htmlFor="newPassword"
-                      style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, textTransform: "uppercase", letterSpacing: "0.08em" }}
+                      style={{
+                        fontFamily: "'JetBrains Mono', monospace",
+                        fontSize: 10,
+                        textTransform: "uppercase",
+                        letterSpacing: "0.08em",
+                      }}
                     >
                       {t("profile.newPassword")}
                     </Label>
@@ -481,7 +590,13 @@ export default function ProfilePage() {
                         type="button"
                         variant="ghost"
                         size="icon"
-                        style={{ position: "absolute", right: 0, top: 0, height: "100%", width: 40 }}
+                        style={{
+                          position: "absolute",
+                          right: 0,
+                          top: 0,
+                          height: "100%",
+                          width: 40,
+                        }}
                         tabIndex={-1}
                         onClick={() => setShowNew(!showNew)}
                       >
@@ -489,15 +604,28 @@ export default function ProfilePage() {
                       </Button>
                     </div>
                     {errors.newPassword && (
-                      <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: "var(--color-destructive)" }}>
+                      <p
+                        style={{
+                          fontFamily: "'JetBrains Mono', monospace",
+                          fontSize: 10,
+                          color: "var(--color-destructive)",
+                        }}
+                      >
                         {errors.newPassword.message}
                       </p>
                     )}
                   </div>
-                  <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                  <div
+                    style={{ display: "flex", flexDirection: "column", gap: 6 }}
+                  >
                     <Label
                       htmlFor="confirmPassword"
-                      style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, textTransform: "uppercase", letterSpacing: "0.08em" }}
+                      style={{
+                        fontFamily: "'JetBrains Mono', monospace",
+                        fontSize: 10,
+                        textTransform: "uppercase",
+                        letterSpacing: "0.08em",
+                      }}
                     >
                       {t("profile.confirmPassword")}
                     </Label>
@@ -507,13 +635,29 @@ export default function ProfilePage() {
                       {...register("confirmPassword")}
                     />
                     {errors.confirmPassword && (
-                      <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: "var(--color-destructive)" }}>
+                      <p
+                        style={{
+                          fontFamily: "'JetBrains Mono', monospace",
+                          fontSize: 10,
+                          color: "var(--color-destructive)",
+                        }}
+                      >
                         {errors.confirmPassword.message}
                       </p>
                     )}
                   </div>
-                  <Button type="submit" disabled={isSubmitting} size="sm">
-                    {isSubmitting ? t("profile.changing") : t("profile.changePassword")}
+                  <Button
+                    type="submit"
+                    disabled={isSubmitting}
+                    size="sm"
+                    style={{
+                      fontFamily: "'JetBrains Mono', monospace",
+                      letterSpacing: "0.1em",
+                    }}
+                  >
+                    {isSubmitting
+                      ? t("profile.changing")
+                      : t("profile.changePassword")}
                   </Button>
                 </form>
               </div>
@@ -521,27 +665,66 @@ export default function ProfilePage() {
 
             {/* Tech Stack */}
             <div style={cardStyle}>
+              {accentLine}
               <div style={cardHeaderStyle}>
-                <div style={cardTitleStyle}>{t("profile.techStack").toUpperCase()}</div>
+                <div style={cardTitleStyle}>
+                  {t("profile.techStack").toUpperCase()}
+                </div>
                 <div style={cardSubtitleStyle}>
-                  {frontendStack.length + backendStack.length + infraStack.length + testingStack.length} technologies
+                  {frontendStack.length +
+                    backendStack.length +
+                    infraStack.length +
+                    testingStack.length}{" "}
+                  technologies
                 </div>
               </div>
               <div style={{ padding: "16px 24px 20px" }}>
                 <Tabs defaultValue="frontend">
                   <TabsList
-                    style={{ width: "100%", marginBottom: 16, fontFamily: "'JetBrains Mono', monospace" }}
+                    style={{
+                      width: "100%",
+                      marginBottom: 16,
+                      fontFamily: "'JetBrains Mono', monospace",
+                    }}
                   >
-                    <TabsTrigger value="frontend" style={{ flex: 1, fontFamily: "'JetBrains Mono', monospace", fontSize: 10 }}>
+                    <TabsTrigger
+                      value="frontend"
+                      style={{
+                        flex: 1,
+                        fontFamily: "'JetBrains Mono', monospace",
+                        fontSize: 10,
+                      }}
+                    >
                       Frontend
                     </TabsTrigger>
-                    <TabsTrigger value="backend" style={{ flex: 1, fontFamily: "'JetBrains Mono', monospace", fontSize: 10 }}>
+                    <TabsTrigger
+                      value="backend"
+                      style={{
+                        flex: 1,
+                        fontFamily: "'JetBrains Mono', monospace",
+                        fontSize: 10,
+                      }}
+                    >
                       Backend
                     </TabsTrigger>
-                    <TabsTrigger value="infra" style={{ flex: 1, fontFamily: "'JetBrains Mono', monospace", fontSize: 10 }}>
+                    <TabsTrigger
+                      value="infra"
+                      style={{
+                        flex: 1,
+                        fontFamily: "'JetBrains Mono', monospace",
+                        fontSize: 10,
+                      }}
+                    >
                       Infra
                     </TabsTrigger>
-                    <TabsTrigger value="testing" style={{ flex: 1, fontFamily: "'JetBrains Mono', monospace", fontSize: 10 }}>
+                    <TabsTrigger
+                      value="testing"
+                      style={{
+                        flex: 1,
+                        fontFamily: "'JetBrains Mono', monospace",
+                        fontSize: 10,
+                      }}
+                    >
                       Testing
                     </TabsTrigger>
                   </TabsList>
@@ -554,7 +737,7 @@ export default function ProfilePage() {
                     <TabsContent key={value} value={value}>
                       <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
                         {stack.map((tech) => (
-                          <span key={tech} style={chipStyle}>
+                          <span key={tech} style={chipStyle} title={tech}>
                             {tech}
                           </span>
                         ))}

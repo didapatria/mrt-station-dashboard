@@ -51,90 +51,100 @@ export default function MapPage() {
   return (
     <div>
       {/* Page header */}
-      <div style={{ marginBottom: 24, display: "flex", alignItems: "flex-start", justifyContent: "space-between", flexWrap: "wrap", gap: 16 }}>
-        <div>
-          <h1
-            style={{
-              fontFamily: "'Bebas Neue', sans-serif",
-              fontSize: 36,
-              letterSpacing: "0.04em",
-              lineHeight: 1,
-              color: "var(--color-foreground)",
-              margin: 0,
-            }}
-          >
-            {t("map.title")}
-          </h1>
-          <p
-            style={{
-              fontFamily: "'JetBrains Mono', monospace",
-              fontSize: 9.5,
-              letterSpacing: "0.14em",
-              color: "var(--color-muted-foreground)",
-              textTransform: "uppercase",
-              margin: "6px 0 0",
-            }}
-          >
-            {t("map.subtitle")} — {withCoords.length} {t("map.mapped")}
-          </p>
-        </div>
+      <div style={{ marginBottom: 24 }}>
+        <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", flexWrap: "wrap", gap: 16 }}>
+          <div>
+            <h1
+              style={{
+                fontFamily: "'Bebas Neue', sans-serif",
+                fontSize: 36,
+                letterSpacing: "0.04em",
+                lineHeight: 1,
+                color: "var(--color-foreground)",
+                margin: 0,
+              }}
+            >
+              {t("map.title")}
+            </h1>
+            <p
+              style={{
+                fontFamily: "'JetBrains Mono', monospace",
+                fontSize: 9.5,
+                letterSpacing: "0.14em",
+                color: "var(--color-muted-foreground)",
+                textTransform: "uppercase",
+                margin: "6px 0 0",
+              }}
+            >
+              {t("map.subtitle")} — {withCoords.length} {t("map.mapped")}
+            </p>
+          </div>
 
-        {/* Status count chips */}
-        <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
-          {[
-            { label: t("map.active"), count: statusCounts.active, status: "ACTIVE" },
-            { label: t("map.maintenance"), count: statusCounts.maintenance, status: "MAINTENANCE" },
-            { label: t("map.inactive"), count: statusCounts.inactive, status: "INACTIVE" },
-          ].map(({ label, count, status }) => {
-            const led = statusLED(status);
-            return (
-              <div
-                key={status}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 6,
-                  background: "var(--color-card)",
-                  border: "1px solid var(--color-border)",
-                  borderRadius: 20,
-                  padding: "4px 10px",
-                }}
-              >
+          {/* Status count chips */}
+          <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
+            {[
+              { label: t("map.active"), count: statusCounts.active, status: "ACTIVE" },
+              { label: t("map.maintenance"), count: statusCounts.maintenance, status: "MAINTENANCE" },
+              { label: t("map.inactive"), count: statusCounts.inactive, status: "INACTIVE" },
+            ].map(({ label, count, status }) => {
+              const led = statusLED(status);
+              return (
                 <div
+                  key={status}
                   style={{
-                    width: 7,
-                    height: 7,
-                    borderRadius: "50%",
-                    background: led.color,
-                    boxShadow: led.shadow,
-                    flexShrink: 0,
-                  }}
-                />
-                <span
-                  style={{
-                    fontFamily: "'JetBrains Mono', monospace",
-                    fontSize: 10,
-                    letterSpacing: "0.08em",
-                    color: "var(--color-foreground)",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 6,
+                    background: "var(--color-card)",
+                    border: "1px solid var(--color-border)",
+                    borderRadius: 20,
+                    padding: "4px 10px",
+                    backdropFilter: "blur(4px)",
                   }}
                 >
-                  {count}
-                </span>
-                <span
-                  style={{
-                    fontFamily: "'JetBrains Mono', monospace",
-                    fontSize: 9.5,
-                    letterSpacing: "0.1em",
-                    textTransform: "uppercase",
-                    color: "var(--color-muted-foreground)",
-                  }}
-                >
-                  {label}
-                </span>
-              </div>
-            );
-          })}
+                  <div
+                    style={{
+                      width: 7,
+                      height: 7,
+                      borderRadius: "50%",
+                      background: led.color,
+                      boxShadow: led.shadow,
+                      flexShrink: 0,
+                    }}
+                  />
+                  <span
+                    style={{
+                      fontFamily: "'JetBrains Mono', monospace",
+                      fontSize: 10,
+                      letterSpacing: "0.08em",
+                      color: "var(--color-foreground)",
+                    }}
+                  >
+                    {count}
+                  </span>
+                  <span
+                    style={{
+                      fontFamily: "'JetBrains Mono', monospace",
+                      fontSize: 9.5,
+                      letterSpacing: "0.1em",
+                      textTransform: "uppercase",
+                      color: "var(--color-muted-foreground)",
+                    }}
+                  >
+                    {label}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
         </div>
+        <div
+          style={{
+            marginTop: 16,
+            height: 1,
+            background: "linear-gradient(90deg, var(--color-border) 0%, transparent 80%)",
+          }}
+        />
       </div>
 
       <div
@@ -267,7 +277,7 @@ export default function MapPage() {
                         borderRight: "none",
                         borderBottom: "1px solid var(--color-border)",
                         cursor: "pointer",
-                        transition: "background 0.15s",
+                        transition: "all 0.12s ease",
                         display: "flex",
                         alignItems: "center",
                         gap: 10,
@@ -336,7 +346,13 @@ export default function MapPage() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
             >
-              <div style={cardStyle}>
+              <div
+                style={{
+                  ...cardStyle,
+                  boxShadow: "inset 0 1px 0 rgba(59,130,246,0.1)",
+                }}
+              >
+                <div style={{ height: 2, background: "linear-gradient(90deg, #3b82f6 0%, transparent 100%)" }} />
                 <div
                   style={{
                     padding: "14px 16px 12px",

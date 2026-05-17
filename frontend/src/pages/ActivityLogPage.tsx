@@ -84,7 +84,7 @@ export default function ActivityLogPage() {
   const logs = data?.logs ?? [];
   const meta = data?.meta ?? null;
 
-  const formatTime = (dateStr: string) => {
+  const formatRelative = (dateStr: string) => {
     const date = new Date(dateStr);
     const now = new Date();
     const diffMs = now.getTime() - date.getTime();
@@ -96,7 +96,11 @@ export default function ActivityLogPage() {
     if (diffMins < 60) return `${diffMins}m ago`;
     if (diffHours < 24) return `${diffHours}h ago`;
     if (diffDays < 7) return `${diffDays}d ago`;
-    return date.toLocaleDateString("id-ID", {
+    return null;
+  };
+
+  const formatAbsolute = (dateStr: string) => {
+    return new Date(dateStr).toLocaleDateString("id-ID", {
       day: "numeric",
       month: "short",
       year: "numeric",
@@ -115,7 +119,6 @@ export default function ActivityLogPage() {
           alignItems: "flex-start",
           justifyContent: "space-between",
           gap: 16,
-          marginBottom: 28,
           flexWrap: "wrap",
         }}
       >
@@ -209,6 +212,17 @@ export default function ActivityLogPage() {
         </div>
       </div>
 
+      {/* Horizontal fade line below header */}
+      <div
+        style={{
+          height: 1,
+          background:
+            "linear-gradient(90deg, rgba(59,130,246,0.5) 0%, transparent 60%)",
+          marginTop: 12,
+          marginBottom: 28,
+        }}
+      />
+
       {/* Log List */}
       <motion.div
         initial={{ opacity: 0, y: 10 }}
@@ -223,6 +237,15 @@ export default function ActivityLogPage() {
             overflow: "hidden",
           }}
         >
+          {/* Top accent gradient line */}
+          <div
+            style={{
+              height: 2,
+              background:
+                "linear-gradient(90deg, #3b82f6 0%, rgba(59,130,246,0) 100%)",
+            }}
+          />
+
           {/* Card section header */}
           <div
             style={{
@@ -256,27 +279,51 @@ export default function ActivityLogPage() {
             </span>
           </div>
 
-          {isLoading
-            ? Array.from({ length: 5 }).map((_, i) => (
+          {isLoading ? (
+            Array.from({ length: 5 }).map((_, i) => (
+              <div
+                key={i}
+                style={{
+                  padding: "14px 20px 14px 24px",
+                  borderBottom: "1px solid var(--color-border)",
+                  display: "flex",
+                  alignItems: "flex-start",
+                  gap: 12,
+                }}
+              >
+                <Skeleton className="h-9 w-9 rounded-full shrink-0" />
                 <div
-                  key={i}
                   style={{
-                    padding: "14px 20px",
-                    borderBottom: "1px solid var(--color-border)",
+                    flex: 1,
                     display: "flex",
-                    alignItems: "flex-start",
-                    gap: 12,
+                    flexDirection: "column",
+                    gap: 6,
                   }}
                 >
-                  <Skeleton className="h-8 w-8 rounded-full shrink-0" />
-                  <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 6 }}>
-                    <Skeleton className="h-4 w-64" />
-                    <Skeleton className="h-3 w-40" />
-                  </div>
-                  <Skeleton className="h-3 w-16 shrink-0" />
+                  <Skeleton className="h-4 w-64" />
+                  <Skeleton className="h-3 w-40" />
                 </div>
-              ))
-            : logs.map((log, idx) => {
+                <Skeleton className="h-3 w-16 shrink-0" />
+              </div>
+            ))
+          ) : (
+            /* Timeline wrapper */
+            <div style={{ position: "relative" }}>
+              {/* Vertical timeline connector */}
+              <div
+                style={{
+                  position: "absolute",
+                  left: 41,
+                  top: 0,
+                  bottom: 0,
+                  width: 1,
+                  background:
+                    "linear-gradient(180deg, rgba(59,130,246,0.2) 0%, rgba(59,130,246,0) 100%)",
+                  pointerEvents: "none",
+                }}
+              />
+
+              {logs.map((log, idx) => {
                 const actionStyle =
                   ACTION_STYLES[log.action as keyof typeof ACTION_STYLES] ?? {
                     bg: "rgba(100,116,139,0.1)",
@@ -288,11 +335,14 @@ export default function ActivityLogPage() {
                   ENTITY_ICONS[log.entity as keyof typeof ENTITY_ICONS] ??
                   Activity;
 
+                const relative = formatRelative(log.createdAt);
+                const absolute = formatAbsolute(log.createdAt);
+
                 return (
                   <div
                     key={log.id}
                     style={{
-                      padding: "14px 20px",
+                      padding: "14px 20px 14px 24px",
                       borderBottom:
                         idx < logs.length - 1
                           ? "1px solid var(--color-border)"
@@ -302,22 +352,23 @@ export default function ActivityLogPage() {
                       gap: 12,
                     }}
                   >
-                    {/* Action icon circle */}
+                    {/* Action icon circle — 36px with subtle border */}
                     <div
                       style={{
-                        width: 32,
-                        height: 32,
+                        width: 36,
+                        height: 36,
                         borderRadius: "50%",
                         background: bg,
+                        border: "1px solid rgba(255,255,255,0.06)",
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
                         flexShrink: 0,
+                        position: "relative",
+                        zIndex: 1,
                       }}
                     >
-                      <ActionIcon
-                        style={{ width: 14, height: 14, color }}
-                      />
+                      <ActionIcon style={{ width: 14, height: 14, color }} />
                     </div>
 
                     {/* Content */}
@@ -382,23 +433,47 @@ export default function ActivityLogPage() {
                       </div>
                     </div>
 
-                    {/* Timestamp */}
-                    <span
+                    {/* Timestamp — relative prominent, absolute smaller below */}
+                    <div
                       style={{
-                        fontFamily: "'JetBrains Mono', monospace",
-                        fontSize: 10,
-                        color: "var(--color-muted-foreground)",
-                        opacity: 0.45,
-                        whiteSpace: "nowrap",
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "flex-end",
+                        gap: 2,
                         flexShrink: 0,
                         marginTop: 2,
                       }}
                     >
-                      {formatTime(log.createdAt)}
-                    </span>
+                      <span
+                        style={{
+                          fontFamily: "'JetBrains Mono', monospace",
+                          fontSize: 10.5,
+                          color: "var(--color-muted-foreground)",
+                          opacity: 0.7,
+                          whiteSpace: "nowrap",
+                        }}
+                      >
+                        {relative ?? absolute}
+                      </span>
+                      {relative && (
+                        <span
+                          style={{
+                            fontFamily: "'JetBrains Mono', monospace",
+                            fontSize: 9,
+                            color: "var(--color-muted-foreground)",
+                            opacity: 0.35,
+                            whiteSpace: "nowrap",
+                          }}
+                        >
+                          {absolute}
+                        </span>
+                      )}
+                    </div>
                   </div>
                 );
               })}
+            </div>
+          )}
         </div>
       </motion.div>
 

@@ -29,7 +29,8 @@ export default function SettingsPage() {
 
   const cardWithAccent: React.CSSProperties = {
     ...cardStyle,
-    borderLeft: "3px solid var(--color-primary)",
+    borderLeft: "3px solid transparent",
+    borderImage: "linear-gradient(180deg, #3b82f6 0%, rgba(59,130,246,0.2) 100%) 1",
   };
 
   const cardHeaderStyle: React.CSSProperties = {
@@ -63,6 +64,7 @@ export default function SettingsPage() {
     alignItems: "center",
     justifyContent: "space-between",
     borderBottom: "1px solid var(--color-border)",
+    transition: "all 0.12s ease",
   };
 
   const settingLabelStyle: React.CSSProperties = {
@@ -99,6 +101,13 @@ export default function SettingsPage() {
         >
           System Configuration · Preferences
         </p>
+        <div
+          style={{
+            marginTop: 16,
+            height: 1,
+            background: "linear-gradient(90deg, var(--color-border) 0%, transparent 80%)",
+          }}
+        />
       </div>
 
       <motion.div
@@ -108,6 +117,7 @@ export default function SettingsPage() {
       >
         {/* Language */}
         <div style={cardWithAccent}>
+          <div style={{ height: 2, background: "linear-gradient(90deg, #3b82f6 0%, transparent 100%)" }} />
           <div style={cardHeaderStyle}>
             <div style={cardTitleStyle}>
               <Globe size={15} />
@@ -122,8 +132,12 @@ export default function SettingsPage() {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="en">English</SelectItem>
-                <SelectItem value="id">Indonesia</SelectItem>
+                <SelectItem value="en">
+                  <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11 }}>English</span>
+                </SelectItem>
+                <SelectItem value="id">
+                  <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11 }}>Indonesia</span>
+                </SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -131,6 +145,7 @@ export default function SettingsPage() {
 
         {/* Appearance */}
         <div style={cardWithAccent}>
+          <div style={{ height: 2, background: "linear-gradient(90deg, #3b82f6 0%, transparent 100%)" }} />
           <div style={cardHeaderStyle}>
             <div style={cardTitleStyle}>
               <Palette size={15} />
@@ -145,8 +160,12 @@ export default function SettingsPage() {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="light">Light</SelectItem>
-                <SelectItem value="dark">Dark</SelectItem>
+                <SelectItem value="light">
+                  <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11 }}>Light</span>
+                </SelectItem>
+                <SelectItem value="dark">
+                  <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11 }}>Dark</span>
+                </SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -154,6 +173,7 @@ export default function SettingsPage() {
 
         {/* Notifications */}
         <div style={cardWithAccent}>
+          <div style={{ height: 2, background: "linear-gradient(90deg, #3b82f6 0%, transparent 100%)" }} />
           <div style={cardHeaderStyle}>
             <div style={cardTitleStyle}>
               <Bell size={15} />
@@ -191,6 +211,7 @@ export default function SettingsPage() {
 
         {/* About */}
         <div style={cardWithAccent}>
+          <div style={{ height: 2, background: "linear-gradient(90deg, #3b82f6 0%, transparent 100%)" }} />
           <div style={cardHeaderStyle}>
             <div style={cardTitleStyle}>
               <Monitor size={15} />
@@ -198,37 +219,48 @@ export default function SettingsPage() {
             </div>
             <div style={cardSubtitleStyle}>System information</div>
           </div>
-          {[
-            { key: "VERSION", value: "2.11.0" },
-            { key: "FRONTEND", value: "React 19 + Vite 8 + Tailwind 4" },
-            { key: "BACKEND", value: "Express.js 5 + TypeScript" },
-            { key: "DATABASE", value: "PostgreSQL + Prisma ORM" },
-            { key: "AUTH", value: "JWT + Google OAuth" },
-            { key: "E2E TESTS", value: "93 Playwright tests" },
-          ].map(({ key, value }, idx, arr) => (
-            <div
-              key={key}
-              style={{
-                ...settingRowStyle,
-                borderBottom: idx < arr.length - 1 ? "1px solid var(--color-border)" : "none",
-              }}
-            >
-              <span style={settingLabelStyle}>{key}</span>
-              <span
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1fr",
+            }}
+          >
+            {[
+              { key: "VERSION", value: "2.11.0" },
+              { key: "FRONTEND", value: "React 19 + Vite 8 + Tailwind 4" },
+              { key: "BACKEND", value: "Express.js 5 + TypeScript" },
+              { key: "DATABASE", value: "PostgreSQL + Prisma ORM" },
+              { key: "AUTH", value: "JWT + Google OAuth" },
+              { key: "E2E TESTS", value: "93 Playwright tests" },
+            ].map(({ key, value }, idx, arr) => (
+              <div
+                key={key}
                 style={{
-                  fontFamily: "'JetBrains Mono', monospace",
-                  fontSize: 10.5,
-                  color: "var(--color-foreground)",
-                  background: "rgba(29,111,232,0.08)",
-                  border: "1px solid rgba(29,111,232,0.15)",
-                  borderRadius: 3,
-                  padding: "2px 8px",
+                  padding: "14px 24px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  borderBottom: idx < arr.length - 1 ? "1px solid var(--color-border)" : "none",
+                  transition: "all 0.12s ease",
                 }}
               >
-                {value}
-              </span>
-            </div>
-          ))}
+                <span style={settingLabelStyle}>{key}</span>
+                <span
+                  style={{
+                    fontFamily: "'JetBrains Mono', monospace",
+                    fontSize: 10.5,
+                    color: "var(--color-foreground)",
+                    background: "rgba(29,111,232,0.08)",
+                    border: "1px solid rgba(29,111,232,0.15)",
+                    borderRadius: 3,
+                    padding: "3px 10px",
+                  }}
+                >
+                  {value}
+                </span>
+              </div>
+            ))}
+          </div>
         </div>
       </motion.div>
     </div>

@@ -528,14 +528,14 @@ export default function AuthLayout() {
           }}
         />
 
-        {/* Theme toggle — top right */}
+        {/* Theme toggle — top right (desktop only; mobile handled per-page) */}
         <div
+          className="hidden lg:block"
           style={{
             position: "absolute",
             top: 16,
             right: 16,
             zIndex: 10,
-            opacity: 0.6,
           }}
         >
           <ThemeToggle />

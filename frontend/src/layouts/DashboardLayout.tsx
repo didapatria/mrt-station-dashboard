@@ -139,6 +139,8 @@ function NavItemLink({
                 : "2px solid transparent",
               paddingLeft: "calc(12px - 2px)",
               paddingRight: "12px",
+              background: isActive ? "rgba(59,130,246,0.08)" : undefined,
+              borderRadius: isActive ? 8 : undefined,
             }),
       })}
       className={({ isActive }) =>
@@ -148,7 +150,7 @@ function NavItemLink({
           isActive
             ? collapsed
               ? "bg-primary text-primary-foreground shadow-sm"
-              : "bg-primary/10 text-primary font-semibold"
+              : "text-primary font-semibold"
             : "text-muted-foreground hover:text-foreground hover:bg-accent/70",
         )
       }
@@ -201,7 +203,22 @@ export default function DashboardLayout() {
   const sidebarPl = collapsed ? "lg:pl-16" : "lg:pl-60";
 
   const sidebarNav = (onNavClick?: () => void) => (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full" style={{ position: "relative" }}>
+      {/* Dot grid texture overlay */}
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          pointerEvents: "none",
+          opacity: 0.025,
+          backgroundImage:
+            "radial-gradient(circle, rgba(59,130,246,0.8) 1px, transparent 1px)",
+          backgroundSize: "20px 20px",
+          zIndex: 0,
+        }}
+      />
+
+      {/* Logo bar */}
       <div
         style={{
           display: "flex",
@@ -211,7 +228,9 @@ export default function DashboardLayout() {
           padding: "0 1rem",
           height: "3.5rem",
           flexShrink: 0,
-          borderBottom: "1px solid rgba(29,111,232,0.15)",
+          borderBottom: "1px solid rgba(59,130,246,0.2)",
+          position: "relative",
+          zIndex: 1,
         }}
       >
         <div
@@ -256,7 +275,11 @@ export default function DashboardLayout() {
         )}
       </div>
 
-      <nav className="flex-1 overflow-y-auto px-3 py-3" data-tour="sidebar-nav">
+      <nav
+        className="flex-1 overflow-y-auto px-3 py-3"
+        data-tour="sidebar-nav"
+        style={{ position: "relative", zIndex: 1 }}
+      >
         {visibleGroups.map((group) => (
           <div key={group.labelKey} className="mb-3">
             {!collapsed && (
@@ -316,6 +339,8 @@ export default function DashboardLayout() {
             alignItems: "center",
             justifyContent: "space-between",
             flexShrink: 0,
+            position: "relative",
+            zIndex: 1,
           }}
         >
           <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
@@ -394,7 +419,8 @@ export default function DashboardLayout() {
             height: "3.5rem",
             padding: "0 1rem",
             borderBottom: "1px solid var(--color-border)",
-            background: "var(--color-sidebar)",
+            background:
+              "linear-gradient(180deg, var(--color-sidebar) 0%, color-mix(in oklch, var(--color-background) 85%, var(--color-sidebar) 15%) 100%)",
           }}
           className="sticky top-0 z-30 backdrop-blur-xl"
         >
@@ -525,7 +551,7 @@ export default function DashboardLayout() {
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3 }}
+            transition={{ duration: 0.25 }}
           >
             <Outlet />
           </motion.div>

@@ -252,9 +252,19 @@ const hashChipStyle: React.CSSProperties = {
   transition: "background 0.15s",
 };
 
+function getVersionAccentColor(version: string): string {
+  const parts = version.split(".");
+  const minor = parts[1] ?? "0";
+  const patch = parts[2] ?? "0";
+  if (minor === "0" && patch === "0") return "#22c55e"; // major x.0.0
+  if (patch === "0") return "#3b82f6"; // minor x.y.0
+  return "rgba(148,163,184,0.3)"; // patch x.y.z
+}
+
 export default function ChangelogPage() {
   return (
     <div>
+      {/* Page header */}
       <div style={{ marginBottom: 24 }}>
         <h2
           style={{
@@ -279,125 +289,160 @@ export default function ChangelogPage() {
         >
           Release History · MRT Jakarta
         </p>
+        {/* Horizontal fade line */}
+        <div
+          style={{
+            height: 1,
+            background:
+              "linear-gradient(90deg, rgba(59,130,246,0.3) 0%, transparent 70%)",
+            marginTop: 14,
+          }}
+        />
       </div>
+
+      <style>
+        {"@keyframes pulse-led { 0%,100%{opacity:1} 50%{opacity:0.6} }"}
+      </style>
 
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         style={{ display: "flex", flexDirection: "column", gap: 20 }}
       >
-        {changelog.map((release, i) => (
-          <div
-            key={release.version}
-            style={{
-              background: "var(--color-card)",
-              border: "1px solid var(--color-border)",
-              borderRadius: 12,
-              overflow: "hidden",
-            }}
-          >
-            {/* Card Header */}
+        {changelog.map((release, i) => {
+          const accentColor = getVersionAccentColor(release.version);
+          return (
             <div
+              key={release.version}
               style={{
-                padding: "18px 24px 14px",
-                borderBottom: "1px solid var(--color-border)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                flexWrap: "wrap",
-                gap: 8,
+                background: "var(--color-card)",
+                border: "1px solid var(--color-border)",
+                borderRadius: 12,
+                overflow: "hidden",
               }}
             >
-              <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                <span
-                  style={{
-                    fontFamily: "'Bebas Neue', sans-serif",
-                    fontSize: 22,
-                    letterSpacing: "0.05em",
-                    color: "var(--color-foreground)",
-                  }}
+              {/* Version-typed accent line */}
+              <div
+                style={{
+                  height: 2,
+                  background: `linear-gradient(90deg, ${accentColor} 0%, transparent 100%)`,
+                }}
+              />
+
+              {/* Card Header */}
+              <div
+                style={{
+                  padding: "18px 24px 14px",
+                  borderBottom: "1px solid var(--color-border)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  flexWrap: "wrap",
+                  gap: 8,
+                }}
+              >
+                <div
+                  style={{ display: "flex", alignItems: "center", gap: 12 }}
                 >
-                  v{release.version}
-                </span>
-                <span
-                  style={{
-                    fontFamily: "'JetBrains Mono', monospace",
-                    fontSize: 10,
-                    color: "var(--color-muted-foreground)",
-                    letterSpacing: "0.06em",
-                  }}
-                >
-                  {release.date}
-                </span>
-                {i === 0 && (
+                  <span
+                    style={{
+                      fontFamily: "'Bebas Neue', sans-serif",
+                      fontSize: 22,
+                      letterSpacing: "0.05em",
+                      color: "var(--color-foreground)",
+                    }}
+                  >
+                    v{release.version}
+                  </span>
                   <span
                     style={{
                       fontFamily: "'JetBrains Mono', monospace",
-                      fontSize: 9,
-                      letterSpacing: "0.12em",
-                      background: "rgba(34,197,94,0.12)",
-                      border: "1px solid rgba(34,197,94,0.25)",
-                      borderRadius: 3,
-                      padding: "2px 7px",
-                      color: "#22c55e",
-                      fontWeight: 600,
+                      fontSize: 10,
+                      color: "var(--color-muted-foreground)",
+                      letterSpacing: "0.06em",
                     }}
                   >
-                    LATEST
+                    {release.date}
                   </span>
+                  {i === 0 && (
+                    <span
+                      style={{
+                        fontFamily: "'JetBrains Mono', monospace",
+                        fontSize: 9,
+                        letterSpacing: "0.12em",
+                        background: "rgba(34,197,94,0.12)",
+                        border: "1px solid rgba(34,197,94,0.25)",
+                        borderRadius: 3,
+                        padding: "2px 7px",
+                        color: "#22c55e",
+                        fontWeight: 600,
+                        animation: "pulse-led 2s ease-in-out infinite",
+                        display: "inline-block",
+                      }}
+                    >
+                      LATEST
+                    </span>
+                  )}
+                </div>
+                {release.commits.length > 0 && (
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: 4 }}>
+                    {release.commits.map((hash) => (
+                      <a
+                        key={hash}
+                        href={`https://github.com/didapatria/mrt-station-dashboard/commit/${hash}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={hashChipStyle}
+                      >
+                        <GitCommit size={10} />
+                        {hash}
+                      </a>
+                    ))}
+                  </div>
                 )}
               </div>
-              {release.commits.length > 0 && (
-                <div style={{ display: "flex", flexWrap: "wrap", gap: 4 }}>
-                  {release.commits.map((hash) => (
-                    <a
-                      key={hash}
-                      href={`https://github.com/didapatria/mrt-station-dashboard/commit/${hash}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      style={hashChipStyle}
-                    >
-                      <GitCommit size={10} />
-                      {hash}
-                    </a>
-                  ))}
-                </div>
-              )}
-            </div>
 
-            {/* Change list */}
-            <div style={{ padding: "16px 24px 20px", display: "flex", flexDirection: "column", gap: 8 }}>
-              {release.items.map((item) => (
-                <div
-                  key={item}
-                  style={{ display: "flex", alignItems: "flex-start", gap: 10 }}
-                >
+              {/* Change list */}
+              <div
+                style={{
+                  padding: "16px 24px 20px",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 8,
+                }}
+              >
+                {release.items.map((item) => (
                   <div
-                    style={{
-                      width: 5,
-                      height: 5,
-                      borderRadius: "50%",
-                      background: "var(--color-primary)",
-                      opacity: 0.6,
-                      flexShrink: 0,
-                      marginTop: 7,
-                    }}
-                  />
-                  <span
-                    style={{
-                      fontFamily: "'Sora', sans-serif",
-                      fontSize: 13,
-                      color: "var(--color-foreground)",
-                      lineHeight: 1.55,
-                    }}
+                    key={item}
+                    style={{ display: "flex", alignItems: "flex-start", gap: 10 }}
                   >
-                    {item}
-                  </span>
-                </div>
-              ))}
+                    <div
+                      style={{
+                        width: 5,
+                        height: 5,
+                        borderRadius: "50%",
+                        background: "var(--color-primary)",
+                        opacity: 0.6,
+                        flexShrink: 0,
+                        marginTop: 7,
+                      }}
+                    />
+                    <span
+                      style={{
+                        fontFamily: "'Sora', sans-serif",
+                        fontSize: 13,
+                        color: "var(--color-foreground)",
+                        lineHeight: 1.55,
+                      }}
+                    >
+                      {item}
+                    </span>
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </motion.div>
     </div>
   );

@@ -7,6 +7,7 @@ import { useTranslation } from "react-i18next";
 import { GoogleLogin } from "@react-oauth/google";
 import { useLogin, useGoogleLogin } from "@/hooks/use-auth";
 import { Eye, EyeOff, Train } from "lucide-react";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 const loginSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -101,6 +102,9 @@ export default function LoginPage() {
         >
           MRT JAKARTA
         </span>
+        <div style={{ marginLeft: "auto" }}>
+          <ThemeToggle />
+        </div>
       </div>
 
       {/* Heading */}

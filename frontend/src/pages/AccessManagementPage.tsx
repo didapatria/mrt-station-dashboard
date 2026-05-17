@@ -18,17 +18,26 @@ const ROLES = ["ADMIN", "OPERATOR"];
 
 const ROLE_CONFIG: Record<
   string,
-  { accentColor: string; bgColor: string; description: string }
+  {
+    accentColor: string;
+    bgColor: string;
+    description: string;
+    glowShadow: string;
+  }
 > = {
   ADMIN: {
     accentColor: "#3b82f6",
     bgColor: "rgba(59,130,246,0.1)",
     description: "Full access to all features and management",
+    glowShadow:
+      "0 0 0 1px rgba(59,130,246,0.15), inset 0 1px 0 rgba(59,130,246,0.1)",
   },
   OPERATOR: {
     accentColor: "#10b981",
     bgColor: "rgba(16,185,129,0.1)",
     description: "Read-only access to operational data",
+    glowShadow:
+      "0 0 0 1px rgba(16,185,129,0.15), inset 0 1px 0 rgba(16,185,129,0.1)",
   },
 };
 
@@ -79,7 +88,6 @@ export default function AccessManagementPage() {
           display: "flex",
           flexDirection: "column",
           gap: 4,
-          marginBottom: 28,
         }}
       >
         <h1
@@ -106,6 +114,17 @@ export default function AccessManagementPage() {
         </span>
       </div>
 
+      {/* Horizontal fade line below header */}
+      <div
+        style={{
+          height: 1,
+          background:
+            "linear-gradient(90deg, rgba(59,130,246,0.5) 0%, transparent 60%)",
+          marginTop: 12,
+          marginBottom: 28,
+        }}
+      />
+
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -131,8 +150,18 @@ export default function AccessManagementPage() {
                   borderRadius: 12,
                   overflow: "hidden",
                   borderLeft: `3px solid ${cfg.accentColor}`,
+                  boxShadow: cfg.glowShadow,
                 }}
               >
+                {/* Top accent gradient line */}
+                <div
+                  style={{
+                    height: 2,
+                    background:
+                      "linear-gradient(90deg, #3b82f6 0%, rgba(59,130,246,0) 100%)",
+                  }}
+                />
+
                 {/* Card header */}
                 <div style={{ padding: "18px 20px 14px" }}>
                   <div
@@ -195,9 +224,7 @@ export default function AccessManagementPage() {
 
                 {/* Permissions list */}
                 <div style={{ padding: "14px 20px 18px" }}>
-                  <div
-                    style={{ display: "flex", flexWrap: "wrap", gap: 5 }}
-                  >
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: 5 }}>
                     {rolePerms.map((perm) => (
                       <span
                         key={perm}
@@ -243,6 +270,15 @@ export default function AccessManagementPage() {
             overflow: "hidden",
           }}
         >
+          {/* Top accent gradient line */}
+          <div
+            style={{
+              height: 2,
+              background:
+                "linear-gradient(90deg, #3b82f6 0%, rgba(59,130,246,0) 100%)",
+            }}
+          />
+
           {/* Card section header */}
           <div
             style={{
@@ -349,62 +385,79 @@ export default function AccessManagementPage() {
               </TableHeader>
               <TableBody>
                 {PERMISSION_GROUPS.map((group) =>
-                  group.permissions.map((perm, idx) => (
-                    <TableRow key={perm}>
-                      {idx === 0 && (
-                        <TableCell
-                          rowSpan={group.permissions.length}
-                          style={{
-                            fontFamily: "'JetBrains Mono', monospace",
-                            fontSize: 10,
-                            letterSpacing: "0.08em",
-                            textTransform: "uppercase",
-                            verticalAlign: "top",
-                            borderRight: "1px solid var(--color-border)",
-                            background: "rgba(0,0,0,0.015)",
-                            color: "var(--color-muted-foreground)",
-                          }}
-                        >
-                          {group.group}
-                        </TableCell>
-                      )}
-                      <TableCell
+                  group.permissions.map((perm, idx) => {
+                    // Compute global row index for alternating backgrounds
+                    const groupStart = PERMISSION_GROUPS.slice(
+                      0,
+                      PERMISSION_GROUPS.indexOf(group),
+                    ).reduce((acc, g) => acc + g.permissions.length, 0);
+                    const globalIdx = groupStart + idx;
+                    const isOdd = globalIdx % 2 !== 0;
+
+                    return (
+                      <TableRow
+                        key={perm}
                         style={{
-                          fontFamily: "'JetBrains Mono', monospace",
-                          fontSize: 11,
+                          background: isOdd
+                            ? "rgba(255,255,255,0.015)"
+                            : "transparent",
                         }}
                       >
-                        {PERMISSION_LABELS[perm] ?? perm}
-                      </TableCell>
-                      {ROLES.map((role) => (
+                        {idx === 0 && (
+                          <TableCell
+                            rowSpan={group.permissions.length}
+                            style={{
+                              fontFamily: "'Bebas Neue', sans-serif",
+                              fontSize: 14,
+                              letterSpacing: "0.1em",
+                              textTransform: "uppercase",
+                              verticalAlign: "top",
+                              borderRight: "1px solid var(--color-border)",
+                              background: "rgba(0,0,0,0.015)",
+                              color: "var(--color-muted-foreground)",
+                            }}
+                          >
+                            {group.group}
+                          </TableCell>
+                        )}
                         <TableCell
-                          key={role}
-                          style={{ textAlign: "center" }}
+                          style={{
+                            fontFamily: "'JetBrains Mono', monospace",
+                            fontSize: 11,
+                          }}
                         >
-                          {hasRole(role, perm) ? (
-                            <Check
-                              style={{
-                                width: 15,
-                                height: 15,
-                                color: "#22c55e",
-                                margin: "0 auto",
-                              }}
-                            />
-                          ) : (
-                            <X
-                              style={{
-                                width: 15,
-                                height: 15,
-                                color: "#ef4444",
-                                opacity: 0.35,
-                                margin: "0 auto",
-                              }}
-                            />
-                          )}
+                          {PERMISSION_LABELS[perm] ?? perm}
                         </TableCell>
-                      ))}
-                    </TableRow>
-                  )),
+                        {ROLES.map((role) => (
+                          <TableCell
+                            key={role}
+                            style={{ textAlign: "center" }}
+                          >
+                            {hasRole(role, perm) ? (
+                              <Check
+                                style={{
+                                  width: 15,
+                                  height: 15,
+                                  color: "#22c55e",
+                                  margin: "0 auto",
+                                }}
+                              />
+                            ) : (
+                              <X
+                                style={{
+                                  width: 15,
+                                  height: 15,
+                                  color: "#ef4444",
+                                  opacity: 0.35,
+                                  margin: "0 auto",
+                                }}
+                              />
+                            )}
+                          </TableCell>
+                        ))}
+                      </TableRow>
+                    );
+                  }),
                 )}
               </TableBody>
             </Table>

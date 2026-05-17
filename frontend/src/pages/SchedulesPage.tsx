@@ -103,30 +103,34 @@ const STATUS_LED: Record<
 function StatusLED({ status }: { status: string }) {
   const cfg = STATUS_LED[status] ?? STATUS_LED["ACTIVE"];
   return (
-    <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-      <span
-        style={{
-          width: 7,
-          height: 7,
-          borderRadius: "50%",
-          background: cfg.color,
-          boxShadow: `0 0 6px ${cfg.glow}`,
-          flexShrink: 0,
-          display: "inline-block",
-        }}
-      />
-      <span
-        style={{
-          fontFamily: "'JetBrains Mono', monospace",
-          fontSize: 10,
-          letterSpacing: "0.1em",
-          textTransform: "uppercase",
-          color: cfg.color,
-        }}
-      >
-        {cfg.label}
-      </span>
-    </div>
+    <>
+      <style>{"@keyframes pulse-led { 0%,100%{opacity:1} 50%{opacity:0.5} }"}</style>
+      <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+        <span
+          style={{
+            width: 7,
+            height: 7,
+            borderRadius: "50%",
+            background: cfg.color,
+            boxShadow: `0 0 6px ${cfg.glow}`,
+            animation: status === "ACTIVE" ? "pulse-led 2s ease-in-out infinite" : undefined,
+            flexShrink: 0,
+            display: "inline-block",
+          }}
+        />
+        <span
+          style={{
+            fontFamily: "'JetBrains Mono', monospace",
+            fontSize: 10,
+            letterSpacing: "0.1em",
+            textTransform: "uppercase",
+            color: cfg.color,
+          }}
+        >
+          {cfg.label}
+        </span>
+      </div>
+    </>
   );
 }
 
@@ -287,7 +291,6 @@ export default function SchedulesPage() {
           alignItems: "flex-start",
           justifyContent: "space-between",
           gap: 16,
-          marginBottom: 24,
           flexWrap: "wrap",
         }}
       >
@@ -302,6 +305,22 @@ export default function SchedulesPage() {
             }}
           >
             {t("schedules.title")}
+            <span
+              style={{
+                fontFamily: "'JetBrains Mono', monospace",
+                fontSize: 10,
+                background: "rgba(59,130,246,0.1)",
+                border: "1px solid rgba(59,130,246,0.2)",
+                color: "#60a5fa",
+                padding: "2px 8px",
+                borderRadius: 4,
+                letterSpacing: "0.08em",
+                marginLeft: 10,
+                verticalAlign: "middle",
+              }}
+            >
+              {totalCount} entries
+            </span>
           </h1>
           <p
             style={{
@@ -313,7 +332,7 @@ export default function SchedulesPage() {
               marginTop: 6,
             }}
           >
-            {totalCount} ENTRIES · N–S LINE · SCHEDULE REGISTRY
+            N–S LINE · SCHEDULE REGISTRY
           </p>
         </div>
         <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
@@ -344,6 +363,17 @@ export default function SchedulesPage() {
           )}
         </div>
       </div>
+
+      {/* Accent line */}
+      <div
+        style={{
+          height: 1,
+          background:
+            "linear-gradient(90deg, rgba(59,130,246,0.5) 0%, rgba(59,130,246,0.0) 60%)",
+          marginTop: 12,
+          marginBottom: 28,
+        }}
+      />
 
       {/* Filter Bar */}
       <div
@@ -444,6 +474,14 @@ export default function SchedulesPage() {
               overflow: "hidden",
             }}
           >
+            {/* Card top accent */}
+            <div
+              style={{
+                height: 2,
+                background:
+                  "linear-gradient(90deg, #3b82f6 0%, rgba(59,130,246,0) 100%)",
+              }}
+            />
             <div
               style={{
                 padding: "18px 24px 14px",
@@ -492,6 +530,14 @@ export default function SchedulesPage() {
                 overflow: "hidden",
               }}
             >
+              {/* Card top accent */}
+              <div
+                style={{
+                  height: 2,
+                  background:
+                    "linear-gradient(90deg, #3b82f6 0%, rgba(59,130,246,0) 100%)",
+                }}
+              />
               <div
                 style={{
                   padding: "18px 24px 14px",
@@ -633,17 +679,20 @@ export default function SchedulesPage() {
                           </TableRow>
                         ))
                       : sortedSchedules.map((schedule) => (
-                          <TableRow key={schedule.id}>
-                            <TableCell>
-                              <span
-                                style={{
-                                  fontFamily: "'JetBrains Mono', monospace",
-                                  fontSize: 12,
-                                  fontWeight: 600,
-                                }}
-                              >
-                                {schedule.trainNumber}
-                              </span>
+                          <TableRow
+                            key={schedule.id}
+                            style={{ transition: "background 0.12s ease" }}
+                          >
+                            <TableCell
+                              style={{
+                                padding: "12px 16px",
+                                fontFamily: "'JetBrains Mono', monospace",
+                                fontSize: 12,
+                                fontWeight: 600,
+                                background: "rgba(59,130,246,0.05)",
+                              }}
+                            >
+                              {schedule.trainNumber}
                             </TableCell>
                             <TableCell>
                               <div

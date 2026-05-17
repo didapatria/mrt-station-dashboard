@@ -94,15 +94,19 @@ const STATUS_DOT: Record<
   string,
   { color: string; glow: string; label: string }
 > = {
-  ACTIVE: { color: "#22c55e", glow: "rgba(34,197,94,0.4)", label: "Active" },
+  ACTIVE: {
+    color: "#22c55e",
+    glow: "rgba(34,197,94,0.5)",
+    label: "Active",
+  },
   MAINTENANCE: {
     color: "#f59e0b",
-    glow: "rgba(245,158,11,0.4)",
+    glow: "rgba(245,158,11,0.5)",
     label: "Maintenance",
   },
   INACTIVE: {
     color: "#ef4444",
-    glow: "rgba(239,68,68,0.4)",
+    glow: "rgba(239,68,68,0.5)",
     label: "Inactive",
   },
 };
@@ -295,6 +299,9 @@ export default function StationsPage() {
 
   const thBg = isDark ? "rgba(255,255,255,0.03)" : "rgba(0,0,0,0.025)";
 
+  const isTerminalOrder = (order: number) =>
+    order === 1 || order === (meta?.total ?? 0);
+
   return (
     <div style={{ position: "relative" }}>
       {/* ── Page header ── */}
@@ -354,6 +361,15 @@ export default function StationsPage() {
           >
             N–S Line · Station Registry
           </p>
+          {/* Horizontal fade line */}
+          <div
+            style={{
+              height: 1,
+              background:
+                "linear-gradient(90deg, rgba(59,130,246,0.3) 0%, transparent 70%)",
+              marginTop: 12,
+            }}
+          />
         </div>
 
         {/* Actions */}
@@ -494,6 +510,14 @@ export default function StationsPage() {
           marginBottom: 20,
         }}
       >
+        {/* Top accent line */}
+        <div
+          style={{
+            height: 2,
+            background:
+              "linear-gradient(90deg, #3b82f6 0%, transparent 100%)",
+          }}
+        />
         <div className="overflow-x-auto">
           <Table>
             <TableHeader>
@@ -657,6 +681,7 @@ export default function StationsPage() {
                     const dot =
                       STATUS_DOT[station.status] ?? STATUS_DOT.INACTIVE;
                     const isSelected = selectedIds.has(station.id);
+                    const isTerminal = isTerminalOrder(station.order);
                     return (
                       <TableRow
                         key={station.id}
@@ -696,32 +721,29 @@ export default function StationsPage() {
                           >
                             <div
                               style={{
-                                width: 26,
-                                height: 26,
+                                width: isTerminal ? 24 : 22,
+                                height: isTerminal ? 24 : 22,
                                 borderRadius: "50%",
-                                background:
-                                  station.order === 1 ||
-                                  station.order === (meta?.total ?? 0)
-                                    ? "var(--color-primary)"
-                                    : "transparent",
-                                border:
-                                  station.order === 1 ||
-                                  station.order === (meta?.total ?? 0)
-                                    ? "none"
-                                    : "1.5px solid var(--color-border)",
+                                background: isTerminal
+                                  ? "var(--color-primary)"
+                                  : "transparent",
+                                border: isTerminal
+                                  ? "none"
+                                  : "1.5px solid var(--color-border)",
                                 display: "flex",
                                 alignItems: "center",
                                 justifyContent: "center",
                                 fontFamily: "'JetBrains Mono', monospace",
                                 fontSize: 10,
                                 fontWeight: 700,
-                                color:
-                                  station.order === 1 ||
-                                  station.order === (meta?.total ?? 0)
-                                    ? "white"
-                                    : "var(--color-muted-foreground)",
+                                color: isTerminal
+                                  ? "white"
+                                  : "var(--color-muted-foreground)",
                                 letterSpacing: 0,
                                 flexShrink: 0,
+                                boxShadow: isTerminal
+                                  ? "0 0 10px rgba(29,111,232,0.45)"
+                                  : "none",
                               }}
                             >
                               {station.order}
@@ -756,6 +778,7 @@ export default function StationsPage() {
                                 letterSpacing: "0.06em",
                                 flexShrink: 0,
                                 minWidth: 36,
+                                boxShadow: "0 0 8px rgba(29,111,232,0.2)",
                               }}
                             >
                               {station.code}
@@ -882,7 +905,7 @@ export default function StationsPage() {
                                   height: 7,
                                   borderRadius: "50%",
                                   background: dot.color,
-                                  boxShadow: `0 0 6px ${dot.glow}`,
+                                  boxShadow: `0 0 8px ${dot.glow}`,
                                   flexShrink: 0,
                                 }}
                               />
@@ -1009,9 +1032,8 @@ export default function StationsPage() {
               display: "flex",
               alignItems: "center",
               gap: 14,
-              boxShadow: isDark
-                ? "0 8px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.06)"
-                : "0 8px 40px rgba(0,0,0,0.12), 0 0 0 1px rgba(0,0,0,0.05)",
+              boxShadow:
+                "0 -4px 32px rgba(0,0,0,0.4), 0 0 0 1px rgba(59,130,246,0.1)",
               whiteSpace: "nowrap",
             }}
           >
