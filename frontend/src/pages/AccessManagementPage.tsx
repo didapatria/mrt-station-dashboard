@@ -1,3 +1,4 @@
+import { Navigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ShieldCheck, Shield, Check, X } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -13,11 +14,15 @@ import {
 } from "@/components/ui/table";
 import { PERMISSION_GROUPS, PERMISSION_LABELS } from "@/lib/permissions";
 import { useAllPermissions } from "@/hooks/use-permissions";
+import { useRole } from "@/hooks/use-role";
 
 const ROLES = ["ADMIN", "OPERATOR"];
 
 export default function AccessManagementPage() {
+  const { isAdmin } = useRole();
   const { data: permissions = [], isLoading } = useAllPermissions();
+
+  if (!isAdmin) return <Navigate to="/dashboard" replace />;
 
   function hasRole(role: string, permName: string): boolean {
     const perm = permissions.find((p) => p.name === permName);
