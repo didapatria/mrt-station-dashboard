@@ -4,7 +4,9 @@ test.describe("Station Compare Page", () => {
   test("should compare two stations", async ({ adminPage: page }) => {
     await navigateTo(page, "/compare");
 
-    await expect(page.locator("text=/station comparison|compare/i").first()).toBeVisible();
+    await expect(
+      page.locator("text=/station comparison|compare/i").first(),
+    ).toBeVisible();
 
     const comboboxes = page.locator("button[role='combobox']");
     expect(await comboboxes.count()).toBeGreaterThanOrEqual(2);
@@ -25,11 +27,15 @@ test.describe("Station Compare Page", () => {
 
     // Comparison data visible
     await expect(
-      page.locator("text=/LBB|FTM|CPR|HJN|BLA|BLM|ASN|SNY|IST|BNH|STB|DKA|BHI/").first()
+      page
+        .locator("text=/LBB|FTM|CPR|HJN|BLA|BLM|ASN|SNY|IST|BNH|STB|DKA|BHI/")
+        .first(),
     ).toBeVisible();
   });
 
-  test("should show all stations in compare dropdowns", async ({ adminPage: page }) => {
+  test("should show all stations in compare dropdowns", async ({
+    adminPage: page,
+  }) => {
     await navigateTo(page, "/compare");
 
     const comboboxes = page.locator("button[role='combobox']");

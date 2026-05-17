@@ -25,13 +25,26 @@ test.describe("Route Planner Page", () => {
 
     // Results
     const hasResults =
-      (await page.locator("table").isVisible().catch(() => false)) ||
-      (await page.locator("text=/no.*route|no.*schedule|0 schedule/i").first().isVisible().catch(() => false)) ||
-      (await page.locator("text=/schedule/i").first().isVisible().catch(() => false));
+      (await page
+        .locator("table")
+        .isVisible()
+        .catch(() => false)) ||
+      (await page
+        .locator("text=/no.*route|no.*schedule|0 schedule/i")
+        .first()
+        .isVisible()
+        .catch(() => false)) ||
+      (await page
+        .locator("text=/schedule/i")
+        .first()
+        .isVisible()
+        .catch(() => false));
     expect(hasResults).toBeTruthy();
   });
 
-  test("should show all station options in dropdowns", async ({ adminPage: page }) => {
+  test("should show all station options in dropdowns", async ({
+    adminPage: page,
+  }) => {
     await navigateTo(page, "/route-planner");
 
     const comboboxes = page.locator("button[role='combobox']");

@@ -24,7 +24,9 @@ test.describe("Schedules Page", () => {
     }
   });
 
-  test("should create, edit, and delete a schedule", async ({ adminPage: page }) => {
+  test("should create, edit, and delete a schedule", async ({
+    adminPage: page,
+  }) => {
     await navigateTo(page, "/schedules");
     await page.waitForTimeout(1000);
 
@@ -90,7 +92,9 @@ test.describe("Schedules Page", () => {
       await actionBtns.nth(btnCount - 1).click();
       await page.waitForTimeout(500);
       const alertDialog = page.locator("[role='alertdialog'], [role='dialog']");
-      const deleteBtn = alertDialog.getByRole("button", { name: /delete|confirm/i });
+      const deleteBtn = alertDialog.getByRole("button", {
+        name: /delete|confirm/i,
+      });
       if (await deleteBtn.isVisible()) {
         await deleteBtn.click();
         await page.waitForTimeout(2000);

@@ -1,7 +1,9 @@
 import { test, expect, navigateTo } from "./fixtures/auth";
 
 test.describe("Users Page", () => {
-  test("should display and search users (admin)", async ({ adminPage: page }) => {
+  test("should display and search users (admin)", async ({
+    adminPage: page,
+  }) => {
     await navigateTo(page, "/users");
 
     await expect(page.locator("table")).toBeVisible();
@@ -21,7 +23,9 @@ test.describe("Users Page", () => {
     await expect(page.locator("text=/you/i").first()).toBeVisible();
   });
 
-  test("should not show Users in sidebar for operator", async ({ operatorPage: page }) => {
+  test("should not show Users in sidebar for operator", async ({
+    operatorPage: page,
+  }) => {
     const usersLink = page.locator("a[href='/users']");
     const isVisible = await usersLink.isVisible().catch(() => false);
     expect(isVisible).toBeFalsy();
@@ -29,24 +33,34 @@ test.describe("Users Page", () => {
 });
 
 test.describe("Access Management Page", () => {
-  test("should display permission matrix for admin", async ({ adminPage: page }) => {
+  test("should display permission matrix for admin", async ({
+    adminPage: page,
+  }) => {
     await navigateTo(page, "/access");
 
     await expect(page.locator("text=/ACCESS CONTROL/i").first()).toBeVisible();
-    await expect(page.locator("text=/Permission Matrix/i").first()).toBeVisible();
+    await expect(
+      page.locator("text=/Permission Matrix/i").first(),
+    ).toBeVisible();
 
     // Should show both roles
     await expect(page.locator("text=ADMIN").first()).toBeVisible();
     await expect(page.locator("text=OPERATOR").first()).toBeVisible();
 
     // Should show permission groups (loaded from API)
-    await expect(page.locator("text=/Stations|Schedules|Users/").first()).toBeVisible();
+    await expect(
+      page.locator("text=/Stations|Schedules|Users/").first(),
+    ).toBeVisible();
 
     // Permission badges loaded from DB
-    await expect(page.locator("text=/View Stations|Create Stations/").first()).toBeVisible({ timeout: 10000 });
+    await expect(
+      page.locator("text=/View Stations|Create Stations/").first(),
+    ).toBeVisible({ timeout: 10000 });
   });
 
-  test("should not show Access Management for operator", async ({ operatorPage: page }) => {
+  test("should not show Access Management for operator", async ({
+    operatorPage: page,
+  }) => {
     const accessLink = page.locator("a[href='/access']");
     const isVisible = await accessLink.isVisible().catch(() => false);
     expect(isVisible).toBeFalsy();

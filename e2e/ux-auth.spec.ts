@@ -17,7 +17,9 @@ test.describe("UX: Auth Pages", () => {
     await expect(passwordInput).toHaveAttribute("type", "password");
   });
 
-  test("register password toggle should show/hide password", async ({ page }) => {
+  test("register password toggle should show/hide password", async ({
+    page,
+  }) => {
     await page.goto("/register");
     await page.waitForLoadState("domcontentloaded");
 
@@ -30,7 +32,9 @@ test.describe("UX: Auth Pages", () => {
     await expect(passwordInput).toHaveAttribute("type", "text");
   });
 
-  test("tab order should skip password toggle buttons on login", async ({ page }) => {
+  test("tab order should skip password toggle buttons on login", async ({
+    page,
+  }) => {
     await page.goto("/login");
     await page.waitForLoadState("domcontentloaded");
 
@@ -42,7 +46,9 @@ test.describe("UX: Auth Pages", () => {
     await expect(page.locator("button[type='submit']")).toBeFocused();
   });
 
-  test("login should show Zod validation error for invalid email", async ({ page }) => {
+  test("login should show Zod validation error for invalid email", async ({
+    page,
+  }) => {
     await page.goto("/login");
     await page.waitForLoadState("domcontentloaded");
 

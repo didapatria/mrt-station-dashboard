@@ -1,10 +1,20 @@
 import { test, expect, navigateTo } from "./fixtures/auth";
 
 test.describe("Navigation", () => {
-  test("should navigate to all pages via sidebar", async ({ adminPage: page }) => {
+  test("should navigate to all pages via sidebar", async ({
+    adminPage: page,
+  }) => {
     const routes = [
-      "/stations", "/schedules", "/map", "/route-planner", "/compare",
-      "/access", "/activity", "/changelog", "/profile", "/dashboard",
+      "/stations",
+      "/schedules",
+      "/map",
+      "/route-planner",
+      "/compare",
+      "/access",
+      "/activity",
+      "/changelog",
+      "/profile",
+      "/dashboard",
     ];
     for (const route of routes) {
       await navigateTo(page, route);
@@ -12,12 +22,19 @@ test.describe("Navigation", () => {
     }
   });
 
-  test("should show admin sidebar items for admin", async ({ adminPage: page }) => {
+  test("should show admin sidebar items for admin", async ({
+    adminPage: page,
+  }) => {
     await expect(page.locator("a[href='/users']")).toBeVisible();
   });
 
-  test("should hide admin items for operator", async ({ operatorPage: page }) => {
-    const isVisible = await page.locator("a[href='/users']").isVisible().catch(() => false);
+  test("should hide admin items for operator", async ({
+    operatorPage: page,
+  }) => {
+    const isVisible = await page
+      .locator("a[href='/users']")
+      .isVisible()
+      .catch(() => false);
     expect(isVisible).toBeFalsy();
   });
 

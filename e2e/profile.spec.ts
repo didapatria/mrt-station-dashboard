@@ -1,7 +1,9 @@
 import { test, expect, navigateTo } from "./fixtures/auth";
 
 test.describe("Profile Page", () => {
-  test("should display profile info and sections", async ({ adminPage: page }) => {
+  test("should display profile info and sections", async ({
+    adminPage: page,
+  }) => {
     await navigateTo(page, "/profile");
 
     // User info
@@ -31,27 +33,52 @@ test.describe("Profile Page", () => {
     await page.waitForTimeout(1000);
 
     const hasError =
-      (await page.locator("text=/match|mismatch|not match/i").first().isVisible().catch(() => false)) ||
-      (await page.locator("p.text-destructive, [role='alert'], .text-red-500, p[class*='destructive']").first().isVisible().catch(() => false));
+      (await page
+        .locator("text=/match|mismatch|not match/i")
+        .first()
+        .isVisible()
+        .catch(() => false)) ||
+      (await page
+        .locator(
+          "p.text-destructive, [role='alert'], .text-red-500, p[class*='destructive']",
+        )
+        .first()
+        .isVisible()
+        .catch(() => false));
     expect(hasError).toBeTruthy();
   });
 
-  test("should display permissions card with badges (admin)", async ({ adminPage: page }) => {
+  test("should display permissions card with badges (admin)", async ({
+    adminPage: page,
+  }) => {
     await navigateTo(page, "/profile");
 
-    await expect(page.locator("text=/permissions/i").first()).toBeVisible({ timeout: 8000 });
+    await expect(page.locator("text=/permissions/i").first()).toBeVisible({
+      timeout: 8000,
+    });
     // Admin has many permissions — at least one badge should be visible
-    await expect(page.locator("text=/stations.view|dashboard.view|users.view/").first()).toBeVisible({ timeout: 8000 });
+    await expect(
+      page.locator("text=/stations.view|dashboard.view|users.view/").first(),
+    ).toBeVisible({ timeout: 8000 });
     // Should show count
-    await expect(page.locator("text=/permissions granted/i").first()).toBeVisible();
+    await expect(
+      page.locator("text=/permissions granted/i").first(),
+    ).toBeVisible();
   });
 
-  test("should show fewer permissions for operator", async ({ operatorPage: page }) => {
+  test("should show fewer permissions for operator", async ({
+    operatorPage: page,
+  }) => {
     await navigateTo(page, "/profile");
 
-    await expect(page.locator("text=/permissions/i").first()).toBeVisible({ timeout: 8000 });
+    await expect(page.locator("text=/permissions/i").first()).toBeVisible({
+      timeout: 8000,
+    });
     // Operator should NOT have admin permissions
-    const hasUsersDelete = await page.locator("text=users.delete").isVisible().catch(() => false);
+    const hasUsersDelete = await page
+      .locator("text=users.delete")
+      .isVisible()
+      .catch(() => false);
     expect(hasUsersDelete).toBeFalsy();
   });
 
@@ -63,7 +90,9 @@ test.describe("Profile Page", () => {
     await expect(page.locator("text=/Express|Prisma/").first()).toBeVisible();
 
     await page.getByRole("tab", { name: /infra/i }).click();
-    await expect(page.locator("text=/Fly.io|Vercel|Docker/").first()).toBeVisible();
+    await expect(
+      page.locator("text=/Fly.io|Vercel|Docker/").first(),
+    ).toBeVisible();
 
     await page.getByRole("tab", { name: /testing/i }).click();
     await expect(page.locator("text=/Playwright/").first()).toBeVisible();

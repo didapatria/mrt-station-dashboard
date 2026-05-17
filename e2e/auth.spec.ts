@@ -18,7 +18,7 @@ test.describe("Login Page", () => {
     await page.click("button[type='submit']");
     await page.waitForTimeout(500);
     await expect(
-      page.locator("text=/invalid email|required/i").first()
+      page.locator("text=/invalid email|required/i").first(),
     ).toBeVisible();
   });
 
@@ -34,10 +34,23 @@ test.describe("Login Page", () => {
         .first()
         .isVisible()
         .catch(() => false)) ||
-      (await page.locator("[data-sonner-toast]").isVisible().catch(() => false)) ||
-      (await page.locator("[role='status']").isVisible().catch(() => false)) ||
-      (await page.locator("li[data-toast]").isVisible().catch(() => false)) ||
-      (await page.locator(".bg-destructive, .text-destructive").first().isVisible().catch(() => false));
+      (await page
+        .locator("[data-sonner-toast]")
+        .isVisible()
+        .catch(() => false)) ||
+      (await page
+        .locator("[role='status']")
+        .isVisible()
+        .catch(() => false)) ||
+      (await page
+        .locator("li[data-toast]")
+        .isVisible()
+        .catch(() => false)) ||
+      (await page
+        .locator(".bg-destructive, .text-destructive")
+        .first()
+        .isVisible()
+        .catch(() => false));
     // If still on login page, the login failed (which is the expected behavior)
     expect(errorVisible || page.url().includes("/login")).toBeTruthy();
   });
@@ -78,7 +91,7 @@ test.describe("Register Page", () => {
     await page.waitForTimeout(500);
     const hasErrors = await page
       .locator(
-        "p.text-destructive, [role='alert'], .text-red-500, p[class*='destructive'], p[class*='error']"
+        "p.text-destructive, [role='alert'], .text-red-500, p[class*='destructive'], p[class*='error']",
       )
       .first()
       .isVisible()

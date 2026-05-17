@@ -8,13 +8,23 @@ test.describe("Mobile — Navigation", () => {
     await page.waitForTimeout(1500);
 
     const sidebar = page.locator("[data-tour='sidebar'], nav, aside").first();
-    const hamburger = page.locator("button[aria-label*='menu' i], button[data-tour*='menu' i], button svg[class*='menu' i]").first();
+    const hamburger = page
+      .locator(
+        "button[aria-label*='menu' i], button[data-tour*='menu' i], button svg[class*='menu' i]",
+      )
+      .first();
 
     const hamburgerVisible = await hamburger.isVisible().catch(() => false);
-    const sidebarOffscreen = await sidebar.evaluate((el) => {
-      const rect = el.getBoundingClientRect();
-      return rect.left < 0 || rect.width === 0 || getComputedStyle(el).display === "none";
-    }).catch(() => true);
+    const sidebarOffscreen = await sidebar
+      .evaluate((el) => {
+        const rect = el.getBoundingClientRect();
+        return (
+          rect.left < 0 ||
+          rect.width === 0 ||
+          getComputedStyle(el).display === "none"
+        );
+      })
+      .catch(() => true);
 
     expect(hamburgerVisible || sidebarOffscreen).toBeTruthy();
   });
@@ -31,7 +41,12 @@ test.describe("Mobile — Navigation", () => {
     }
     await page.waitForTimeout(2000);
     // Use heading role — not sidebar text which may be hidden
-    await expect(page.getByRole("heading").filter({ hasText: /station/i }).first()).toBeVisible();
+    await expect(
+      page
+        .getByRole("heading")
+        .filter({ hasText: /station/i })
+        .first(),
+    ).toBeVisible();
   });
 });
 
@@ -40,7 +55,9 @@ test.describe("Mobile — Dashboard", () => {
     await page.goto("/dashboard");
     await page.waitForTimeout(2000);
 
-    await expect(page.locator("text=/good (morning|afternoon|evening)/i")).toBeVisible();
+    await expect(
+      page.locator("text=/good (morning|afternoon|evening)/i"),
+    ).toBeVisible();
 
     const bodyWidth = await page.evaluate(() => document.body.scrollWidth);
     const viewportWidth = await page.evaluate(() => window.innerWidth);
@@ -65,7 +82,12 @@ test.describe("Mobile — Stations", () => {
     await page.goto("/stations");
     await page.waitForTimeout(2000);
 
-    await expect(page.getByRole("heading").filter({ hasText: /station/i }).first()).toBeVisible();
+    await expect(
+      page
+        .getByRole("heading")
+        .filter({ hasText: /station/i })
+        .first(),
+    ).toBeVisible();
     const bodyWidth = await page.evaluate(() => document.body.scrollWidth);
     const viewportWidth = await page.evaluate(() => window.innerWidth);
     expect(bodyWidth).toBeLessThanOrEqual(viewportWidth + 10);
@@ -75,7 +97,9 @@ test.describe("Mobile — Stations", () => {
     await page.goto("/stations");
     await page.waitForTimeout(1500);
 
-    const searchInput = page.locator("input[placeholder*='search' i], input[type='search']").first();
+    const searchInput = page
+      .locator("input[placeholder*='search' i], input[type='search']")
+      .first();
     if (await searchInput.isVisible({ timeout: 5000 }).catch(() => false)) {
       await searchInput.tap();
       await searchInput.fill("Bundaran");
@@ -90,7 +114,12 @@ test.describe("Mobile — Schedules", () => {
     await page.goto("/schedules");
     await page.waitForTimeout(2000);
 
-    await expect(page.getByRole("heading").filter({ hasText: /schedule/i }).first()).toBeVisible();
+    await expect(
+      page
+        .getByRole("heading")
+        .filter({ hasText: /schedule/i })
+        .first(),
+    ).toBeVisible();
     const bodyWidth = await page.evaluate(() => document.body.scrollWidth);
     const viewportWidth = await page.evaluate(() => window.innerWidth);
     expect(bodyWidth).toBeLessThanOrEqual(viewportWidth + 10);
@@ -102,7 +131,12 @@ test.describe("Mobile — Profile", () => {
     await page.goto("/profile");
     await page.waitForTimeout(2000);
 
-    await expect(page.getByRole("heading").filter({ hasText: /profile/i }).first()).toBeVisible();
+    await expect(
+      page
+        .getByRole("heading")
+        .filter({ hasText: /profile/i })
+        .first(),
+    ).toBeVisible();
     const bodyWidth = await page.evaluate(() => document.body.scrollWidth);
     const viewportWidth = await page.evaluate(() => window.innerWidth);
     expect(bodyWidth).toBeLessThanOrEqual(viewportWidth + 10);
@@ -185,7 +219,9 @@ test.describe("Mobile — Changelog", () => {
     await page.waitForTimeout(2000);
 
     // Latest version (v2.10.0) should be visible
-    await expect(page.locator("text=/2\.10\.0/").first()).toBeVisible({ timeout: 8000 });
+    await expect(page.locator("text=/2\.10\.0/").first()).toBeVisible({
+      timeout: 8000,
+    });
     const bodyWidth = await page.evaluate(() => document.body.scrollWidth);
     const viewportWidth = await page.evaluate(() => window.innerWidth);
     expect(bodyWidth).toBeLessThanOrEqual(viewportWidth + 10);

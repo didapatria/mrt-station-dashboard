@@ -1,7 +1,9 @@
 import { test, expect, navigateTo } from "./fixtures/auth";
 
 test.describe("Feedback", () => {
-  test("should open feedback dialog and submit", async ({ adminPage: page }) => {
+  test("should open feedback dialog and submit", async ({
+    adminPage: page,
+  }) => {
     await navigateTo(page, "/dashboard");
 
     // Open user dropdown
@@ -34,7 +36,9 @@ test.describe("Feedback", () => {
     await page.waitForTimeout(200);
 
     // Message
-    await dialog.locator("textarea").fill("Great dashboard, very useful for managing MRT stations.");
+    await dialog
+      .locator("textarea")
+      .fill("Great dashboard, very useful for managing MRT stations.");
 
     // Submit button should be enabled
     const submitBtn = dialog.getByRole("button", { name: /send feedback/i });
@@ -46,7 +50,9 @@ test.describe("Feedback", () => {
     await expect(dialog).not.toBeVisible({ timeout: 5000 });
   });
 
-  test("should not submit without rating or message", async ({ adminPage: page }) => {
+  test("should not submit without rating or message", async ({
+    adminPage: page,
+  }) => {
     await navigateTo(page, "/dashboard");
 
     const userMenu = page.locator("[data-tour='user-menu']");
@@ -65,7 +71,9 @@ test.describe("Feedback", () => {
     await expect(submitBtn).toBeDisabled();
   });
 
-  test("should submit feedback with bug category", async ({ adminPage: page }) => {
+  test("should submit feedback with bug category", async ({
+    adminPage: page,
+  }) => {
     await navigateTo(page, "/dashboard");
 
     const userMenu = page.locator("[data-tour='user-menu']");
@@ -88,7 +96,9 @@ test.describe("Feedback", () => {
     await page.getByRole("option", { name: /bug/i }).click();
     await page.waitForTimeout(200);
 
-    await dialog.locator("textarea").fill("Found a minor display issue on mobile.");
+    await dialog
+      .locator("textarea")
+      .fill("Found a minor display issue on mobile.");
 
     const submitBtn = dialog.getByRole("button", { name: /send feedback/i });
     await expect(submitBtn).toBeEnabled();
@@ -118,7 +128,9 @@ test.describe("Feedback", () => {
     await page.getByRole("option", { name: /feature/i }).click();
     await page.waitForTimeout(200);
 
-    await dialog.locator("textarea").fill("Would love to see bulk schedule import.");
+    await dialog
+      .locator("textarea")
+      .fill("Would love to see bulk schedule import.");
 
     await dialog.getByRole("button", { name: /send feedback/i }).click();
     await page.waitForTimeout(2000);

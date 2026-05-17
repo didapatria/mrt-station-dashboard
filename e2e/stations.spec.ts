@@ -1,7 +1,9 @@
 import { test, expect, navigateTo } from "./fixtures/auth";
 
 test.describe("Stations Page", () => {
-  test("should display and interact with stations", async ({ adminPage: page }) => {
+  test("should display and interact with stations", async ({
+    adminPage: page,
+  }) => {
     await navigateTo(page, "/stations");
 
     // Verify table loaded
@@ -20,7 +22,10 @@ test.describe("Stations Page", () => {
     await page.waitForTimeout(1000);
 
     // Sort by clicking column header
-    const orderHeader = page.locator("th").filter({ hasText: /order/i }).first();
+    const orderHeader = page
+      .locator("th")
+      .filter({ hasText: /order/i })
+      .first();
     if (await orderHeader.isVisible()) {
       await orderHeader.click();
       await page.waitForTimeout(500);
@@ -28,7 +33,7 @@ test.describe("Stations Page", () => {
 
     // Pagination
     const nextBtn = page.getByRole("button", { name: /next/i }).first();
-    if (await nextBtn.isVisible() && await nextBtn.isEnabled()) {
+    if ((await nextBtn.isVisible()) && (await nextBtn.isEnabled())) {
       await nextBtn.click();
       await page.waitForTimeout(1000);
       await expect(page.locator("table")).toBeVisible();
@@ -45,17 +50,30 @@ test.describe("Stations Page", () => {
       await page.waitForTimeout(2000);
 
       // Should show station detail with code, name, status
-      await expect(page.locator("text=/LBB|FTM|CPR|HJN|BLA|BLM|ASN|SNY|IST|BNH|STB|DKA|BHI/").first()).toBeVisible();
+      await expect(
+        page
+          .locator("text=/LBB|FTM|CPR|HJN|BLA|BLM|ASN|SNY|IST|BNH|STB|DKA|BHI/")
+          .first(),
+      ).toBeVisible();
       // Should show location info
       await expect(page.locator("text=/Jakarta/i").first()).toBeVisible();
       // Should show schedules section or map
-      const hasSchedules = await page.locator("text=/schedule|train/i").first().isVisible().catch(() => false);
-      const hasMap = await page.locator(".leaflet-container").isVisible().catch(() => false);
+      const hasSchedules = await page
+        .locator("text=/schedule|train/i")
+        .first()
+        .isVisible()
+        .catch(() => false);
+      const hasMap = await page
+        .locator(".leaflet-container")
+        .isVisible()
+        .catch(() => false);
       expect(hasSchedules || hasMap).toBeTruthy();
     }
   });
 
-  test("should create, edit, and delete a station", async ({ adminPage: page }) => {
+  test("should create, edit, and delete a station", async ({
+    adminPage: page,
+  }) => {
     await navigateTo(page, "/stations");
     await page.waitForTimeout(1000);
 
@@ -110,7 +128,9 @@ test.describe("Stations Page", () => {
       await actionBtns.nth(btnCount - 1).click();
       await page.waitForTimeout(500);
       const alertDialog = page.locator("[role='alertdialog'], [role='dialog']");
-      const deleteBtn = alertDialog.getByRole("button", { name: /delete|confirm/i });
+      const deleteBtn = alertDialog.getByRole("button", {
+        name: /delete|confirm/i,
+      });
       if (await deleteBtn.isVisible()) {
         await deleteBtn.click();
         await page.waitForTimeout(2000);

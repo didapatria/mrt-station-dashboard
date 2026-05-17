@@ -54,4 +54,12 @@ export const test = base.extend<AuthFixtures>({
   },
 });
 
-export { expect, navigateTo, ADMIN_EMAIL, ADMIN_PASSWORD, OPERATOR_EMAIL, OPERATOR_PASSWORD, API_URL };
+export {
+  expect,
+  navigateTo,
+  ADMIN_EMAIL,
+  ADMIN_PASSWORD,
+  OPERATOR_EMAIL,
+  OPERATOR_PASSWORD,
+  API_URL,
+};

@@ -1,7 +1,9 @@
 import { test, expect, navigateTo } from "./fixtures/auth";
 
 test.describe("Activity Log Page", () => {
-  test("should display activity log with controls", async ({ adminPage: page }) => {
+  test("should display activity log with controls", async ({
+    adminPage: page,
+  }) => {
     await navigateTo(page, "/activity");
 
     // Page title
@@ -17,8 +19,16 @@ test.describe("Activity Log Page", () => {
     // Content (entries or empty state)
     await page.waitForTimeout(1000);
     const hasContent =
-      (await page.locator("text=/create|update|delete/i").first().isVisible().catch(() => false)) ||
-      (await page.locator("text=/no.*activity|no.*log|empty|no.*data/i").first().isVisible().catch(() => false));
+      (await page
+        .locator("text=/create|update|delete/i")
+        .first()
+        .isVisible()
+        .catch(() => false)) ||
+      (await page
+        .locator("text=/no.*activity|no.*log|empty|no.*data/i")
+        .first()
+        .isVisible()
+        .catch(() => false));
     expect(hasContent).toBeTruthy();
   });
 
@@ -36,8 +46,16 @@ test.describe("Activity Log Page", () => {
       await page.waitForTimeout(1000);
       // Should show Station-related entries or empty state
       const hasContent =
-        (await page.locator("text=/station/i").first().isVisible().catch(() => false)) ||
-        (await page.locator("text=/no.*activity|empty/i").first().isVisible().catch(() => false));
+        (await page
+          .locator("text=/station/i")
+          .first()
+          .isVisible()
+          .catch(() => false)) ||
+        (await page
+          .locator("text=/no.*activity|empty/i")
+          .first()
+          .isVisible()
+          .catch(() => false));
       expect(hasContent).toBeTruthy();
     }
   });

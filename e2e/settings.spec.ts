@@ -6,16 +6,23 @@ test.describe("Settings Page", () => {
 
     await expect(page.locator("text=/settings/i").first()).toBeVisible();
     await expect(page.locator("text=/language/i").first()).toBeVisible();
-    await expect(page.locator("text=/appearance|theme/i").first()).toBeVisible();
+    await expect(
+      page.locator("text=/appearance|theme/i").first(),
+    ).toBeVisible();
     await expect(page.locator("text=/about/i").first()).toBeVisible();
-    await expect(page.locator("text=/react|express|postgresql/i").first()).toBeVisible();
+    await expect(
+      page.locator("text=/react|express|postgresql/i").first(),
+    ).toBeVisible();
   });
 
   test("should change language and theme", async ({ adminPage: page }) => {
     await navigateTo(page, "/settings");
 
     // Language toggle
-    const langTrigger = page.locator("button[role='combobox']").filter({ hasText: /english|indonesia/i }).first();
+    const langTrigger = page
+      .locator("button[role='combobox']")
+      .filter({ hasText: /english|indonesia/i })
+      .first();
     if (await langTrigger.isVisible()) {
       await langTrigger.click();
       await page.waitForTimeout(300);
@@ -34,7 +41,10 @@ test.describe("Settings Page", () => {
     }
 
     // Theme toggle
-    const themeTrigger = page.locator("button[role='combobox']").filter({ hasText: /light|dark/i }).first();
+    const themeTrigger = page
+      .locator("button[role='combobox']")
+      .filter({ hasText: /light|dark/i })
+      .first();
     if (await themeTrigger.isVisible()) {
       await themeTrigger.click();
       await page.waitForTimeout(300);

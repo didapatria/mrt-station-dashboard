@@ -1,13 +1,17 @@
 import { test, expect, navigateTo } from "./fixtures/auth";
 
 test.describe("Changelog Page", () => {
-  test("should display changelog with versions", async ({ adminPage: page }) => {
+  test("should display changelog with versions", async ({
+    adminPage: page,
+  }) => {
     await navigateTo(page, "/changelog");
     await expect(page.locator("text=/changelog/i").first()).toBeVisible();
     await expect(page.locator("text=/v[0-9]+/").first()).toBeVisible();
   });
 
-  test("should show Latest badge on newest release", async ({ adminPage: page }) => {
+  test("should show Latest badge on newest release", async ({
+    adminPage: page,
+  }) => {
     await navigateTo(page, "/changelog");
     await expect(page.locator("text=/latest/i").first()).toBeVisible();
     // v2.10.0 should be at top
@@ -19,7 +23,9 @@ test.describe("Changelog Page", () => {
     // Commit hashes for v2.7.0
     await expect(page.locator("text=/16aa9d8|fc1c219/").first()).toBeVisible();
     // Commit links should point to GitHub
-    const commitLink = page.locator("a[href*='github.com'][href*='/commit/']").first();
+    const commitLink = page
+      .locator("a[href*='github.com'][href*='/commit/']")
+      .first();
     await expect(commitLink).toBeVisible();
   });
 
