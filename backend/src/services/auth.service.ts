@@ -130,7 +130,7 @@ export const authService = {
       throw new Error("Invalid Google token");
     }
 
-    const { email, name, sub: googleId } = payload;
+    const { email, name, sub: googleId, picture } = payload;
 
     let user = await prisma.user.findUnique({
       where: { email },
@@ -141,6 +141,7 @@ export const authService = {
         role: true,
         createdAt: true,
         password: true,
+        avatarUrl: true,
       },
     });
 
@@ -153,6 +154,7 @@ export const authService = {
           name: name || email.split("@")[0],
           email,
           password: hashedPassword,
+          avatarUrl: picture || null,
         },
         select: {
           id: true,
@@ -161,6 +163,7 @@ export const authService = {
           role: true,
           createdAt: true,
           password: true,
+          avatarUrl: true,
         },
       });
     }
@@ -175,6 +178,7 @@ export const authService = {
         email: user.email,
         role: user.role,
         createdAt: user.createdAt,
+        avatarUrl: user.avatarUrl,
       },
       token,
       permissions,
