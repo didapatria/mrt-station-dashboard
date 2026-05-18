@@ -560,6 +560,130 @@ tbody tr:hover::after {
     animation: skeleton-shimmer 1.4s ease-in-out infinite;
 }
 
+/* ─── Operations Terminal design system ─────────────────────── */
+
+/* Page-level typography */
+.page-heading {
+    font-family: "Bebas Neue", sans-serif;
+    font-size: 36px;
+    letter-spacing: 0.04em;
+    line-height: 1;
+    color: var(--color-foreground);
+    margin: 0;
+}
+.page-subtitle {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 9.5px;
+    letter-spacing: 0.1em;
+    color: var(--color-muted-foreground);
+    margin-top: 4px;
+}
+.ops-divider {
+    height: 1px;
+    background: linear-gradient(
+        90deg,
+        rgba(59, 130, 246, 0.3) 0%,
+        transparent 70%
+    );
+    margin-top: 14px;
+}
+
+/* Card anatomy */
+.ops-card {
+    background: var(--color-card);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+}
+.ops-card-accent {
+    box-shadow: inset 3px 0 0 rgba(59, 130, 246, 0.55);
+}
+.ops-accent-line {
+    height: 2px;
+    background: linear-gradient(90deg, #3b82f6 0%, transparent 100%);
+    flex-shrink: 0;
+}
+.ops-card-header {
+    padding: 18px 24px 14px;
+    border-bottom: 1px solid var(--color-border);
+}
+.ops-card-title {
+    font-family: "Bebas Neue", sans-serif;
+    font-size: 18px;
+    letter-spacing: 0.05em;
+    color: var(--color-foreground);
+}
+.ops-card-subtitle {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    color: var(--color-muted-foreground);
+    margin-top: 4px;
+}
+
+/* Data row patterns */
+.ops-setting-row {
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--color-border);
+    transition: background 0.12s ease;
+}
+.ops-setting-row:last-child {
+    border-bottom: none;
+}
+.ops-data-row {
+    padding: 14px 24px;
+    border-bottom: 1px solid var(--color-border);
+    transition: background 0.12s ease;
+}
+.ops-data-row:last-child {
+    border-bottom: none;
+}
+
+/* Typography atoms */
+.ops-mono-label {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-muted-foreground);
+}
+.ops-mono-xs {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 9.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-muted-foreground);
+}
+
+/* Value / status badges */
+.ops-value-badge {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10.5px;
+    color: var(--color-foreground);
+    background: rgba(29, 111, 232, 0.08);
+    border: 1px solid rgba(29, 111, 232, 0.15);
+    border-radius: 3px;
+    padding: 3px 10px;
+}
+.ops-chip {
+    background: rgba(59, 130, 246, 0.1);
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    border-radius: 4px;
+    color: #60a5fa;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 9.5px;
+    letter-spacing: 0.08em;
+    padding: 2px 8px;
+}
+.ops-status-active {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    color: var(--color-success, #22c55e);
+}
+
 /* ─── Settings page responsive grid ─────────────────────────── */
 .settings-grid {
     display: grid;

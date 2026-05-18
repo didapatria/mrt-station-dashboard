@@ -10,6 +10,8 @@ import {
 } from "@/components/ui/select";
 import { useThemeStore } from "@/store/theme.store";
 import { usePageMeta } from "@/hooks/use-page-meta";
+import { PageHeader } from "@/components/PageHeader";
+import { OpsCard } from "@/components/OpsCard";
 
 export default function SettingsPage() {
   usePageMeta({ title: "Settings", path: "/settings" });
@@ -21,96 +23,12 @@ export default function SettingsPage() {
     localStorage.setItem("language", lang);
   };
 
-  const cardStyle: React.CSSProperties = {
-    background: "var(--color-card)",
-    border: "1px solid var(--color-border)",
-    borderRadius: 12,
-    overflow: "hidden",
-    position: "relative",
-  };
-
-  const cardWithAccent: React.CSSProperties = {
-    ...cardStyle,
-    boxShadow: "inset 3px 0 0 rgba(59,130,246,0.55)",
-  };
-
-  const cardHeaderStyle: React.CSSProperties = {
-    padding: "18px 24px 14px",
-    borderBottom: "1px solid var(--color-border)",
-    display: "flex",
-    flexDirection: "column",
-    gap: 4,
-  };
-
-  const cardTitleStyle: React.CSSProperties = {
-    fontFamily: "'Bebas Neue', sans-serif",
-    fontSize: 18,
-    letterSpacing: "0.05em",
-    color: "var(--color-foreground)",
-    display: "flex",
-    alignItems: "center",
-    gap: 8,
-  };
-
-  const cardSubtitleStyle: React.CSSProperties = {
-    fontFamily: "'JetBrains Mono', monospace",
-    fontSize: 10,
-    letterSpacing: "0.08em",
-    color: "var(--color-muted-foreground)",
-  };
-
-  const settingRowStyle: React.CSSProperties = {
-    padding: "14px 20px",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-    borderBottom: "1px solid var(--color-border)",
-    transition: "all 0.12s ease",
-  };
-
-  const settingLabelStyle: React.CSSProperties = {
-    fontFamily: "'JetBrains Mono', monospace",
-    fontSize: 10.5,
-    textTransform: "uppercase",
-    letterSpacing: "0.08em",
-    color: "var(--color-muted-foreground)",
-  };
-
   return (
     <div>
-      <div style={{ marginBottom: 24 }}>
-        <h2
-          style={{
-            fontFamily: "'Bebas Neue', sans-serif",
-            fontSize: 36,
-            letterSpacing: "0.04em",
-            lineHeight: 1,
-            color: "var(--color-foreground)",
-            margin: 0,
-          }}
-        >
-          SETTINGS
-        </h2>
-        <p
-          style={{
-            fontFamily: "'JetBrains Mono', monospace",
-            fontSize: 9.5,
-            letterSpacing: "0.1em",
-            color: "var(--color-muted-foreground)",
-            marginTop: 4,
-          }}
-        >
-          System Configuration · Preferences
-        </p>
-        <div
-          style={{
-            marginTop: 16,
-            height: 1,
-            background:
-              "linear-gradient(90deg, var(--color-border) 0%, transparent 80%)",
-          }}
-        />
-      </div>
+      <PageHeader
+        title="SETTINGS"
+        subtitle="System Configuration · Preferences"
+      />
 
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -118,181 +36,77 @@ export default function SettingsPage() {
         className="settings-grid"
       >
         {/* Language */}
-        <div style={cardWithAccent}>
+        <OpsCard title="LANGUAGE" subtitle="Localization settings" icon={<Globe size={15} />}>
           <div
-            style={{
-              height: 2,
-              background:
-                "linear-gradient(90deg, #3b82f6 0%, transparent 100%)",
-            }}
-          />
-          <div style={cardHeaderStyle}>
-            <div style={cardTitleStyle}>
-              <Globe size={15} />
-              LANGUAGE
-            </div>
-            <div style={cardSubtitleStyle}>Localization settings</div>
-          </div>
-          <div style={settingRowStyle}>
-            <span style={settingLabelStyle}>Active Language</span>
+            className="ops-setting-row"
+            style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}
+          >
+            <span className="ops-mono-label">Active Language</span>
             <Select value={i18n.language} onValueChange={changeLanguage}>
-              <SelectTrigger
-                style={{
-                  width: 160,
-                  fontFamily: "'JetBrains Mono', monospace",
-                  fontSize: 11,
-                }}
-              >
+              <SelectTrigger className="w-40 font-mono text-[11px]">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="en">
-                  <span
-                    style={{
-                      fontFamily: "'JetBrains Mono', monospace",
-                      fontSize: 11,
-                    }}
-                  >
-                    English
-                  </span>
+                  <span className="font-mono text-[11px]">English</span>
                 </SelectItem>
                 <SelectItem value="id">
-                  <span
-                    style={{
-                      fontFamily: "'JetBrains Mono', monospace",
-                      fontSize: 11,
-                    }}
-                  >
-                    Indonesia
-                  </span>
+                  <span className="font-mono text-[11px]">Indonesia</span>
                 </SelectItem>
               </SelectContent>
             </Select>
           </div>
-        </div>
+        </OpsCard>
 
         {/* Appearance */}
-        <div style={cardWithAccent}>
+        <OpsCard title="APPEARANCE" subtitle="Customize the look and feel" icon={<Palette size={15} />}>
           <div
-            style={{
-              height: 2,
-              background:
-                "linear-gradient(90deg, #3b82f6 0%, transparent 100%)",
-            }}
-          />
-          <div style={cardHeaderStyle}>
-            <div style={cardTitleStyle}>
-              <Palette size={15} />
-              APPEARANCE
-            </div>
-            <div style={cardSubtitleStyle}>Customize the look and feel</div>
-          </div>
-          <div style={settingRowStyle}>
-            <span style={settingLabelStyle}>Color Theme</span>
+            className="ops-setting-row"
+            style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}
+          >
+            <span className="ops-mono-label">Color Theme</span>
             <Select value={theme} onValueChange={() => toggleTheme()}>
-              <SelectTrigger
-                style={{
-                  width: 160,
-                  fontFamily: "'JetBrains Mono', monospace",
-                  fontSize: 11,
-                }}
-              >
+              <SelectTrigger className="w-40 font-mono text-[11px]">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="light">
-                  <span
-                    style={{
-                      fontFamily: "'JetBrains Mono', monospace",
-                      fontSize: 11,
-                    }}
-                  >
-                    Light
-                  </span>
+                  <span className="font-mono text-[11px]">Light</span>
                 </SelectItem>
                 <SelectItem value="dark">
-                  <span
-                    style={{
-                      fontFamily: "'JetBrains Mono', monospace",
-                      fontSize: 11,
-                    }}
-                  >
-                    Dark
-                  </span>
+                  <span className="font-mono text-[11px]">Dark</span>
                 </SelectItem>
               </SelectContent>
             </Select>
           </div>
-        </div>
+        </OpsCard>
 
         {/* Notifications */}
-        <div style={cardWithAccent}>
+        <OpsCard
+          title="NOTIFICATIONS"
+          subtitle="Real-time notification preferences"
+          icon={<Bell size={15} />}
+        >
           <div
-            style={{
-              height: 2,
-              background:
-                "linear-gradient(90deg, #3b82f6 0%, transparent 100%)",
-            }}
-          />
-          <div style={cardHeaderStyle}>
-            <div style={cardTitleStyle}>
-              <Bell size={15} />
-              NOTIFICATIONS
-            </div>
-            <div style={cardSubtitleStyle}>
-              Real-time notification preferences
-            </div>
-          </div>
-          <div style={settingRowStyle}>
+            className="ops-setting-row"
+            style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}
+          >
             <div>
-              <div style={settingLabelStyle}>Real-time Updates</div>
+              <div className="ops-mono-label">Real-time Updates</div>
               <div
-                style={{
-                  fontFamily: "'Sora', sans-serif",
-                  fontSize: 11,
-                  color: "var(--color-muted-foreground)",
-                  marginTop: 2,
-                }}
+                className="text-muted-foreground"
+                style={{ fontFamily: "'Sora', sans-serif", fontSize: 11, marginTop: 2 }}
               >
                 Receive notifications via SSE when data changes
               </div>
             </div>
-            <span
-              style={{
-                fontFamily: "'JetBrains Mono', monospace",
-                fontSize: 10.5,
-                color: "var(--color-success, #22c55e)",
-                fontWeight: 600,
-                letterSpacing: "0.05em",
-              }}
-            >
-              ENABLED
-            </span>
+            <span className="ops-status-active">ENABLED</span>
           </div>
-        </div>
+        </OpsCard>
 
         {/* About */}
-        <div style={cardWithAccent}>
-          <div
-            style={{
-              height: 2,
-              background:
-                "linear-gradient(90deg, #3b82f6 0%, transparent 100%)",
-            }}
-          />
-          <div style={cardHeaderStyle}>
-            <div style={cardTitleStyle}>
-              <Monitor size={15} />
-              ABOUT
-            </div>
-            <div style={cardSubtitleStyle}>System information</div>
-          </div>
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1fr",
-            }}
-          >
+        <OpsCard title="ABOUT" subtitle="System information" icon={<Monitor size={15} />}>
+          <div>
             {[
               { key: "VERSION", value: "2.13.0" },
               { key: "FRONTEND", value: "React 19 + Vite 8 + Tailwind 4" },
@@ -300,39 +114,18 @@ export default function SettingsPage() {
               { key: "DATABASE", value: "PostgreSQL + Prisma ORM" },
               { key: "AUTH", value: "JWT + Google OAuth" },
               { key: "E2E TESTS", value: "112 Playwright tests" },
-            ].map(({ key, value }, idx, arr) => (
+            ].map(({ key, value }) => (
               <div
                 key={key}
-                style={{
-                  padding: "14px 24px",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  borderBottom:
-                    idx < arr.length - 1
-                      ? "1px solid var(--color-border)"
-                      : "none",
-                  transition: "all 0.12s ease",
-                }}
+                className="ops-data-row"
+                style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}
               >
-                <span style={settingLabelStyle}>{key}</span>
-                <span
-                  style={{
-                    fontFamily: "'JetBrains Mono', monospace",
-                    fontSize: 10.5,
-                    color: "var(--color-foreground)",
-                    background: "rgba(29,111,232,0.08)",
-                    border: "1px solid rgba(29,111,232,0.15)",
-                    borderRadius: 3,
-                    padding: "3px 10px",
-                  }}
-                >
-                  {value}
-                </span>
+                <span className="ops-mono-label">{key}</span>
+                <span className="ops-value-badge">{value}</span>
               </div>
             ))}
           </div>
-        </div>
+        </OpsCard>
       </motion.div>
     </div>
   );
