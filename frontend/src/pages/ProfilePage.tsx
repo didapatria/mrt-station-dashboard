@@ -260,21 +260,7 @@ export default function ProfilePage() {
                         type="button"
                         onClick={() => fileInputRef.current?.click()}
                         disabled={updateAvatarMutation.isPending}
-                        style={{
-                          position: "absolute",
-                          bottom: 0,
-                          right: 0,
-                          width: 22,
-                          height: 22,
-                          borderRadius: "50%",
-                          background: "#1d6fe8",
-                          border: "2px solid var(--color-background)",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          cursor: "pointer",
-                          padding: 0,
-                        }}
+                        className="ops-avatar-btn"
                       >
                         {updateAvatarMutation.isPending ? (
                           <Loader2
@@ -320,15 +306,7 @@ export default function ProfilePage() {
                         >
                           {user.role}
                         </Badge>
-                        <span
-                          style={{
-                            fontFamily: "'JetBrains Mono', monospace",
-                            fontSize: 11,
-                            color: "var(--color-muted-foreground)",
-                          }}
-                        >
-                          {user.email}
-                        </span>
+                        <span className="ops-mono-data">{user.email}</span>
                       </div>
                     </div>
                   </div>
@@ -347,18 +325,7 @@ export default function ProfilePage() {
                           borderBottom: "1px solid var(--color-border)",
                         }}
                       >
-                        <div
-                          style={{
-                            width: 36,
-                            height: 36,
-                            borderRadius: 8,
-                            background: "var(--color-muted)",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            flexShrink: 0,
-                          }}
-                        >
+                        <div className="ops-icon-box">
                           <Icon
                             size={15}
                             style={{ color: "var(--color-muted-foreground)" }}
@@ -366,17 +333,7 @@ export default function ProfilePage() {
                         </div>
                         <div>
                           <div className="ops-mono-label">{item.label}</div>
-                          <div
-                            style={{
-                              fontFamily: "'Sora', sans-serif",
-                              fontSize: 13,
-                              fontWeight: 500,
-                              color: "var(--color-foreground)",
-                              marginTop: 1,
-                            }}
-                          >
-                            {item.value}
-                          </div>
+                          <div className="ops-row-value">{item.value}</div>
                         </div>
                       </div>
                     );
@@ -457,16 +414,7 @@ export default function ProfilePage() {
                     </span>
                   ))}
                   {permissions.length === 0 && (
-                    <span
-                      style={{
-                        fontFamily: "'JetBrains Mono', monospace",
-                        fontSize: 10,
-                        letterSpacing: "0.08em",
-                        color: "var(--color-muted-foreground)",
-                      }}
-                    >
-                      Fetching permissions...
-                    </span>
+                    <span className="ops-mono-data">Fetching permissions...</span>
                   )}
                 </div>
               </div>
@@ -495,15 +443,7 @@ export default function ProfilePage() {
                   <div
                     style={{ display: "flex", flexDirection: "column", gap: 6 }}
                   >
-                    <Label
-                      htmlFor="currentPassword"
-                      style={{
-                        fontFamily: "'JetBrains Mono', monospace",
-                        fontSize: 10,
-                        textTransform: "uppercase",
-                        letterSpacing: "0.08em",
-                      }}
-                    >
+                    <Label htmlFor="currentPassword" className="ops-form-label">
                       {t("profile.currentPassword")}
                     </Label>
                     <div style={{ position: "relative" }}>
@@ -530,29 +470,13 @@ export default function ProfilePage() {
                       </Button>
                     </div>
                     {errors.currentPassword && (
-                      <p
-                        style={{
-                          fontFamily: "'JetBrains Mono', monospace",
-                          fontSize: 10,
-                          color: "var(--color-destructive)",
-                        }}
-                      >
-                        {errors.currentPassword.message}
-                      </p>
+                      <p className="ops-form-error">{errors.currentPassword.message}</p>
                     )}
                   </div>
                   <div
                     style={{ display: "flex", flexDirection: "column", gap: 6 }}
                   >
-                    <Label
-                      htmlFor="newPassword"
-                      style={{
-                        fontFamily: "'JetBrains Mono', monospace",
-                        fontSize: 10,
-                        textTransform: "uppercase",
-                        letterSpacing: "0.08em",
-                      }}
-                    >
+                    <Label htmlFor="newPassword" className="ops-form-label">
                       {t("profile.newPassword")}
                     </Label>
                     <div style={{ position: "relative" }}>
@@ -579,29 +503,13 @@ export default function ProfilePage() {
                       </Button>
                     </div>
                     {errors.newPassword && (
-                      <p
-                        style={{
-                          fontFamily: "'JetBrains Mono', monospace",
-                          fontSize: 10,
-                          color: "var(--color-destructive)",
-                        }}
-                      >
-                        {errors.newPassword.message}
-                      </p>
+                      <p className="ops-form-error">{errors.newPassword.message}</p>
                     )}
                   </div>
                   <div
                     style={{ display: "flex", flexDirection: "column", gap: 6 }}
                   >
-                    <Label
-                      htmlFor="confirmPassword"
-                      style={{
-                        fontFamily: "'JetBrains Mono', monospace",
-                        fontSize: 10,
-                        textTransform: "uppercase",
-                        letterSpacing: "0.08em",
-                      }}
-                    >
+                    <Label htmlFor="confirmPassword" className="ops-form-label">
                       {t("profile.confirmPassword")}
                     </Label>
                     <Input
@@ -610,25 +518,14 @@ export default function ProfilePage() {
                       {...register("confirmPassword")}
                     />
                     {errors.confirmPassword && (
-                      <p
-                        style={{
-                          fontFamily: "'JetBrains Mono', monospace",
-                          fontSize: 10,
-                          color: "var(--color-destructive)",
-                        }}
-                      >
-                        {errors.confirmPassword.message}
-                      </p>
+                      <p className="ops-form-error">{errors.confirmPassword.message}</p>
                     )}
                   </div>
                   <Button
                     type="submit"
                     disabled={isSubmitting}
                     size="sm"
-                    style={{
-                      fontFamily: "'JetBrains Mono', monospace",
-                      letterSpacing: "0.1em",
-                    }}
+                    className="ops-btn-mono"
                   >
                     {isSubmitting
                       ? t("profile.changing")

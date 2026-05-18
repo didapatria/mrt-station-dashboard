@@ -253,23 +253,10 @@ export default function DashboardLayout() {
         </div>
         {!collapsed && (
           <div style={{ display: "flex", flexDirection: "column", gap: "1px" }}>
-            <span
-              className="font-display text-base tracking-wide"
-              style={{ letterSpacing: "0.06em" }}
-            >
+            <span className="font-display text-base" style={{ letterSpacing: "0.06em" }}>
               MRT JAKARTA
             </span>
-            <span
-              style={{
-                fontFamily: "'JetBrains Mono', monospace",
-                fontSize: "8px",
-                fontWeight: 600,
-                letterSpacing: "0.16em",
-                textTransform: "uppercase",
-                color: "var(--color-muted-foreground)",
-                opacity: 0.5,
-              }}
-            >
+            <span className="sidebar-group-label" style={{ letterSpacing: "0.16em" }}>
               N-S LINE
             </span>
           </div>
@@ -285,35 +272,10 @@ export default function DashboardLayout() {
           <div key={group.labelKey} className="mb-3">
             {!collapsed && (
               <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "6px",
-                  padding: "0 8px",
-                  marginBottom: "6px",
-                }}
+                style={{ display: "flex", alignItems: "center", gap: "6px", padding: "0 8px", marginBottom: "6px" }}
               >
-                <span
-                  style={{
-                    fontFamily: "'JetBrains Mono', monospace",
-                    fontSize: "9px",
-                    fontWeight: 600,
-                    letterSpacing: "0.14em",
-                    textTransform: "uppercase",
-                    color: "var(--color-muted-foreground)",
-                    opacity: 0.5,
-                  }}
-                >
-                  {t(group.labelKey)}
-                </span>
-                <span
-                  style={{
-                    flex: 1,
-                    height: "1px",
-                    background: "var(--color-border)",
-                    opacity: 0.5,
-                  }}
-                />
+                <span className="sidebar-group-label">{t(group.labelKey)}</span>
+                <span className="sidebar-sep-line" />
               </div>
             )}
             <div className="space-y-0.5">
@@ -355,24 +317,12 @@ export default function DashboardLayout() {
                 flexShrink: 0,
               }}
             />
-            <span
-              style={{
-                fontFamily: "'JetBrains Mono', monospace",
-                fontSize: "8px",
-                fontWeight: 600,
-                letterSpacing: "0.12em",
-                textTransform: "uppercase",
-                color: "rgba(148,163,184,0.2)",
-              }}
-            >
-              SYS ONLINE
-            </span>
+            <span className="sidebar-sub-text">SYS ONLINE</span>
           </div>
           <span
             style={{
               fontFamily: "'JetBrains Mono', monospace",
               fontSize: "8px",
-              fontWeight: 500,
               letterSpacing: "0.1em",
               color: "rgba(29,111,232,0.3)",
             }}

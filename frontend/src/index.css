@@ -1078,6 +1078,238 @@ tbody tr:hover::after {
     }
 }
 
+/* ─── Auth page supplemental classes ─────────────────────────── */
+
+/* Mobile logo icon square */
+.auth-mobile-logo {
+    width: 30px;
+    height: 30px;
+    border-radius: 6px;
+    background: linear-gradient(135deg, #1d6fe8, #0ea5e9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 16px rgba(29, 111, 232, 0.4);
+    flex-shrink: 0;
+}
+
+/* Brand name next to logo */
+.auth-brand-name {
+    font-family: "Bebas Neue", sans-serif;
+    font-size: 20px;
+    letter-spacing: 0.1em;
+    color: var(--color-foreground);
+}
+
+/* Large auth page heading */
+.auth-heading {
+    font-family: "Bebas Neue", sans-serif;
+    font-size: 40px;
+    color: var(--color-foreground);
+    letter-spacing: 0.06em;
+    line-height: 1;
+    margin-bottom: 10px;
+}
+
+/* Subtitle below heading */
+.auth-subheading {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10px;
+    color: var(--color-muted-foreground);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+}
+
+/* OR divider line */
+.auth-divider-line {
+    flex: 1;
+    height: 1px;
+    background: var(--color-border);
+}
+
+/* OR divider label */
+.auth-divider-label {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 9px;
+    color: var(--color-muted-foreground);
+    letter-spacing: 0.16em;
+}
+
+/* Footer text beneath form */
+.auth-footer-text {
+    text-align: center;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+    color: var(--color-muted-foreground);
+    letter-spacing: 0.04em;
+}
+
+/* Inline link in auth pages */
+.auth-link {
+    color: #60a5fa;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(96, 165, 250, 0.3);
+    padding-bottom: 1px;
+}
+
+/* Absolute password-toggle button */
+.auth-eye-btn {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 40px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(148, 163, 184, 0.35);
+    padding: 0;
+}
+
+/* ─── Form utilities ──────────────────────────────────────────── */
+
+/* Form field label (JetBrains Mono, small, uppercase) */
+.ops-form-label {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-muted-foreground);
+}
+
+/* Form field error message */
+.ops-form-error {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10px;
+    color: var(--color-destructive);
+    margin-top: 4px;
+    letter-spacing: 0.04em;
+}
+
+/* ─── Profile page utilities ──────────────────────────────────── */
+
+/* Icon container box in profile row items */
+.ops-icon-box {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    background: var(--color-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+/* Value text in profile/settings rows */
+.ops-row-value {
+    font-family: "Sora", sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--color-foreground);
+    margin-top: 1px;
+}
+
+/* Avatar camera edit button */
+.ops-avatar-btn {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #1d6fe8;
+    border: 2px solid var(--color-background);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 0;
+}
+.ops-avatar-btn:disabled {
+    opacity: 0.7;
+}
+
+/* ─── Skeleton component classes ──────────────────────────────── */
+
+/* Skeleton card container (same as ops-card) */
+.skeleton-card {
+    background: var(--color-card);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+/* Skeleton card header */
+.skeleton-header {
+    padding: 18px 24px 14px;
+    border-bottom: 1px solid var(--color-border);
+}
+
+/* ─── Station table row utilities ────────────────────────────── */
+
+/* Station code plate (Bebas Neue badge) in table rows */
+.ops-station-code {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px 8px;
+    border-radius: 5px;
+    background: color-mix(in oklch, var(--color-primary) 10%, transparent);
+    border: 1px solid rgba(29, 111, 232, 0.2);
+    font-family: "Bebas Neue", sans-serif;
+    font-size: 13px;
+    color: var(--color-primary);
+    letter-spacing: 0.06em;
+    flex-shrink: 0;
+    min-width: 36px;
+    box-shadow: 0 0 8px rgba(29, 111, 232, 0.15);
+}
+
+/* Station name link with CSS hover */
+.ops-station-link {
+    font-family: "Sora", sans-serif;
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--color-foreground);
+    text-decoration: none;
+    transition: color 0.12s ease;
+}
+.ops-station-link:hover {
+    color: var(--color-primary);
+}
+
+/* Sidebar nav section label */
+.sidebar-group-label {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-muted-foreground);
+    opacity: 0.5;
+}
+
+/* Sidebar separator line */
+.sidebar-sep-line {
+    flex: 1;
+    height: 1px;
+    background: var(--color-border);
+    opacity: 0.5;
+}
+
+/* Sidebar subsystem text (version, status) */
+.sidebar-sub-text {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 8px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(148, 163, 184, 0.2);
+}
+
 /* ─── Reduced motion overrides ───────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
     *,

@@ -69,65 +69,18 @@ export default function LoginPage() {
       {/* Mobile header */}
       <div
         className="lg:hidden"
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: 10,
-          marginBottom: 40,
-        }}
+        style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 40 }}
       >
-        <div
-          style={{
-            width: 30,
-            height: 30,
-            borderRadius: 6,
-            background: "linear-gradient(135deg, #1d6fe8, #0ea5e9)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            boxShadow: "0 0 16px rgba(29,111,232,0.4)",
-            flexShrink: 0,
-          }}
-        >
+        <div className="auth-mobile-logo">
           <Train style={{ width: 14, height: 14, color: "white" }} />
         </div>
-        <span
-          style={{
-            fontFamily: "'Bebas Neue', sans-serif",
-            fontSize: 20,
-            letterSpacing: "0.1em",
-            color: "var(--color-foreground)",
-          }}
-        >
-          MRT JAKARTA
-        </span>
+        <span className="auth-brand-name">MRT JAKARTA</span>
       </div>
 
       {/* Heading */}
       <div style={{ marginBottom: 40 }}>
-        <div
-          style={{
-            fontFamily: "'Bebas Neue', sans-serif",
-            fontSize: 40,
-            color: "var(--color-foreground)",
-            letterSpacing: "0.06em",
-            lineHeight: 1,
-            marginBottom: 10,
-          }}
-        >
-          {t("auth.signIn")}
-        </div>
-        <p
-          style={{
-            fontFamily: "'JetBrains Mono', monospace",
-            fontSize: 10,
-            color: "var(--color-muted-foreground)",
-            letterSpacing: "0.14em",
-            textTransform: "uppercase",
-          }}
-        >
-          Enter credentials to access the system
-        </p>
+        <div className="auth-heading">{t("auth.signIn")}</div>
+        <p className="auth-subheading">Enter credentials to access the system</p>
       </div>
 
       {/* Error banners */}
@@ -186,21 +139,7 @@ export default function LoginPage() {
               type="button"
               tabIndex={-1}
               onClick={() => setShowPassword(!showPassword)}
-              style={{
-                position: "absolute",
-                right: 0,
-                top: 0,
-                bottom: 0,
-                width: 40,
-                background: "none",
-                border: "none",
-                cursor: "pointer",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                color: "rgba(148,163,184,0.35)",
-                padding: 0,
-              }}
+              className="auth-eye-btn"
             >
               {showPassword ? <EyeOff size={14} /> : <Eye size={14} />}
             </button>
@@ -221,35 +160,13 @@ export default function LoginPage() {
       </form>
 
       {/* Divider */}
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: 12,
-          margin: "28px 0",
-        }}
-      >
-        <div
-          style={{ flex: 1, height: 1, background: "var(--color-border)" }}
-        />
-        <span
-          style={{
-            fontFamily: "'JetBrains Mono', monospace",
-            fontSize: 9,
-            color: "var(--color-muted-foreground)",
-            letterSpacing: "0.16em",
-          }}
-        >
-          {t("auth.orContinueWith").toUpperCase()}
-        </span>
-        <div
-          style={{ flex: 1, height: 1, background: "var(--color-border)" }}
-        />
+      <div style={{ display: "flex", alignItems: "center", gap: 12, margin: "28px 0" }}>
+        <div className="auth-divider-line" />
+        <span className="auth-divider-label">{t("auth.orContinueWith").toUpperCase()}</span>
+        <div className="auth-divider-line" />
       </div>
 
-      <div
-        style={{ display: "flex", justifyContent: "center", marginBottom: 24 }}
-      >
+      <div style={{ display: "flex", justifyContent: "center", marginBottom: 24 }}>
         <GoogleLogin
           onSuccess={handleGoogleSuccess}
           onError={() => {}}
@@ -259,25 +176,9 @@ export default function LoginPage() {
         />
       </div>
 
-      <p
-        style={{
-          textAlign: "center",
-          fontFamily: "'JetBrains Mono', monospace",
-          fontSize: 11,
-          color: "var(--color-muted-foreground)",
-          letterSpacing: "0.04em",
-        }}
-      >
+      <p className="auth-footer-text">
         {t("auth.noAccount")}{" "}
-        <Link
-          to="/register"
-          style={{
-            color: "#60a5fa",
-            textDecoration: "none",
-            borderBottom: "1px solid rgba(96,165,250,0.3)",
-            paddingBottom: 1,
-          }}
-        >
+        <Link to="/register" className="auth-link">
           {t("auth.signUp")}
         </Link>
       </p>

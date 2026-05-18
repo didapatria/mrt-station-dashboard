@@ -428,8 +428,7 @@ export default function StationsPage() {
                     sortKey="order"
                     sortConfig={sortConfig}
                     onSort={requestSort}
-                    className="w-12"
-                    className="ops-table-head"
+                    className="ops-table-head w-12"
                   />
                 )}
                 <SortableTableHead<Station>
@@ -437,13 +436,7 @@ export default function StationsPage() {
                   sortKey="name"
                   sortConfig={sortConfig}
                   onSort={requestSort}
-                  style={{
-                    fontFamily: "'JetBrains Mono', monospace",
-                    fontSize: 9.5,
-                    letterSpacing: "0.16em",
-                    color: "var(--color-muted-foreground)",
-                    textTransform: "uppercase",
-                  }}
+                  className="ops-table-head"
                 />
                 {columns.isVisible("location") && (
                   <SortableTableHead<Station>
@@ -451,15 +444,11 @@ export default function StationsPage() {
                     sortKey="location"
                     sortConfig={sortConfig}
                     onSort={requestSort}
-                    className="hidden md:table-cell"
-                    className="ops-table-head"
+                    className="ops-table-head hidden md:table-cell"
                   />
                 )}
                 {columns.isVisible("coordinates") && (
-                  <TableHead
-                    className="hidden lg:table-cell"
-                    className="ops-table-head"
-                  >
+                  <TableHead className="ops-table-head hidden lg:table-cell">
                     Coords
                   </TableHead>
                 )}
@@ -598,59 +587,17 @@ export default function StationsPage() {
                             }}
                           >
                             {/* Code plate */}
-                            <div
-                              style={{
-                                display: "inline-flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                padding: "2px 8px",
-                                borderRadius: 5,
-                                background: isDark
-                                  ? "rgba(29,111,232,0.12)"
-                                  : "rgba(29,111,232,0.08)",
-                                border: "1px solid rgba(29,111,232,0.2)",
-                                fontFamily: "'Bebas Neue', sans-serif",
-                                fontSize: 13,
-                                color: "var(--color-primary)",
-                                letterSpacing: "0.06em",
-                                flexShrink: 0,
-                                minWidth: 36,
-                                boxShadow: "0 0 8px rgba(29,111,232,0.2)",
-                              }}
-                            >
-                              {station.code}
-                            </div>
+                            <div className="ops-station-code">{station.code}</div>
                             <div>
                               <Link
                                 to={`/stations/${station.id}`}
-                                style={{
-                                  fontFamily: "'Sora', sans-serif",
-                                  fontSize: 13.5,
-                                  fontWeight: 500,
-                                  color: "var(--color-foreground)",
-                                  textDecoration: "none",
-                                  transition: "color 0.12s ease",
-                                }}
-                                onMouseEnter={(e) =>
-                                  ((e.target as HTMLElement).style.color =
-                                    "var(--color-primary)")
-                                }
-                                onMouseLeave={(e) =>
-                                  ((e.target as HTMLElement).style.color =
-                                    "var(--color-foreground)")
-                                }
+                                className="ops-station-link"
                               >
                                 {station.name}
                               </Link>
                               <p
-                                className="md:hidden"
-                                style={{
-                                  fontFamily: "'JetBrains Mono', monospace",
-                                  fontSize: 10,
-                                  color: "var(--color-muted-foreground)",
-                                  marginTop: 2,
-                                  letterSpacing: "0.04em",
-                                }}
+                                className="ops-mono-data md:hidden"
+                                style={{ marginTop: 2 }}
                               >
                                 {station.location}
                               </p>
@@ -660,15 +607,7 @@ export default function StationsPage() {
 
                         {/* Location */}
                         {columns.isVisible("location") && (
-                          <TableCell
-                            className="hidden md:table-cell"
-                            style={{
-                              fontFamily: "'JetBrains Mono', monospace",
-                              fontSize: 11,
-                              color: "var(--color-muted-foreground)",
-                              letterSpacing: "0.03em",
-                            }}
-                          >
+                          <TableCell className="ops-mono-data hidden md:table-cell">
                             {station.location}
                           </TableCell>
                         )}

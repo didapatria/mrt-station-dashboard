@@ -64,16 +64,7 @@ export function SkeletonAvatar({ size = 36 }: { size?: number }) {
 /** Dashboard stat card (number + label + icon) */
 export function SkeletonStatCard() {
   return (
-    <div
-      style={{
-        background: "var(--color-card)",
-        border: "1px solid var(--color-border)",
-        borderRadius: 12,
-        overflow: "hidden",
-        padding: "20px 24px",
-      }}
-    >
-      {/* Accent line */}
+    <div className="skeleton-card" style={{ padding: "20px 24px" }}>
       <SkeletonBase style={{ height: 2, marginBottom: 20, borderRadius: 0 }} />
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
         <div style={{ flex: 1 }}>
@@ -112,25 +103,11 @@ export function SkeletonRow({ columns = 5 }: { columns?: number }) {
 /** Full card with header + content */
 export function SkeletonCard({ rows = 3 }: { rows?: number }) {
   return (
-    <div
-      style={{
-        background: "var(--color-card)",
-        border: "1px solid var(--color-border)",
-        borderRadius: 12,
-        overflow: "hidden",
-      }}
-    >
-      {/* Accent line */}
+    <div className="skeleton-card">
       <SkeletonBase style={{ height: 2, borderRadius: 0 }} />
-      {/* Header */}
       <div
-        style={{
-          padding: "18px 24px 14px",
-          borderBottom: "1px solid var(--color-border)",
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
+        className="skeleton-header"
+        style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}
       >
         <div>
           <SkeletonBase style={{ height: 16, width: 120, marginBottom: 6 }} />
@@ -138,7 +115,6 @@ export function SkeletonCard({ rows = 3 }: { rows?: number }) {
         </div>
         <SkeletonBase style={{ height: 28, width: 72, borderRadius: 6 }} />
       </div>
-      {/* Rows */}
       <div style={{ padding: "8px 0" }}>
         {Array.from({ length: rows }).map((_, i) => (
           <div
@@ -167,14 +143,7 @@ export function SkeletonCard({ rows = 3 }: { rows?: number }) {
 /** Table with N skeleton rows */
 export function SkeletonTable({ rows = 6, columns = 5 }: { rows?: number; columns?: number }) {
   return (
-    <div
-      style={{
-        background: "var(--color-card)",
-        border: "1px solid var(--color-border)",
-        borderRadius: 12,
-        overflow: "hidden",
-      }}
-    >
+    <div className="skeleton-card">
       <table style={{ width: "100%", borderCollapse: "collapse" }}>
         <thead>
           <tr style={{ borderBottom: "1px solid var(--color-border)" }}>
