@@ -518,3 +518,38 @@ tbody tr:hover::after {
         color: black !important;
     }
 }
+
+/* ─── Skeleton shimmer ───────────────────────────────────────── */
+@keyframes skeleton-shimmer {
+    0% {
+        background-position: -400px 0;
+    }
+    100% {
+        background-position: 400px 0;
+    }
+}
+.skeleton-shimmer {
+    background: linear-gradient(
+        90deg,
+        var(--color-muted) 25%,
+        color-mix(in oklch, var(--color-muted) 80%, var(--color-background)) 50%,
+        var(--color-muted) 75%
+    );
+    background-size: 800px 100%;
+    animation: skeleton-shimmer 1.4s ease-in-out infinite;
+}
+
+/* ─── Reduced motion overrides ───────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    ::before,
+    ::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+    .skeleton-shimmer {
+        animation: none;
+        background: var(--color-muted);
+    }
+}
