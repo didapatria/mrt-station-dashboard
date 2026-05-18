@@ -296,7 +296,11 @@ export default function SchedulesPage() {
         subtitle={`N–S Line · Schedule Registry · ${totalCount} entries`}
         right={
           <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-            <Button variant="outline" onClick={handleExport} className="ops-btn-mono">
+            <Button
+              variant="outline"
+              onClick={handleExport}
+              className="ops-btn-mono"
+            >
               <Download className="h-4 w-4 mr-2" />
               CSV
             </Button>
@@ -323,10 +327,7 @@ export default function SchedulesPage() {
         }}
       >
         <div style={{ position: "relative", flex: 1, minWidth: 200 }}>
-          <Search
-            className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4"
-            className="text-muted-foreground"
-          />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             placeholder={t("common.search")}
             value={search}
@@ -361,15 +362,12 @@ export default function SchedulesPage() {
       {/* Schedules View */}
       <Tabs defaultValue="table" className="mb-4">
         <TabsList>
-          <TabsTrigger
-            value="table"
-            className="ops-btn-mono tracking-[0.1em]"
-          >
+          <TabsTrigger value="table" className="ops-btn-mono tracking-widest">
             TABLE
           </TabsTrigger>
           <TabsTrigger
             value="calendar"
-            className="ops-btn-mono tracking-[0.1em]"
+            className="ops-btn-mono tracking-widest"
           >
             TIMELINE
           </TabsTrigger>
@@ -396,7 +394,9 @@ export default function SchedulesPage() {
               <div className="ops-accent-line" />
               <div className="ops-card-header">
                 <p className="ops-card-title">SCHEDULE REGISTRY</p>
-                <p className="ops-card-subtitle">{totalCount} RECORDS · NORTH–SOUTH LINE</p>
+                <p className="ops-card-subtitle">
+                  {totalCount} RECORDS · NORTH–SOUTH LINE
+                </p>
               </div>
               <div className="overflow-x-auto">
                 <Table>
@@ -409,9 +409,7 @@ export default function SchedulesPage() {
                         onSort={requestSort}
                         className="ops-table-head"
                       />
-                      <TableHead
-                        className="ops-table-head"
-                      >
+                      <TableHead className="ops-table-head">
                         {t("schedules.route")}
                       </TableHead>
                       <SortableTableHead<Schedule>
@@ -474,7 +472,13 @@ export default function SchedulesPage() {
                               {schedule.trainNumber}
                             </TableCell>
                             <TableCell>
-                              <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                              <div
+                                style={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                  gap: 6,
+                                }}
+                              >
                                 <span className="ops-station-ref">
                                   {schedule.departureStation?.code}
                                 </span>
@@ -485,7 +489,12 @@ export default function SchedulesPage() {
                               </div>
                               <p className="ops-route-sub">
                                 {schedule.departureStation?.name}
-                                <span className="ops-route-arrow" style={{ margin: "0 4px" }}>→</span>
+                                <span
+                                  className="ops-route-arrow"
+                                  style={{ margin: "0 4px" }}
+                                >
+                                  →
+                                </span>
                                 {schedule.arrivalStation?.name}
                               </p>
                             </TableCell>
@@ -606,10 +615,7 @@ export default function SchedulesPage() {
           </DialogHeader>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div className="space-y-2">
-              <Label
-                htmlFor="trainNumber"
-                className="ops-form-label"
-              >
+              <Label htmlFor="trainNumber" className="ops-form-label">
                 {t("schedules.trainNumber")}
               </Label>
               <Input
@@ -627,9 +633,7 @@ export default function SchedulesPage() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label
-                  className="ops-form-label"
-                >
+                <Label className="ops-form-label">
                   {t("schedules.departureStation")}
                 </Label>
                 <Select
@@ -654,9 +658,7 @@ export default function SchedulesPage() {
                 )}
               </div>
               <div className="space-y-2">
-                <Label
-                  className="ops-form-label"
-                >
+                <Label className="ops-form-label">
                   {t("schedules.arrivalStation")}
                 </Label>
                 <Select
@@ -684,18 +686,14 @@ export default function SchedulesPage() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label
-                  htmlFor="departureTime"
-                  className="ops-form-label"
-                >
+                <Label htmlFor="departureTime" className="ops-form-label">
                   {t("schedules.departureTime")}
                 </Label>
                 <div className="relative">
                   <Input
                     id="departureTime"
                     type="time"
-                    className="w-full pr-10 [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:inset-0 [&::-webkit-calendar-picker-indicator]:w-full [&::-webkit-calendar-picker-indicator]:cursor-pointer"
-                    className="ops-input-mono"
+                    className="w-full pr-10 [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:inset-0 [&::-webkit-calendar-picker-indicator]:w-full [&::-webkit-calendar-picker-indicator]:cursor-pointer ops-input-mono"
                     {...register("departureTime")}
                   />
                   <Clock className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -707,18 +705,14 @@ export default function SchedulesPage() {
                 )}
               </div>
               <div className="space-y-2">
-                <Label
-                  htmlFor="arrivalTime"
-                  className="ops-form-label"
-                >
+                <Label htmlFor="arrivalTime" className="ops-form-label">
                   {t("schedules.arrivalTime")}
                 </Label>
                 <div className="relative">
                   <Input
                     id="arrivalTime"
                     type="time"
-                    className="w-full pr-10 [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:inset-0 [&::-webkit-calendar-picker-indicator]:w-full [&::-webkit-calendar-picker-indicator]:cursor-pointer"
-                    className="ops-input-mono"
+                    className="w-full pr-10 [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:inset-0 [&::-webkit-calendar-picker-indicator]:w-full [&::-webkit-calendar-picker-indicator]:cursor-pointer ops-input-mono"
                     {...register("arrivalTime")}
                   />
                   <Clock className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -733,9 +727,7 @@ export default function SchedulesPage() {
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label
-                  className="ops-form-label"
-                >
+                <Label className="ops-form-label">
                   {t("schedules.dayType")}
                 </Label>
                 <Select
@@ -758,11 +750,7 @@ export default function SchedulesPage() {
                 </Select>
               </div>
               <div className="space-y-2">
-                <Label
-                  className="ops-form-label"
-                >
-                  {t("stations.status")}
-                </Label>
+                <Label className="ops-form-label">{t("stations.status")}</Label>
                 <Select
                   defaultValue={editingSchedule?.status || "ACTIVE"}
                   onValueChange={(val) =>

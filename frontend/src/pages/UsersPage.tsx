@@ -50,7 +50,10 @@ import { useAuthStore } from "@/store/auth.store";
 import { usePageMeta } from "@/hooks/use-page-meta";
 import type { User } from "@/types";
 
-const PROTECTED_EMAILS = ["admin@mrtjakarta.co.id", "operator@mrtjakarta.co.id"];
+const PROTECTED_EMAILS = [
+  "admin@mrtjakarta.co.id",
+  "operator@mrtjakarta.co.id",
+];
 
 export default function UsersPage() {
   usePageMeta({ title: "Users", path: "/users" });
@@ -228,7 +231,7 @@ export default function UsersPage() {
                   onSort={requestSort}
                   className="ops-table-head hidden md:table-cell"
                 />
-                <TableHead className="ops-table-head text-right w-[100px]">
+                <TableHead className="ops-table-head text-right w-25">
                   {t("common.actions")}
                 </TableHead>
               </TableRow>
@@ -260,122 +263,148 @@ export default function UsersPage() {
                 : sortedUsers.map((user) => {
                     const isProtected = PROTECTED_EMAILS.includes(user.email);
                     return (
-                    <TableRow
-                      key={user.id}
-                      className="hover:bg-muted/30"
-                      style={{
-                        transition: "background 0.12s ease",
-                        borderLeft:
-                          user.role === "ADMIN"
-                            ? "2px solid rgba(59,130,246,0.3)"
-                            : undefined,
-                      }}
-                    >
-                      <TableCell>
-                        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                          <Avatar className="h-9 w-9">
-                            <AvatarImage
-                              src={
-                                user.avatarUrl ||
-                                `https://api.dicebear.com/9.x/initials/svg?seed=${encodeURIComponent(user.name)}`
-                              }
-                              alt={user.name}
-                            />
-                            <AvatarFallback
-                              style={{
-                                background:
-                                  user.role === "ADMIN"
-                                    ? "rgba(16,185,129,0.15)"
-                                    : "rgba(59,130,246,0.15)",
-                                color:
-                                  user.role === "ADMIN" ? "#10b981" : "#60a5fa",
-                                fontFamily: "'JetBrains Mono', monospace",
-                                fontSize: 13,
-                                fontWeight: 700,
-                              }}
-                            >
-                              {user.name.charAt(0).toUpperCase()}
-                            </AvatarFallback>
-                          </Avatar>
-                          <div>
-                            <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                              <p className="ops-user-name">{user.name}</p>
-                              {isProtected && (
-                                <span className="ops-badge-default">Default</span>
-                              )}
+                      <TableRow
+                        key={user.id}
+                        className="hover:bg-muted/30"
+                        style={{
+                          transition: "background 0.12s ease",
+                          borderLeft:
+                            user.role === "ADMIN"
+                              ? "2px solid rgba(59,130,246,0.3)"
+                              : undefined,
+                        }}
+                      >
+                        <TableCell>
+                          <div
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: 10,
+                            }}
+                          >
+                            <Avatar className="h-9 w-9">
+                              <AvatarImage
+                                src={
+                                  user.avatarUrl ||
+                                  `https://api.dicebear.com/9.x/initials/svg?seed=${encodeURIComponent(user.name)}`
+                                }
+                                alt={user.name}
+                              />
+                              <AvatarFallback
+                                style={{
+                                  background:
+                                    user.role === "ADMIN"
+                                      ? "rgba(16,185,129,0.15)"
+                                      : "rgba(59,130,246,0.15)",
+                                  color:
+                                    user.role === "ADMIN"
+                                      ? "#10b981"
+                                      : "#60a5fa",
+                                  fontFamily: "'JetBrains Mono', monospace",
+                                  fontSize: 13,
+                                  fontWeight: 700,
+                                }}
+                              >
+                                {user.name.charAt(0).toUpperCase()}
+                              </AvatarFallback>
+                            </Avatar>
+                            <div>
+                              <div
+                                style={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                  gap: 6,
+                                }}
+                              >
+                                <p className="ops-user-name">{user.name}</p>
+                                {isProtected && (
+                                  <span className="ops-badge-default">
+                                    Default
+                                  </span>
+                                )}
+                              </div>
+                              <p
+                                className="ops-mono-data sm:hidden"
+                                style={{ margin: 0 }}
+                              >
+                                {user.email}
+                              </p>
                             </div>
-                            <p className="ops-mono-data sm:hidden" style={{ margin: 0 }}>
-                              {user.email}
-                            </p>
                           </div>
-                        </div>
-                      </TableCell>
-                      <TableCell className="ops-mono-data hidden sm:table-cell">
-                        {user.email}
-                      </TableCell>
-                      <TableCell>
-                        <Select
-                          value={user.role}
-                          onValueChange={(val) =>
-                            handleRoleChange(
-                              user.id,
-                              val as "ADMIN" | "OPERATOR",
-                            )
-                          }
-                          disabled={user.id === currentUser?.id || isProtected}
-                        >
-                          <SelectTrigger className="w-32.5 h-8">
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="ADMIN">
-                              <span className="flex items-center gap-1.5">
-                                <ShieldCheck className="h-3.5 w-3.5" />
-                                Admin
-                              </span>
-                            </SelectItem>
-                            <SelectItem value="OPERATOR">
-                              <span className="flex items-center gap-1.5">
-                                <Shield className="h-3.5 w-3.5" />
-                                Operator
-                              </span>
-                            </SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </TableCell>
-                      <TableCell className="ops-mono-data hidden md:table-cell">
-                        {new Date(user.createdAt).toLocaleDateString("id-ID", {
-                          year: "numeric",
-                          month: "short",
-                          day: "numeric",
-                        })}
-                      </TableCell>
-                      <TableCell className="text-right">
-                        {user.id === currentUser?.id ? (
-                          <span className="ops-badge-you">You</span>
-                        ) : isProtected ? (
-                          <span className="ops-badge-protected">Protected</span>
-                        ) : (
-                          <TooltipProvider>
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <Button
-                                  variant="ghost"
-                                  size="icon"
-                                  className="h-8 w-8 text-destructive hover:text-destructive"
-                                  onClick={() => setDeleteConfirm(user.id)}
-                                >
-                                  <Trash2 className="h-3.5 w-3.5" />
-                                </Button>
-                              </TooltipTrigger>
-                              <TooltipContent>
-                                {t("common.delete")}
-                              </TooltipContent>
-                            </Tooltip>
-                          </TooltipProvider>
-                        )}
-                      </TableCell>
-                    </TableRow>
+                        </TableCell>
+                        <TableCell className="ops-mono-data hidden sm:table-cell">
+                          {user.email}
+                        </TableCell>
+                        <TableCell>
+                          <Select
+                            value={user.role}
+                            onValueChange={(val) =>
+                              handleRoleChange(
+                                user.id,
+                                val as "ADMIN" | "OPERATOR",
+                              )
+                            }
+                            disabled={
+                              user.id === currentUser?.id || isProtected
+                            }
+                          >
+                            <SelectTrigger className="w-32.5 h-8">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="ADMIN">
+                                <span className="flex items-center gap-1.5">
+                                  <ShieldCheck className="h-3.5 w-3.5" />
+                                  Admin
+                                </span>
+                              </SelectItem>
+                              <SelectItem value="OPERATOR">
+                                <span className="flex items-center gap-1.5">
+                                  <Shield className="h-3.5 w-3.5" />
+                                  Operator
+                                </span>
+                              </SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </TableCell>
+                        <TableCell className="ops-mono-data hidden md:table-cell">
+                          {new Date(user.createdAt).toLocaleDateString(
+                            "id-ID",
+                            {
+                              year: "numeric",
+                              month: "short",
+                              day: "numeric",
+                            },
+                          )}
+                        </TableCell>
+                        <TableCell className="text-right">
+                          {user.id === currentUser?.id ? (
+                            <span className="ops-badge-you">You</span>
+                          ) : isProtected ? (
+                            <span className="ops-badge-protected">
+                              Protected
+                            </span>
+                          ) : (
+                            <TooltipProvider>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    className="h-8 w-8 text-destructive hover:text-destructive"
+                                    onClick={() => setDeleteConfirm(user.id)}
+                                  >
+                                    <Trash2 className="h-3.5 w-3.5" />
+                                  </Button>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                  {t("common.delete")}
+                                </TooltipContent>
+                              </Tooltip>
+                            </TooltipProvider>
+                          )}
+                        </TableCell>
+                      </TableRow>
                     );
                   })}
             </TableBody>
