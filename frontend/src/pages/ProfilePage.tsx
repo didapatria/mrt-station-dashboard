@@ -316,7 +316,10 @@ export default function ProfilePage() {
                   >
                     <Avatar style={{ width: 64, height: 64 }}>
                       <AvatarImage
-                        src={user.avatarUrl || `https://api.dicebear.com/9.x/initials/svg?seed=${encodeURIComponent(user.name)}`}
+                        src={
+                          user.avatarUrl ||
+                          `https://api.dicebear.com/9.x/initials/svg?seed=${encodeURIComponent(user.name)}`
+                        }
                         alt={user.name}
                       />
                       <AvatarFallback className="bg-primary text-primary-foreground text-2xl font-bold">
@@ -485,15 +488,42 @@ export default function ProfilePage() {
                     </span>
                   ))}
                   {permissions.length === 0 && (
-                    <p
+                    <div
                       style={{
-                        fontFamily: "'Sora', sans-serif",
-                        fontSize: 13,
-                        color: "var(--color-muted-foreground)",
+                        width: "100%",
+                        padding: "12px 16px",
+                        background: "rgba(59,130,246,0.04)",
+                        border: "1px dashed rgba(59,130,246,0.2)",
+                        borderRadius: 8,
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: 4,
                       }}
                     >
-                      No permissions assigned
-                    </p>
+                      <span
+                        style={{
+                          fontFamily: "'JetBrains Mono', monospace",
+                          fontSize: 10,
+                          letterSpacing: "0.1em",
+                          textTransform: "uppercase",
+                          color: "rgba(59,130,246,0.6)",
+                        }}
+                      >
+                        No permissions assigned
+                      </span>
+                      <span
+                        style={{
+                          fontFamily: "'Sora', sans-serif",
+                          fontSize: 12,
+                          color: "var(--color-muted-foreground)",
+                          lineHeight: 1.5,
+                        }}
+                      >
+                        Your account has no direct permissions yet. Permissions
+                        are inherited from your role. Contact an admin to request
+                        additional access.
+                      </span>
+                    </div>
                   )}
                 </div>
               </div>
