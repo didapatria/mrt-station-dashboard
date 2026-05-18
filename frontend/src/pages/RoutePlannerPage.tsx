@@ -68,7 +68,7 @@ export default function RoutePlannerPage() {
             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
               <Train
                 size={14}
-                style={{ color: "var(--color-muted-foreground)" }}
+                className="text-muted-foreground"
               />
               <p className="ops-card-title" style={{ margin: 0 }}>
                 PLAN YOUR ROUTE
@@ -299,7 +299,7 @@ export default function RoutePlannerPage() {
               <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                 <Clock
                   size={14}
-                  style={{ color: "var(--color-muted-foreground)" }}
+                  className="text-muted-foreground"
                 />
                 <p
                   className="ops-card-title"

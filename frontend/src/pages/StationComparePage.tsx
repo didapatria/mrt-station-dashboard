@@ -88,7 +88,7 @@ function StationCard({
   }[] = [
     {
       icon: (
-        <Hash size={13} style={{ color: "var(--color-muted-foreground)" }} />
+        <Hash size={13} className="text-muted-foreground" />
       ),
       label: "ORDER",
       value: (
@@ -129,7 +129,7 @@ function StationCard({
       icon: (
         <Calendar
           size={13}
-          style={{ color: "var(--color-muted-foreground)" }}
+          className="text-muted-foreground"
         />
       ),
       label: "SCHEDULES",
@@ -149,7 +149,7 @@ function StationCard({
     },
     {
       icon: (
-        <MapPin size={13} style={{ color: "var(--color-muted-foreground)" }} />
+        <MapPin size={13} className="text-muted-foreground" />
       ),
       label: "LOCATION",
       value: (
@@ -162,7 +162,7 @@ function StationCard({
       icon: (
         <Navigation
           size={13}
-          style={{ color: "var(--color-muted-foreground)" }}
+          className="text-muted-foreground"
         />
       ),
       label: "COORDINATES",

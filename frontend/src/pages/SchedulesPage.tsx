@@ -325,7 +325,7 @@ export default function SchedulesPage() {
         <div style={{ position: "relative", flex: 1, minWidth: 200 }}>
           <Search
             className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4"
-            style={{ color: "var(--color-muted-foreground)" }}
+            className="text-muted-foreground"
           />
           <Input
             placeholder={t("common.search")}

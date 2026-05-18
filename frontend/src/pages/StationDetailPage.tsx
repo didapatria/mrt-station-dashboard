@@ -219,7 +219,7 @@ export default function StationDetailPage() {
               <div className="ops-accent-line" />
               <div className="ops-card-header">
                 <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                  <Clock size={14} style={{ color: "var(--color-muted-foreground)" }} />
+                  <Clock size={14} className="text-muted-foreground" />
                   <p className="ops-card-title" style={{ fontSize: 16 }}>
                     {t("schedules.title")}
                   </p>

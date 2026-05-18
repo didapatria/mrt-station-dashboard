@@ -243,7 +243,7 @@ export default function ProfilePage() {
                     style={{ display: "flex", alignItems: "center", gap: 16 }}
                   >
                     <div style={{ position: "relative", flexShrink: 0 }}>
-                      <Avatar style={{ width: 64, height: 64 }}>
+                      <Avatar className="h-16 w-16">
                         <AvatarImage
                           src={
                             avatarPreview ||
@@ -275,7 +275,7 @@ export default function ProfilePage() {
                         ref={fileInputRef}
                         type="file"
                         accept="image/*"
-                        style={{ display: "none" }}
+                        className="hidden"
                         onChange={handleAvatarChange}
                       />
                     </div>
@@ -328,7 +328,7 @@ export default function ProfilePage() {
                         <div className="ops-icon-box">
                           <Icon
                             size={15}
-                            style={{ color: "var(--color-muted-foreground)" }}
+                            className="text-muted-foreground"
                           />
                         </div>
                         <div>
@@ -376,14 +376,7 @@ export default function ProfilePage() {
                           size={14}
                           style={{ color: "var(--color-muted-foreground)" }}
                         />
-                        <span
-                          style={{
-                            fontFamily: "'Sora', sans-serif",
-                            fontSize: 13,
-                          }}
-                        >
-                          {item.label}
-                        </span>
+                        <span className="ops-station-ref">{item.label}</span>
                       </div>
                       <Badge variant="outline">{item.value}</Badge>
                     </div>
