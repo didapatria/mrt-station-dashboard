@@ -31,6 +31,7 @@ import { useThemeStore } from "@/store/theme.store";
 import { usePermission } from "@/hooks/use-permission";
 import { authService } from "@/services/auth.service";
 import { useUpdateAvatar } from "@/hooks/use-auth";
+import { usePageMeta } from "@/hooks/use-page-meta";
 
 const passwordSchema = z
   .object({
@@ -113,6 +114,7 @@ const accentLine = (
 );
 
 export default function ProfilePage() {
+  usePageMeta({ title: "Profile", path: "/profile" });
   const { t, i18n } = useTranslation();
   const { user } = useAuthStore();
   const { theme } = useThemeStore();

@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/table";
 import { useStations } from "@/hooks/use-stations";
 import { useSchedules } from "@/hooks/use-schedules";
+import { usePageMeta } from "@/hooks/use-page-meta";
 
 const statusLED = (status: string) => {
   if (status === "ACTIVE")
@@ -50,6 +51,7 @@ const thStyle: React.CSSProperties = {
 };
 
 export default function RoutePlannerPage() {
+  usePageMeta({ title: "Route Planner", path: "/route-planner" });
   const { t } = useTranslation();
   const { data: stationsData } = useStations({ limit: 100 });
   const stations = useMemo(() => stationsData?.stations ?? [], [stationsData]);

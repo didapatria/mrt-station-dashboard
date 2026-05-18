@@ -9,8 +9,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useThemeStore } from "@/store/theme.store";
+import { usePageMeta } from "@/hooks/use-page-meta";
 
 export default function SettingsPage() {
+  usePageMeta({ title: "Settings", path: "/settings" });
   const { i18n } = useTranslation();
   const { theme, toggleTheme } = useThemeStore();
 

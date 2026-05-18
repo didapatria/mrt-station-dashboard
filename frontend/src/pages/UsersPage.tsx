@@ -46,9 +46,11 @@ import { useUsers, useUpdateUserRole, useDeleteUser } from "@/hooks/use-users";
 import { useSortable } from "@/hooks/use-sortable";
 import { useDebounce } from "@/hooks/use-debounce";
 import { useAuthStore } from "@/store/auth.store";
+import { usePageMeta } from "@/hooks/use-page-meta";
 import type { User } from "@/types";
 
 export default function UsersPage() {
+  usePageMeta({ title: "Users", path: "/users" });
   const { t } = useTranslation();
   const currentUser = useAuthStore((s) => s.user);
   const [searchParams, setSearchParams] = useSearchParams();

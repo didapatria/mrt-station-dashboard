@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { GitCommit } from "lucide-react";
+import { usePageMeta } from "@/hooks/use-page-meta";
 
 const changelog = [
   {
@@ -317,6 +318,7 @@ function getVersionAccentColor(version: string): string {
 }
 
 export default function ChangelogPage() {
+  usePageMeta({ title: "Changelog", path: "/changelog" });
   return (
     <div>
       {/* Page header */}

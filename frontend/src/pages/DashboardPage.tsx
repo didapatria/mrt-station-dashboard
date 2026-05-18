@@ -43,6 +43,7 @@ import { dashboardService } from "@/services/dashboard.service";
 import { useAuthStore } from "@/store/auth.store";
 import { useThemeStore } from "@/store/theme.store";
 import { exportDashboardPDF } from "@/lib/export-pdf";
+import { usePageMeta } from "@/hooks/use-page-meta";
 
 const stagger = {
   hidden: { opacity: 0 },
@@ -63,6 +64,7 @@ const ACCENT_COLORS = [
 ];
 
 export default function DashboardPage() {
+  usePageMeta({ title: "Dashboard", path: "/dashboard" });
   const { t } = useTranslation();
   const user = useAuthStore((s) => s.user);
   const { theme } = useThemeStore();

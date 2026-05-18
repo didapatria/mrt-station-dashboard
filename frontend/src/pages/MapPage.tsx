@@ -6,6 +6,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Input } from "@/components/ui/input";
 import { StationMap } from "@/components/StationMap";
 import { useStations } from "@/hooks/use-stations";
+import { usePageMeta } from "@/hooks/use-page-meta";
 import type { Station } from "@/types";
 
 const statusLED = (status: string) => {
@@ -24,6 +25,7 @@ const cardStyle: React.CSSProperties = {
 };
 
 export default function MapPage() {
+  usePageMeta({ title: "Station Map", path: "/map" });
   const { t } = useTranslation();
   const { data, isLoading } = useStations({ limit: 100 });
   const stations = useMemo(() => data?.stations ?? [], [data]);

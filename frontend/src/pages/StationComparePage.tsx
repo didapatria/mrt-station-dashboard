@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/select";
 import { useStations } from "@/hooks/use-stations";
 import { useSchedules } from "@/hooks/use-schedules";
+import { usePageMeta } from "@/hooks/use-page-meta";
 import type { Station } from "@/types";
 
 const statusLED = (status: string) => {
@@ -301,6 +302,7 @@ function StationCard({
 }
 
 export default function StationComparePage() {
+  usePageMeta({ title: "Compare Stations", path: "/compare" });
   useTranslation();
   const { data: stationsData } = useStations({ limit: 100 });
   const stations = stationsData?.stations ?? [];

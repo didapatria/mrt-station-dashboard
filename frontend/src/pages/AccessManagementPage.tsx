@@ -13,6 +13,7 @@ import {
 import { PERMISSION_GROUPS, PERMISSION_LABELS } from "@/lib/permissions";
 import { useAllPermissions } from "@/hooks/use-permissions";
 import { useRole } from "@/hooks/use-role";
+import { usePageMeta } from "@/hooks/use-page-meta";
 
 const ROLES = ["ADMIN", "OPERATOR"];
 
@@ -42,6 +43,7 @@ const ROLE_CONFIG: Record<
 };
 
 export default function AccessManagementPage() {
+  usePageMeta({ title: "Access Management", path: "/access", noIndex: true });
   const { isAdmin } = useRole();
   const { data: permissions = [], isLoading } = useAllPermissions();
 

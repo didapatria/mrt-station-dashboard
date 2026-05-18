@@ -76,6 +76,7 @@ import { useColumnToggle } from "@/hooks/use-column-toggle";
 import { useRole } from "@/hooks/use-role";
 import { MapLocationPicker } from "@/components/MapLocationPicker";
 import { useThemeStore } from "@/store/theme.store";
+import { usePageMeta } from "@/hooks/use-page-meta";
 import type { Station } from "@/types";
 
 const stationSchema = z.object({
@@ -112,6 +113,7 @@ const STATUS_DOT: Record<
 };
 
 export default function StationsPage() {
+  usePageMeta({ title: "Stations", path: "/stations" });
   const { t } = useTranslation();
   const { isAdmin } = useRole();
   const { theme } = useThemeStore();

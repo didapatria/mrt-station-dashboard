@@ -25,6 +25,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Pagination } from "@/components/ui/pagination";
 import { EmptyState } from "@/components/EmptyState";
 import { useActivityLogs } from "@/hooks/use-activity-logs";
+import { usePageMeta } from "@/hooks/use-page-meta";
 
 const ACTION_STYLES: Record<
   string,
@@ -56,6 +57,7 @@ const ENTITY_CHIP: React.CSSProperties = {
 };
 
 export default function ActivityLogPage() {
+  usePageMeta({ title: "Activity Log", path: "/activity-log" });
   const { t } = useTranslation();
   const [searchParams, setSearchParams] = useSearchParams();
   const [page, setPage] = useState(Number(searchParams.get("page")) || 1);

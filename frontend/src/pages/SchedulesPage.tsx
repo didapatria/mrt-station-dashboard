@@ -65,6 +65,7 @@ import { useSortable } from "@/hooks/use-sortable";
 import { useDebounce } from "@/hooks/use-debounce";
 import { dashboardService } from "@/services/dashboard.service";
 import { useRole } from "@/hooks/use-role";
+import { usePageMeta } from "@/hooks/use-page-meta";
 import type { Schedule } from "@/types";
 
 const scheduleSchema = z.object({
@@ -140,6 +141,7 @@ function StatusLED({ status }: { status: string }) {
 }
 
 export default function SchedulesPage() {
+  usePageMeta({ title: "Schedules", path: "/schedules" });
   const { t } = useTranslation();
   const { isAdmin } = useRole();
   const [searchParams, setSearchParams] = useSearchParams();
