@@ -116,7 +116,7 @@ export default function SettingsPage() {
         style={{
           display: "grid",
           gap: 24,
-          gridTemplateColumns: "repeat(2, 1fr)",
+          gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 280px), 1fr))",
         }}
       >
         {/* Language */}

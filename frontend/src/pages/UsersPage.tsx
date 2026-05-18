@@ -6,7 +6,7 @@ import { Search, Trash2, Shield, ShieldCheck, UserCog } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -401,6 +401,13 @@ export default function UsersPage() {
                           }}
                         >
                           <Avatar className="h-9 w-9">
+                            <AvatarImage
+                              src={
+                                user.avatarUrl ||
+                                `https://api.dicebear.com/9.x/initials/svg?seed=${encodeURIComponent(user.name)}`
+                              }
+                              alt={user.name}
+                            />
                             <AvatarFallback
                               style={{
                                 background:
