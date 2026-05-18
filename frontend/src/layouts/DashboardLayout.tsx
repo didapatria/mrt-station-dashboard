@@ -1,8 +1,8 @@
-import { Outlet, Navigate, NavLink, useNavigate } from "react-router-dom";
+import { Outlet, Navigate, NavLink, useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAuthStore } from "@/store/auth.store";
 import { useLogout } from "@/hooks/use-auth";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Train,
   LayoutDashboard,
@@ -180,6 +180,7 @@ export default function DashboardLayout() {
   const { isAdmin } = useRole();
   const logout = useLogout();
   const navigate = useNavigate();
+  const location = useLocation();
   const [sheetOpen, setSheetOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
   const [feedbackOpen, setFeedbackOpen] = useState(false);
@@ -551,13 +552,17 @@ export default function DashboardLayout() {
 
         <main className="p-4 md:p-6">
           <PageBreadcrumb />
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.25 }}
-          >
-            <Outlet />
-          </motion.div>
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={location.pathname}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -4 }}
+              transition={{ duration: 0.2, ease: "easeOut" }}
+            >
+              <Outlet />
+            </motion.div>
+          </AnimatePresence>
         </main>
       </div>
     </div>
