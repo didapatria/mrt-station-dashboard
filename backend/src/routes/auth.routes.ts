@@ -167,3 +167,30 @@ authRouter.post(
   authMiddleware,
   authController.changePassword,
 );
+
+/**
+ * @swagger
+ * /auth/avatar:
+ *   patch:
+ *     tags: [Authentication]
+ *     summary: Update profile avatar
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [avatarUrl]
+ *             properties:
+ *               avatarUrl:
+ *                 type: string
+ *                 description: Base64 data URL or external image URL
+ *     responses:
+ *       200:
+ *         description: Avatar updated
+ *       400:
+ *         description: Invalid avatar format
+ */
+authRouter.patch("/avatar", authMiddleware, authController.updateAvatar);

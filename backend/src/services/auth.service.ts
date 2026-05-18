@@ -109,6 +109,7 @@ export const authService = {
         email: true,
         role: true,
         createdAt: true,
+        avatarUrl: true,
       },
     });
 
@@ -116,6 +117,22 @@ export const authService = {
       throw new Error("User not found");
     }
 
+    return user;
+  },
+
+  async updateAvatar(userId: string, avatarUrl: string) {
+    const user = await prisma.user.update({
+      where: { id: userId },
+      data: { avatarUrl },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        role: true,
+        createdAt: true,
+        avatarUrl: true,
+      },
+    });
     return user;
   },
 

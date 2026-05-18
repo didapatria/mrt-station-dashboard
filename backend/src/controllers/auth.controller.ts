@@ -75,4 +75,34 @@ export const authController = {
       res.status(404).json({ success: false, error: message });
     }
   },
+
+  async updateAvatar(req: AuthRequest, res: Response): Promise<void> {
+    try {
+      const { avatarUrl } = req.body;
+      if (!avatarUrl || typeof avatarUrl !== "string") {
+        res
+          .status(400)
+          .json({ success: false, error: "avatarUrl is required" });
+        return;
+      }
+      if (
+        !avatarUrl.startsWith("data:image/") &&
+        !avatarUrl.startsWith("http")
+      ) {
+        res
+          .status(400)
+          .json({ success: false, error: "Invalid avatar format" });
+        return;
+      }
+      const user = await authService.updateAvatar(
+        req.user!.userId,
+        avatarUrl,
+      );
+      res.json({ success: true, data: user });
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Failed to update avatar";
+      res.status(500).json({ success: false, error: message });
+    }
+  },
 };
