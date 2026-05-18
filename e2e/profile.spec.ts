@@ -60,9 +60,9 @@ test.describe("Profile Page", () => {
     await expect(
       page.locator("text=/stations.view|dashboard.view|users.view/").first(),
     ).toBeVisible({ timeout: 8000 });
-    // Should show count
+    // Should show count (subtitle shows "X permissions via role")
     await expect(
-      page.locator("text=/permissions granted/i").first(),
+      page.locator("text=/permissions via role/i").first(),
     ).toBeVisible();
   });
 

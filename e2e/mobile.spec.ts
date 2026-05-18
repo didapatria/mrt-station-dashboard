@@ -146,8 +146,8 @@ test.describe("Mobile — Profile", () => {
     await page.goto("/profile");
     await page.waitForTimeout(3000);
 
-    // "permissions granted" text is in CardDescription — not sidebar
-    const permCard = page.locator("text=/permissions granted/i").first();
+    // "permissions via role" text is in CardDescription — not sidebar
+    const permCard = page.locator("text=/permissions via role/i").first();
     await expect(permCard).toBeVisible({ timeout: 10000 });
   });
 });

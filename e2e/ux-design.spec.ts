@@ -35,8 +35,8 @@ test.describe("Design — Auth Page", () => {
     await page.goto("/login");
     await page.waitForLoadState("domcontentloaded");
 
-    await expect(page.locator("text=LEBAK BULUS GRAB").first()).toBeVisible();
-    await expect(page.locator("text=BUNDARAN HI").first()).toBeVisible();
+    await expect(page.locator("text=LEBAK BULUS BANK SYARIAH INDONESIA").first()).toBeVisible();
+    await expect(page.locator("text=BUNDARAN HI BANK JAKARTA").first()).toBeVisible();
   });
 
   test("left panel should contain SVG rail line diagram", async ({ page }) => {
@@ -53,7 +53,7 @@ test.describe("Design — Auth Page", () => {
     await page.goto("/login");
     await page.waitForLoadState("domcontentloaded");
 
-    const stationText = page.locator("text=LEBAK BULUS GRAB").first();
+    const stationText = page.locator("text=LEBAK BULUS BANK SYARIAH INDONESIA").first();
     const isVisible = await stationText.isVisible().catch(() => false);
     expect(isVisible).toBeFalsy();
   });
