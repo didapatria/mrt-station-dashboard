@@ -45,6 +45,9 @@ export const authService = {
       },
     });
 
+    // Assign default OPERATOR role in model_has_roles
+    await assignDefaultRole(user.id, user.role);
+
     const token = generateToken({ userId: user.id, email: user.email });
     const permissions = await permissionService.getPermissionsForUser(user.id);
 
@@ -183,6 +186,9 @@ export const authService = {
           avatarUrl: true,
         },
       });
+
+      // Assign default OPERATOR role in model_has_roles
+      await assignDefaultRole(user.id, user.role);
     }
 
     const token = generateToken({ userId: user.id, email: user.email });
@@ -207,4 +213,14 @@ function generateToken(payload: JwtPayload): string {
   const secret = process.env.JWT_SECRET || "fallback-secret";
   const expiresIn = process.env.JWT_EXPIRES_IN || "7d";
   return jwt.sign(payload, secret, { expiresIn } as jwt.SignOptions);
+}
+
+async function assignDefaultRole(userId: string, roleName: string) {
+  const roleRecord = await prisma.role.findUnique({ where: { name: roleName } });
+  if (!roleRecord) return; // roles table not yet seeded — skip silently
+  await prisma.modelHasRole.upsert({
+    where: { userId_roleId: { userId, roleId: roleRecord.id } },
+    update: {},
+    create: { userId, roleId: roleRecord.id },
+  });
 }

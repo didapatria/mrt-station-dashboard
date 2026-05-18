@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -530,19 +531,13 @@ export default function StationsPage() {
               >
                 {isAdmin && (
                   <TableHead style={{ width: 44, padding: "0 16px" }}>
-                    <input
-                      type="checkbox"
+                    <Checkbox
                       checked={
                         selectedIds.size === sortedStations.length &&
                         sortedStations.length > 0
                       }
-                      onChange={toggleSelectAll}
-                      style={{
-                        width: 14,
-                        height: 14,
-                        cursor: "pointer",
-                        accentColor: "var(--color-primary)",
-                      }}
+                      onCheckedChange={toggleSelectAll}
+                      aria-label="Select all stations"
                     />
                   </TableHead>
                 )}
@@ -701,16 +696,10 @@ export default function StationsPage() {
                       >
                         {isAdmin && (
                           <TableCell style={{ padding: "0 16px", width: 44 }}>
-                            <input
-                              type="checkbox"
+                            <Checkbox
                               checked={isSelected}
-                              onChange={() => toggleSelect(station.id)}
-                              style={{
-                                width: 14,
-                                height: 14,
-                                cursor: "pointer",
-                                accentColor: "var(--color-primary)",
-                              }}
+                              onCheckedChange={() => toggleSelect(station.id)}
+                              aria-label={`Select ${station.name}`}
                             />
                           </TableCell>
                         )}

@@ -59,21 +59,33 @@ export const userService = {
   },
 
   async updateRole(userId: string, role: "ADMIN" | "OPERATOR") {
-    const user = await prisma.user.findUnique({ where: { id: userId } });
+    const [user, roleRecord] = await Promise.all([
+      prisma.user.findUnique({ where: { id: userId } }),
+      prisma.role.findUnique({ where: { name: role } }),
+    ]);
     if (!user) throw new Error("User not found");
+    if (!roleRecord) throw new Error(`Role "${role}" not found in roles table`);
 
-    const updated = await prisma.user.update({
-      where: { id: userId },
-      data: { role },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        role: true,
-        avatarUrl: true,
-        createdAt: true,
-        updatedAt: true,
-      },
+    const updated = await prisma.$transaction(async (tx) => {
+      const updatedUser = await tx.user.update({
+        where: { id: userId },
+        data: { role },
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          role: true,
+          avatarUrl: true,
+          createdAt: true,
+          updatedAt: true,
+        },
+      });
+
+      // Sync model_has_roles: remove old role assignments, assign new role
+      await tx.modelHasRole.deleteMany({ where: { userId } });
+      await tx.modelHasRole.create({ data: { userId, roleId: roleRecord.id } });
+
+      return updatedUser;
     });
 
     return updated;
