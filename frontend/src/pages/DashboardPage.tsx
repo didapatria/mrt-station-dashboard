@@ -399,11 +399,7 @@ export default function DashboardPage() {
               variant="outline"
               size="sm"
               onClick={() => exportDashboardPDF(stats, stations, schedules)}
-              style={{
-                fontFamily: "'JetBrains Mono', monospace",
-                fontSize: 10,
-                letterSpacing: "0.08em",
-              }}
+              className="ops-btn-mono"
             >
               <FileText className="h-3.5 w-3.5 mr-1.5" />
               PDF
@@ -413,11 +409,7 @@ export default function DashboardPage() {
             variant="outline"
             size="sm"
             onClick={handleExportStations}
-            style={{
-              fontFamily: "'JetBrains Mono', monospace",
-              fontSize: 10,
-              letterSpacing: "0.08em",
-            }}
+            className="ops-btn-mono"
           >
             <Download className="h-3.5 w-3.5 mr-1.5" />
             {t("dashboard.exportStations")}
@@ -426,11 +418,7 @@ export default function DashboardPage() {
             variant="outline"
             size="sm"
             onClick={handleExportSchedules}
-            style={{
-              fontFamily: "'JetBrains Mono', monospace",
-              fontSize: 10,
-              letterSpacing: "0.08em",
-            }}
+            className="ops-btn-mono"
           >
             <Download className="h-3.5 w-3.5 mr-1.5" />
             {t("dashboard.exportSchedules")}
@@ -578,41 +566,15 @@ export default function DashboardPage() {
           ].map(({ title, data, colors }) => (
             <div
               key={title}
-              style={{
-                background: "var(--color-card)",
-                border: "1px solid var(--color-border)",
-                borderRadius: 12,
-                overflow: "hidden",
-              }}
+              className="ops-card"
             >
               {/* Top accent gradient line */}
+              <div className="ops-accent-line" />
               <div
-                style={{
-                  height: 2,
-                  background:
-                    "linear-gradient(90deg, #3b82f6 0%, rgba(59,130,246,0.0) 100%)",
-                  borderRadius: "12px 12px 0 0",
-                }}
-              />
-              <div
-                style={{
-                  padding: "18px 24px 14px",
-                  borderBottom: "1px solid var(--color-border)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                }}
+                className="ops-card-header"
+                style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}
               >
-                <h3
-                  style={{
-                    fontFamily: "'Bebas Neue', sans-serif",
-                    fontSize: 18,
-                    letterSpacing: "0.05em",
-                    color: "var(--color-foreground)",
-                  }}
-                >
-                  {title}
-                </h3>
+                <h3 className="ops-card-title">{title}</h3>
                 <div style={{ display: "flex", gap: 12 }}>
                   {data.map((d, i) => (
                     <div
@@ -679,53 +641,19 @@ export default function DashboardPage() {
       {hourlyData.length > 0 && (
         <motion.div variants={fadeUp} initial="hidden" animate="show">
           <div
-            className="mb-8"
-            style={{
-              background: "var(--color-card)",
-              border: "1px solid var(--color-border)",
-              borderRadius: 12,
-              overflow: "hidden",
-            }}
+            className="ops-card mb-8"
           >
             {/* Top accent gradient line */}
+            <div className="ops-accent-line" />
             <div
-              style={{
-                height: 2,
-                background:
-                  "linear-gradient(90deg, #3b82f6 0%, rgba(59,130,246,0.0) 100%)",
-                borderRadius: "12px 12px 0 0",
-              }}
-            />
-            <div
-              style={{
-                padding: "18px 24px 14px",
-                borderBottom: "1px solid var(--color-border)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-              }}
+              className="ops-card-header"
+              style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}
             >
               <div>
-                <h3
-                  style={{
-                    fontFamily: "'Bebas Neue', sans-serif",
-                    fontSize: 18,
-                    letterSpacing: "0.05em",
-                    color: "var(--color-foreground)",
-                    marginBottom: 2,
-                  }}
-                >
+                <h3 className="ops-card-title" style={{ marginBottom: 2 }}>
                   {t("dashboard.weekdayDistribution")}
                 </h3>
-                <p
-                  style={{
-                    fontFamily: "'JetBrains Mono', monospace",
-                    fontSize: 9.5,
-                    color: "var(--color-muted-foreground)",
-                    letterSpacing: "0.1em",
-                    textTransform: "uppercase",
-                  }}
-                >
+                <p className="ops-card-subtitle">
                   {t("dashboard.schedulesPerHour")}
                 </p>
               </div>
@@ -850,22 +778,10 @@ export default function DashboardPage() {
 
           <TabsContent value="stations">
             <div
-              style={{
-                background: "var(--color-card)",
-                border: "1px solid var(--color-border)",
-                borderRadius: 12,
-                overflow: "hidden",
-              }}
+              className="ops-card"
             >
               {/* Top accent gradient line */}
-              <div
-                style={{
-                  height: 2,
-                  background:
-                    "linear-gradient(90deg, #3b82f6 0%, rgba(59,130,246,0.0) 100%)",
-                  borderRadius: "12px 12px 0 0",
-                }}
-              />
+              <div className="ops-accent-line" />
               <div className="overflow-x-auto">
                 <Table>
                   <TableHeader>
@@ -874,52 +790,16 @@ export default function DashboardPage() {
                         borderBottom: "1px solid var(--color-border)",
                       }}
                     >
-                      <TableHead
-                        style={{
-                          fontFamily: "'JetBrains Mono', monospace",
-                          fontSize: 9.5,
-                          letterSpacing: "0.14em",
-                          textTransform: "uppercase",
-                          color: "var(--color-muted-foreground)",
-                          padding: "12px 16px",
-                        }}
-                      >
+                      <TableHead className="ops-table-head" style={{ padding: "12px 16px" }}>
                         Code
                       </TableHead>
-                      <TableHead
-                        style={{
-                          fontFamily: "'JetBrains Mono', monospace",
-                          fontSize: 9.5,
-                          letterSpacing: "0.14em",
-                          textTransform: "uppercase",
-                          color: "var(--color-muted-foreground)",
-                        }}
-                      >
+                      <TableHead className="ops-table-head">
                         Name
                       </TableHead>
-                      <TableHead
-                        className="hidden sm:table-cell"
-                        style={{
-                          fontFamily: "'JetBrains Mono', monospace",
-                          fontSize: 9.5,
-                          letterSpacing: "0.14em",
-                          textTransform: "uppercase",
-                          color: "var(--color-muted-foreground)",
-                        }}
-                      >
+                      <TableHead className="ops-table-head hidden sm:table-cell">
                         Location
                       </TableHead>
-                      <TableHead
-                        style={{
-                          textAlign: "right",
-                          fontFamily: "'JetBrains Mono', monospace",
-                          fontSize: 9.5,
-                          letterSpacing: "0.14em",
-                          textTransform: "uppercase",
-                          color: "var(--color-muted-foreground)",
-                          padding: "12px 16px",
-                        }}
-                      >
+                      <TableHead className="ops-table-head text-right" style={{ padding: "12px 16px" }}>
                         Status
                       </TableHead>
                     </TableRow>
@@ -948,24 +828,10 @@ export default function DashboardPage() {
                             {station.code}
                           </div>
                         </TableCell>
-                        <TableCell
-                          style={{
-                            fontFamily: "'Sora', sans-serif",
-                            fontSize: 13.5,
-                            fontWeight: 500,
-                          }}
-                        >
+                        <TableCell className="ops-user-name">
                           {station.name}
                         </TableCell>
-                        <TableCell
-                          className="hidden sm:table-cell"
-                          style={{
-                            fontFamily: "'JetBrains Mono', monospace",
-                            fontSize: 11,
-                            color: "var(--color-muted-foreground)",
-                            letterSpacing: "0.02em",
-                          }}
-                        >
+                        <TableCell className="ops-mono-data hidden sm:table-cell">
                           {station.location}
                         </TableCell>
                         <TableCell
@@ -993,22 +859,10 @@ export default function DashboardPage() {
 
           <TabsContent value="schedules">
             <div
-              style={{
-                background: "var(--color-card)",
-                border: "1px solid var(--color-border)",
-                borderRadius: 12,
-                overflow: "hidden",
-              }}
+              className="ops-card"
             >
               {/* Top accent gradient line */}
-              <div
-                style={{
-                  height: 2,
-                  background:
-                    "linear-gradient(90deg, #3b82f6 0%, rgba(59,130,246,0.0) 100%)",
-                  borderRadius: "12px 12px 0 0",
-                }}
-              />
+              <div className="ops-accent-line" />
               <div className="overflow-x-auto">
                 <Table>
                   <TableHeader>
@@ -1020,16 +874,13 @@ export default function DashboardPage() {
                       {["Train", "Route", "Time", "Status"].map((h, i) => (
                         <TableHead
                           key={h}
-                          className={i === 2 ? "hidden sm:table-cell" : ""}
+                          className={[
+                            "ops-table-head",
+                            i === 2 ? "hidden sm:table-cell" : "",
+                            i === 3 ? "text-right" : "",
+                          ].filter(Boolean).join(" ")}
                           style={{
-                            fontFamily: "'JetBrains Mono', monospace",
-                            fontSize: 9.5,
-                            letterSpacing: "0.14em",
-                            textTransform: "uppercase",
-                            color: "var(--color-muted-foreground)",
-                            padding:
-                              i === 0 || i === 3 ? "12px 16px" : undefined,
-                            textAlign: i === 3 ? "right" : undefined,
+                            padding: i === 0 || i === 3 ? "12px 16px" : undefined,
                           }}
                         >
                           {h}
@@ -1074,15 +925,7 @@ export default function DashboardPage() {
                             {schedule.arrivalStation?.name}
                           </span>
                         </TableCell>
-                        <TableCell
-                          className="hidden sm:table-cell"
-                          style={{
-                            fontFamily: "'JetBrains Mono', monospace",
-                            fontSize: 11,
-                            color: "var(--color-muted-foreground)",
-                            letterSpacing: "0.04em",
-                          }}
-                        >
+                        <TableCell className="ops-mono-data hidden sm:table-cell">
                           {schedule.departureTime}
                           <span style={{ margin: "0 4px", opacity: 0.4 }}>
                             —

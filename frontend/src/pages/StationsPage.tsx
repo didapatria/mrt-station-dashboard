@@ -18,6 +18,7 @@ import {
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { PageHeader } from "@/components/PageHeader";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -307,136 +308,39 @@ export default function StationsPage() {
 
   return (
     <div style={{ position: "relative" }}>
-      {/* ── Page header ── */}
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          alignItems: "flex-start",
-          justifyContent: "space-between",
-          gap: 16,
-          marginBottom: 28,
-          flexWrap: "wrap",
-        }}
-      >
-        <div>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "baseline",
-              gap: 14,
-              marginBottom: 6,
-            }}
-          >
-            <h2
-              style={{
-                fontFamily: "'Bebas Neue', sans-serif",
-                fontSize: 36,
-                letterSpacing: "0.06em",
-                lineHeight: 1,
-                color: "var(--color-foreground)",
-              }}
-            >
-              {t("stations.title")}
-            </h2>
-            {meta && (
-              <span
-                style={{
-                  fontFamily: "'JetBrains Mono', monospace",
-                  fontSize: 11,
-                  color: "var(--color-muted-foreground)",
-                  letterSpacing: "0.06em",
-                  opacity: 0.7,
-                }}
-              >
-                {meta.total} entries
-              </span>
+      <PageHeader
+        title={t("stations.title")}
+        subtitle={`N–S Line · Station Registry${meta ? ` · ${meta.total} entries` : ""}`}
+        right={
+          <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
+            <ColumnToggle
+              columns={[
+                { key: "order", label: "Order" },
+                { key: "location", label: "Location" },
+                { key: "coordinates", label: "Coordinates" },
+                { key: "status", label: "Status" },
+              ]}
+              isVisible={columns.isVisible}
+              toggle={columns.toggle}
+            />
+            <Button variant="outline" size="sm" onClick={handleExport} className="ops-btn-mono">
+              <Download className="h-3.5 w-3.5 mr-1.5" />
+              CSV
+            </Button>
+            {isAdmin && (
+              <Button variant="outline" size="sm" onClick={() => setCsvImportOpen(true)} className="ops-btn-mono">
+                Import
+              </Button>
+            )}
+            {isAdmin && (
+              <Button size="sm" onClick={openCreate} className="ops-btn-mono">
+                <Plus className="h-3.5 w-3.5 mr-1.5" />
+                {t("stations.addStation")}
+              </Button>
             )}
           </div>
-          <p
-            style={{
-              fontFamily: "'JetBrains Mono', monospace",
-              fontSize: 10,
-              color: "var(--color-muted-foreground)",
-              letterSpacing: "0.14em",
-              textTransform: "uppercase",
-            }}
-          >
-            N–S Line · Station Registry
-          </p>
-          {/* Horizontal fade line */}
-          <div
-            style={{
-              height: 1,
-              background:
-                "linear-gradient(90deg, rgba(59,130,246,0.3) 0%, transparent 70%)",
-              marginTop: 12,
-            }}
-          />
-        </div>
-
-        {/* Actions */}
-        <div
-          style={{
-            display: "flex",
-            gap: 8,
-            flexWrap: "wrap",
-            alignItems: "center",
-          }}
-        >
-          <ColumnToggle
-            columns={[
-              { key: "order", label: "Order" },
-              { key: "location", label: "Location" },
-              { key: "coordinates", label: "Coordinates" },
-              { key: "status", label: "Status" },
-            ]}
-            isVisible={columns.isVisible}
-            toggle={columns.toggle}
-          />
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleExport}
-            style={{
-              fontFamily: "'JetBrains Mono', monospace",
-              fontSize: 10,
-              letterSpacing: "0.08em",
-            }}
-          >
-            <Download className="h-3.5 w-3.5 mr-1.5" />
-            CSV
-          </Button>
-          {isAdmin && (
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setCsvImportOpen(true)}
-              style={{
-                fontFamily: "'JetBrains Mono', monospace",
-                fontSize: 10,
-                letterSpacing: "0.08em",
-              }}
-            >
-              Import
-            </Button>
-          )}
-          {isAdmin && (
-            <Button
-              size="sm"
-              onClick={openCreate}
-              style={{
-                fontFamily: "'JetBrains Mono', monospace",
-                fontSize: 10,
-                letterSpacing: "0.08em",
-              }}
-            >
-              <Plus className="h-3.5 w-3.5 mr-1.5" />
-              {t("stations.addStation")}
-            </Button>
-          )}
-        </div>
-      </div>
+        }
+      />
 
       {/* ── Filter strip ── */}
       <div
@@ -470,25 +374,13 @@ export default function StationsPage() {
             placeholder={t("common.search")}
             value={search}
             onChange={(e) => handleSearchChange(e.target.value)}
-            style={{
-              paddingLeft: 34,
-              fontFamily: "'Sora', sans-serif",
-              fontSize: 13,
-              height: 36,
-            }}
+            className="font-['Sora'] text-[13px]"
+            style={{ paddingLeft: 34, height: 36 }}
           />
         </div>
 
         <Select value={statusFilter} onValueChange={handleStatusChange}>
-          <SelectTrigger
-            style={{
-              width: 148,
-              height: 36,
-              fontFamily: "'JetBrains Mono', monospace",
-              fontSize: 11,
-              letterSpacing: "0.06em",
-            }}
-          >
+          <SelectTrigger className="ops-btn-mono" style={{ width: 148, height: 36 }}>
             <SelectValue placeholder="Status" />
           </SelectTrigger>
           <SelectContent>
@@ -505,21 +397,10 @@ export default function StationsPage() {
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3 }}
-        style={{
-          background: "var(--color-card)",
-          border: "1px solid var(--color-border)",
-          borderRadius: 12,
-          overflow: "hidden",
-          marginBottom: 20,
-        }}
+        className="ops-card"
+        style={{ marginBottom: 20 }}
       >
-        {/* Top accent line */}
-        <div
-          style={{
-            height: 2,
-            background: "linear-gradient(90deg, #3b82f6 0%, transparent 100%)",
-          }}
-        />
+        <div className="ops-accent-line" />
         <div className="overflow-x-auto">
           <Table>
             <TableHeader>
@@ -548,13 +429,7 @@ export default function StationsPage() {
                     sortConfig={sortConfig}
                     onSort={requestSort}
                     className="w-12"
-                    style={{
-                      fontFamily: "'JetBrains Mono', monospace",
-                      fontSize: 9.5,
-                      letterSpacing: "0.16em",
-                      color: "var(--color-muted-foreground)",
-                      textTransform: "uppercase",
-                    }}
+                    className="ops-table-head"
                   />
                 )}
                 <SortableTableHead<Station>
@@ -577,25 +452,13 @@ export default function StationsPage() {
                     sortConfig={sortConfig}
                     onSort={requestSort}
                     className="hidden md:table-cell"
-                    style={{
-                      fontFamily: "'JetBrains Mono', monospace",
-                      fontSize: 9.5,
-                      letterSpacing: "0.16em",
-                      color: "var(--color-muted-foreground)",
-                      textTransform: "uppercase",
-                    }}
+                    className="ops-table-head"
                   />
                 )}
                 {columns.isVisible("coordinates") && (
                   <TableHead
                     className="hidden lg:table-cell"
-                    style={{
-                      fontFamily: "'JetBrains Mono', monospace",
-                      fontSize: 9.5,
-                      letterSpacing: "0.16em",
-                      color: "var(--color-muted-foreground)",
-                      textTransform: "uppercase",
-                    }}
+                    className="ops-table-head"
                   >
                     Coords
                   </TableHead>
@@ -606,27 +469,11 @@ export default function StationsPage() {
                     sortKey="status"
                     sortConfig={sortConfig}
                     onSort={requestSort}
-                    style={{
-                      fontFamily: "'JetBrains Mono', monospace",
-                      fontSize: 9.5,
-                      letterSpacing: "0.16em",
-                      color: "var(--color-muted-foreground)",
-                      textTransform: "uppercase",
-                    }}
+                    className="ops-table-head"
                   />
                 )}
                 {isAdmin && (
-                  <TableHead
-                    style={{
-                      textAlign: "right",
-                      fontFamily: "'JetBrains Mono', monospace",
-                      fontSize: 9.5,
-                      letterSpacing: "0.16em",
-                      color: "var(--color-muted-foreground)",
-                      textTransform: "uppercase",
-                      padding: "0 16px",
-                    }}
-                  >
+                  <TableHead className="ops-table-head text-right" style={{ padding: "0 16px" }}>
                     Actions
                   </TableHead>
                 )}

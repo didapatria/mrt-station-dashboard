@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { GitCommit } from "lucide-react";
 import { usePageMeta } from "@/hooks/use-page-meta";
+import { PageHeader } from "@/components/PageHeader";
 
 const changelog = [
   {
@@ -293,69 +294,20 @@ const changelog = [
   },
 ];
 
-const hashChipStyle: React.CSSProperties = {
-  fontFamily: "'JetBrains Mono', monospace",
-  fontSize: 10,
-  background: "rgba(29,111,232,0.1)",
-  border: "1px solid rgba(29,111,232,0.2)",
-  borderRadius: 3,
-  padding: "2px 6px",
-  color: "#60a5fa",
-  textDecoration: "none",
-  display: "inline-flex",
-  alignItems: "center",
-  gap: 4,
-  transition: "background 0.15s",
-};
-
 function getVersionAccentColor(version: string): string {
   const parts = version.split(".");
   const minor = parts[1] ?? "0";
   const patch = parts[2] ?? "0";
-  if (minor === "0" && patch === "0") return "#22c55e"; // major x.0.0
-  if (patch === "0") return "#3b82f6"; // minor x.y.0
-  return "rgba(148,163,184,0.3)"; // patch x.y.z
+  if (minor === "0" && patch === "0") return "#22c55e";
+  if (patch === "0") return "#3b82f6";
+  return "rgba(148,163,184,0.3)";
 }
 
 export default function ChangelogPage() {
   usePageMeta({ title: "Changelog", path: "/changelog" });
   return (
     <div>
-      {/* Page header */}
-      <div style={{ marginBottom: 24 }}>
-        <h2
-          style={{
-            fontFamily: "'Bebas Neue', sans-serif",
-            fontSize: 36,
-            letterSpacing: "0.04em",
-            lineHeight: 1,
-            color: "var(--color-foreground)",
-            margin: 0,
-          }}
-        >
-          CHANGELOG
-        </h2>
-        <p
-          style={{
-            fontFamily: "'JetBrains Mono', monospace",
-            fontSize: 9.5,
-            letterSpacing: "0.1em",
-            color: "var(--color-muted-foreground)",
-            marginTop: 4,
-          }}
-        >
-          Release History · MRT Jakarta
-        </p>
-        {/* Horizontal fade line */}
-        <div
-          style={{
-            height: 1,
-            background:
-              "linear-gradient(90deg, rgba(59,130,246,0.3) 0%, transparent 70%)",
-            marginTop: 14,
-          }}
-        />
-      </div>
+      <PageHeader title="CHANGELOG" subtitle="Release History · MRT Jakarta" />
 
       <style>
         {"@keyframes pulse-led { 0%,100%{opacity:1} 50%{opacity:0.6} }"}
@@ -379,12 +331,7 @@ export default function ChangelogPage() {
                 hidden: { opacity: 0, y: 16 },
                 visible: { opacity: 1, y: 0, transition: { duration: 0.3 } },
               }}
-              style={{
-                background: "var(--color-card)",
-                border: "1px solid var(--color-border)",
-                borderRadius: 12,
-                overflow: "hidden",
-              }}
+              className="ops-card"
             >
               {/* Version-typed accent line */}
               <div
@@ -396,9 +343,8 @@ export default function ChangelogPage() {
 
               {/* Card Header */}
               <div
+                className="ops-card-header"
                 style={{
-                  padding: "18px 24px 14px",
-                  borderBottom: "1px solid var(--color-border)",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "space-between",
@@ -407,44 +353,10 @@ export default function ChangelogPage() {
                 }}
               >
                 <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                  <span
-                    style={{
-                      fontFamily: "'Bebas Neue', sans-serif",
-                      fontSize: 22,
-                      letterSpacing: "0.05em",
-                      color: "var(--color-foreground)",
-                    }}
-                  >
-                    v{release.version}
-                  </span>
-                  <span
-                    style={{
-                      fontFamily: "'JetBrains Mono', monospace",
-                      fontSize: 10,
-                      color: "var(--color-muted-foreground)",
-                      letterSpacing: "0.06em",
-                    }}
-                  >
-                    {release.date}
-                  </span>
+                  <span className="changelog-version">v{release.version}</span>
+                  <span className="changelog-date">{release.date}</span>
                   {i === 0 && (
-                    <span
-                      style={{
-                        fontFamily: "'JetBrains Mono', monospace",
-                        fontSize: 9,
-                        letterSpacing: "0.12em",
-                        background: "rgba(34,197,94,0.12)",
-                        border: "1px solid rgba(34,197,94,0.25)",
-                        borderRadius: 3,
-                        padding: "2px 7px",
-                        color: "#22c55e",
-                        fontWeight: 600,
-                        animation: "pulse-led 2s ease-in-out infinite",
-                        display: "inline-block",
-                      }}
-                    >
-                      LATEST
-                    </span>
+                    <span className="ops-badge-latest">LATEST</span>
                   )}
                 </div>
                 {release.commits.length > 0 && (
@@ -455,7 +367,7 @@ export default function ChangelogPage() {
                         href={`https://github.com/didapatria/mrt-station-dashboard/commit/${hash}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        style={hashChipStyle}
+                        className="commit-chip"
                       >
                         <GitCommit size={10} />
                         {hash}
@@ -477,33 +389,10 @@ export default function ChangelogPage() {
                 {release.items.map((item) => (
                   <div
                     key={item}
-                    style={{
-                      display: "flex",
-                      alignItems: "flex-start",
-                      gap: 10,
-                    }}
+                    style={{ display: "flex", alignItems: "flex-start", gap: 10 }}
                   >
-                    <div
-                      style={{
-                        width: 5,
-                        height: 5,
-                        borderRadius: "50%",
-                        background: "var(--color-primary)",
-                        opacity: 0.6,
-                        flexShrink: 0,
-                        marginTop: 7,
-                      }}
-                    />
-                    <span
-                      style={{
-                        fontFamily: "'Sora', sans-serif",
-                        fontSize: 13,
-                        color: "var(--color-foreground)",
-                        lineHeight: 1.55,
-                      }}
-                    >
-                      {item}
-                    </span>
+                    <div className="changelog-dot" />
+                    <span className="changelog-item-text">{item}</span>
                   </div>
                 ))}
               </div>

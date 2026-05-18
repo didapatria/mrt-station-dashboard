@@ -24,6 +24,7 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { Pagination } from "@/components/ui/pagination";
 import { EmptyState } from "@/components/EmptyState";
+import { PageHeader } from "@/components/PageHeader";
 import { useActivityLogs } from "@/hooks/use-activity-logs";
 import { usePageMeta } from "@/hooks/use-page-meta";
 
@@ -40,20 +41,6 @@ const ENTITY_ICONS: Record<string, typeof Activity> = {
   Station: MapPin,
   Schedule: Clock,
   User: Users,
-};
-
-const ENTITY_CHIP: React.CSSProperties = {
-  fontFamily: "'JetBrains Mono', monospace",
-  fontSize: 8.5,
-  letterSpacing: "0.1em",
-  textTransform: "uppercase" as const,
-  padding: "2px 7px",
-  borderRadius: 2,
-  border: "1px solid var(--color-border)",
-  color: "var(--color-muted-foreground)",
-  display: "inline-flex",
-  alignItems: "center",
-  gap: 4,
 };
 
 export default function ActivityLogPage() {
@@ -111,118 +98,62 @@ export default function ActivityLogPage() {
     });
   };
 
-  return (
-    <div>
-      {/* Page Header */}
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          alignItems: "flex-start",
-          justifyContent: "space-between",
-          gap: 16,
-          flexWrap: "wrap",
+  const filterExportRight = (
+    <div
+      className="ops-card"
+      style={{
+        padding: "10px 14px",
+        display: "flex",
+        flexDirection: "row",
+        gap: 8,
+        alignItems: "center",
+      }}
+    >
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={() => {
+          const csv = [
+            "Time,User,Action,Entity,Details",
+            ...logs
+              .map(
+                (l) =>
+                  `${l.createdAt},${l.user.name},${l.action},${l.entity},"${l.details || ""}"`,
+              )
+              .join("\n"),
+          ].join("\n");
+          const blob = new Blob([csv], { type: "text/csv" });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = "activity-log.csv";
+          a.click();
+          URL.revokeObjectURL(url);
+          toast.success("Activity log exported");
         }}
       >
-        <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-          <h1
-            style={{
-              fontFamily: "'Bebas Neue', sans-serif",
-              fontSize: 36,
-              letterSpacing: "0.04em",
-              lineHeight: 1,
-              margin: 0,
-            }}
-          >
-            ACTIVITY LOG
-          </h1>
-          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            <span
-              style={{
-                fontFamily: "'JetBrains Mono', monospace",
-                fontSize: 9.5,
-                letterSpacing: "0.14em",
-                textTransform: "uppercase",
-                color: "var(--color-muted-foreground)",
-              }}
-            >
-              Audit Trail · System Events
-            </span>
-            <span
-              style={{
-                fontFamily: "'JetBrains Mono', monospace",
-                fontSize: 9.5,
-                letterSpacing: "0.08em",
-                color: "var(--color-muted-foreground)",
-                opacity: 0.6,
-              }}
-            >
-              {meta?.total ?? logs.length} entries
-            </span>
-          </div>
-        </div>
+        <Download className="h-4 w-4 mr-2" />
+        CSV
+      </Button>
+      <Select value={entityFilter} onValueChange={handleEntityFilterChange}>
+        <SelectTrigger className="w-40">
+          <SelectValue placeholder="Filter by type" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="ALL">{t("activity.allTypes")}</SelectItem>
+          <SelectItem value="Station">Stations</SelectItem>
+          <SelectItem value="Schedule">Schedules</SelectItem>
+        </SelectContent>
+      </Select>
+    </div>
+  );
 
-        {/* Filter + Export strip */}
-        <div
-          style={{
-            background: "var(--color-card)",
-            border: "1px solid var(--color-border)",
-            borderRadius: 10,
-            padding: "10px 14px",
-            display: "flex",
-            flexDirection: "row",
-            gap: 8,
-            alignItems: "center",
-          }}
-        >
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => {
-              const csv = [
-                "Time,User,Action,Entity,Details",
-                ...logs
-                  .map(
-                    (l) =>
-                      `${l.createdAt},${l.user.name},${l.action},${l.entity},"${l.details || ""}"`,
-                  )
-                  .join("\n"),
-              ].join("\n");
-              const blob = new Blob([csv], { type: "text/csv" });
-              const url = URL.createObjectURL(blob);
-              const a = document.createElement("a");
-              a.href = url;
-              a.download = "activity-log.csv";
-              a.click();
-              URL.revokeObjectURL(url);
-              toast.success("Activity log exported");
-            }}
-          >
-            <Download className="h-4 w-4 mr-2" />
-            CSV
-          </Button>
-          <Select value={entityFilter} onValueChange={handleEntityFilterChange}>
-            <SelectTrigger className="w-40">
-              <SelectValue placeholder="Filter by type" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="ALL">{t("activity.allTypes")}</SelectItem>
-              <SelectItem value="Station">Stations</SelectItem>
-              <SelectItem value="Schedule">Schedules</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-      </div>
-
-      {/* Horizontal fade line below header */}
-      <div
-        style={{
-          height: 1,
-          background:
-            "linear-gradient(90deg, rgba(59,130,246,0.5) 0%, transparent 60%)",
-          marginTop: 12,
-          marginBottom: 28,
-        }}
+  return (
+    <div>
+      <PageHeader
+        title="ACTIVITY LOG"
+        subtitle={`Audit Trail · System Events · ${meta?.total ?? logs.length} entries`}
+        right={filterExportRight}
       />
 
       {/* Log List */}
@@ -231,52 +162,16 @@ export default function ActivityLogPage() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3 }}
       >
-        <div
-          style={{
-            background: "var(--color-card)",
-            border: "1px solid var(--color-border)",
-            borderRadius: 12,
-            overflow: "hidden",
-          }}
-        >
-          {/* Top accent gradient line */}
-          <div
-            style={{
-              height: 2,
-              background:
-                "linear-gradient(90deg, #3b82f6 0%, rgba(59,130,246,0) 100%)",
-            }}
-          />
+        <div className="ops-card">
+          <div className="ops-accent-line" />
 
           {/* Card section header */}
           <div
-            style={{
-              padding: "18px 24px 14px",
-              borderBottom: "1px solid var(--color-border)",
-              display: "flex",
-              alignItems: "baseline",
-              gap: 10,
-            }}
+            className="ops-card-header"
+            style={{ display: "flex", alignItems: "baseline", gap: 10 }}
           >
-            <span
-              style={{
-                fontFamily: "'Bebas Neue', sans-serif",
-                fontSize: 20,
-                letterSpacing: "0.05em",
-                lineHeight: 1,
-              }}
-            >
-              EVENTS
-            </span>
-            <span
-              style={{
-                fontFamily: "'JetBrains Mono', monospace",
-                fontSize: 9.5,
-                letterSpacing: "0.14em",
-                textTransform: "uppercase",
-                color: "var(--color-muted-foreground)",
-              }}
-            >
+            <span className="ops-card-title">EVENTS</span>
+            <span className="ops-card-subtitle" style={{ marginTop: 0 }}>
               Most Recent First
             </span>
           </div>
@@ -355,7 +250,7 @@ export default function ActivityLogPage() {
                       gap: 12,
                     }}
                   >
-                    {/* Action icon circle — 36px with subtle border */}
+                    {/* Action icon circle */}
                     <div
                       style={{
                         width: 36,
@@ -384,18 +279,12 @@ export default function ActivityLogPage() {
                           flexWrap: "wrap",
                         }}
                       >
-                        <span
-                          style={{
-                            fontFamily: "'Sora', sans-serif",
-                            fontSize: 13,
-                            fontWeight: 500,
-                          }}
-                        >
+                        <span className="text-[13px] font-medium">
                           {log.action.charAt(0) +
                             log.action.slice(1).toLowerCase()}
                           d a
                         </span>
-                        <span style={ENTITY_CHIP}>
+                        <span className="ops-entity-chip">
                           <EntityIcon style={{ width: 9, height: 9 }} />
                           {log.entity}
                         </span>
@@ -409,26 +298,13 @@ export default function ActivityLogPage() {
                           flexWrap: "wrap",
                         }}
                       >
-                        <span
-                          style={{
-                            fontFamily: "'JetBrains Mono', monospace",
-                            fontSize: 11,
-                            color: "var(--color-muted-foreground)",
-                          }}
-                        >
+                        <span className="ops-mono-label" style={{ fontSize: 11, textTransform: "none", letterSpacing: "0.04em" }}>
                           {log.user.name}
                         </span>
                         {log.details && (
                           <span
-                            style={{
-                              fontFamily: "'Sora', sans-serif",
-                              fontSize: 11.5,
-                              color: "var(--color-muted-foreground)",
-                              overflow: "hidden",
-                              textOverflow: "ellipsis",
-                              whiteSpace: "nowrap",
-                              maxWidth: 280,
-                            }}
+                            className="text-[11.5px] text-muted-foreground truncate"
+                            style={{ maxWidth: 280 }}
                           >
                             — {log.details}
                           </span>
@@ -436,7 +312,7 @@ export default function ActivityLogPage() {
                       </div>
                     </div>
 
-                    {/* Timestamp — relative prominent, absolute smaller below */}
+                    {/* Timestamp */}
                     <div
                       style={{
                         display: "flex",
@@ -447,27 +323,11 @@ export default function ActivityLogPage() {
                         marginTop: 2,
                       }}
                     >
-                      <span
-                        style={{
-                          fontFamily: "'JetBrains Mono', monospace",
-                          fontSize: 10.5,
-                          color: "var(--color-muted-foreground)",
-                          opacity: 0.7,
-                          whiteSpace: "nowrap",
-                        }}
-                      >
+                      <span className="ops-mono-xs" style={{ opacity: 0.7, whiteSpace: "nowrap" }}>
                         {relative ?? absolute}
                       </span>
                       {relative && (
-                        <span
-                          style={{
-                            fontFamily: "'JetBrains Mono', monospace",
-                            fontSize: 9,
-                            color: "var(--color-muted-foreground)",
-                            opacity: 0.35,
-                            whiteSpace: "nowrap",
-                          }}
-                        >
+                        <span className="ops-mono-xs" style={{ fontSize: 9, opacity: 0.35, whiteSpace: "nowrap" }}>
                           {absolute}
                         </span>
                       )}

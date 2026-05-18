@@ -684,6 +684,388 @@ tbody tr:hover::after {
     color: var(--color-success, #22c55e);
 }
 
+/* ─── Changelog page ─────────────────────────────────────────── */
+.commit-chip {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10px;
+    background: rgba(29, 111, 232, 0.1);
+    border: 1px solid rgba(29, 111, 232, 0.2);
+    border-radius: 3px;
+    padding: 2px 6px;
+    color: #60a5fa;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    transition: background 0.15s;
+}
+.commit-chip:hover {
+    background: rgba(29, 111, 232, 0.18);
+}
+.ops-badge-latest {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    background: rgba(34, 197, 94, 0.12);
+    border: 1px solid rgba(34, 197, 94, 0.25);
+    border-radius: 3px;
+    padding: 2px 7px;
+    color: #22c55e;
+    font-weight: 600;
+    animation: pulse-led 2s ease-in-out infinite;
+    display: inline-block;
+}
+.changelog-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--color-primary);
+    opacity: 0.6;
+    flex-shrink: 0;
+    margin-top: 7px;
+}
+.changelog-version {
+    font-family: "Bebas Neue", sans-serif;
+    font-size: 22px;
+    letter-spacing: 0.05em;
+    color: var(--color-foreground);
+}
+.changelog-date {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10px;
+    color: var(--color-muted-foreground);
+    letter-spacing: 0.06em;
+}
+.changelog-item-text {
+    font-family: "Sora", sans-serif;
+    font-size: 13px;
+    color: var(--color-foreground);
+    line-height: 1.55;
+}
+
+/* ─── Activity Log page ───────────────────────────────────────── */
+.ops-entity-chip {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 8.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 2px 7px;
+    border-radius: 2px;
+    border: 1px solid var(--color-border);
+    color: var(--color-muted-foreground);
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+/* ─── Shared station / map / detail atoms ───────────────────── */
+.ops-stat-card {
+    background: var(--color-background);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    padding: 12px 16px;
+    transition: all 0.15s ease;
+}
+.ops-stat-card:hover {
+    border-color: rgba(59, 130, 246, 0.3);
+}
+.ops-stat-label {
+    font-family: "Bebas Neue", sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    color: var(--color-muted-foreground);
+    margin: 0 0 6px;
+}
+.ops-stat-value {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 22px;
+    color: var(--color-foreground);
+    margin: 0;
+    line-height: 1;
+}
+.ops-back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    color: var(--color-muted-foreground);
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin-bottom: 20px;
+    padding: 4px 0;
+    transition: color 0.15s;
+}
+.ops-back-btn:hover {
+    color: var(--color-foreground);
+}
+.ops-code-badge {
+    background: rgba(29, 111, 232, 0.12);
+    border: 1px solid rgba(29, 111, 232, 0.2);
+    border-radius: 4px;
+    padding: 2px 8px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 13px;
+    letter-spacing: 0.1em;
+    color: #60a5fa;
+}
+.ops-copy-btn {
+    background: none;
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    padding: 2px 6px;
+    cursor: pointer;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 9px;
+    letter-spacing: 0.08em;
+    color: var(--color-muted-foreground);
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    transition: border-color 0.15s;
+}
+.ops-copy-btn:hover {
+    border-color: rgba(59, 130, 246, 0.3);
+    color: var(--color-foreground);
+}
+.ops-status-chip {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--color-card);
+    border: 1px solid var(--color-border);
+    border-radius: 20px;
+    padding: 4px 10px;
+    backdrop-filter: blur(4px);
+}
+.ops-status-chip-count {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    color: var(--color-foreground);
+}
+.ops-status-chip-label {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 9.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-muted-foreground);
+}
+.ops-map-station-code {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--color-primary);
+    flex-shrink: 0;
+}
+.ops-map-station-name {
+    font-family: "Sora", sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--color-foreground);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.ops-map-station-location {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 9.5px;
+    color: var(--color-muted-foreground);
+    margin: 2px 0 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* ─── Shared button/trigger mono font ───────────────────────── */
+.ops-btn-mono {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+}
+
+/* ─── Table & registry shared atoms ─────────────────────────── */
+.ops-table-head {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 9.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-muted-foreground);
+}
+.ops-mono-data {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10.5px;
+    color: var(--color-muted-foreground);
+}
+.ops-user-name {
+    font-family: "Sora", sans-serif;
+    font-size: 13.5px;
+    font-weight: 500;
+    margin: 0;
+}
+.ops-badge-you {
+    background: rgba(16, 185, 129, 0.1);
+    border: 1px solid rgba(16, 185, 129, 0.25);
+    color: #10b981;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 8.5px;
+    padding: 1px 6px;
+    border-radius: 2px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+.ops-badge-default {
+    background: rgba(234, 179, 8, 0.1);
+    border: 1px solid rgba(234, 179, 8, 0.3);
+    color: #ca8a04;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 7.5px;
+    padding: 1px 5px;
+    border-radius: 2px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+.ops-badge-protected {
+    background: rgba(234, 179, 8, 0.08);
+    border: 1px solid rgba(234, 179, 8, 0.2);
+    color: #ca8a04;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 8.5px;
+    padding: 1px 6px;
+    border-radius: 2px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+/* ─── 404 Not Found page ─────────────────────────────────────── */
+@keyframes bg-shift {
+    0% { background-position: 0% 0%; }
+    100% { background-position: 100% 100%; }
+}
+.not-found-bg {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(135deg, #050d1a 0%, #070c14 40%, #060a12 60%, #050d1a 100%);
+    background-size: 400% 400%;
+    animation: bg-shift 15s ease infinite alternate;
+}
+.not-found-bracket {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    opacity: 0.35;
+}
+.not-found-bracket--tl {
+    top: 0; left: 0;
+    border-top: 1.5px solid rgba(29, 111, 232, 0.5);
+    border-left: 1.5px solid rgba(29, 111, 232, 0.5);
+}
+.not-found-bracket--tr {
+    top: 0; right: 0;
+    border-top: 1.5px solid rgba(29, 111, 232, 0.5);
+    border-right: 1.5px solid rgba(29, 111, 232, 0.5);
+}
+.not-found-bracket--bl {
+    bottom: 0; left: 0;
+    border-bottom: 1.5px solid rgba(29, 111, 232, 0.5);
+    border-left: 1.5px solid rgba(29, 111, 232, 0.5);
+}
+.not-found-bracket--br {
+    bottom: 0; right: 0;
+    border-bottom: 1.5px solid rgba(29, 111, 232, 0.5);
+    border-right: 1.5px solid rgba(29, 111, 232, 0.5);
+}
+.not-found-404-ghost {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: "Bebas Neue", sans-serif;
+    font-size: clamp(80px, 15vw, 140px);
+    color: rgba(29, 111, 232, 0.06);
+    filter: blur(20px);
+    user-select: none;
+    pointer-events: none;
+    white-space: nowrap;
+}
+.not-found-404-text {
+    font-family: "Bebas Neue", sans-serif;
+    font-size: clamp(80px, 15vw, 140px);
+    line-height: 1;
+    color: transparent;
+    -webkit-text-stroke: 1.5px rgba(29, 111, 232, 0.5);
+    letter-spacing: 0.05em;
+    user-select: none;
+}
+.not-found-route-label {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 14px;
+    letter-spacing: 0.2em;
+    color: var(--color-muted-foreground);
+    margin-top: 8px;
+}
+.not-found-separator {
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(29, 111, 232, 0.3), transparent);
+    margin: 20px 0;
+    position: relative;
+}
+.not-found-separator::before {
+    content: "";
+    position: absolute;
+    top: -2px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: rgba(29, 111, 232, 0.5);
+}
+.not-found-desc {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10px;
+    color: var(--color-muted-foreground);
+    letter-spacing: 0.06em;
+    margin-bottom: 32px;
+}
+.not-found-btn-outline {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    padding: 9px 20px;
+    border-radius: 6px;
+    border: 1px solid var(--color-border);
+    background: transparent;
+    color: var(--color-foreground);
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+}
+.not-found-btn-outline:hover {
+    border-color: rgba(29, 111, 232, 0.4);
+    background: rgba(29, 111, 232, 0.05);
+}
+.not-found-btn-primary {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    padding: 9px 20px;
+    border-radius: 6px;
+    border: none;
+    background: #3b82f6;
+    color: white;
+    cursor: pointer;
+    transition: box-shadow 0.15s, background 0.15s;
+    box-shadow: 0 0 12px rgba(59, 130, 246, 0.3);
+}
+.not-found-btn-primary:hover {
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
+    background: #2563eb;
+}
+
 /* ─── Settings page responsive grid ─────────────────────────── */
 .settings-grid {
     display: grid;

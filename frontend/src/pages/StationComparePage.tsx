@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { motion } from "framer-motion";
+import { PageHeader } from "@/components/PageHeader";
 import { MapPin, Navigation, Hash, Calendar } from "lucide-react";
 import {
   Select,
@@ -22,17 +23,6 @@ const statusLED = (status: string) => {
   return { color: "#ef4444", shadow: "0 0 6px 2px rgba(239,68,68,0.4)" };
 };
 
-const cardStyle: React.CSSProperties = {
-  background: "var(--color-card)",
-  border: "1px solid var(--color-border)",
-  borderRadius: 12,
-  overflow: "hidden",
-};
-
-const cardHeaderStyle: React.CSSProperties = {
-  padding: "18px 24px 14px",
-  borderBottom: "1px solid var(--color-border)",
-};
 
 interface StationCardProps {
   station: Station | undefined;
@@ -47,13 +37,8 @@ function StationCard({
 }: StationCardProps) {
   if (!station) {
     return (
-      <div style={cardStyle}>
-        <div
-          style={{
-            height: 2,
-            background: "linear-gradient(90deg, #3b82f6 0%, transparent 100%)",
-          }}
-        />
+      <div className="ops-card">
+        <div className="ops-accent-line" />
         <div
           style={{
             padding: "60px 24px",
@@ -192,30 +177,11 @@ function StationCard({
   ];
 
   return (
-    <div style={cardStyle}>
-      <div
-        style={{
-          height: 2,
-          background: "linear-gradient(90deg, #3b82f6 0%, transparent 100%)",
-        }}
-      />
-      <div style={cardHeaderStyle}>
+    <div className="ops-card">
+      <div className="ops-accent-line" />
+      <div className="ops-card-header">
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <span
-            style={{
-              background: "rgba(29,111,232,0.14)",
-              border: "1px solid rgba(29,111,232,0.25)",
-              borderRadius: 4,
-              padding: "4px 12px",
-              fontFamily: "'Bebas Neue', sans-serif",
-              fontSize: 16,
-              letterSpacing: "0.12em",
-              color: "#60a5fa",
-              display: "inline-block",
-            }}
-          >
-            {station.code}
-          </span>
+          <span className="ops-code-badge">{station.code}</span>
         </div>
         <p
           style={{
@@ -229,16 +195,7 @@ function StationCard({
         >
           {station.name}
         </p>
-        <p
-          style={{
-            fontFamily: "'JetBrains Mono', monospace",
-            fontSize: 9.5,
-            letterSpacing: "0.14em",
-            color: "var(--color-muted-foreground)",
-            textTransform: "uppercase",
-            margin: "4px 0 0",
-          }}
-        >
+        <p className="ops-card-subtitle" style={{ margin: "4px 0 0" }}>
           {station.location}
         </p>
       </div>
@@ -279,17 +236,7 @@ function StationCard({
               }}
             >
               {row.icon}
-              <span
-                style={{
-                  fontFamily: "'JetBrains Mono', monospace",
-                  fontSize: 9.5,
-                  letterSpacing: "0.14em",
-                  textTransform: "uppercase",
-                  color: "var(--color-muted-foreground)",
-                }}
-              >
-                {row.label}
-              </span>
+              <span className="ops-table-head">{row.label}</span>
             </div>
             <div style={{ flex: 1, color: "var(--color-foreground)" }}>
               {row.value}
@@ -325,60 +272,15 @@ export default function StationComparePage() {
 
   return (
     <div>
-      {/* Page header */}
-      <div style={{ marginBottom: 28 }}>
-        <h1
-          style={{
-            fontFamily: "'Bebas Neue', sans-serif",
-            fontSize: 36,
-            letterSpacing: "0.04em",
-            lineHeight: 1,
-            color: "var(--color-foreground)",
-            margin: 0,
-          }}
-        >
-          STATION COMPARE
-        </h1>
-        <p
-          style={{
-            fontFamily: "'JetBrains Mono', monospace",
-            fontSize: 9.5,
-            letterSpacing: "0.14em",
-            color: "var(--color-muted-foreground)",
-            textTransform: "uppercase",
-            margin: "6px 0 0",
-          }}
-        >
-          Side-by-side station analysis
-        </p>
-        <div
-          style={{
-            marginTop: 16,
-            height: 1,
-            background:
-              "linear-gradient(90deg, var(--color-border) 0%, transparent 80%)",
-          }}
-        />
-      </div>
+      <PageHeader title="STATION COMPARE" subtitle="Side-by-side station analysis" />
 
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
       >
         {/* Selector area */}
-        <div
-          style={{
-            ...cardStyle,
-            marginBottom: 24,
-          }}
-        >
-          <div
-            style={{
-              height: 2,
-              background:
-                "linear-gradient(90deg, #3b82f6 0%, transparent 100%)",
-            }}
-          />
+        <div className="ops-card" style={{ marginBottom: 24 }}>
+          <div className="ops-accent-line" />
           <div style={{ padding: "20px 24px" }}>
             <div
               style={{
@@ -389,16 +291,7 @@ export default function StationComparePage() {
               }}
             >
               <div>
-                <p
-                  style={{
-                    fontFamily: "'JetBrains Mono', monospace",
-                    fontSize: 9.5,
-                    letterSpacing: "0.14em",
-                    textTransform: "uppercase",
-                    color: "var(--color-muted-foreground)",
-                    margin: "0 0 8px",
-                  }}
-                >
+                <p className="ops-table-head" style={{ margin: "0 0 8px" }}>
                   Station A
                 </p>
                 <Select value={leftId} onValueChange={setLeftId}>
@@ -452,16 +345,7 @@ export default function StationComparePage() {
               </div>
 
               <div>
-                <p
-                  style={{
-                    fontFamily: "'JetBrains Mono', monospace",
-                    fontSize: 9.5,
-                    letterSpacing: "0.14em",
-                    textTransform: "uppercase",
-                    color: "var(--color-muted-foreground)",
-                    margin: "0 0 8px",
-                  }}
-                >
+                <p className="ops-table-head" style={{ margin: "0 0 8px" }}>
                   Station B
                 </p>
                 <Select value={rightId} onValueChange={setRightId}>

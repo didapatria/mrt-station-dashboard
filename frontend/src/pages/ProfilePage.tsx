@@ -33,6 +33,7 @@ import { useMyPermissions } from "@/hooks/use-permissions";
 import { authService } from "@/services/auth.service";
 import { useUpdateAvatar } from "@/hooks/use-auth";
 import { usePageMeta } from "@/hooks/use-page-meta";
+import { PageHeader } from "@/components/PageHeader";
 
 const passwordSchema = z
   .object({
@@ -47,72 +48,6 @@ const passwordSchema = z
 
 type PasswordFormData = z.infer<typeof passwordSchema>;
 
-const chipStyle: React.CSSProperties = {
-  background: "rgba(59,130,246,0.1)",
-  border: "1px solid rgba(59,130,246,0.2)",
-  borderRadius: 3,
-  padding: "3px 8px",
-  fontFamily: "'JetBrains Mono', monospace",
-  fontSize: 9.5,
-  color: "#60a5fa",
-};
-
-const permChipStyle: React.CSSProperties = {
-  background: "rgba(59,130,246,0.08)",
-  border: "1px solid rgba(59,130,246,0.18)",
-  borderRadius: 3,
-  padding: "3px 8px",
-  fontFamily: "'JetBrains Mono', monospace",
-  fontSize: 9,
-  color: "#60a5fa",
-};
-
-const cardStyle: React.CSSProperties = {
-  background: "var(--color-card)",
-  border: "1px solid var(--color-border)",
-  borderRadius: 12,
-  overflow: "hidden",
-};
-
-const cardHeaderStyle: React.CSSProperties = {
-  padding: "18px 24px 14px",
-  borderBottom: "1px solid var(--color-border)",
-};
-
-const cardTitleStyle: React.CSSProperties = {
-  fontFamily: "'Bebas Neue', sans-serif",
-  fontSize: 18,
-  letterSpacing: "0.05em",
-  color: "var(--color-foreground)",
-  display: "flex",
-  alignItems: "center",
-  gap: 8,
-};
-
-const cardSubtitleStyle: React.CSSProperties = {
-  fontFamily: "'JetBrains Mono', monospace",
-  fontSize: 10,
-  letterSpacing: "0.08em",
-  color: "var(--color-muted-foreground)",
-  marginTop: 4,
-};
-
-const monoLabelStyle: React.CSSProperties = {
-  fontFamily: "'JetBrains Mono', monospace",
-  fontSize: 10,
-  textTransform: "uppercase" as const,
-  letterSpacing: "0.08em",
-  color: "var(--color-muted-foreground)",
-};
-
-const accentLine = (
-  <div
-    style={{
-      height: 2,
-      background: "linear-gradient(90deg, #3b82f6 0%, transparent 100%)",
-    }}
-  />
-);
 
 export default function ProfilePage() {
   usePageMeta({ title: "Profile", path: "/profile" });
@@ -269,41 +204,7 @@ export default function ProfilePage() {
 
   return (
     <div>
-      {/* Page header */}
-      <div style={{ marginBottom: 24 }}>
-        <h2
-          style={{
-            fontFamily: "'Bebas Neue', sans-serif",
-            fontSize: 36,
-            letterSpacing: "0.04em",
-            lineHeight: 1,
-            color: "var(--color-foreground)",
-            margin: 0,
-          }}
-        >
-          PROFILE
-        </h2>
-        <p
-          style={{
-            fontFamily: "'JetBrains Mono', monospace",
-            fontSize: 9.5,
-            letterSpacing: "0.1em",
-            color: "var(--color-muted-foreground)",
-            marginTop: 4,
-          }}
-        >
-          {user.role} · {t("profile.subtitle")}
-        </p>
-        {/* Horizontal fade line */}
-        <div
-          style={{
-            height: 1,
-            background:
-              "linear-gradient(90deg, rgba(59,130,246,0.3) 0%, transparent 70%)",
-            marginTop: 14,
-          }}
-        />
-      </div>
+      <PageHeader title="PROFILE" subtitle={`${user.role} · ${t("profile.subtitle")}`} />
 
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -320,24 +221,18 @@ export default function ProfilePage() {
           <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
             {/* Profile Info card with avatar gradient treatment */}
             <div
+              className="ops-card"
               style={{
-                ...cardStyle,
                 background: isDark
                   ? "linear-gradient(135deg, rgba(59,130,246,0.06) 0%, rgba(59,130,246,0.02) 100%)"
                   : "linear-gradient(135deg, rgba(59,130,246,0.04) 0%, transparent 100%)",
               }}
             >
-              {accentLine}
-              <div
-                style={{
-                  background: "var(--color-card)",
-                  border: "none",
-                  borderRadius: 0,
-                }}
-              >
+              <div className="ops-accent-line" />
+              <div>
                 <div
+                  className="ops-card-header"
                   style={{
-                    ...cardHeaderStyle,
                     padding: "20px 24px 16px",
                     background: isDark
                       ? "linear-gradient(135deg, rgba(59,130,246,0.06) 0%, rgba(59,130,246,0.02) 100%)"
@@ -470,7 +365,7 @@ export default function ProfilePage() {
                           />
                         </div>
                         <div>
-                          <div style={monoLabelStyle}>{item.label}</div>
+                          <div className="ops-mono-label">{item.label}</div>
                           <div
                             style={{
                               fontFamily: "'Sora', sans-serif",
@@ -491,11 +386,11 @@ export default function ProfilePage() {
             </div>
 
             {/* Preferences */}
-            <div style={cardStyle}>
-              {accentLine}
-              <div style={cardHeaderStyle}>
-                <div style={cardTitleStyle}>PREFERENCES</div>
-                <div style={cardSubtitleStyle}>
+            <div className="ops-card">
+              <div className="ops-accent-line" />
+              <div className="ops-card-header">
+                <div className="ops-card-title" style={{ display: "flex", alignItems: "center", gap: 8 }}>PREFERENCES</div>
+                <div className="ops-card-subtitle">
                   Current environment settings
                 </div>
               </div>
@@ -541,14 +436,14 @@ export default function ProfilePage() {
             </div>
 
             {/* Permissions */}
-            <div style={cardStyle}>
-              {accentLine}
-              <div style={cardHeaderStyle}>
-                <div style={cardTitleStyle}>
+            <div className="ops-card">
+              <div className="ops-accent-line" />
+              <div className="ops-card-header">
+                <div className="ops-card-title" style={{ display: "flex", alignItems: "center", gap: 8 }}>
                   <Shield size={15} />
                   PERMISSIONS
                 </div>
-                <div style={cardSubtitleStyle}>
+                <div className="ops-card-subtitle">
                   {permissions.length > 0
                     ? `${permissions.length} permissions via role`
                     : "Loading permissions..."}
@@ -557,7 +452,7 @@ export default function ProfilePage() {
               <div style={{ padding: "16px 24px 20px" }}>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
                   {permissions.map((perm) => (
-                    <span key={perm} style={permChipStyle}>
+                    <span key={perm} className="ops-chip" style={{ fontSize: 9 }}>
                       {perm}
                     </span>
                   ))}
@@ -581,14 +476,14 @@ export default function ProfilePage() {
           {/* Right Column */}
           <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
             {/* Change Password */}
-            <div style={cardStyle}>
-              {accentLine}
-              <div style={cardHeaderStyle}>
-                <div style={cardTitleStyle}>
+            <div className="ops-card">
+              <div className="ops-accent-line" />
+              <div className="ops-card-header">
+                <div className="ops-card-title" style={{ display: "flex", alignItems: "center", gap: 8 }}>
                   <Lock size={15} />
                   {t("profile.changePassword").toUpperCase()}
                 </div>
-                <div style={cardSubtitleStyle}>
+                <div className="ops-card-subtitle">
                   {t("profile.updatePassword")}
                 </div>
               </div>
@@ -744,13 +639,13 @@ export default function ProfilePage() {
             </div>
 
             {/* Tech Stack */}
-            <div style={cardStyle}>
-              {accentLine}
-              <div style={cardHeaderStyle}>
-                <div style={cardTitleStyle}>
+            <div className="ops-card">
+              <div className="ops-accent-line" />
+              <div className="ops-card-header">
+                <div className="ops-card-title" style={{ display: "flex", alignItems: "center", gap: 8 }}>
                   {t("profile.techStack").toUpperCase()}
                 </div>
-                <div style={cardSubtitleStyle}>
+                <div className="ops-card-subtitle">
                   {frontendStack.length +
                     backendStack.length +
                     infraStack.length +
@@ -819,7 +714,7 @@ export default function ProfilePage() {
                         style={{ display: "flex", flexWrap: "wrap", gap: 6 }}
                       >
                         {stack.map((tech) => (
-                          <span key={tech} style={chipStyle} title={tech}>
+                          <span key={tech} className="ops-chip" title={tech}>
                             {tech}
                           </span>
                         ))}

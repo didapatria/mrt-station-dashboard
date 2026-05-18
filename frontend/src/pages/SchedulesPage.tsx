@@ -66,6 +66,7 @@ import { useDebounce } from "@/hooks/use-debounce";
 import { dashboardService } from "@/services/dashboard.service";
 import { useRole } from "@/hooks/use-role";
 import { usePageMeta } from "@/hooks/use-page-meta";
+import { PageHeader } from "@/components/PageHeader";
 import type { Schedule } from "@/types";
 
 const scheduleSchema = z.object({
@@ -290,104 +291,29 @@ export default function SchedulesPage() {
 
   return (
     <div>
-      {/* Page Header */}
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          alignItems: "flex-start",
-          justifyContent: "space-between",
-          gap: 16,
-          flexWrap: "wrap",
-        }}
-      >
-        <div>
-          <h1
-            style={{
-              fontFamily: "'Bebas Neue', sans-serif",
-              fontSize: 36,
-              lineHeight: 1,
-              letterSpacing: "0.04em",
-              margin: 0,
-            }}
-          >
-            {t("schedules.title")}
-            <span
-              style={{
-                fontFamily: "'JetBrains Mono', monospace",
-                fontSize: 10,
-                background: "rgba(59,130,246,0.1)",
-                border: "1px solid rgba(59,130,246,0.2)",
-                color: "#60a5fa",
-                padding: "2px 8px",
-                borderRadius: 4,
-                letterSpacing: "0.08em",
-                marginLeft: 10,
-                verticalAlign: "middle",
-              }}
-            >
-              {totalCount} entries
-            </span>
-          </h1>
-          <p
-            style={{
-              fontFamily: "'JetBrains Mono', monospace",
-              fontSize: 9.5,
-              letterSpacing: "0.14em",
-              textTransform: "uppercase",
-              color: "var(--color-muted-foreground)",
-              marginTop: 6,
-            }}
-          >
-            N–S LINE · SCHEDULE REGISTRY
-          </p>
-        </div>
-        <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-          <Button
-            variant="outline"
-            onClick={handleExport}
-            style={{
-              fontFamily: "'JetBrains Mono', monospace",
-              fontSize: 10,
-              letterSpacing: "0.08em",
-            }}
-          >
-            <Download className="h-4 w-4 mr-2" />
-            CSV
-          </Button>
-          {isAdmin && (
-            <Button
-              onClick={openCreate}
-              style={{
-                fontFamily: "'JetBrains Mono', monospace",
-                fontSize: 10,
-                letterSpacing: "0.08em",
-              }}
-            >
-              <Plus className="h-4 w-4 mr-2" />
-              {t("schedules.addSchedule")}
+      <PageHeader
+        title={t("schedules.title")}
+        subtitle={`N–S Line · Schedule Registry · ${totalCount} entries`}
+        right={
+          <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+            <Button variant="outline" onClick={handleExport} className="ops-btn-mono">
+              <Download className="h-4 w-4 mr-2" />
+              CSV
             </Button>
-          )}
-        </div>
-      </div>
-
-      {/* Accent line */}
-      <div
-        style={{
-          height: 1,
-          background:
-            "linear-gradient(90deg, rgba(59,130,246,0.5) 0%, rgba(59,130,246,0.0) 60%)",
-          marginTop: 12,
-          marginBottom: 28,
-        }}
+            {isAdmin && (
+              <Button onClick={openCreate} className="ops-btn-mono">
+                <Plus className="h-4 w-4 mr-2" />
+                {t("schedules.addSchedule")}
+              </Button>
+            )}
+          </div>
+        }
       />
 
       {/* Filter Bar */}
       <div
+        className="ops-card"
         style={{
-          background: "var(--color-card)",
-          border: "1px solid var(--color-border)",
-          borderRadius: 12,
           padding: "16px 20px",
           marginBottom: 20,
           display: "flex",
@@ -406,17 +332,13 @@ export default function SchedulesPage() {
             value={search}
             onChange={(e) => handleSearchChange(e.target.value)}
             className="pl-9"
-            style={{ fontFamily: "'Sora', sans-serif", fontSize: 13 }}
+            className="font-['Sora'] text-[13px]"
           />
         </div>
         <Select value={dayTypeFilter} onValueChange={handleDayTypeChange}>
           <SelectTrigger
             className="w-35"
-            style={{
-              fontFamily: "'JetBrains Mono', monospace",
-              fontSize: 10,
-              letterSpacing: "0.08em",
-            }}
+            className="ops-btn-mono"
           >
             <SelectValue placeholder="Day Type" />
           </SelectTrigger>
@@ -430,11 +352,7 @@ export default function SchedulesPage() {
         <Select value={statusFilter} onValueChange={handleStatusChange}>
           <SelectTrigger
             className="w-35"
-            style={{
-              fontFamily: "'JetBrains Mono', monospace",
-              fontSize: 10,
-              letterSpacing: "0.08em",
-            }}
+            className="ops-btn-mono"
           >
             <SelectValue placeholder="Status" />
           </SelectTrigger>
@@ -452,72 +370,24 @@ export default function SchedulesPage() {
         <TabsList>
           <TabsTrigger
             value="table"
-            style={{
-              fontFamily: "'JetBrains Mono', monospace",
-              fontSize: 10,
-              letterSpacing: "0.1em",
-            }}
+            className="ops-btn-mono tracking-[0.1em]"
           >
             TABLE
           </TabsTrigger>
           <TabsTrigger
             value="calendar"
-            style={{
-              fontFamily: "'JetBrains Mono', monospace",
-              fontSize: 10,
-              letterSpacing: "0.1em",
-            }}
+            className="ops-btn-mono tracking-[0.1em]"
           >
             TIMELINE
           </TabsTrigger>
         </TabsList>
 
         <TabsContent value="calendar">
-          <div
-            style={{
-              background: "var(--color-card)",
-              border: "1px solid var(--color-border)",
-              borderRadius: 12,
-              overflow: "hidden",
-            }}
-          >
-            {/* Card top accent */}
-            <div
-              style={{
-                height: 2,
-                background:
-                  "linear-gradient(90deg, #3b82f6 0%, rgba(59,130,246,0) 100%)",
-              }}
-            />
-            <div
-              style={{
-                padding: "18px 24px 14px",
-                borderBottom: "1px solid var(--color-border)",
-              }}
-            >
-              <p
-                style={{
-                  fontFamily: "'Bebas Neue', sans-serif",
-                  fontSize: 20,
-                  letterSpacing: "0.05em",
-                  margin: 0,
-                  lineHeight: 1,
-                }}
-              >
-                TIMELINE VIEW
-              </p>
-              <p
-                style={{
-                  fontFamily: "'JetBrains Mono', monospace",
-                  fontSize: 9.5,
-                  letterSpacing: "0.14em",
-                  textTransform: "uppercase",
-                  color: "var(--color-muted-foreground)",
-                  marginTop: 4,
-                }}
-              >
-                SCHEDULE CALENDAR
-              </p>
+          <div className="ops-card">
+            <div className="ops-accent-line" />
+            <div className="ops-card-header">
+              <p className="ops-card-title">TIMELINE VIEW</p>
+              <p className="ops-card-subtitle">SCHEDULE CALENDAR</p>
             </div>
             <ScheduleCalendar schedules={sortedSchedules} />
           </div>
@@ -529,51 +399,11 @@ export default function SchedulesPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3 }}
           >
-            <div
-              style={{
-                background: "var(--color-card)",
-                border: "1px solid var(--color-border)",
-                borderRadius: 12,
-                overflow: "hidden",
-              }}
-            >
-              {/* Card top accent */}
-              <div
-                style={{
-                  height: 2,
-                  background:
-                    "linear-gradient(90deg, #3b82f6 0%, rgba(59,130,246,0) 100%)",
-                }}
-              />
-              <div
-                style={{
-                  padding: "18px 24px 14px",
-                  borderBottom: "1px solid var(--color-border)",
-                }}
-              >
-                <p
-                  style={{
-                    fontFamily: "'Bebas Neue', sans-serif",
-                    fontSize: 20,
-                    letterSpacing: "0.05em",
-                    margin: 0,
-                    lineHeight: 1,
-                  }}
-                >
-                  SCHEDULE REGISTRY
-                </p>
-                <p
-                  style={{
-                    fontFamily: "'JetBrains Mono', monospace",
-                    fontSize: 9.5,
-                    letterSpacing: "0.14em",
-                    textTransform: "uppercase",
-                    color: "var(--color-muted-foreground)",
-                    marginTop: 4,
-                  }}
-                >
-                  {totalCount} RECORDS · NORTH–SOUTH LINE
-                </p>
+            <div className="ops-card">
+              <div className="ops-accent-line" />
+              <div className="ops-card-header">
+                <p className="ops-card-title">SCHEDULE REGISTRY</p>
+                <p className="ops-card-subtitle">{totalCount} RECORDS · NORTH–SOUTH LINE</p>
               </div>
               <div className="overflow-x-auto">
                 <Table>
@@ -584,22 +414,10 @@ export default function SchedulesPage() {
                         sortKey="trainNumber"
                         sortConfig={sortConfig}
                         onSort={requestSort}
-                        style={{
-                          fontFamily: "'JetBrains Mono', monospace",
-                          fontSize: 9.5,
-                          letterSpacing: "0.14em",
-                          textTransform: "uppercase",
-                          color: "var(--color-muted-foreground)",
-                        }}
+                        className="ops-table-head"
                       />
                       <TableHead
-                        style={{
-                          fontFamily: "'JetBrains Mono', monospace",
-                          fontSize: 9.5,
-                          letterSpacing: "0.14em",
-                          textTransform: "uppercase",
-                          color: "var(--color-muted-foreground)",
-                        }}
+                        className="ops-table-head"
                       >
                         {t("schedules.route")}
                       </TableHead>
@@ -609,39 +427,21 @@ export default function SchedulesPage() {
                         sortConfig={sortConfig}
                         onSort={requestSort}
                         className="hidden sm:table-cell"
-                        style={{
-                          fontFamily: "'JetBrains Mono', monospace",
-                          fontSize: 9.5,
-                          letterSpacing: "0.14em",
-                          textTransform: "uppercase",
-                          color: "var(--color-muted-foreground)",
-                        }}
+                        className="ops-table-head"
                       />
                       <SortableTableHead<Schedule>
                         label={t("schedules.dayType")}
                         sortKey="dayType"
                         sortConfig={sortConfig}
                         onSort={requestSort}
-                        style={{
-                          fontFamily: "'JetBrains Mono', monospace",
-                          fontSize: 9.5,
-                          letterSpacing: "0.14em",
-                          textTransform: "uppercase",
-                          color: "var(--color-muted-foreground)",
-                        }}
+                        className="ops-table-head"
                       />
                       <SortableTableHead<Schedule>
                         label={t("stations.status")}
                         sortKey="status"
                         sortConfig={sortConfig}
                         onSort={requestSort}
-                        style={{
-                          fontFamily: "'JetBrains Mono', monospace",
-                          fontSize: 9.5,
-                          letterSpacing: "0.14em",
-                          textTransform: "uppercase",
-                          color: "var(--color-muted-foreground)",
-                        }}
+                        className="ops-table-head"
                       />
                       {isAdmin && (
                         <TableHead

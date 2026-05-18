@@ -1,6 +1,7 @@
 import { useState, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { motion } from "framer-motion";
+import { PageHeader } from "@/components/PageHeader";
 import { ArrowRight, Clock, Train } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -30,25 +31,6 @@ const statusLED = (status: string) => {
   return { color: "#ef4444", shadow: "0 0 6px 2px rgba(239,68,68,0.4)" };
 };
 
-const cardStyle: React.CSSProperties = {
-  background: "var(--color-card)",
-  border: "1px solid var(--color-border)",
-  borderRadius: 12,
-  overflow: "hidden",
-};
-
-const cardHeaderStyle: React.CSSProperties = {
-  padding: "18px 24px 14px",
-  borderBottom: "1px solid var(--color-border)",
-};
-
-const thStyle: React.CSSProperties = {
-  fontFamily: "'JetBrains Mono', monospace",
-  fontSize: 9.5,
-  textTransform: "uppercase" as const,
-  letterSpacing: "0.14em",
-  color: "var(--color-muted-foreground)",
-};
 
 export default function RoutePlannerPage() {
   usePageMeta({ title: "Route Planner", path: "/route-planner" });
@@ -73,88 +55,26 @@ export default function RoutePlannerPage() {
 
   return (
     <div>
-      {/* Page header */}
-      <div style={{ marginBottom: 28 }}>
-        <h1
-          style={{
-            fontFamily: "'Bebas Neue', sans-serif",
-            fontSize: 36,
-            letterSpacing: "0.04em",
-            lineHeight: 1,
-            color: "var(--color-foreground)",
-            margin: 0,
-          }}
-        >
-          ROUTE PLANNER
-        </h1>
-        <p
-          style={{
-            fontFamily: "'JetBrains Mono', monospace",
-            fontSize: 9.5,
-            letterSpacing: "0.14em",
-            color: "var(--color-muted-foreground)",
-            textTransform: "uppercase",
-            margin: "6px 0 0",
-          }}
-        >
-          Find available schedules between stations
-        </p>
-        <div
-          style={{
-            marginTop: 16,
-            height: 1,
-            background:
-              "linear-gradient(90deg, var(--color-border) 0%, transparent 80%)",
-          }}
-        />
-      </div>
+      <PageHeader title="ROUTE PLANNER" subtitle="Find available schedules between stations" />
 
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
       >
         {/* Terminal-style form card */}
-        <div
-          style={{
-            ...cardStyle,
-            marginBottom: 24,
-          }}
-        >
-          <div
-            style={{
-              height: 2,
-              background:
-                "linear-gradient(90deg, #3b82f6 0%, transparent 100%)",
-            }}
-          />
-          <div style={cardHeaderStyle}>
+        <div className="ops-card" style={{ marginBottom: 24 }}>
+          <div className="ops-accent-line" />
+          <div className="ops-card-header">
             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
               <Train
                 size={14}
                 style={{ color: "var(--color-muted-foreground)" }}
               />
-              <p
-                style={{
-                  fontFamily: "'Bebas Neue', sans-serif",
-                  fontSize: 16,
-                  letterSpacing: "0.1em",
-                  color: "var(--color-foreground)",
-                  margin: 0,
-                }}
-              >
+              <p className="ops-card-title" style={{ margin: 0 }}>
                 PLAN YOUR ROUTE
               </p>
             </div>
-            <p
-              style={{
-                fontFamily: "'JetBrains Mono', monospace",
-                fontSize: 9.5,
-                letterSpacing: "0.14em",
-                color: "var(--color-muted-foreground)",
-                textTransform: "uppercase",
-                margin: "4px 0 0",
-              }}
-            >
+            <p className="ops-card-subtitle" style={{ margin: "4px 0 0" }}>
               Select origin and destination
             </p>
           </div>
@@ -373,31 +293,17 @@ export default function RoutePlannerPage() {
 
         {/* Results */}
         {fromId && toId && fromId !== toId && (
-          <div style={cardStyle}>
-            <div
-              style={{
-                height: 2,
-                background:
-                  "linear-gradient(90deg, #3b82f6 0%, transparent 100%)",
-              }}
-            />
-            <div style={cardHeaderStyle}>
+          <div className="ops-card">
+            <div className="ops-accent-line" />
+            <div className="ops-card-header">
               <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                 <Clock
                   size={14}
                   style={{ color: "var(--color-muted-foreground)" }}
                 />
                 <p
-                  style={{
-                    fontFamily: "'Bebas Neue', sans-serif",
-                    fontSize: 16,
-                    letterSpacing: "0.1em",
-                    color: "var(--color-foreground)",
-                    margin: 0,
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 6,
-                  }}
+                  className="ops-card-title"
+                  style={{ margin: 0, display: "flex", alignItems: "center", gap: 6 }}
                 >
                   <span>{fromStation?.code}</span>
                   <span
@@ -425,16 +331,7 @@ export default function RoutePlannerPage() {
                   {results.length}
                 </span>
               </div>
-              <p
-                style={{
-                  fontFamily: "'JetBrains Mono', monospace",
-                  fontSize: 9.5,
-                  letterSpacing: "0.14em",
-                  color: "var(--color-muted-foreground)",
-                  textTransform: "uppercase",
-                  margin: "4px 0 0",
-                }}
-              >
+              <p className="ops-card-subtitle" style={{ margin: "4px 0 0" }}>
                 Direct schedule results
               </p>
             </div>
@@ -486,22 +383,22 @@ export default function RoutePlannerPage() {
               <Table>
                 <TableHeader>
                   <TableRow style={{ background: "var(--color-muted)" }}>
-                    <TableHead style={thStyle}>
+                    <TableHead className="ops-table-head">
                       {t("schedules.trainNumber")}
                     </TableHead>
-                    <TableHead style={thStyle}>
+                    <TableHead className="ops-table-head">
                       {t("schedules.route")}
                     </TableHead>
-                    <TableHead style={thStyle}>
+                    <TableHead className="ops-table-head">
                       {t("schedules.departureTime")}
                     </TableHead>
-                    <TableHead style={thStyle}>
+                    <TableHead className="ops-table-head">
                       {t("schedules.arrivalTime")}
                     </TableHead>
-                    <TableHead style={thStyle}>
+                    <TableHead className="ops-table-head">
                       {t("schedules.dayType")}
                     </TableHead>
-                    <TableHead style={thStyle}>
+                    <TableHead className="ops-table-head">
                       {t("stations.status")}
                     </TableHead>
                   </TableRow>
@@ -555,20 +452,10 @@ export default function RoutePlannerPage() {
                               </span>
                             </div>
                           </TableCell>
-                          <TableCell
-                            style={{
-                              fontFamily: "'JetBrains Mono', monospace",
-                              fontSize: 12,
-                            }}
-                          >
+                          <TableCell className="ops-mono-data">
                             {s.departureTime}
                           </TableCell>
-                          <TableCell
-                            style={{
-                              fontFamily: "'JetBrains Mono', monospace",
-                              fontSize: 12,
-                            }}
-                          >
+                          <TableCell className="ops-mono-data">
                             {s.arrivalTime}
                           </TableCell>
                           <TableCell>

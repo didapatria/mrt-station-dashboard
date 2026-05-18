@@ -1,6 +1,7 @@
 import { Navigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ShieldCheck, Shield, Check, X } from "lucide-react";
+import { PageHeader } from "@/components/PageHeader";
 import { Separator } from "@/components/ui/separator";
 import {
   Table,
@@ -84,48 +85,7 @@ export default function AccessManagementPage() {
 
   return (
     <div>
-      {/* Page Header */}
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: 4,
-        }}
-      >
-        <h1
-          style={{
-            fontFamily: "'Bebas Neue', sans-serif",
-            fontSize: 36,
-            letterSpacing: "0.04em",
-            lineHeight: 1,
-            margin: 0,
-          }}
-        >
-          ACCESS CONTROL
-        </h1>
-        <span
-          style={{
-            fontFamily: "'JetBrains Mono', monospace",
-            fontSize: 9.5,
-            letterSpacing: "0.14em",
-            textTransform: "uppercase",
-            color: "var(--color-muted-foreground)",
-          }}
-        >
-          RBAC · Permission Matrix
-        </span>
-      </div>
-
-      {/* Horizontal fade line below header */}
-      <div
-        style={{
-          height: 1,
-          background:
-            "linear-gradient(90deg, rgba(59,130,246,0.5) 0%, transparent 60%)",
-          marginTop: 12,
-          marginBottom: 28,
-        }}
-      />
+      <PageHeader title="ACCESS CONTROL" subtitle="RBAC · Permission Matrix" />
 
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -146,23 +106,13 @@ export default function AccessManagementPage() {
             return (
               <div
                 key={role}
+                className="ops-card"
                 style={{
-                  background: "var(--color-card)",
-                  border: "1px solid var(--color-border)",
-                  borderRadius: 12,
-                  overflow: "hidden",
                   borderLeft: `3px solid ${cfg.accentColor}`,
                   boxShadow: cfg.glowShadow,
                 }}
               >
-                {/* Top accent gradient line */}
-                <div
-                  style={{
-                    height: 2,
-                    background:
-                      "linear-gradient(90deg, #3b82f6 0%, rgba(59,130,246,0) 100%)",
-                  }}
-                />
+                <div className="ops-accent-line" />
 
                 {/* Card header */}
                 <div style={{ padding: "18px 20px 14px" }}>
@@ -272,54 +222,14 @@ export default function AccessManagementPage() {
         </div>
 
         {/* Permission Matrix */}
-        <div
-          style={{
-            background: "var(--color-card)",
-            border: "1px solid var(--color-border)",
-            borderRadius: 12,
-            overflow: "hidden",
-          }}
-        >
-          {/* Top accent gradient line */}
+        <div className="ops-card">
+          <div className="ops-accent-line" />
           <div
-            style={{
-              height: 2,
-              background:
-                "linear-gradient(90deg, #3b82f6 0%, rgba(59,130,246,0) 100%)",
-            }}
-          />
-
-          {/* Card section header */}
-          <div
-            style={{
-              padding: "18px 24px 14px",
-              borderBottom: "1px solid var(--color-border)",
-              display: "flex",
-              alignItems: "baseline",
-              gap: 10,
-            }}
+            className="ops-card-header"
+            style={{ display: "flex", alignItems: "baseline", gap: 10 }}
           >
-            <span
-              style={{
-                fontFamily: "'Bebas Neue', sans-serif",
-                fontSize: 20,
-                letterSpacing: "0.05em",
-                lineHeight: 1,
-              }}
-            >
-              PERMISSION MATRIX
-            </span>
-            <span
-              style={{
-                fontFamily: "'JetBrains Mono', monospace",
-                fontSize: 9.5,
-                letterSpacing: "0.14em",
-                textTransform: "uppercase",
-                color: "var(--color-muted-foreground)",
-              }}
-            >
-              Detailed comparison across modules
-            </span>
+            <span className="ops-card-title">PERMISSION MATRIX</span>
+            <span className="ops-card-subtitle">Detailed comparison across modules</span>
           </div>
 
           <div style={{ width: "100%", overflowX: "auto" }}>
@@ -333,28 +243,8 @@ export default function AccessManagementPage() {
               </colgroup>
               <TableHeader>
                 <TableRow style={{ background: "rgba(0,0,0,0.02)" }}>
-                  <TableHead
-                    style={{
-                      fontFamily: "'JetBrains Mono', monospace",
-                      fontSize: 9.5,
-                      letterSpacing: "0.14em",
-                      textTransform: "uppercase",
-                      color: "var(--color-muted-foreground)",
-                    }}
-                  >
-                    Module
-                  </TableHead>
-                  <TableHead
-                    style={{
-                      fontFamily: "'JetBrains Mono', monospace",
-                      fontSize: 9.5,
-                      letterSpacing: "0.14em",
-                      textTransform: "uppercase",
-                      color: "var(--color-muted-foreground)",
-                    }}
-                  >
-                    Permission
-                  </TableHead>
+                  <TableHead className="ops-table-head">Module</TableHead>
+                  <TableHead className="ops-table-head">Permission</TableHead>
                   {ROLES.map((role) => {
                     const cfg = ROLE_CONFIG[role];
                     return (

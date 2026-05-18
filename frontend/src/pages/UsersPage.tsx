@@ -41,6 +41,7 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { Pagination } from "@/components/ui/pagination";
 import { EmptyState } from "@/components/EmptyState";
+import { PageHeader } from "@/components/PageHeader";
 import { SortableTableHead } from "@/components/SortableTableHead";
 import { useUsers, useUpdateUserRole, useDeleteUser } from "@/hooks/use-users";
 import { useSortable } from "@/hooks/use-sortable";
@@ -127,71 +128,15 @@ export default function UsersPage() {
 
   return (
     <div>
-      {/* Page Header */}
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: 4,
-        }}
-      >
-        <h1
-          style={{
-            fontFamily: "'Bebas Neue', sans-serif",
-            fontSize: 36,
-            letterSpacing: "0.04em",
-            lineHeight: 1,
-            margin: 0,
-          }}
-        >
-          USERS
-          <span
-            style={{
-              fontFamily: "'JetBrains Mono', monospace",
-              fontSize: 10,
-              background: "rgba(59,130,246,0.1)",
-              border: "1px solid rgba(59,130,246,0.2)",
-              color: "#60a5fa",
-              padding: "2px 8px",
-              borderRadius: 4,
-              letterSpacing: "0.08em",
-              marginLeft: 10,
-              verticalAlign: "middle",
-            }}
-          >
-            {totalCount} entries
-          </span>
-        </h1>
-        <span
-          style={{
-            fontFamily: "'JetBrains Mono', monospace",
-            fontSize: 9.5,
-            letterSpacing: "0.14em",
-            textTransform: "uppercase",
-            color: "var(--color-muted-foreground)",
-          }}
-        >
-          User Registry · System Access
-        </span>
-      </div>
-
-      {/* Accent line */}
-      <div
-        style={{
-          height: 1,
-          background:
-            "linear-gradient(90deg, rgba(59,130,246,0.5) 0%, rgba(59,130,246,0.0) 60%)",
-          marginTop: 12,
-          marginBottom: 28,
-        }}
+      <PageHeader
+        title="USERS"
+        subtitle={`User Registry · System Access · ${totalCount} entries`}
       />
 
       {/* Filter Bar */}
       <div
+        className="ops-card"
         style={{
-          background: "var(--color-card)",
-          border: "1px solid var(--color-border)",
-          borderRadius: 12,
           padding: "14px 18px",
           marginBottom: 16,
           display: "flex",
@@ -238,52 +183,16 @@ export default function UsersPage() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3 }}
       >
-        <div
-          style={{
-            background: "var(--color-card)",
-            border: "1px solid var(--color-border)",
-            borderRadius: 12,
-            overflow: "hidden",
-          }}
-        >
-          {/* Card top accent */}
-          <div
-            style={{
-              height: 2,
-              background:
-                "linear-gradient(90deg, #3b82f6 0%, rgba(59,130,246,0) 100%)",
-            }}
-          />
+        <div className="ops-card">
+          <div className="ops-accent-line" />
 
           {/* Card Section Header */}
           <div
-            style={{
-              padding: "18px 24px 14px",
-              borderBottom: "1px solid var(--color-border)",
-              display: "flex",
-              alignItems: "baseline",
-              gap: 10,
-            }}
+            className="ops-card-header"
+            style={{ display: "flex", alignItems: "baseline", gap: 10 }}
           >
-            <span
-              style={{
-                fontFamily: "'Bebas Neue', sans-serif",
-                fontSize: 20,
-                letterSpacing: "0.05em",
-                lineHeight: 1,
-              }}
-            >
-              REGISTRY
-            </span>
-            <span
-              style={{
-                fontFamily: "'JetBrains Mono', monospace",
-                fontSize: 9.5,
-                letterSpacing: "0.14em",
-                textTransform: "uppercase",
-                color: "var(--color-muted-foreground)",
-              }}
-            >
+            <span className="ops-card-title">REGISTRY</span>
+            <span className="ops-card-subtitle" style={{ marginTop: 0 }}>
               All Accounts
             </span>
           </div>
@@ -296,66 +205,30 @@ export default function UsersPage() {
                   sortKey="name"
                   sortConfig={sortConfig}
                   onSort={requestSort}
-                  style={{
-                    fontFamily: "'JetBrains Mono', monospace",
-                    fontSize: 9.5,
-                    letterSpacing: "0.14em",
-                    textTransform: "uppercase",
-                    color: "var(--color-muted-foreground)",
-                  }}
+                  className="ops-table-head"
                 />
                 <SortableTableHead<User>
                   label="Email"
                   sortKey="email"
                   sortConfig={sortConfig}
                   onSort={requestSort}
-                  className="hidden sm:table-cell"
-                  style={{
-                    fontFamily: "'JetBrains Mono', monospace",
-                    fontSize: 9.5,
-                    letterSpacing: "0.14em",
-                    textTransform: "uppercase",
-                    color: "var(--color-muted-foreground)",
-                  }}
+                  className="ops-table-head hidden sm:table-cell"
                 />
                 <SortableTableHead<User>
                   label="Role"
                   sortKey="role"
                   sortConfig={sortConfig}
                   onSort={requestSort}
-                  style={{
-                    fontFamily: "'JetBrains Mono', monospace",
-                    fontSize: 9.5,
-                    letterSpacing: "0.14em",
-                    textTransform: "uppercase",
-                    color: "var(--color-muted-foreground)",
-                  }}
+                  className="ops-table-head"
                 />
                 <SortableTableHead<User>
                   label="Joined"
                   sortKey="createdAt"
                   sortConfig={sortConfig}
                   onSort={requestSort}
-                  className="hidden md:table-cell"
-                  style={{
-                    fontFamily: "'JetBrains Mono', monospace",
-                    fontSize: 9.5,
-                    letterSpacing: "0.14em",
-                    textTransform: "uppercase",
-                    color: "var(--color-muted-foreground)",
-                  }}
+                  className="ops-table-head hidden md:table-cell"
                 />
-                <TableHead
-                  style={{
-                    textAlign: "right",
-                    width: 100,
-                    fontFamily: "'JetBrains Mono', monospace",
-                    fontSize: 9.5,
-                    letterSpacing: "0.14em",
-                    textTransform: "uppercase",
-                    color: "var(--color-muted-foreground)",
-                  }}
-                >
+                <TableHead className="ops-table-head text-right w-[100px]">
                   {t("common.actions")}
                 </TableHead>
               </TableRow>
@@ -399,13 +272,7 @@ export default function UsersPage() {
                       }}
                     >
                       <TableCell>
-                        <div
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: 10,
-                          }}
-                        >
+                        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                           <Avatar className="h-9 w-9">
                             <AvatarImage
                               src={
@@ -432,56 +299,18 @@ export default function UsersPage() {
                           </Avatar>
                           <div>
                             <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                              <p
-                                style={{
-                                  fontFamily: "'Sora', sans-serif",
-                                  fontSize: 13.5,
-                                  fontWeight: 500,
-                                  margin: 0,
-                                }}
-                              >
-                                {user.name}
-                              </p>
+                              <p className="ops-user-name">{user.name}</p>
                               {isProtected && (
-                                <span
-                                  style={{
-                                    background: "rgba(234,179,8,0.1)",
-                                    border: "1px solid rgba(234,179,8,0.3)",
-                                    color: "#ca8a04",
-                                    fontFamily: "'JetBrains Mono', monospace",
-                                    fontSize: 7.5,
-                                    padding: "1px 5px",
-                                    borderRadius: 2,
-                                    letterSpacing: "0.1em",
-                                    textTransform: "uppercase",
-                                  }}
-                                >
-                                  Default
-                                </span>
+                                <span className="ops-badge-default">Default</span>
                               )}
                             </div>
-                            <p
-                              style={{
-                                fontFamily: "'JetBrains Mono', monospace",
-                                fontSize: 10.5,
-                                color: "var(--color-muted-foreground)",
-                                margin: 0,
-                              }}
-                              className="sm:hidden"
-                            >
+                            <p className="ops-mono-data sm:hidden" style={{ margin: 0 }}>
                               {user.email}
                             </p>
                           </div>
                         </div>
                       </TableCell>
-                      <TableCell
-                        className="hidden sm:table-cell"
-                        style={{
-                          fontFamily: "'JetBrains Mono', monospace",
-                          fontSize: 10.5,
-                          color: "var(--color-muted-foreground)",
-                        }}
-                      >
+                      <TableCell className="ops-mono-data hidden sm:table-cell">
                         {user.email}
                       </TableCell>
                       <TableCell>
@@ -514,53 +343,18 @@ export default function UsersPage() {
                           </SelectContent>
                         </Select>
                       </TableCell>
-                      <TableCell
-                        className="hidden md:table-cell"
-                        style={{
-                          fontFamily: "'JetBrains Mono', monospace",
-                          fontSize: 10.5,
-                          color: "var(--color-muted-foreground)",
-                        }}
-                      >
+                      <TableCell className="ops-mono-data hidden md:table-cell">
                         {new Date(user.createdAt).toLocaleDateString("id-ID", {
                           year: "numeric",
                           month: "short",
                           day: "numeric",
                         })}
                       </TableCell>
-                      <TableCell style={{ textAlign: "right" }}>
+                      <TableCell className="text-right">
                         {user.id === currentUser?.id ? (
-                          <span
-                            style={{
-                              background: "rgba(16,185,129,0.1)",
-                              border: "1px solid rgba(16,185,129,0.25)",
-                              color: "#10b981",
-                              fontFamily: "'JetBrains Mono', monospace",
-                              fontSize: 8.5,
-                              padding: "1px 6px",
-                              borderRadius: 2,
-                              letterSpacing: "0.1em",
-                              textTransform: "uppercase",
-                            }}
-                          >
-                            You
-                          </span>
+                          <span className="ops-badge-you">You</span>
                         ) : isProtected ? (
-                          <span
-                            style={{
-                              background: "rgba(234,179,8,0.08)",
-                              border: "1px solid rgba(234,179,8,0.2)",
-                              color: "#ca8a04",
-                              fontFamily: "'JetBrains Mono', monospace",
-                              fontSize: 8.5,
-                              padding: "1px 6px",
-                              borderRadius: 2,
-                              letterSpacing: "0.1em",
-                              textTransform: "uppercase",
-                            }}
-                          >
-                            Protected
-                          </span>
+                          <span className="ops-badge-protected">Protected</span>
                         ) : (
                           <TooltipProvider>
                             <Tooltip>
@@ -616,21 +410,10 @@ export default function UsersPage() {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle
-              style={{
-                fontFamily: "'Bebas Neue', sans-serif",
-                fontSize: 22,
-                letterSpacing: "0.05em",
-              }}
-            >
+            <AlertDialogTitle className="ops-card-title">
               {t("common.delete")}
             </AlertDialogTitle>
-            <AlertDialogDescription
-              style={{
-                fontFamily: "'JetBrains Mono', monospace",
-                fontSize: 11.5,
-              }}
-            >
+            <AlertDialogDescription className="ops-mono-data">
               {t("users.deleteConfirm")}
             </AlertDialogDescription>
           </AlertDialogHeader>

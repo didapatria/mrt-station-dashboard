@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { motion } from "framer-motion";
@@ -19,78 +18,22 @@ import { useSchedules } from "@/hooks/use-schedules";
 
 const statusLED = (status: string) => {
   if (status === "ACTIVE")
-    return {
-      color: "#22c55e",
-      shadow: "0 0 6px 2px rgba(34,197,94,0.4)",
-    };
+    return { color: "#22c55e", shadow: "0 0 6px 2px rgba(34,197,94,0.4)" };
   if (status === "MAINTENANCE")
-    return {
-      color: "#f59e0b",
-      shadow: "0 0 6px 2px rgba(245,158,11,0.4)",
-    };
+    return { color: "#f59e0b", shadow: "0 0 6px 2px rgba(245,158,11,0.4)" };
   return { color: "#ef4444", shadow: "0 0 6px 2px rgba(239,68,68,0.4)" };
 };
 
 const scheduleStatusLED = (status: string) => {
   if (status === "ACTIVE")
-    return {
-      color: "#22c55e",
-      shadow: "0 0 6px 2px rgba(34,197,94,0.4)",
-    };
+    return { color: "#22c55e", shadow: "0 0 6px 2px rgba(34,197,94,0.4)" };
   if (status === "DELAYED")
-    return {
-      color: "#f59e0b",
-      shadow: "0 0 6px 2px rgba(245,158,11,0.4)",
-    };
+    return { color: "#f59e0b", shadow: "0 0 6px 2px rgba(245,158,11,0.4)" };
   return { color: "#ef4444", shadow: "0 0 6px 2px rgba(239,68,68,0.4)" };
 };
 
-const cardStyle: React.CSSProperties = {
-  background: "var(--color-card)",
-  border: "1px solid var(--color-border)",
-  borderRadius: 12,
-  overflow: "hidden",
-};
-
-const cardHeaderStyle: React.CSSProperties = {
-  padding: "18px 24px 14px",
-  borderBottom: "1px solid var(--color-border)",
-};
-
-const thStyle: React.CSSProperties = {
-  fontFamily: "'JetBrains Mono', monospace",
-  fontSize: 9.5,
-  textTransform: "uppercase",
-  letterSpacing: "0.14em",
-  color: "var(--color-muted-foreground)",
-};
-
-const ACCENT_LINE = (
-  <div
-    style={{
-      height: 2,
-      background: "linear-gradient(90deg, #3b82f6 0%, rgba(59,130,246,0) 100%)",
-    }}
-  />
-);
-
 function StatCard({ children }: { children: React.ReactNode }) {
-  const [hovered, setHovered] = useState(false);
-  return (
-    <div
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      style={{
-        background: "var(--color-background)",
-        border: `1px solid ${hovered ? "rgba(59,130,246,0.3)" : "var(--color-border)"}`,
-        borderRadius: 8,
-        padding: "12px 16px",
-        transition: "all 0.15s ease",
-      }}
-    >
-      {children}
-    </div>
-  );
+  return <div className="ops-stat-card">{children}</div>;
 }
 
 export default function StationDetailPage() {
@@ -110,12 +53,7 @@ export default function StationDetailPage() {
     );
   if (!station)
     return (
-      <p
-        style={{
-          fontFamily: "'Sora', sans-serif",
-          color: "var(--color-muted-foreground)",
-        }}
-      >
+      <p style={{ fontFamily: "'Sora', sans-serif", color: "var(--color-muted-foreground)" }}>
         Station not found.
       </p>
     );
@@ -124,41 +62,15 @@ export default function StationDetailPage() {
 
   return (
     <div>
-      <button
-        onClick={() => navigate("/stations")}
-        style={{
-          display: "inline-flex",
-          alignItems: "center",
-          gap: 6,
-          fontFamily: "'JetBrains Mono', monospace",
-          fontSize: 11,
-          letterSpacing: "0.08em",
-          color: "var(--color-muted-foreground)",
-          background: "none",
-          border: "none",
-          cursor: "pointer",
-          marginBottom: 20,
-          padding: "4px 0",
-        }}
-      >
+      <button onClick={() => navigate("/stations")} className="ops-back-btn">
         <ArrowLeft size={14} />
         {t("stations.title")}
       </button>
 
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-      >
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
         {/* Page header */}
         <div>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 14,
-              flexWrap: "wrap",
-            }}
-          >
+          <div style={{ display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap" }}>
             <h1
               style={{
                 fontFamily: "'Bebas Neue', sans-serif",
@@ -171,7 +83,6 @@ export default function StationDetailPage() {
             >
               {station.name}
             </h1>
-            {/* Station code badge — larger with glow */}
             <span
               style={{
                 background: "rgba(29,111,232,0.12)",
@@ -189,14 +100,7 @@ export default function StationDetailPage() {
               {station.code}
             </span>
           </div>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 8,
-              marginTop: 8,
-            }}
-          >
+          <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 8 }}>
             <div
               style={{
                 width: 7,
@@ -207,60 +111,22 @@ export default function StationDetailPage() {
                 flexShrink: 0,
               }}
             />
-            <span
-              style={{
-                fontFamily: "'JetBrains Mono', monospace",
-                fontSize: 11,
-                letterSpacing: "0.1em",
-                color: "var(--color-muted-foreground)",
-              }}
-            >
+            <span className="ops-mono-data" style={{ fontSize: 11, letterSpacing: "0.1em" }}>
               {station.status}
             </span>
           </div>
-
-          {/* Horizontal fade line below header */}
-          <div
-            style={{
-              height: 1,
-              background:
-                "linear-gradient(90deg, rgba(59,130,246,0.5) 0%, transparent 60%)",
-              marginTop: 12,
-              marginBottom: 28,
-            }}
-          />
+          <div className="ops-divider" style={{ marginTop: 12, marginBottom: 28 }} />
         </div>
 
         <div className="grid gap-6 lg:grid-cols-[1fr_350px]">
           {/* Main */}
           <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
             {/* Info card */}
-            <div style={cardStyle}>
-              {ACCENT_LINE}
-              <div style={cardHeaderStyle}>
-                <p
-                  style={{
-                    fontFamily: "'Bebas Neue', sans-serif",
-                    fontSize: 16,
-                    letterSpacing: "0.1em",
-                    color: "var(--color-foreground)",
-                    margin: 0,
-                  }}
-                >
-                  STATION INFO
-                </p>
-                <p
-                  style={{
-                    fontFamily: "'JetBrains Mono', monospace",
-                    fontSize: 9.5,
-                    letterSpacing: "0.14em",
-                    color: "var(--color-muted-foreground)",
-                    textTransform: "uppercase",
-                    margin: "4px 0 0",
-                  }}
-                >
-                  Station details &amp; metadata
-                </p>
+            <div className="ops-card">
+              <div className="ops-accent-line" />
+              <div className="ops-card-header">
+                <p className="ops-card-title" style={{ fontSize: 16 }}>STATION INFO</p>
+                <p className="ops-card-subtitle">Station details &amp; metadata</p>
               </div>
               <div
                 style={{
@@ -270,60 +136,15 @@ export default function StationDetailPage() {
                   gap: 20,
                 }}
               >
-                {/* Order */}
                 <StatCard>
-                  <p
-                    style={{
-                      fontFamily: "'Bebas Neue', sans-serif",
-                      fontSize: 11,
-                      letterSpacing: "0.12em",
-                      color: "var(--color-muted-foreground)",
-                      margin: "0 0 6px",
-                    }}
-                  >
-                    {t("stations.order").toUpperCase()}
-                  </p>
-                  <p
-                    style={{
-                      fontFamily: "'JetBrains Mono', monospace",
-                      fontSize: 22,
-                      color: "var(--color-foreground)",
-                      margin: 0,
-                      lineHeight: 1,
-                    }}
-                  >
-                    {String(station.order).padStart(2, "0")}
-                  </p>
+                  <p className="ops-stat-label">{t("stations.order").toUpperCase()}</p>
+                  <p className="ops-stat-value">{String(station.order).padStart(2, "0")}</p>
                 </StatCard>
 
-                {/* Location */}
                 <StatCard>
-                  <p
-                    style={{
-                      fontFamily: "'Bebas Neue', sans-serif",
-                      fontSize: 11,
-                      letterSpacing: "0.12em",
-                      color: "var(--color-muted-foreground)",
-                      margin: "0 0 6px",
-                    }}
-                  >
-                    LOCATION
-                  </p>
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "flex-start",
-                      gap: 6,
-                    }}
-                  >
-                    <MapPin
-                      size={13}
-                      style={{
-                        color: "var(--color-muted-foreground)",
-                        marginTop: 2,
-                        flexShrink: 0,
-                      }}
-                    />
+                  <p className="ops-stat-label">LOCATION</p>
+                  <div style={{ display: "flex", alignItems: "flex-start", gap: 6 }}>
+                    <MapPin size={13} style={{ color: "var(--color-muted-foreground)", marginTop: 2, flexShrink: 0 }} />
                     <p
                       style={{
                         fontFamily: "'Sora', sans-serif",
@@ -338,22 +159,9 @@ export default function StationDetailPage() {
                   </div>
                 </StatCard>
 
-                {/* Status */}
                 <StatCard>
-                  <p
-                    style={{
-                      fontFamily: "'Bebas Neue', sans-serif",
-                      fontSize: 11,
-                      letterSpacing: "0.12em",
-                      color: "var(--color-muted-foreground)",
-                      margin: "0 0 6px",
-                    }}
-                  >
-                    {t("stations.status").toUpperCase()}
-                  </p>
-                  <div
-                    style={{ display: "flex", alignItems: "center", gap: 8 }}
-                  >
+                  <p className="ops-stat-label">{t("stations.status").toUpperCase()}</p>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                     <div
                       style={{
                         width: 7,
@@ -364,48 +172,17 @@ export default function StationDetailPage() {
                         flexShrink: 0,
                       }}
                     />
-                    <span
-                      style={{
-                        fontFamily: "'JetBrains Mono', monospace",
-                        fontSize: 12,
-                        letterSpacing: "0.08em",
-                        color: "var(--color-foreground)",
-                      }}
-                    >
+                    <span className="ops-mono-data" style={{ fontSize: 12, letterSpacing: "0.08em", color: "var(--color-foreground)" }}>
                       {station.status}
                     </span>
                   </div>
                 </StatCard>
 
-                {/* Coordinates — lat/lng on separate labeled lines */}
                 {station.latitude && station.longitude && (
                   <StatCard>
-                    <p
-                      style={{
-                        fontFamily: "'Bebas Neue', sans-serif",
-                        fontSize: 11,
-                        letterSpacing: "0.12em",
-                        color: "var(--color-muted-foreground)",
-                        margin: "0 0 8px",
-                      }}
-                    >
-                      COORDINATES
-                    </p>
-                    <div
-                      style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        gap: 4,
-                        marginBottom: 8,
-                      }}
-                    >
-                      <div
-                        style={{
-                          display: "flex",
-                          alignItems: "baseline",
-                          gap: 6,
-                        }}
-                      >
+                    <p className="ops-stat-label" style={{ marginBottom: 8 }}>COORDINATES</p>
+                    <div style={{ display: "flex", flexDirection: "column", gap: 4, marginBottom: 8 }}>
+                      <div style={{ display: "flex", alignItems: "baseline", gap: 6 }}>
                         <span
                           style={{
                             fontFamily: "'JetBrains Mono', monospace",
@@ -419,23 +196,11 @@ export default function StationDetailPage() {
                         >
                           LAT
                         </span>
-                        <span
-                          style={{
-                            fontFamily: "'JetBrains Mono', monospace",
-                            fontSize: 11,
-                            color: "var(--color-foreground)",
-                          }}
-                        >
+                        <span className="ops-mono-data" style={{ fontSize: 11 }}>
                           {station.latitude.toFixed(6)}
                         </span>
                       </div>
-                      <div
-                        style={{
-                          display: "flex",
-                          alignItems: "baseline",
-                          gap: 6,
-                        }}
-                      >
+                      <div style={{ display: "flex", alignItems: "baseline", gap: 6 }}>
                         <span
                           style={{
                             fontFamily: "'JetBrains Mono', monospace",
@@ -449,38 +214,17 @@ export default function StationDetailPage() {
                         >
                           LNG
                         </span>
-                        <span
-                          style={{
-                            fontFamily: "'JetBrains Mono', monospace",
-                            fontSize: 11,
-                            color: "var(--color-foreground)",
-                          }}
-                        >
+                        <span className="ops-mono-data" style={{ fontSize: 11 }}>
                           {station.longitude.toFixed(6)}
                         </span>
                       </div>
                     </div>
                     <button
                       onClick={() => {
-                        navigator.clipboard.writeText(
-                          `${station.latitude}, ${station.longitude}`,
-                        );
+                        navigator.clipboard.writeText(`${station.latitude}, ${station.longitude}`);
                         toast.success("Coordinates copied");
                       }}
-                      style={{
-                        background: "none",
-                        border: "1px solid var(--color-border)",
-                        borderRadius: 4,
-                        padding: "2px 6px",
-                        cursor: "pointer",
-                        fontFamily: "'JetBrains Mono', monospace",
-                        fontSize: 9,
-                        letterSpacing: "0.08em",
-                        color: "var(--color-muted-foreground)",
-                        display: "inline-flex",
-                        alignItems: "center",
-                        gap: 3,
-                      }}
+                      className="ops-copy-btn"
                     >
                       <Copy size={9} />
                       COPY
@@ -491,23 +235,12 @@ export default function StationDetailPage() {
             </div>
 
             {/* Schedules card */}
-            <div style={cardStyle}>
-              {ACCENT_LINE}
-              <div style={cardHeaderStyle}>
+            <div className="ops-card">
+              <div className="ops-accent-line" />
+              <div className="ops-card-header">
                 <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                  <Clock
-                    size={14}
-                    style={{ color: "var(--color-muted-foreground)" }}
-                  />
-                  <p
-                    style={{
-                      fontFamily: "'Bebas Neue', sans-serif",
-                      fontSize: 16,
-                      letterSpacing: "0.1em",
-                      color: "var(--color-foreground)",
-                      margin: 0,
-                    }}
-                  >
+                  <Clock size={14} style={{ color: "var(--color-muted-foreground)" }} />
+                  <p className="ops-card-title" style={{ fontSize: 16 }}>
                     {t("schedules.title")}
                   </p>
                   <span
@@ -524,32 +257,15 @@ export default function StationDetailPage() {
                     {schedules.length}
                   </span>
                 </div>
-                <p
-                  style={{
-                    fontFamily: "'JetBrains Mono', monospace",
-                    fontSize: 9.5,
-                    letterSpacing: "0.14em",
-                    color: "var(--color-muted-foreground)",
-                    textTransform: "uppercase",
-                    margin: "4px 0 0",
-                  }}
-                >
-                  Train schedules at this station
-                </p>
+                <p className="ops-card-subtitle">Train schedules at this station</p>
               </div>
               <Table>
                 <TableHeader>
                   <TableRow style={{ background: "var(--color-muted)" }}>
-                    <TableHead style={thStyle}>
-                      {t("schedules.trainNumber")}
-                    </TableHead>
-                    <TableHead style={thStyle}>
-                      {t("schedules.route")}
-                    </TableHead>
-                    <TableHead style={thStyle}>{t("schedules.time")}</TableHead>
-                    <TableHead style={thStyle}>
-                      {t("stations.status")}
-                    </TableHead>
+                    <TableHead className="ops-table-head">{t("schedules.trainNumber")}</TableHead>
+                    <TableHead className="ops-table-head">{t("schedules.route")}</TableHead>
+                    <TableHead className="ops-table-head">{t("schedules.time")}</TableHead>
+                    <TableHead className="ops-table-head">{t("stations.status")}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -557,14 +273,8 @@ export default function StationDetailPage() {
                     <TableRow>
                       <TableCell
                         colSpan={4}
-                        style={{
-                          textAlign: "center",
-                          padding: "32px 0",
-                          fontFamily: "'JetBrains Mono', monospace",
-                          fontSize: 11,
-                          letterSpacing: "0.08em",
-                          color: "var(--color-muted-foreground)",
-                        }}
+                        className="ops-mono-data text-center"
+                        style={{ padding: "32px 0", fontSize: 11, letterSpacing: "0.08em" }}
                       >
                         NO SCHEDULES FOUND
                       </TableCell>
@@ -574,40 +284,17 @@ export default function StationDetailPage() {
                       const sled = scheduleStatusLED(s.status);
                       return (
                         <TableRow key={s.id}>
-                          <TableCell
-                            style={{
-                              fontFamily: "'JetBrains Mono', monospace",
-                              fontSize: 12,
-                              fontWeight: 600,
-                            }}
-                          >
+                          <TableCell className="ops-mono-data" style={{ fontSize: 12, fontWeight: 600 }}>
                             {s.trainNumber}
                           </TableCell>
-                          <TableCell
-                            style={{
-                              fontFamily: "'JetBrains Mono', monospace",
-                              fontSize: 11,
-                            }}
-                          >
-                            {s.departureStation?.code} →{" "}
-                            {s.arrivalStation?.code}
+                          <TableCell className="ops-mono-data" style={{ fontSize: 11 }}>
+                            {s.departureStation?.code} → {s.arrivalStation?.code}
                           </TableCell>
-                          <TableCell
-                            style={{
-                              fontFamily: "'JetBrains Mono', monospace",
-                              fontSize: 11,
-                            }}
-                          >
+                          <TableCell className="ops-mono-data" style={{ fontSize: 11 }}>
                             {s.departureTime} — {s.arrivalTime}
                           </TableCell>
                           <TableCell>
-                            <div
-                              style={{
-                                display: "flex",
-                                alignItems: "center",
-                                gap: 6,
-                              }}
-                            >
+                            <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
                               <div
                                 style={{
                                   width: 7,
@@ -618,14 +305,7 @@ export default function StationDetailPage() {
                                   flexShrink: 0,
                                 }}
                               />
-                              <span
-                                style={{
-                                  fontFamily: "'JetBrains Mono', monospace",
-                                  fontSize: 10,
-                                  letterSpacing: "0.08em",
-                                  color: "var(--color-foreground)",
-                                }}
-                              >
+                              <span className="ops-mono-data" style={{ fontSize: 10, letterSpacing: "0.08em", color: "var(--color-foreground)" }}>
                                 {s.status}
                               </span>
                             </div>
@@ -642,39 +322,16 @@ export default function StationDetailPage() {
           {/* Sidebar Map */}
           <div>
             {station.latitude && station.longitude && (
-              <div style={{ ...cardStyle }}>
-                {ACCENT_LINE}
-                <div style={cardHeaderStyle}>
-                  <p
-                    style={{
-                      fontFamily: "'Bebas Neue', sans-serif",
-                      fontSize: 16,
-                      letterSpacing: "0.1em",
-                      color: "var(--color-foreground)",
-                      margin: 0,
-                    }}
-                  >
-                    MAP LOCATION
-                  </p>
-                  <p
-                    style={{
-                      fontFamily: "'JetBrains Mono', monospace",
-                      fontSize: 9.5,
-                      letterSpacing: "0.14em",
-                      color: "var(--color-muted-foreground)",
-                      textTransform: "uppercase",
-                      margin: "4px 0 0",
-                    }}
-                  >
-                    {station.latitude.toFixed(4)},{" "}
-                    {station.longitude.toFixed(4)}
+              <div className="ops-card">
+                <div className="ops-accent-line" />
+                <div className="ops-card-header">
+                  <p className="ops-card-title" style={{ fontSize: 16 }}>MAP LOCATION</p>
+                  <p className="ops-card-subtitle">
+                    {station.latitude.toFixed(4)}, {station.longitude.toFixed(4)}
                   </p>
                 </div>
                 <div style={{ height: 256 }}>
-                  <StationMap
-                    stations={[station]}
-                    selectedStationId={station.id}
-                  />
+                  <StationMap stations={[station]} selectedStationId={station.id} />
                 </div>
                 <div style={{ padding: "12px 24px" }}>
                   <button
