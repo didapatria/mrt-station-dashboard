@@ -360,15 +360,23 @@ export default function ChangelogPage() {
       </style>
 
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
+        initial="hidden"
+        animate="visible"
+        variants={{
+          hidden: {},
+          visible: { transition: { staggerChildren: 0.06 } },
+        }}
         style={{ display: "flex", flexDirection: "column", gap: 20 }}
       >
         {changelog.map((release, i) => {
           const accentColor = getVersionAccentColor(release.version);
           return (
-            <div
+            <motion.div
               key={release.version}
+              variants={{
+                hidden: { opacity: 0, y: 16 },
+                visible: { opacity: 1, y: 0, transition: { duration: 0.3 } },
+              }}
               style={{
                 background: "var(--color-card)",
                 border: "1px solid var(--color-border)",
@@ -497,7 +505,7 @@ export default function ChangelogPage() {
                   </div>
                 ))}
               </div>
-            </div>
+            </motion.div>
           );
         })}
       </motion.div>
