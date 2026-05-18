@@ -425,12 +425,7 @@ export default function RoutePlannerPage() {
                             <div
                               style={{ display: "flex", alignItems: "center" }}
                             >
-                              <span
-                                style={{
-                                  fontFamily: "'Sora', sans-serif",
-                                  fontSize: 13,
-                                }}
-                              >
+                              <span className="ops-station-ref">
                                 {fromStation?.name}
                               </span>
                               <span
@@ -442,12 +437,7 @@ export default function RoutePlannerPage() {
                               >
                                 →
                               </span>
-                              <span
-                                style={{
-                                  fontFamily: "'Sora', sans-serif",
-                                  fontSize: 13,
-                                }}
-                              >
+                              <span className="ops-station-ref">
                                 {toStation?.name}
                               </span>
                             </div>

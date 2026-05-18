@@ -183,17 +183,7 @@ export default function StationDetailPage() {
                     <p className="ops-stat-label" style={{ marginBottom: 8 }}>COORDINATES</p>
                     <div style={{ display: "flex", flexDirection: "column", gap: 4, marginBottom: 8 }}>
                       <div style={{ display: "flex", alignItems: "baseline", gap: 6 }}>
-                        <span
-                          style={{
-                            fontFamily: "'JetBrains Mono', monospace",
-                            fontSize: 8,
-                            letterSpacing: "0.12em",
-                            color: "var(--color-muted-foreground)",
-                            opacity: 0.6,
-                            textTransform: "uppercase",
-                            flexShrink: 0,
-                          }}
-                        >
+                        <span className="ops-coord-axis">
                           LAT
                         </span>
                         <span className="ops-mono-data" style={{ fontSize: 11 }}>
@@ -201,17 +191,7 @@ export default function StationDetailPage() {
                         </span>
                       </div>
                       <div style={{ display: "flex", alignItems: "baseline", gap: 6 }}>
-                        <span
-                          style={{
-                            fontFamily: "'JetBrains Mono', monospace",
-                            fontSize: 8,
-                            letterSpacing: "0.12em",
-                            color: "var(--color-muted-foreground)",
-                            opacity: 0.6,
-                            textTransform: "uppercase",
-                            flexShrink: 0,
-                          }}
-                        >
+                        <span className="ops-coord-axis">
                           LNG
                         </span>
                         <span className="ops-mono-data" style={{ fontSize: 11 }}>

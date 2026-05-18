@@ -500,27 +500,10 @@ export default function DashboardPage() {
                   }}
                 />
                 <div style={{ paddingLeft: 14 }}>
-                  <p
-                    style={{
-                      fontFamily: "'JetBrains Mono', monospace",
-                      fontSize: 9.5,
-                      color: "var(--color-muted-foreground)",
-                      letterSpacing: "0.14em",
-                      textTransform: "uppercase",
-                      marginBottom: 6,
-                    }}
-                  >
+                  <p className="ops-table-head" style={{ marginBottom: 6 }}>
                     {stat.title}
                   </p>
-                  <p
-                    style={{
-                      fontFamily: "'Bebas Neue', sans-serif",
-                      fontSize: 52,
-                      lineHeight: 1,
-                      letterSpacing: "0.02em",
-                      color: "var(--color-foreground)",
-                    }}
-                  >
+                  <p className="font-display" style={{ fontSize: 52, lineHeight: 1, letterSpacing: "0.02em" }}>
                     {stat.value}
                   </p>
                   {/* Accent underline */}

@@ -331,15 +331,11 @@ export default function SchedulesPage() {
             placeholder={t("common.search")}
             value={search}
             onChange={(e) => handleSearchChange(e.target.value)}
-            className="pl-9"
-            className="font-['Sora'] text-[13px]"
+            className="pl-9 font-['Sora'] text-[13px]"
           />
         </div>
         <Select value={dayTypeFilter} onValueChange={handleDayTypeChange}>
-          <SelectTrigger
-            className="w-35"
-            className="ops-btn-mono"
-          >
+          <SelectTrigger className="w-35 ops-btn-mono">
             <SelectValue placeholder="Day Type" />
           </SelectTrigger>
           <SelectContent>
@@ -350,10 +346,7 @@ export default function SchedulesPage() {
           </SelectContent>
         </Select>
         <Select value={statusFilter} onValueChange={handleStatusChange}>
-          <SelectTrigger
-            className="w-35"
-            className="ops-btn-mono"
-          >
+          <SelectTrigger className="w-35 ops-btn-mono">
             <SelectValue placeholder="Status" />
           </SelectTrigger>
           <SelectContent>
@@ -426,8 +419,7 @@ export default function SchedulesPage() {
                         sortKey="departureTime"
                         sortConfig={sortConfig}
                         onSort={requestSort}
-                        className="hidden sm:table-cell"
-                        className="ops-table-head"
+                        className="ops-table-head hidden sm:table-cell"
                       />
                       <SortableTableHead<Schedule>
                         label={t("schedules.dayType")}
@@ -444,16 +436,7 @@ export default function SchedulesPage() {
                         className="ops-table-head"
                       />
                       {isAdmin && (
-                        <TableHead
-                          className="text-right w-25"
-                          style={{
-                            fontFamily: "'JetBrains Mono', monospace",
-                            fontSize: 9.5,
-                            letterSpacing: "0.14em",
-                            textTransform: "uppercase",
-                            color: "var(--color-muted-foreground)",
-                          }}
-                        >
+                        <TableHead className="ops-table-head text-right w-25">
                           {t("common.actions")}
                         </TableHead>
                       )}
@@ -486,98 +469,35 @@ export default function SchedulesPage() {
                           </TableRow>
                         ))
                       : sortedSchedules.map((schedule) => (
-                          <TableRow
-                            key={schedule.id}
-                            style={{ transition: "background 0.12s ease" }}
-                          >
-                            <TableCell
-                              style={{
-                                padding: "12px 16px",
-                                fontFamily: "'JetBrains Mono', monospace",
-                                fontSize: 12,
-                                fontWeight: 600,
-                                background: "rgba(59,130,246,0.05)",
-                              }}
-                            >
+                          <TableRow key={schedule.id}>
+                            <TableCell className="ops-train-cell">
                               {schedule.trainNumber}
                             </TableCell>
                             <TableCell>
-                              <div
-                                style={{
-                                  display: "flex",
-                                  alignItems: "center",
-                                  gap: 6,
-                                }}
-                              >
-                                <span
-                                  style={{
-                                    fontFamily: "'Sora', sans-serif",
-                                    fontSize: 13,
-                                  }}
-                                >
+                              <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                                <span className="ops-station-ref">
                                   {schedule.departureStation?.code}
                                 </span>
-                                <span
-                                  style={{
-                                    fontFamily: "'JetBrains Mono', monospace",
-                                    fontSize: 11,
-                                    color: "var(--color-muted-foreground)",
-                                  }}
-                                >
-                                  →
-                                </span>
-                                <span
-                                  style={{
-                                    fontFamily: "'Sora', sans-serif",
-                                    fontSize: 13,
-                                  }}
-                                >
+                                <span className="ops-route-arrow">→</span>
+                                <span className="ops-station-ref">
                                   {schedule.arrivalStation?.code}
                                 </span>
                               </div>
-                              <p
-                                style={{
-                                  fontFamily: "'Sora', sans-serif",
-                                  fontSize: 11,
-                                  color: "var(--color-muted-foreground)",
-                                  marginTop: 2,
-                                }}
-                              >
+                              <p className="ops-route-sub">
                                 {schedule.departureStation?.name}
-                                <span
-                                  style={{
-                                    fontFamily: "'JetBrains Mono', monospace",
-                                    margin: "0 4px",
-                                    color: "var(--color-muted-foreground)",
-                                  }}
-                                >
-                                  →
-                                </span>
+                                <span className="ops-route-arrow" style={{ margin: "0 4px" }}>→</span>
                                 {schedule.arrivalStation?.name}
                               </p>
                             </TableCell>
                             <TableCell className="hidden sm:table-cell">
-                              <span
-                                style={{
-                                  fontFamily: "'JetBrains Mono', monospace",
-                                  fontSize: 11,
-                                }}
-                              >
+                              <span className="ops-mono-data">
                                 {schedule.departureTime}
                                 {" — "}
                                 {schedule.arrivalTime}
                               </span>
                             </TableCell>
                             <TableCell>
-                              <span
-                                style={{
-                                  fontFamily: "'JetBrains Mono', monospace",
-                                  fontSize: 10,
-                                  letterSpacing: "0.08em",
-                                  textTransform: "uppercase",
-                                  color: "var(--color-muted-foreground)",
-                                }}
-                              >
+                              <span className="ops-day-badge">
                                 {schedule.dayType}
                               </span>
                             </TableCell>
@@ -673,26 +593,12 @@ export default function SchedulesPage() {
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle
-              style={{
-                fontFamily: "'Bebas Neue', sans-serif",
-                fontSize: 28,
-                letterSpacing: "0.04em",
-                lineHeight: 1,
-              }}
-            >
+            <DialogTitle className="ops-dialog-title">
               {editingSchedule
                 ? t("schedules.editSchedule")
                 : t("schedules.addSchedule")}
             </DialogTitle>
-            <DialogDescription
-              style={{
-                fontFamily: "'JetBrains Mono', monospace",
-                fontSize: 10,
-                letterSpacing: "0.1em",
-                textTransform: "uppercase",
-              }}
-            >
+            <DialogDescription className="ops-dialog-desc">
               {editingSchedule
                 ? "UPDATE THE SCHEDULE DETAILS BELOW."
                 : "FILL IN THE DETAILS TO CREATE A NEW SCHEDULE."}
@@ -702,12 +608,7 @@ export default function SchedulesPage() {
             <div className="space-y-2">
               <Label
                 htmlFor="trainNumber"
-                style={{
-                  fontFamily: "'JetBrains Mono', monospace",
-                  fontSize: 9.5,
-                  letterSpacing: "0.12em",
-                  textTransform: "uppercase",
-                }}
+                className="ops-form-label"
               >
                 {t("schedules.trainNumber")}
               </Label>
@@ -715,10 +616,7 @@ export default function SchedulesPage() {
                 id="trainNumber"
                 {...register("trainNumber")}
                 placeholder="MRT-0600-NS"
-                style={{
-                  fontFamily: "'JetBrains Mono', monospace",
-                  fontSize: 13,
-                }}
+                className="ops-input-mono"
               />
               {errors.trainNumber && (
                 <p className="text-xs text-destructive">
@@ -730,12 +628,7 @@ export default function SchedulesPage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label
-                  style={{
-                    fontFamily: "'JetBrains Mono', monospace",
-                    fontSize: 9.5,
-                    letterSpacing: "0.12em",
-                    textTransform: "uppercase",
-                  }}
+                  className="ops-form-label"
                 >
                   {t("schedules.departureStation")}
                 </Label>
@@ -762,12 +655,7 @@ export default function SchedulesPage() {
               </div>
               <div className="space-y-2">
                 <Label
-                  style={{
-                    fontFamily: "'JetBrains Mono', monospace",
-                    fontSize: 9.5,
-                    letterSpacing: "0.12em",
-                    textTransform: "uppercase",
-                  }}
+                  className="ops-form-label"
                 >
                   {t("schedules.arrivalStation")}
                 </Label>
@@ -798,12 +686,7 @@ export default function SchedulesPage() {
               <div className="space-y-2">
                 <Label
                   htmlFor="departureTime"
-                  style={{
-                    fontFamily: "'JetBrains Mono', monospace",
-                    fontSize: 9.5,
-                    letterSpacing: "0.12em",
-                    textTransform: "uppercase",
-                  }}
+                  className="ops-form-label"
                 >
                   {t("schedules.departureTime")}
                 </Label>
@@ -812,10 +695,7 @@ export default function SchedulesPage() {
                     id="departureTime"
                     type="time"
                     className="w-full pr-10 [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:inset-0 [&::-webkit-calendar-picker-indicator]:w-full [&::-webkit-calendar-picker-indicator]:cursor-pointer"
-                    style={{
-                      fontFamily: "'JetBrains Mono', monospace",
-                      fontSize: 13,
-                    }}
+                    className="ops-input-mono"
                     {...register("departureTime")}
                   />
                   <Clock className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -829,12 +709,7 @@ export default function SchedulesPage() {
               <div className="space-y-2">
                 <Label
                   htmlFor="arrivalTime"
-                  style={{
-                    fontFamily: "'JetBrains Mono', monospace",
-                    fontSize: 9.5,
-                    letterSpacing: "0.12em",
-                    textTransform: "uppercase",
-                  }}
+                  className="ops-form-label"
                 >
                   {t("schedules.arrivalTime")}
                 </Label>
@@ -843,10 +718,7 @@ export default function SchedulesPage() {
                     id="arrivalTime"
                     type="time"
                     className="w-full pr-10 [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:inset-0 [&::-webkit-calendar-picker-indicator]:w-full [&::-webkit-calendar-picker-indicator]:cursor-pointer"
-                    style={{
-                      fontFamily: "'JetBrains Mono', monospace",
-                      fontSize: 13,
-                    }}
+                    className="ops-input-mono"
                     {...register("arrivalTime")}
                   />
                   <Clock className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -862,12 +734,7 @@ export default function SchedulesPage() {
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label
-                  style={{
-                    fontFamily: "'JetBrains Mono', monospace",
-                    fontSize: 9.5,
-                    letterSpacing: "0.12em",
-                    textTransform: "uppercase",
-                  }}
+                  className="ops-form-label"
                 >
                   {t("schedules.dayType")}
                 </Label>
@@ -892,12 +759,7 @@ export default function SchedulesPage() {
               </div>
               <div className="space-y-2">
                 <Label
-                  style={{
-                    fontFamily: "'JetBrains Mono', monospace",
-                    fontSize: 9.5,
-                    letterSpacing: "0.12em",
-                    textTransform: "uppercase",
-                  }}
+                  className="ops-form-label"
                 >
                   {t("stations.status")}
                 </Label>
@@ -934,22 +796,14 @@ export default function SchedulesPage() {
                 type="button"
                 variant="outline"
                 onClick={() => setDialogOpen(false)}
-                style={{
-                  fontFamily: "'JetBrains Mono', monospace",
-                  fontSize: 10,
-                  letterSpacing: "0.08em",
-                }}
+                className="ops-btn-mono"
               >
                 {t("common.cancel")}
               </Button>
               <Button
                 type="submit"
                 disabled={isMutating}
-                style={{
-                  fontFamily: "'JetBrains Mono', monospace",
-                  fontSize: 10,
-                  letterSpacing: "0.08em",
-                }}
+                className="ops-btn-mono"
               >
                 {isMutating
                   ? t("common.loading")
