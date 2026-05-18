@@ -62,3 +62,18 @@ export function useLogout() {
     queryClient.clear();
   };
 }
+
+export function useUpdateAvatar() {
+  const { updateUser } = useAuthStore();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (avatarUrl: string) => authService.updateAvatar(avatarUrl),
+    onSuccess: (response) => {
+      if (response.success && response.data) {
+        updateUser({ avatarUrl: response.data.avatarUrl });
+        queryClient.invalidateQueries({ queryKey: authKeys.profile() });
+      }
+    },
+  });
+}

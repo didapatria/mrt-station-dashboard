@@ -16,6 +16,7 @@ interface AuthState {
   clearError: () => void;
   initFromStorage: () => void;
   setPermissions: (permissions: string[]) => void;
+  updateUser: (partial: Partial<User>) => void;
 }
 
 function getInitialAuthState(): {
@@ -105,4 +106,12 @@ export const useAuthStore = create<AuthState>((set) => ({
   },
 
   setPermissions: (permissions) => set({ permissions }),
+
+  updateUser: (partial) =>
+    set((state) => {
+      if (!state.user) return {};
+      const updated = { ...state.user, ...partial };
+      localStorage.setItem("user", JSON.stringify(updated));
+      return { user: updated };
+    }),
 }));

@@ -32,4 +32,11 @@ export const authService = {
     const response = await api.get<ApiResponse<User>>("/auth/profile");
     return response.data;
   },
+
+  async updateAvatar(avatarUrl: string) {
+    const response = await api.patch<ApiResponse<User>>("/auth/avatar", {
+      avatarUrl,
+    });
+    return response.data;
+  },
 };

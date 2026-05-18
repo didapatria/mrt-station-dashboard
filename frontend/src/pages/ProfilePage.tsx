@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { motion } from "framer-motion";
 import {
@@ -13,6 +13,8 @@ import {
   Palette,
   Bell,
   Monitor,
+  Camera,
+  Loader2,
 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -28,6 +30,7 @@ import { useAuthStore } from "@/store/auth.store";
 import { useThemeStore } from "@/store/theme.store";
 import { usePermission } from "@/hooks/use-permission";
 import { authService } from "@/services/auth.service";
+import { useUpdateAvatar } from "@/hooks/use-auth";
 
 const passwordSchema = z
   .object({
@@ -118,6 +121,32 @@ export default function ProfilePage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showCurrent, setShowCurrent] = useState(false);
   const [showNew, setShowNew] = useState(false);
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const updateAvatarMutation = useUpdateAvatar();
+
+  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith("image/")) {
+      toast.error("Please select an image file");
+      return;
+    }
+    if (file.size > 2 * 1024 * 1024) {
+      toast.error("Image must be under 2MB");
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      const dataUrl = ev.target?.result as string;
+      setAvatarPreview(dataUrl);
+      updateAvatarMutation.mutate(dataUrl, {
+        onSuccess: () => toast.success("Avatar updated"),
+        onError: () => toast.error("Failed to update avatar"),
+      });
+    };
+    reader.readAsDataURL(file);
+  };
 
   const {
     register,
@@ -314,18 +343,57 @@ export default function ProfilePage() {
                   <div
                     style={{ display: "flex", alignItems: "center", gap: 16 }}
                   >
-                    <Avatar style={{ width: 64, height: 64 }}>
-                      <AvatarImage
-                        src={
-                          user.avatarUrl ||
-                          `https://api.dicebear.com/9.x/initials/svg?seed=${encodeURIComponent(user.name)}`
-                        }
-                        alt={user.name}
+                    <div style={{ position: "relative", flexShrink: 0 }}>
+                      <Avatar style={{ width: 64, height: 64 }}>
+                        <AvatarImage
+                          src={
+                            avatarPreview ||
+                            user.avatarUrl ||
+                            `https://api.dicebear.com/9.x/initials/svg?seed=${encodeURIComponent(user.name)}`
+                          }
+                          alt={user.name}
+                        />
+                        <AvatarFallback className="bg-primary text-primary-foreground text-2xl font-bold">
+                          {user.name.charAt(0).toUpperCase()}
+                        </AvatarFallback>
+                      </Avatar>
+                      <button
+                        type="button"
+                        onClick={() => fileInputRef.current?.click()}
+                        disabled={updateAvatarMutation.isPending}
+                        style={{
+                          position: "absolute",
+                          bottom: 0,
+                          right: 0,
+                          width: 22,
+                          height: 22,
+                          borderRadius: "50%",
+                          background: "#1d6fe8",
+                          border: "2px solid var(--color-background)",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          cursor: "pointer",
+                          padding: 0,
+                        }}
+                      >
+                        {updateAvatarMutation.isPending ? (
+                          <Loader2
+                            size={10}
+                            style={{ color: "white", animation: "spin 1s linear infinite" }}
+                          />
+                        ) : (
+                          <Camera size={10} style={{ color: "white" }} />
+                        )}
+                      </button>
+                      <input
+                        ref={fileInputRef}
+                        type="file"
+                        accept="image/*"
+                        style={{ display: "none" }}
+                        onChange={handleAvatarChange}
                       />
-                      <AvatarFallback className="bg-primary text-primary-foreground text-2xl font-bold">
-                        {user.name.charAt(0).toUpperCase()}
-                      </AvatarFallback>
-                    </Avatar>
+                    </div>
                     <div>
                       <div
                         style={{
