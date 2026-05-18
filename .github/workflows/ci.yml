@@ -38,7 +38,12 @@ jobs:
 
       - name: Test
         working-directory: frontend
-        run: npm run test:run
+        run: |
+          npm run test:run -- --reporter=verbose 2>&1 | tee /tmp/frontend-test.txt
+          echo "## Frontend Tests" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          grep -E "✓|×|PASS|FAIL|Test Files|Tests |Duration" /tmp/frontend-test.txt | tail -30 >> $GITHUB_STEP_SUMMARY || true
+          echo '```' >> $GITHUB_STEP_SUMMARY
 
       - name: Build
         working-directory: frontend
@@ -67,7 +72,12 @@ jobs:
 
       - name: Test
         working-directory: backend
-        run: NODE_ENV=test npm run test:run
+        run: |
+          NODE_ENV=test npm run test:run -- --reporter=verbose 2>&1 | tee /tmp/backend-test.txt
+          echo "## Backend Tests" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          grep -E "✓|×|PASS|FAIL|Test Files|Tests |Duration" /tmp/backend-test.txt | tail -30 >> $GITHUB_STEP_SUMMARY || true
+          echo '```' >> $GITHUB_STEP_SUMMARY
 
       - name: Build
         working-directory: backend

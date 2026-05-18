@@ -6,19 +6,19 @@ import { useState, useEffect } from "react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
 const MRT_STATIONS = [
-  "Lebak Bulus Grab",
-  "Fatmawati",
-  "Cipete Raya",
+  "Lebak Bulus Bank Syariah Indonesia",
+  "Fatmawati Indomaret",
+  "Cipete Raya Tuku",
   "Haji Nawi",
   "Blok A",
   "Blok M BCA",
-  "ASEAN",
-  "Senayan",
+  "ASEAN Headquarters",
+  "Senayan Mastercard",
   "Istora Mandiri",
   "Bendungan Hilir",
   "Setiabudi Astra",
   "Dukuh Atas BNI",
-  "Bundaran HI",
+  "Bundaran HI Bank Jakarta",
 ];
 
 const ACCENT = "#1d6fe8";

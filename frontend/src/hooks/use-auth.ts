@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { authService } from "@/services/auth.service";
 import { useAuthStore } from "@/store/auth.store";
+import { userKeys } from "@/hooks/use-users";
 
 export const authKeys = {
   all: ["auth"] as const,
@@ -73,6 +74,7 @@ export function useUpdateAvatar() {
       if (response.success && response.data) {
         updateUser({ avatarUrl: response.data.avatarUrl });
         queryClient.invalidateQueries({ queryKey: authKeys.profile() });
+        queryClient.invalidateQueries({ queryKey: userKeys.lists() });
       }
     },
   });

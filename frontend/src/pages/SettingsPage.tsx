@@ -115,11 +115,7 @@ export default function SettingsPage() {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        style={{
-          display: "grid",
-          gap: 24,
-          gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 280px), 1fr))",
-        }}
+        className="settings-grid"
       >
         {/* Language */}
         <div style={cardWithAccent}>

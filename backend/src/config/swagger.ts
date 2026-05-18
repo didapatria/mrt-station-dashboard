@@ -63,7 +63,7 @@ const options: swaggerJsdoc.Options = {
           type: "object",
           properties: {
             id: { type: "string", format: "uuid" },
-            name: { type: "string", example: "Lebak Bulus Grab" },
+            name: { type: "string", example: "Lebak Bulus Bank Syariah Indonesia" },
             code: { type: "string", example: "LBB" },
             location: {
               type: "string",
@@ -251,7 +251,7 @@ const options: swaggerJsdoc.Options = {
             entityId: { type: "string", format: "uuid" },
             details: {
               type: "string",
-              example: "Created station Lebak Bulus Grab (LBB)",
+              example: "Created station Lebak Bulus Bank Syariah Indonesia (LBB)",
             },
             createdAt: { type: "string", format: "date-time" },
             user: { $ref: "#/components/schemas/User" },

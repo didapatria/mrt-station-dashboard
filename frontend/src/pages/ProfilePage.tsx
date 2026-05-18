@@ -29,6 +29,7 @@ import { Label } from "@/components/ui/label";
 import { useAuthStore } from "@/store/auth.store";
 import { useThemeStore } from "@/store/theme.store";
 import { usePermission } from "@/hooks/use-permission";
+import { useMyPermissions } from "@/hooks/use-permissions";
 import { authService } from "@/services/auth.service";
 import { useUpdateAvatar } from "@/hooks/use-auth";
 import { usePageMeta } from "@/hooks/use-page-meta";
@@ -120,6 +121,7 @@ export default function ProfilePage() {
   const { theme } = useThemeStore();
   const isDark = theme === "dark";
   const { permissions } = usePermission();
+  useMyPermissions();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showCurrent, setShowCurrent] = useState(false);
   const [showNew, setShowNew] = useState(false);
@@ -547,7 +549,9 @@ export default function ProfilePage() {
                   PERMISSIONS
                 </div>
                 <div style={cardSubtitleStyle}>
-                  {permissions.length} permissions granted
+                  {permissions.length > 0
+                    ? `${permissions.length} permissions via role`
+                    : "Loading permissions..."}
                 </div>
               </div>
               <div style={{ padding: "16px 24px 20px" }}>
@@ -558,42 +562,16 @@ export default function ProfilePage() {
                     </span>
                   ))}
                   {permissions.length === 0 && (
-                    <div
+                    <span
                       style={{
-                        width: "100%",
-                        padding: "12px 16px",
-                        background: "rgba(59,130,246,0.04)",
-                        border: "1px dashed rgba(59,130,246,0.2)",
-                        borderRadius: 8,
-                        display: "flex",
-                        flexDirection: "column",
-                        gap: 4,
+                        fontFamily: "'JetBrains Mono', monospace",
+                        fontSize: 10,
+                        letterSpacing: "0.08em",
+                        color: "var(--color-muted-foreground)",
                       }}
                     >
-                      <span
-                        style={{
-                          fontFamily: "'JetBrains Mono', monospace",
-                          fontSize: 10,
-                          letterSpacing: "0.1em",
-                          textTransform: "uppercase",
-                          color: "rgba(59,130,246,0.6)",
-                        }}
-                      >
-                        No permissions assigned
-                      </span>
-                      <span
-                        style={{
-                          fontFamily: "'Sora', sans-serif",
-                          fontSize: 12,
-                          color: "var(--color-muted-foreground)",
-                          lineHeight: 1.5,
-                        }}
-                      >
-                        Your account has no direct permissions yet. Permissions
-                        are inherited from your role. Contact an admin to request
-                        additional access.
-                      </span>
-                    </div>
+                      Fetching permissions...
+                    </span>
                   )}
                 </div>
               </div>

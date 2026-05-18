@@ -49,6 +49,8 @@ import { useAuthStore } from "@/store/auth.store";
 import { usePageMeta } from "@/hooks/use-page-meta";
 import type { User } from "@/types";
 
+const PROTECTED_EMAILS = ["admin@mrtjakarta.co.id", "operator@mrtjakarta.co.id"];
+
 export default function UsersPage() {
   usePageMeta({ title: "Users", path: "/users" });
   const { t } = useTranslation();
@@ -382,7 +384,9 @@ export default function UsersPage() {
                       </TableCell>
                     </TableRow>
                   ))
-                : sortedUsers.map((user) => (
+                : sortedUsers.map((user) => {
+                    const isProtected = PROTECTED_EMAILS.includes(user.email);
+                    return (
                     <TableRow
                       key={user.id}
                       className="hover:bg-muted/30"
@@ -427,16 +431,35 @@ export default function UsersPage() {
                             </AvatarFallback>
                           </Avatar>
                           <div>
-                            <p
-                              style={{
-                                fontFamily: "'Sora', sans-serif",
-                                fontSize: 13.5,
-                                fontWeight: 500,
-                                margin: 0,
-                              }}
-                            >
-                              {user.name}
-                            </p>
+                            <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                              <p
+                                style={{
+                                  fontFamily: "'Sora', sans-serif",
+                                  fontSize: 13.5,
+                                  fontWeight: 500,
+                                  margin: 0,
+                                }}
+                              >
+                                {user.name}
+                              </p>
+                              {isProtected && (
+                                <span
+                                  style={{
+                                    background: "rgba(234,179,8,0.1)",
+                                    border: "1px solid rgba(234,179,8,0.3)",
+                                    color: "#ca8a04",
+                                    fontFamily: "'JetBrains Mono', monospace",
+                                    fontSize: 7.5,
+                                    padding: "1px 5px",
+                                    borderRadius: 2,
+                                    letterSpacing: "0.1em",
+                                    textTransform: "uppercase",
+                                  }}
+                                >
+                                  Default
+                                </span>
+                              )}
+                            </div>
                             <p
                               style={{
                                 fontFamily: "'JetBrains Mono', monospace",
@@ -470,7 +493,7 @@ export default function UsersPage() {
                               val as "ADMIN" | "OPERATOR",
                             )
                           }
-                          disabled={user.id === currentUser?.id}
+                          disabled={user.id === currentUser?.id || isProtected}
                         >
                           <SelectTrigger className="w-32.5 h-8">
                             <SelectValue />
@@ -506,7 +529,39 @@ export default function UsersPage() {
                         })}
                       </TableCell>
                       <TableCell style={{ textAlign: "right" }}>
-                        {user.id !== currentUser?.id ? (
+                        {user.id === currentUser?.id ? (
+                          <span
+                            style={{
+                              background: "rgba(16,185,129,0.1)",
+                              border: "1px solid rgba(16,185,129,0.25)",
+                              color: "#10b981",
+                              fontFamily: "'JetBrains Mono', monospace",
+                              fontSize: 8.5,
+                              padding: "1px 6px",
+                              borderRadius: 2,
+                              letterSpacing: "0.1em",
+                              textTransform: "uppercase",
+                            }}
+                          >
+                            You
+                          </span>
+                        ) : isProtected ? (
+                          <span
+                            style={{
+                              background: "rgba(234,179,8,0.08)",
+                              border: "1px solid rgba(234,179,8,0.2)",
+                              color: "#ca8a04",
+                              fontFamily: "'JetBrains Mono', monospace",
+                              fontSize: 8.5,
+                              padding: "1px 6px",
+                              borderRadius: 2,
+                              letterSpacing: "0.1em",
+                              textTransform: "uppercase",
+                            }}
+                          >
+                            Protected
+                          </span>
+                        ) : (
                           <TooltipProvider>
                             <Tooltip>
                               <TooltipTrigger asChild>
@@ -524,26 +579,11 @@ export default function UsersPage() {
                               </TooltipContent>
                             </Tooltip>
                           </TooltipProvider>
-                        ) : (
-                          <span
-                            style={{
-                              background: "rgba(16,185,129,0.1)",
-                              border: "1px solid rgba(16,185,129,0.25)",
-                              color: "#10b981",
-                              fontFamily: "'JetBrains Mono', monospace",
-                              fontSize: 8.5,
-                              padding: "1px 6px",
-                              borderRadius: 2,
-                              letterSpacing: "0.1em",
-                              textTransform: "uppercase",
-                            }}
-                          >
-                            You
-                          </span>
                         )}
                       </TableCell>
                     </TableRow>
-                  ))}
+                    );
+                  })}
             </TableBody>
           </Table>
         </div>

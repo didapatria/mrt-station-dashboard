@@ -37,7 +37,7 @@ async function main() {
   // Create MRT Jakarta stations (North-South Line)
   const stationsData = [
     {
-      name: "Lebak Bulus Grab",
+      name: "Lebak Bulus Bank Syariah Indonesia",
       code: "LBB",
       location: "Lebak Bulus, Jakarta Selatan",
       latitude: -6.2893,
@@ -53,7 +53,7 @@ async function main() {
       order: 2,
     },
     {
-      name: "Cipete Raya",
+      name: "Cipete Raya Tuku",
       code: "CPR",
       location: "Cipete, Jakarta Selatan",
       latitude: -6.2782,
@@ -85,7 +85,7 @@ async function main() {
       order: 6,
     },
     {
-      name: "ASEAN",
+      name: "ASEAN Headquarters",
       code: "ASN",
       location: "Jl. Sisingamangaraja, Jakarta Selatan",
       latitude: -6.2384,
@@ -93,7 +93,7 @@ async function main() {
       order: 7,
     },
     {
-      name: "Senayan",
+      name: "Senayan Mastercard",
       code: "SNY",
       location: "Senayan, Jakarta Selatan",
       latitude: -6.2271,
@@ -133,7 +133,7 @@ async function main() {
       order: 12,
     },
     {
-      name: "Bundaran HI",
+      name: "Bundaran HI Bank Jakarta",
       code: "BHI",
       location: "Bundaran HI, Jakarta Pusat",
       latitude: -6.1921,
@@ -146,7 +146,7 @@ async function main() {
   for (const data of stationsData) {
     const station = await prisma.station.upsert({
       where: { code: data.code },
-      update: {},
+      update: { name: data.name },
       create: { ...data, status: "ACTIVE" },
     });
     stations.push(station);

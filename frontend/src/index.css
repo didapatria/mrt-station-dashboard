@@ -496,6 +496,27 @@ tbody tr:hover::after {
     filter: invert(100%) hue-rotate(180deg) saturate(0.65) brightness(0.88);
 }
 
+/* Dark mode Leaflet zoom buttons */
+.dark .leaflet-control-zoom a {
+    background-color: oklch(0.152 0.02 243) !important;
+    color: rgba(148, 163, 184, 0.9) !important;
+    border-color: rgba(59, 130, 246, 0.2) !important;
+}
+.dark .leaflet-control-zoom a:hover {
+    background-color: oklch(0.18 0.025 243) !important;
+    color: white !important;
+}
+
+/* Dark mode Shadcn Checkbox */
+.dark [data-slot="checkbox"] {
+    border-color: rgba(148, 163, 184, 0.4) !important;
+    background-color: transparent !important;
+}
+.dark [data-slot="checkbox"][data-state="checked"] {
+    background-color: var(--color-primary) !important;
+    border-color: var(--color-primary) !important;
+}
+
 /* ─── Print styles ────────────────────────────────────────── */
 @media print {
     aside,
@@ -537,6 +558,18 @@ tbody tr:hover::after {
     );
     background-size: 800px 100%;
     animation: skeleton-shimmer 1.4s ease-in-out infinite;
+}
+
+/* ─── Settings page responsive grid ─────────────────────────── */
+.settings-grid {
+    display: grid;
+    gap: 24px;
+    grid-template-columns: repeat(2, 1fr);
+}
+@media (max-width: 640px) {
+    .settings-grid {
+        grid-template-columns: 1fr;
+    }
 }
 
 /* ─── Reduced motion overrides ───────────────────────────────── */
