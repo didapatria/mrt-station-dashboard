@@ -1,5 +1,6 @@
 import { Outlet, Navigate } from "react-router-dom";
 import { useAuthStore } from "@/store/auth.store";
+import { useThemeStore } from "@/store/theme.store";
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -20,11 +21,12 @@ const MRT_STATIONS = [
   "Bundaran HI",
 ];
 
-const PANEL_BG = "#05090f";
 const ACCENT = "#1d6fe8";
 
 export default function AuthLayout() {
   const { token } = useAuthStore();
+  const { theme } = useThemeStore();
+  const isDark = theme === "dark";
   const [time, setTime] = useState(new Date());
 
   useEffect(() => {
@@ -37,6 +39,46 @@ export default function AuthLayout() {
   const hh = String(time.getHours()).padStart(2, "0");
   const mm = String(time.getMinutes()).padStart(2, "0");
   const ss = String(time.getSeconds()).padStart(2, "0");
+
+  const p = isDark
+    ? {
+        bg: "#05090f",
+        gridOpacity: 0.018,
+        logoText: "rgba(148,163,184,0.65)",
+        clockText: "rgba(148,163,184,0.45)",
+        headlineMain: "white",
+        headlineStroke: "rgba(29,111,232,0.65)",
+        subtitleText: "rgba(148,163,184,0.4)",
+        chipBg: "rgba(255,255,255,0.03)",
+        chipBorder: "rgba(255,255,255,0.07)",
+        chipLabel: "rgba(148,163,184,0.35)",
+        chipValue: "rgba(226,232,240,0.8)",
+        svgBgLine: "#0b1826",
+        terminalStation: "#60a5fa",
+        midStation: "rgba(148,163,184,0.55)",
+        footerBorder: "rgba(255,255,255,0.04)",
+        footerText: "rgba(148,163,184,0.18)",
+        footerVersion: "rgba(29,111,232,0.3)",
+      }
+    : {
+        bg: "oklch(0.962 0.01 248)",
+        gridOpacity: 0.045,
+        logoText: "rgba(30,58,92,0.7)",
+        clockText: "rgba(51,65,85,0.55)",
+        headlineMain: "#0f172a",
+        headlineStroke: "rgba(29,111,232,0.55)",
+        subtitleText: "rgba(71,85,105,0.55)",
+        chipBg: "rgba(29,111,232,0.04)",
+        chipBorder: "rgba(29,111,232,0.12)",
+        chipLabel: "rgba(51,65,85,0.5)",
+        chipValue: "rgba(15,23,42,0.85)",
+        svgBgLine: "#d1dff5",
+        terminalStation: "#1d6fe8",
+        midStation: "rgba(51,65,85,0.55)",
+        footerBorder: "rgba(0,0,0,0.07)",
+        footerText: "rgba(51,65,85,0.35)",
+        footerVersion: "rgba(29,111,232,0.5)",
+      };
 
   return (
     <div
@@ -51,11 +93,12 @@ export default function AuthLayout() {
         className="hidden lg:flex"
         style={{
           width: "48%",
-          background: PANEL_BG,
+          background: p.bg,
           position: "relative",
           overflow: "hidden",
           borderRight: `1px solid rgba(29,111,232,0.12)`,
           flexDirection: "column",
+          transition: "background 0.3s ease",
         }}
       >
         {/* Grid overlay */}
@@ -63,15 +106,15 @@ export default function AuthLayout() {
           style={{
             position: "absolute",
             inset: 0,
-            opacity: 0.018,
+            opacity: p.gridOpacity,
             backgroundImage: `linear-gradient(${ACCENT} 1px, transparent 1px), linear-gradient(90deg, ${ACCENT} 1px, transparent 1px)`,
             backgroundSize: "44px 44px",
             pointerEvents: "none",
           }}
         />
 
-        {/* Scanline overlay */}
-        <div className="auth-scanlines" />
+        {/* Scanline overlay (dark only) */}
+        {isDark && <div className="auth-scanlines" />}
 
         {/* Glow top-left */}
         <div
@@ -82,60 +125,44 @@ export default function AuthLayout() {
             width: 320,
             height: 320,
             borderRadius: "50%",
-            background: `radial-gradient(circle, rgba(29,111,232,0.09) 0%, transparent 70%)`,
+            background: `radial-gradient(circle, rgba(29,111,232,${isDark ? "0.09" : "0.06"}) 0%, transparent 70%)`,
             pointerEvents: "none",
           }}
         />
 
         {/* Corner brackets */}
-        <div
-          style={{
-            position: "absolute",
-            top: 20,
-            left: 20,
-            width: 28,
-            height: 28,
-            borderTop: `1.5px solid rgba(29,111,232,0.5)`,
-            borderLeft: `1.5px solid rgba(29,111,232,0.5)`,
-            pointerEvents: "none",
-          }}
-        />
-        <div
-          style={{
-            position: "absolute",
-            top: 20,
-            right: 20,
-            width: 28,
-            height: 28,
-            borderTop: `1.5px solid rgba(29,111,232,0.5)`,
-            borderRight: `1.5px solid rgba(29,111,232,0.5)`,
-            pointerEvents: "none",
-          }}
-        />
-        <div
-          style={{
-            position: "absolute",
-            bottom: 20,
-            left: 20,
-            width: 28,
-            height: 28,
-            borderBottom: `1.5px solid rgba(29,111,232,0.5)`,
-            borderLeft: `1.5px solid rgba(29,111,232,0.5)`,
-            pointerEvents: "none",
-          }}
-        />
-        <div
-          style={{
-            position: "absolute",
-            bottom: 20,
-            right: 20,
-            width: 28,
-            height: 28,
-            borderBottom: `1.5px solid rgba(29,111,232,0.5)`,
-            borderRight: `1.5px solid rgba(29,111,232,0.5)`,
-            pointerEvents: "none",
-          }}
-        />
+        {[
+          { top: 20, left: 20, borderTop: true, borderLeft: true },
+          { top: 20, right: 20, borderTop: true, borderRight: true },
+          { bottom: 20, left: 20, borderBottom: true, borderLeft: true },
+          { bottom: 20, right: 20, borderBottom: true, borderRight: true },
+        ].map((pos, i) => (
+          <div
+            key={i}
+            style={{
+              position: "absolute",
+              ...(pos.top !== undefined && { top: pos.top }),
+              ...(pos.bottom !== undefined && { bottom: pos.bottom }),
+              ...(pos.left !== undefined && { left: pos.left }),
+              ...(pos.right !== undefined && { right: pos.right }),
+              width: 28,
+              height: 28,
+              ...(pos.borderTop && {
+                borderTop: `1.5px solid rgba(29,111,232,${isDark ? "0.5" : "0.35"})`,
+              }),
+              ...(pos.borderBottom && {
+                borderBottom: `1.5px solid rgba(29,111,232,${isDark ? "0.5" : "0.35"})`,
+              }),
+              ...(pos.borderLeft && {
+                borderLeft: `1.5px solid rgba(29,111,232,${isDark ? "0.5" : "0.35"})`,
+              }),
+              ...(pos.borderRight && {
+                borderRight: `1.5px solid rgba(29,111,232,${isDark ? "0.5" : "0.35"})`,
+              }),
+              pointerEvents: "none",
+            }}
+          />
+        ))}
 
         {/* Content */}
         <div
@@ -171,7 +198,7 @@ export default function AuthLayout() {
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  boxShadow: `0 0 18px rgba(29,111,232,0.4)`,
+                  boxShadow: `0 0 18px rgba(29,111,232,${isDark ? "0.4" : "0.25"})`,
                   flexShrink: 0,
                 }}
               >
@@ -194,7 +221,7 @@ export default function AuthLayout() {
                   fontSize: 10,
                   fontWeight: 600,
                   letterSpacing: "0.18em",
-                  color: "rgba(148,163,184,0.65)",
+                  color: p.logoText,
                   textTransform: "uppercase",
                 }}
               >
@@ -231,7 +258,7 @@ export default function AuthLayout() {
                 style={{
                   fontFamily: "'JetBrains Mono', monospace",
                   fontSize: 13,
-                  color: "rgba(148,163,184,0.45)",
+                  color: p.clockText,
                   letterSpacing: "0.08em",
                   fontVariantNumeric: "tabular-nums",
                 }}
@@ -261,11 +288,13 @@ export default function AuthLayout() {
                 marginBottom: 16,
               }}
             >
-              <span style={{ color: "white", display: "block" }}>STATION</span>
+              <span style={{ color: p.headlineMain, display: "block" }}>
+                STATION
+              </span>
               <span
                 style={{
                   color: "transparent",
-                  WebkitTextStroke: `1.5px rgba(29,111,232,0.65)`,
+                  WebkitTextStroke: `1.5px ${p.headlineStroke}`,
                   display: "block",
                 }}
               >
@@ -291,7 +320,7 @@ export default function AuthLayout() {
                 style={{
                   fontFamily: "'JetBrains Mono', monospace",
                   fontSize: 9.5,
-                  color: "rgba(148,163,184,0.4)",
+                  color: p.subtitleText,
                   letterSpacing: "0.14em",
                   textTransform: "uppercase",
                 }}
@@ -322,8 +351,8 @@ export default function AuthLayout() {
               <div
                 key={label}
                 style={{
-                  background: "rgba(255,255,255,0.03)",
-                  border: "1px solid rgba(255,255,255,0.07)",
+                  background: p.chipBg,
+                  border: `1px solid ${p.chipBorder}`,
                   borderRadius: 4,
                   padding: "5px 10px",
                   display: "flex",
@@ -335,7 +364,7 @@ export default function AuthLayout() {
                   style={{
                     fontFamily: "'JetBrains Mono', monospace",
                     fontSize: 8,
-                    color: "rgba(148,163,184,0.35)",
+                    color: p.chipLabel,
                     letterSpacing: "0.14em",
                   }}
                 >
@@ -345,7 +374,7 @@ export default function AuthLayout() {
                   style={{
                     fontFamily: "'JetBrains Mono', monospace",
                     fontSize: 12,
-                    color: "rgba(226,232,240,0.8)",
+                    color: p.chipValue,
                     fontWeight: 600,
                     letterSpacing: "0.06em",
                   }}
@@ -381,7 +410,7 @@ export default function AuthLayout() {
                   y1="6"
                   x2="8"
                   y2={MRT_STATIONS.length * 20 - 6}
-                  stroke="#0b1826"
+                  stroke={p.svgBgLine}
                   strokeWidth="2"
                 />
                 <line
@@ -401,9 +430,7 @@ export default function AuthLayout() {
                     cy={6 + i * 20}
                     r={i === 0 || i === MRT_STATIONS.length - 1 ? 4.5 : 3}
                     fill={
-                      i === 0 || i === MRT_STATIONS.length - 1
-                        ? ACCENT
-                        : PANEL_BG
+                      i === 0 || i === MRT_STATIONS.length - 1 ? ACCENT : p.bg
                     }
                     stroke={ACCENT}
                     strokeWidth="2"
@@ -442,8 +469,8 @@ export default function AuthLayout() {
                       fontSize: 10,
                       color:
                         i === 0 || i === MRT_STATIONS.length - 1
-                          ? "#60a5fa"
-                          : "rgba(148,163,184,0.55)",
+                          ? p.terminalStation
+                          : p.midStation,
                       letterSpacing: "0.05em",
                       fontWeight:
                         i === 0 || i === MRT_STATIONS.length - 1 ? 600 : 400,
@@ -457,7 +484,7 @@ export default function AuthLayout() {
                       height: 4,
                       borderRadius: "50%",
                       background: "#10b981",
-                      opacity: 0.55,
+                      opacity: isDark ? 0.55 : 0.7,
                       flexShrink: 0,
                       boxShadow: "0 0 4px rgba(16,185,129,0.45)",
                     }}
@@ -477,7 +504,7 @@ export default function AuthLayout() {
               alignItems: "center",
               justifyContent: "space-between",
               paddingTop: 20,
-              borderTop: "1px solid rgba(255,255,255,0.04)",
+              borderTop: `1px solid ${p.footerBorder}`,
               marginTop: 16,
             }}
           >
@@ -485,7 +512,7 @@ export default function AuthLayout() {
               style={{
                 fontFamily: "'JetBrains Mono', monospace",
                 fontSize: 9,
-                color: "rgba(148,163,184,0.18)",
+                color: p.footerText,
                 letterSpacing: "0.1em",
               }}
             >
@@ -495,7 +522,7 @@ export default function AuthLayout() {
               style={{
                 fontFamily: "'JetBrains Mono', monospace",
                 fontSize: 9,
-                color: "rgba(29,111,232,0.3)",
+                color: p.footerVersion,
                 letterSpacing: "0.08em",
               }}
             >
