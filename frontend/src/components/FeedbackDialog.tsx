@@ -70,9 +70,7 @@ export function FeedbackDialog({ open, onOpenChange }: FeedbackDialogProps) {
     >
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle
-            style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}
-          >
+          <DialogTitle className="flex items-center gap-2">
             <MessageSquare className="h-5 w-5" />
             {t("feedback.title")}
           </DialogTitle>
@@ -82,7 +80,7 @@ export function FeedbackDialog({ open, onOpenChange }: FeedbackDialogProps) {
         <div className="space-y-4">
           <div className="space-y-2">
             <Label>{t("feedback.rating")}</Label>
-            <div style={{ display: "flex", gap: "0.25rem" }}>
+            <div className="flex gap-1">
               {[1, 2, 3, 4, 5].map((star) => (
                 <button
                   key={star}
@@ -90,13 +88,7 @@ export function FeedbackDialog({ open, onOpenChange }: FeedbackDialogProps) {
                   onClick={() => setRating(star)}
                   onMouseEnter={() => setHoveredRating(star)}
                   onMouseLeave={() => setHoveredRating(0)}
-                  style={{
-                    background: "none",
-                    border: "none",
-                    cursor: "pointer",
-                    padding: "2px",
-                    lineHeight: 1,
-                  }}
+                  className="bg-transparent border-0 cursor-pointer p-0.5 leading-none"
                 >
                   <Star
                     className="h-7 w-7 transition-colors"
@@ -147,13 +139,7 @@ export function FeedbackDialog({ open, onOpenChange }: FeedbackDialogProps) {
             />
           </div>
 
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "flex-end",
-              gap: "0.75rem",
-            }}
-          >
+          <div className="flex justify-end gap-3">
             <Button
               variant="outline"
               onClick={() => {

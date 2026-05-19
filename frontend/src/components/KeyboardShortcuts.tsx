@@ -41,20 +41,11 @@ export function KeyboardShortcuts() {
           {shortcuts.map((s) => (
             <div
               key={s.desc}
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "space-between",
-              }}
+              className="flex flex-row items-center justify-between"
             >
               <span className="text-sm text-muted-foreground">{s.desc}</span>
               <div
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  gap: "0.25rem",
-                }}
+                className="flex flex-row gap-1"
               >
                 {s.keys.map((k) => (
                   <kbd

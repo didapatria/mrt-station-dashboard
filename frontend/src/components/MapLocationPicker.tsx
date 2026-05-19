@@ -63,14 +63,7 @@ export function MapLocationPicker({
 
   return (
     <div className="space-y-1">
-      <div
-        style={{
-          height: "200px",
-          borderRadius: "8px",
-          overflow: "hidden",
-          border: "1px solid hsl(var(--border))",
-        }}
-      >
+      <div className="h-50 rounded-lg overflow-hidden border border-border">
         <MapContainer
           center={center}
           zoom={13}

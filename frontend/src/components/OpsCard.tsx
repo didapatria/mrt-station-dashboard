@@ -25,13 +25,11 @@ export function OpsCard({
       <div className="ops-accent-line" />
       {!noHeader && title && (
         <div
-          className="ops-card-header"
-          style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between" }}
+          className="ops-card-header flex items-start justify-between"
         >
           <div>
             <div
-              className="ops-card-title"
-              style={{ display: "flex", alignItems: "center", gap: 8 }}
+              className="ops-card-title flex items-center gap-2"
             >
               {icon}
               {title}

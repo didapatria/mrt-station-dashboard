@@ -224,19 +224,9 @@ export default function DashboardPage() {
           }}
         />
 
-        <div
-          className="relative"
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "space-between",
-            padding: "28px 32px",
-            gap: 24,
-          }}
-        >
+        <div className="relative flex flex-row items-center justify-between px-8 py-7 gap-6">
           {/* Left: greeting */}
-          <div style={{ flex: 1, minWidth: 0 }}>
+          <div className="flex-1 min-w-0">
             <div
               style={{
                 fontFamily: "'JetBrains Mono', monospace",
@@ -289,10 +279,7 @@ export default function DashboardPage() {
 
           {/* Right: big inline stats */}
           {stats && (
-            <div
-              className="hidden sm:flex"
-              style={{ gap: 0, flexShrink: 0, alignSelf: "stretch" }}
-            >
+            <div className="hidden sm:flex gap-0 shrink-0 self-stretch">
               {[
                 {
                   n: stats.totalStations,
@@ -348,52 +335,19 @@ export default function DashboardPage() {
       </motion.div>
 
       {/* ── Page header + export actions ── */}
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          alignItems: "flex-end",
-          justifyContent: "space-between",
-          gap: 16,
-          marginBottom: 32,
-          flexWrap: "wrap",
-        }}
-      >
+      <div className="flex flex-row items-end justify-between gap-4 mb-8 flex-wrap">
         <div>
-          <h2
-            className="font-display"
-            style={{ fontSize: 28, letterSpacing: "0.03em", lineHeight: 1 }}
-          >
+          <h2 className="font-display text-[28px] tracking-[0.03em] leading-none">
             {t("dashboard.title")}
           </h2>
-          <p
-            style={{
-              fontFamily: "'JetBrains Mono', monospace",
-              fontSize: 10.5,
-              color: "var(--color-muted-foreground)",
-              letterSpacing: "0.1em",
-              textTransform: "uppercase",
-              marginTop: 5,
-            }}
-          >
-            <span
-              style={{ display: "inline-flex", alignItems: "center", gap: 6 }}
-            >
-              <span
-                style={{
-                  width: 5,
-                  height: 5,
-                  borderRadius: "50%",
-                  background: "#22c55e",
-                  boxShadow: "0 0 6px rgba(34,197,94,0.7)",
-                  flexShrink: 0,
-                }}
-              />
+          <p className="font-mono text-[10.5px] text-muted-foreground tracking-widest uppercase mt-1.25">
+            <span className="inline-flex items-center gap-1.5">
+              <span className="w-1.25 h-1.25 rounded-full bg-[#22c55e] shadow-[0_0_6px_rgba(34,197,94,0.7)] shrink-0" />
               N–S Line · Real-time Overview
             </span>
           </p>
         </div>
-        <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+        <div className="flex gap-2 flex-wrap">
           {stats && (
             <Button
               variant="outline"
@@ -441,12 +395,7 @@ export default function DashboardPage() {
           variants={stagger}
           initial="hidden"
           animate="show"
-          className="grid gap-px md:grid-cols-2 lg:grid-cols-3 mb-8"
-          style={{
-            background: "var(--color-border)",
-            borderRadius: 12,
-            overflow: "hidden",
-          }}
+          className="grid gap-px md:grid-cols-2 lg:grid-cols-3 mb-8 bg-border rounded-xl overflow-hidden"
         >
           {statCards.map((stat, idx) => {
             const Icon = stat.icon;
@@ -499,11 +448,9 @@ export default function DashboardPage() {
                     color: stat.accent,
                   }}
                 />
-                <div style={{ paddingLeft: 14 }}>
-                  <p className="ops-table-head" style={{ marginBottom: 6 }}>
-                    {stat.title}
-                  </p>
-                  <p className="font-display" style={{ fontSize: 52, lineHeight: 1, letterSpacing: "0.02em" }}>
+                <div className="pl-3.5">
+                  <p className="ops-table-head mb-1.5">{stat.title}</p>
+                  <p className="font-display text-[52px] leading-none tracking-[0.02em]">
                     {stat.value}
                   </p>
                   {/* Accent underline */}
@@ -547,47 +494,26 @@ export default function DashboardPage() {
               colors: ["#3b82f6", "#f59e0b", "#ef4444"],
             },
           ].map(({ title, data, colors }) => (
-            <div
-              key={title}
-              className="ops-card"
-            >
+            <div key={title} className="ops-card">
               {/* Top accent gradient line */}
               <div className="ops-accent-line" />
-              <div
-                className="ops-card-header"
-                style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}
-              >
+              <div className="ops-card-header flex items-center justify-between">
                 <h3 className="ops-card-title">{title}</h3>
-                <div style={{ display: "flex", gap: 12 }}>
+                <div className="flex gap-3">
                   {data.map((d, i) => (
-                    <div
-                      key={d.name}
-                      style={{ display: "flex", alignItems: "center", gap: 5 }}
-                    >
+                    <div key={d.name} className="flex items-center gap-1.25">
                       <div
-                        style={{
-                          width: 7,
-                          height: 7,
-                          borderRadius: "50%",
-                          background: colors[i],
-                          flexShrink: 0,
-                        }}
+                        className="w-[7px] h-[7px] rounded-full shrink-0"
+                        style={{ background: colors[i] }}
                       />
-                      <span
-                        style={{
-                          fontFamily: "'JetBrains Mono', monospace",
-                          fontSize: 9.5,
-                          color: "var(--color-muted-foreground)",
-                          letterSpacing: "0.06em",
-                        }}
-                      >
+                      <span className="font-mono text-[9.5px] text-muted-foreground tracking-[0.06em]">
                         {d.name}
                       </span>
                     </div>
                   ))}
                 </div>
               </div>
-              <div style={{ padding: "12px 0" }}>
+              <div className="py-3">
                 <ResponsiveContainer width="100%" height={200}>
                   <PieChart>
                     <Pie
@@ -623,53 +549,33 @@ export default function DashboardPage() {
       {/* ── Hourly bar chart ── */}
       {hourlyData.length > 0 && (
         <motion.div variants={fadeUp} initial="hidden" animate="show">
-          <div
-            className="ops-card mb-8"
-          >
+          <div className="ops-card mb-8">
             {/* Top accent gradient line */}
             <div className="ops-accent-line" />
             <div
               className="ops-card-header"
-              style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
             >
               <div>
-                <h3 className="ops-card-title" style={{ marginBottom: 2 }}>
+                <h3 className="ops-card-title mb-0.5">
                   {t("dashboard.weekdayDistribution")}
                 </h3>
                 <p className="ops-card-subtitle">
                   {t("dashboard.schedulesPerHour")}
                 </p>
               </div>
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 6,
-                  background: "var(--color-muted)",
-                  borderRadius: 6,
-                  padding: "5px 10px",
-                }}
-              >
-                <TrendingUp
-                  style={{
-                    width: 12,
-                    height: 12,
-                    color: "var(--color-muted-foreground)",
-                  }}
-                />
-                <span
-                  style={{
-                    fontFamily: "'JetBrains Mono', monospace",
-                    fontSize: 10.5,
-                    color: "var(--color-muted-foreground)",
-                    letterSpacing: "0.06em",
-                  }}
-                >
+              <div className="flex items-center gap-1.5 bg-muted rounded-md px-2.5 py-[5px]">
+                <TrendingUp className="w-3 h-3 text-muted-foreground" />
+                <span className="font-mono text-[10.5px] text-muted-foreground tracking-[0.06em]">
                   {hourlyData.reduce((a, b) => a + b.count, 0)} total
                 </span>
               </div>
             </div>
-            <div style={{ padding: "20px 16px 12px 8px" }}>
+            <div className="pt-5 pr-4 pb-3 pl-2">
               <ResponsiveContainer width="100%" height={260}>
                 <BarChart
                   data={hourlyData}
@@ -739,50 +645,35 @@ export default function DashboardPage() {
       {/* ── Station & Schedule tables ── */}
       <motion.div variants={fadeUp} initial="hidden" animate="show">
         <Tabs defaultValue="stations">
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              marginBottom: 16,
-            }}
-          >
+          <div className="flex items-center justify-between mb-4">
             <TabsList>
               <TabsTrigger value="stations">
-                <MapPin style={{ width: 13, height: 13, marginRight: 6 }} />
+                <MapPin className="w-[13px] h-[13px] mr-1.5" />
                 Stations
               </TabsTrigger>
               <TabsTrigger value="schedules">
-                <Clock style={{ width: 13, height: 13, marginRight: 6 }} />
+                <Clock className="w-[13px] h-[13px] mr-1.5" />
                 Schedules
               </TabsTrigger>
             </TabsList>
           </div>
 
           <TabsContent value="stations">
-            <div
-              className="ops-card"
-            >
+            <div className="ops-card">
               {/* Top accent gradient line */}
               <div className="ops-accent-line" />
               <div className="overflow-x-auto">
                 <Table>
                   <TableHeader>
-                    <TableRow
-                      style={{
-                        borderBottom: "1px solid var(--color-border)",
-                      }}
-                    >
-                      <TableHead className="ops-table-head" style={{ padding: "12px 16px" }}>
+                    <TableRow>
+                      <TableHead className="ops-table-head px-4 py-3">
                         Code
                       </TableHead>
-                      <TableHead className="ops-table-head">
-                        Name
-                      </TableHead>
+                      <TableHead className="ops-table-head">Name</TableHead>
                       <TableHead className="ops-table-head hidden sm:table-cell">
                         Location
                       </TableHead>
-                      <TableHead className="ops-table-head text-right" style={{ padding: "12px 16px" }}>
+                      <TableHead className="ops-table-head text-right px-4 py-3">
                         Status
                       </TableHead>
                     </TableRow>
@@ -790,24 +681,8 @@ export default function DashboardPage() {
                   <TableBody>
                     {stations.slice(0, 10).map((station) => (
                       <TableRow key={station.id} className="hover:bg-muted/30">
-                        <TableCell style={{ padding: "12px 16px" }}>
-                          <div
-                            style={{
-                              height: 30,
-                              width: 30,
-                              borderRadius: 6,
-                              background:
-                                "color-mix(in oklch, var(--color-primary) 10%, transparent)",
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "center",
-                              fontFamily: "'JetBrains Mono', monospace",
-                              fontSize: 10,
-                              fontWeight: 700,
-                              color: "var(--color-primary)",
-                              letterSpacing: "-0.02em",
-                            }}
-                          >
+                        <TableCell className="px-4 py-3">
+                          <div className="h-[30px] w-[30px] rounded-md bg-primary/10 flex items-center justify-center font-mono text-[10px] font-bold text-primary tracking-[-0.02em]">
                             {station.code}
                           </div>
                         </TableCell>
@@ -817,9 +692,7 @@ export default function DashboardPage() {
                         <TableCell className="ops-mono-data hidden sm:table-cell">
                           {station.location}
                         </TableCell>
-                        <TableCell
-                          style={{ textAlign: "right", padding: "12px 16px" }}
-                        >
+                        <TableCell className="text-right px-4 py-3">
                           <Badge
                             variant={
                               station.status === "ACTIVE"
@@ -841,30 +714,24 @@ export default function DashboardPage() {
           </TabsContent>
 
           <TabsContent value="schedules">
-            <div
-              className="ops-card"
-            >
+            <div className="ops-card">
               {/* Top accent gradient line */}
               <div className="ops-accent-line" />
               <div className="overflow-x-auto">
                 <Table>
                   <TableHeader>
-                    <TableRow
-                      style={{
-                        borderBottom: "1px solid var(--color-border)",
-                      }}
-                    >
+                    <TableRow>
                       {["Train", "Route", "Time", "Status"].map((h, i) => (
                         <TableHead
                           key={h}
                           className={[
                             "ops-table-head",
+                            i === 0 || i === 3 ? "px-4 py-3" : "",
                             i === 2 ? "hidden sm:table-cell" : "",
                             i === 3 ? "text-right" : "",
-                          ].filter(Boolean).join(" ")}
-                          style={{
-                            padding: i === 0 || i === 3 ? "12px 16px" : undefined,
-                          }}
+                          ]
+                            .filter(Boolean)
+                            .join(" ")}
                         >
                           {h}
                         </TableHead>
@@ -874,50 +741,22 @@ export default function DashboardPage() {
                   <TableBody>
                     {schedules.slice(0, 10).map((schedule) => (
                       <TableRow key={schedule.id} className="hover:bg-muted/30">
-                        <TableCell
-                          style={{
-                            padding: "12px 16px",
-                            fontFamily: "'JetBrains Mono', monospace",
-                            fontSize: 12,
-                            fontWeight: 600,
-                            letterSpacing: "0.04em",
-                          }}
-                        >
+                        <TableCell className="ops-train-cell px-4 py-3">
                           {schedule.trainNumber}
                         </TableCell>
-                        <TableCell
-                          style={{
-                            fontFamily: "'Sora', sans-serif",
-                            fontSize: 13,
-                          }}
-                        >
-                          <span style={{ color: "var(--color-foreground)" }}>
-                            {schedule.departureStation?.name}
-                          </span>
-                          <span
-                            style={{
-                              color: "var(--color-muted-foreground)",
-                              margin: "0 6px",
-                              fontFamily: "'JetBrains Mono', monospace",
-                              fontSize: 11,
-                            }}
-                          >
+                        <TableCell className="font-['Sora',sans-serif] text-[13px]">
+                          <span>{schedule.departureStation?.name}</span>
+                          <span className="text-muted-foreground mx-1.5 font-mono text-[11px]">
                             →
                           </span>
-                          <span style={{ color: "var(--color-foreground)" }}>
-                            {schedule.arrivalStation?.name}
-                          </span>
+                          <span>{schedule.arrivalStation?.name}</span>
                         </TableCell>
                         <TableCell className="ops-mono-data hidden sm:table-cell">
                           {schedule.departureTime}
-                          <span style={{ margin: "0 4px", opacity: 0.4 }}>
-                            —
-                          </span>
+                          <span className="mx-1 opacity-40">—</span>
                           {schedule.arrivalTime}
                         </TableCell>
-                        <TableCell
-                          style={{ textAlign: "right", padding: "12px 16px" }}
-                        >
+                        <TableCell className="text-right px-4 py-3">
                           <Badge
                             variant={
                               schedule.status === "ACTIVE"

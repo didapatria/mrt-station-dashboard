@@ -21,16 +21,7 @@ export function ScheduleCalendar({ schedules }: { schedules: Schedule[] }) {
                 <div className="border-b px-2 py-2 text-xs font-mono text-muted-foreground bg-muted/30">
                   {String(hour).padStart(2, "0")}:00
                 </div>
-                <div
-                  className="border-b px-2 py-1.5 min-h-9"
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    flexWrap: "wrap",
-                    gap: "0.25rem",
-                    alignItems: "center",
-                  }}
-                >
+                <div className="border-b px-2 py-1.5 min-h-9 flex flex-row flex-wrap gap-1 items-center">
                   {hourSchedules.map((s) => (
                     <Badge
                       key={s.id}

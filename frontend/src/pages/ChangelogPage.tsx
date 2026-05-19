@@ -320,7 +320,7 @@ export default function ChangelogPage() {
           hidden: {},
           visible: { transition: { staggerChildren: 0.06 } },
         }}
-        style={{ display: "flex", flexDirection: "column", gap: 20 }}
+        className="flex flex-col gap-5"
       >
         {changelog.map((release, i) => {
           const accentColor = getVersionAccentColor(release.version);
@@ -342,17 +342,8 @@ export default function ChangelogPage() {
               />
 
               {/* Card Header */}
-              <div
-                className="ops-card-header"
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  flexWrap: "wrap",
-                  gap: 8,
-                }}
-              >
-                <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+              <div className="ops-card-header flex items-center justify-between flex-wrap gap-2">
+                <div className="flex items-center gap-3">
                   <span className="changelog-version">v{release.version}</span>
                   <span className="changelog-date">{release.date}</span>
                   {i === 0 && (
@@ -360,7 +351,7 @@ export default function ChangelogPage() {
                   )}
                 </div>
                 {release.commits.length > 0 && (
-                  <div style={{ display: "flex", flexWrap: "wrap", gap: 4 }}>
+                  <div className="flex flex-wrap gap-1">
                     {release.commits.map((hash) => (
                       <a
                         key={hash}
@@ -378,19 +369,9 @@ export default function ChangelogPage() {
               </div>
 
               {/* Change list */}
-              <div
-                style={{
-                  padding: "16px 24px 20px",
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: 8,
-                }}
-              >
+              <div className="px-6 pt-4 pb-5 flex flex-col gap-2">
                 {release.items.map((item) => (
-                  <div
-                    key={item}
-                    style={{ display: "flex", alignItems: "flex-start", gap: 10 }}
-                  >
+                  <div key={item} className="flex items-start gap-2.5">
                     <div className="changelog-dot" />
                     <span className="changelog-item-text">{item}</span>
                   </div>

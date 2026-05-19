@@ -8,9 +8,9 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 const MRT_STATIONS = [
   "Lebak Bulus Bank Syariah Indonesia",
   "Fatmawati Indomaret",
-  "Cipete Raya Tuku",
+  "Cipete Raya TUKU",
   "Haji Nawi",
-  "Blok A",
+  "Blok A Visa",
   "Blok M BCA",
   "ASEAN Headquarters",
   "Senayan Mastercard",

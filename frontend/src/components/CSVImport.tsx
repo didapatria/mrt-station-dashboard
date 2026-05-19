@@ -127,14 +127,7 @@ export function CSVImportDialog({
             </p>
           </div>
         )}
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "flex-end",
-            gap: "0.5rem",
-          }}
-        >
+        <div className="flex flex-row justify-end gap-2">
           <Button variant="outline" onClick={() => onOpenChange(false)}>
             {t("common.cancel")}
           </Button>

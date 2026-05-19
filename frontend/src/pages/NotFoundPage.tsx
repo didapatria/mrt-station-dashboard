@@ -6,30 +6,10 @@ export default function NotFoundPage() {
   const navigate = useNavigate();
 
   return (
-    <div
-      style={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        minHeight: "100vh",
-        background: "var(--color-background)",
-        padding: "0 24px",
-      }}
-    >
+    <div className="flex items-center justify-center min-h-screen bg-background px-6">
       <div className="not-found-bg" />
 
-      <div
-        style={{
-          position: "relative",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          textAlign: "center",
-          padding: "52px 64px",
-          maxWidth: 480,
-          width: "100%",
-        }}
-      >
+      <div className="relative flex flex-col items-center text-center p-[52px_64px] max-w-120 w-full">
         {/* Corner brackets */}
         <span className="not-found-bracket not-found-bracket--tl" />
         <span className="not-found-bracket not-found-bracket--tr" />
@@ -37,7 +17,7 @@ export default function NotFoundPage() {
         <span className="not-found-bracket not-found-bracket--br" />
 
         {/* 404 with blur glow behind */}
-        <div style={{ position: "relative", lineHeight: 1 }}>
+        <div className="relative leading-none">
           <div className="not-found-404-ghost">404</div>
           <div className="not-found-404-text">404</div>
         </div>
@@ -50,7 +30,7 @@ export default function NotFoundPage() {
           The requested station is not on this line.
         </p>
 
-        <div style={{ display: "flex", gap: 12, flexWrap: "wrap", justifyContent: "center" }}>
+        <div className="flex gap-3 flex-wrap justify-center">
           <button
             onClick={() => navigate(-1)}
             className="not-found-btn-outline"

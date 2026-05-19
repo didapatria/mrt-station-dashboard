@@ -92,8 +92,7 @@ export function StationMap({
     <MapContainer
       center={center}
       zoom={13}
-      className="h-full w-full rounded-lg"
-      style={{ minHeight: "400px" }}
+      className="h-full w-full rounded-lg min-h-100"
       attributionControl={false}
     >
       <TileLayer url="https://mt1.google.com/vt/lyrs=r&x={x}&y={y}&z={z}" />

@@ -8,8 +8,8 @@ interface PageHeaderProps {
 
 export function PageHeader({ title, subtitle, right }: PageHeaderProps) {
   return (
-    <div style={{ marginBottom: 24 }}>
-      <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between" }}>
+    <div className="mb-6">
+      <div className="flex items-start justify-between">
         <div>
           <h2 className="page-heading">{title}</h2>
           {subtitle && <p className="page-subtitle">{subtitle}</p>}
