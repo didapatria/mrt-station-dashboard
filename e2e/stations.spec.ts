@@ -75,12 +75,8 @@ test.describe("Stations Page", () => {
     adminPage: page,
   }) => {
     await navigateTo(page, "/stations");
-  
-    // Ensure clean state: reload to clear any stale data from previous failed runs
-    await page.reload();
     await expect(page.locator("table")).toBeVisible();
   
-    // Clear search
     const searchInput = page.getByPlaceholder(/search/i);
     await searchInput.clear();
   
@@ -92,7 +88,6 @@ test.describe("Stations Page", () => {
     const dialog = page.locator("[role='dialog']");
     await expect(dialog).toBeVisible();
   
-    // Use unique values to avoid conflicts with previous test runs
     const uniqueId = Date.now().toString(36);
     const stationName = `Test Station E2E ${uniqueId}`;
     const stationCode = `T${uniqueId.slice(-3).toUpperCase()}`;
@@ -104,21 +99,18 @@ test.describe("Stations Page", () => {
     await dialog.locator("#longitude").fill("106.8000");
     await dialog.locator("#order").fill("99");
   
-    // Ensure button is enabled before clicking
     const createBtn = dialog.getByRole("button", { name: "Create" });
     await expect(createBtn).toBeEnabled();
     await createBtn.click();
   
-    // Wait for dialog to close with longer timeout for slow API
+    // Wait for dialog to close
     await expect(dialog).not.toBeVisible({ timeout: 15000 });
   
-    // Verify table updated
+    // CRITICAL: Search for the station instead of scanning paginated table
+    await searchInput.fill(stationName);
     await expect(page.locator("tbody")).toContainText(stationName, { timeout: 10000 });
   
-    // ── SEARCH & EDIT ──
-    await searchInput.fill(stationName);
-    await expect(page.locator("tbody")).toContainText(stationName);
-  
+    // ── EDIT ──
     const row = page.locator("tbody tr", { hasText: stationName });
     const actionsCell = row.locator("td").last();
     const editBtn = actionsCell.locator("button").nth(0);
@@ -135,13 +127,13 @@ test.describe("Stations Page", () => {
     await expect(saveBtn).toBeEnabled();
     await saveBtn.click();
     await expect(editDialog).not.toBeVisible({ timeout: 15000 });
+  
+    // Verify update via search
+    await searchInput.clear();
+    await searchInput.fill(updatedName);
     await expect(page.locator("tbody")).toContainText(updatedName, { timeout: 10000 });
   
     // ── DELETE ──
-    await searchInput.clear();
-    await searchInput.fill(updatedName);
-    await expect(page.locator("tbody")).toContainText(updatedName);
-  
     const delRow = page.locator("tbody tr", { hasText: updatedName });
     const delActionsCell = delRow.locator("td").last();
     const deleteBtn = delActionsCell.locator("button").nth(1);
@@ -151,6 +143,11 @@ test.describe("Stations Page", () => {
     await expect(alertDialog).toBeVisible();
     await alertDialog.getByRole("button", { name: /delete|confirm/i }).click();
     await expect(alertDialog).not.toBeVisible({ timeout: 10000 });
+  
+    // Verify deletion via search
+    await searchInput.clear();
+    await searchInput.fill(updatedName);
+    // After deletion, search should show no results or "No results" message
     await expect(page.locator("tbody")).not.toContainText(updatedName, { timeout: 10000 });
   });
 });
