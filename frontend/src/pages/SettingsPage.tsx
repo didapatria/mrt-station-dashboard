@@ -108,7 +108,7 @@ export default function SettingsPage() {
         >
           <div>
             {[
-              { key: "VERSION", value: "2.13.0" },
+              { key: "VERSION", value: "2.14.0" },
               { key: "FRONTEND", value: "React 19 + Vite 8 + Tailwind 4" },
               { key: "BACKEND", value: "Express.js 5 + TypeScript" },
               { key: "DATABASE", value: "PostgreSQL + Prisma ORM" },

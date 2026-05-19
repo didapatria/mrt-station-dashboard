@@ -372,7 +372,7 @@ export default function AuthLayout() {
               className="font-mono text-[9px] tracking-[0.08em]"
               style={{ color: p.footerVersion }}
             >
-              v2.13.0
+              v2.14.0
             </span>
           </motion.div>
         </div>

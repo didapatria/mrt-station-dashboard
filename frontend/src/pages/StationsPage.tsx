@@ -493,7 +493,7 @@ export default function StationsPage() {
                     return (
                       <TableRow
                         key={station.id}
-                        className="transition-[background,border-color] duration-[120ms] ease-linear"
+                        className="transition-[background,border-color] duration-120 ease-linear"
                         style={{
                           borderLeft: isSelected
                             ? "3px solid var(--color-primary)"

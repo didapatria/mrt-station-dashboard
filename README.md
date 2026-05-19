@@ -7,7 +7,7 @@
   <a href="https://didapatria.github.io/mrt-station-dashboard/">
     <img src="https://img.shields.io/badge/E2E%20Report-GitHub%20Pages-0969da?logo=github&logoColor=white" alt="E2E Report" />
   </a>
-  <img src="https://img.shields.io/badge/version-2.13.0-blue" />
+  <img src="https://img.shields.io/badge/version-2.14.0-blue" />
 </p>
 
 <p align="left">

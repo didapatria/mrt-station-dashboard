@@ -278,7 +278,7 @@ export default function DashboardLayout() {
             <span className="sidebar-sub-text">SYS ONLINE</span>
           </div>
           <span className="font-mono text-[8px] tracking-widest text-[rgba(29,111,232,0.3)]">
-            v2.13.0
+            v2.14.0
           </span>
         </div>
       )}

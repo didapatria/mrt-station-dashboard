@@ -1,7 +1,7 @@
 # MRT Station Management Dashboard
 
 ## Project Overview
-Full-stack web application for managing MRT Jakarta stations and schedules. Built as a portfolio project demonstrating full-stack proficiency with 120+ commits, 14 pages, 40+ features, 93 E2E tests. Design system: "Operations Terminal" aesthetic — Bebas Neue (display), JetBrains Mono (data labels), Sora (body), LED status dots, card containers with top accent gradient lines.
+Full-stack web application for managing MRT Jakarta stations and schedules. Built as a portfolio project demonstrating full-stack proficiency with 225+ commits, 14 pages, 40+ features, 112 E2E tests. Design system: "Operations Terminal" aesthetic — Bebas Neue (display), JetBrains Mono (data labels), Sora (body), LED status dots, card containers with top accent gradient lines.
 
 ## Commands
 
