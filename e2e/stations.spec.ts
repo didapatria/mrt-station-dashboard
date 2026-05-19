@@ -90,35 +90,40 @@ test.describe("Stations Page", () => {
     await dialog.locator("#longitude").fill("106.8000");
     await dialog.locator("#order").fill("99");
   
+    // Click save and wait for dialog to close + table to update
     await dialog.getByRole("button", { name: /create|save|add/i }).click();
-    await expect(dialog).not.toBeVisible({ timeout: 10000 }); // ← increased + explicit wait
+    await expect(dialog).not.toBeVisible({ timeout: 10000 });
+    // Extra guard: wait for the new row to appear in the table
+    await expect(page.locator("tbody")).toContainText("Test Station E2E", { timeout: 10000 });
   
     // ── SEARCH & EDIT ──
     const searchInput = page.getByPlaceholder(/search/i);
     await searchInput.fill("Test Station E2E");
-    await expect(page.locator("tbody")).toContainText(/Test Station E2E/i);
+    await expect(page.locator("tbody")).toContainText("Test Station E2E");
   
-    // Use precise aria-label or text matcher for edit button
+    // Icon buttons have no accessible name — use index within the row's Actions cell
     const row = page.locator("tbody tr", { hasText: /Test Station E2E/ });
-    const editBtn = row.getByRole("button", { name: /edit/i }); // ← precise selector
+    const actionsCell = row.locator("td").last(); // Actions column is last
+    const editBtn = actionsCell.locator("button").nth(0); // first button = edit
     await expect(editBtn).toBeVisible();
     await editBtn.click();
   
-    // Re-locate dialog to avoid stale reference
     const editDialog = page.locator("[role='dialog']");
-    await expect(editDialog).toBeVisible({ timeout: 5000 }); // ← wait for animation
+    await expect(editDialog).toBeVisible({ timeout: 5000 });
     await editDialog.locator("#name").clear();
     await editDialog.locator("#name").fill("Test Station Updated");
     await editDialog.getByRole("button", { name: /update|save/i }).click();
     await expect(editDialog).not.toBeVisible({ timeout: 10000 });
+    await expect(page.locator("tbody")).toContainText("Test Station Updated", { timeout: 10000 });
   
     // ── DELETE ──
     await searchInput.clear();
     await searchInput.fill("Test Station Updated");
-    await expect(page.locator("tbody")).toContainText(/Test Station Updated/i);
+    await expect(page.locator("tbody")).toContainText("Test Station Updated");
   
     const delRow = page.locator("tbody tr", { hasText: /Test Station Updated/ });
-    const deleteBtn = delRow.getByRole("button", { name: /delete/i }); // ← precise selector
+    const delActionsCell = delRow.locator("td").last();
+    const deleteBtn = delActionsCell.locator("button").nth(1); // second button = delete
     await deleteBtn.click();
   
     const alertDialog = page.locator("[role='alertdialog'], [role='dialog']");
