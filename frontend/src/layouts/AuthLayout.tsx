@@ -81,35 +81,22 @@ export default function AuthLayout() {
       };
 
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        display: "flex",
-        background: "var(--color-background)",
-      }}
-    >
+    <div className="min-h-screen flex bg-background">
       {/* ── Left panel ── */}
       <div
-        className="hidden lg:flex"
+        className="hidden lg:flex w-[48%] relative overflow-hidden flex-col transition-[background] duration-300"
         style={{
-          width: "48%",
           background: p.bg,
-          position: "relative",
-          overflow: "hidden",
           borderRight: `1px solid rgba(29,111,232,0.12)`,
-          flexDirection: "column",
-          transition: "background 0.3s ease",
         }}
       >
         {/* Grid overlay */}
         <div
+          className="absolute inset-0 pointer-events-none"
           style={{
-            position: "absolute",
-            inset: 0,
             opacity: p.gridOpacity,
             backgroundImage: `linear-gradient(${ACCENT} 1px, transparent 1px), linear-gradient(90deg, ${ACCENT} 1px, transparent 1px)`,
             backgroundSize: "44px 44px",
-            pointerEvents: "none",
           }}
         />
 
@@ -118,15 +105,9 @@ export default function AuthLayout() {
 
         {/* Glow top-left */}
         <div
+          className="absolute -top-20 -left-20 w-80 h-80 rounded-full pointer-events-none"
           style={{
-            position: "absolute",
-            top: -80,
-            left: -80,
-            width: 320,
-            height: 320,
-            borderRadius: "50%",
             background: `radial-gradient(circle, rgba(29,111,232,${isDark ? "0.09" : "0.06"}) 0%, transparent 70%)`,
-            pointerEvents: "none",
           }}
         />
 
@@ -165,41 +146,21 @@ export default function AuthLayout() {
         ))}
 
         {/* Content */}
-        <div
-          style={{
-            position: "relative",
-            zIndex: 10,
-            display: "flex",
-            flexDirection: "column",
-            height: "100%",
-            padding: "36px 40px",
-          }}
-        >
+        <div className="relative z-10 flex flex-col h-full p-[36px_40px]">
           {/* Top bar */}
           <motion.div
             initial={{ opacity: 0, y: -6 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              marginBottom: 44,
-            }}
+            className="flex items-center justify-between mb-11"
           >
             {/* Logo */}
-            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <div className="flex items-center gap-2.5">
               <div
+                className="w-7.5 h-7.5 rounded-md flex items-center justify-center shrink-0"
                 style={{
-                  width: 30,
-                  height: 30,
-                  borderRadius: 6,
                   background: `linear-gradient(135deg, ${ACCENT}, #0ea5e9)`,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
                   boxShadow: `0 0 18px rgba(29,111,232,${isDark ? "0.4" : "0.25"})`,
-                  flexShrink: 0,
                 }}
               >
                 <svg
@@ -216,52 +177,24 @@ export default function AuthLayout() {
                 </svg>
               </div>
               <span
-                style={{
-                  fontFamily: "'JetBrains Mono', monospace",
-                  fontSize: 10,
-                  fontWeight: 600,
-                  letterSpacing: "0.18em",
-                  color: p.logoText,
-                  textTransform: "uppercase",
-                }}
+                className="font-mono text-[10px] font-semibold tracking-[0.18em] uppercase"
+                style={{ color: p.logoText }}
               >
                 MRT JAKARTA
               </span>
             </div>
 
             {/* Status + Clock */}
-            <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 6,
-                  background: "rgba(16,185,129,0.07)",
-                  border: "1px solid rgba(16,185,129,0.22)",
-                  borderRadius: 3,
-                  padding: "3px 8px",
-                }}
-              >
+            <div className="flex items-center gap-3.5">
+              <div className="flex items-center gap-1.5 bg-[rgba(16,185,129,0.07)] border border-[rgba(16,185,129,0.22)] rounded-[3px] px-2 py-0.75">
                 <span className="auth-status-dot" />
-                <span
-                  style={{
-                    fontFamily: "'JetBrains Mono', monospace",
-                    fontSize: 8.5,
-                    color: "#10b981",
-                    letterSpacing: "0.14em",
-                  }}
-                >
+                <span className="font-mono text-[8.5px] text-[#10b981] tracking-[0.14em]">
                   OPERATIONAL
                 </span>
               </div>
               <span
-                style={{
-                  fontFamily: "'JetBrains Mono', monospace",
-                  fontSize: 13,
-                  color: p.clockText,
-                  letterSpacing: "0.08em",
-                  fontVariantNumeric: "tabular-nums",
-                }}
+                className="font-mono text-[13px] tracking-[0.08em] tabular-nums"
+                style={{ color: p.clockText }}
               >
                 {hh}
                 <span className="auth-clock-colon">:</span>
@@ -277,18 +210,10 @@ export default function AuthLayout() {
             initial={{ opacity: 0, x: -16 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.65, delay: 0.1 }}
-            style={{ marginBottom: 8 }}
+            className="mb-2"
           >
-            <div
-              style={{
-                fontFamily: "'Bebas Neue', sans-serif",
-                fontSize: "clamp(54px, 5.8vw, 76px)",
-                lineHeight: 0.9,
-                letterSpacing: "0.03em",
-                marginBottom: 16,
-              }}
-            >
-              <span style={{ color: p.headlineMain, display: "block" }}>
+            <div className="font-display leading-[0.9] tracking-[0.03em] mb-4 text-[clamp(54px,5.8vw,76px)]">
+              <span className="block" style={{ color: p.headlineMain }}>
                 STATION
               </span>
               <span
@@ -301,29 +226,14 @@ export default function AuthLayout() {
                 CONTROL
               </span>
             </div>
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 8,
-              }}
-            >
+            <div className="flex items-center gap-2">
               <div
-                style={{
-                  height: 1,
-                  width: 20,
-                  background: ACCENT,
-                  opacity: 0.7,
-                }}
+                className="h-px w-5 opacity-70"
+                style={{ background: ACCENT }}
               />
               <span
-                style={{
-                  fontFamily: "'JetBrains Mono', monospace",
-                  fontSize: 9.5,
-                  color: p.subtitleText,
-                  letterSpacing: "0.14em",
-                  textTransform: "uppercase",
-                }}
+                className="font-mono text-[9.5px] tracking-[0.14em] uppercase"
+                style={{ color: p.subtitleText }}
               >
                 North–South Line · 13 Stations
               </span>
@@ -335,13 +245,7 @@ export default function AuthLayout() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.25 }}
-            style={{
-              display: "flex",
-              gap: 8,
-              marginBottom: 24,
-              marginTop: 20,
-              flexWrap: "wrap",
-            }}
+            className="flex gap-2 mb-6 mt-5 flex-wrap"
           >
             {[
               { label: "STATIONS", value: "13" },
@@ -350,34 +254,21 @@ export default function AuthLayout() {
             ].map(({ label, value }) => (
               <div
                 key={label}
+                className="rounded px-2.5 py-1.25 flex flex-col gap-px"
                 style={{
                   background: p.chipBg,
                   border: `1px solid ${p.chipBorder}`,
-                  borderRadius: 4,
-                  padding: "5px 10px",
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: 1,
                 }}
               >
                 <span
-                  style={{
-                    fontFamily: "'JetBrains Mono', monospace",
-                    fontSize: 8,
-                    color: p.chipLabel,
-                    letterSpacing: "0.14em",
-                  }}
+                  className="font-mono text-[8px] tracking-[0.14em]"
+                  style={{ color: p.chipLabel }}
                 >
                   {label}
                 </span>
                 <span
-                  style={{
-                    fontFamily: "'JetBrains Mono', monospace",
-                    fontSize: 12,
-                    color: p.chipValue,
-                    fontWeight: 600,
-                    letterSpacing: "0.06em",
-                  }}
+                  className="font-mono text-[12px] font-semibold tracking-[0.06em]"
+                  style={{ color: p.chipValue }}
                 >
                   {value}
                 </span>
@@ -390,16 +281,10 @@ export default function AuthLayout() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.3 }}
-            style={{
-              display: "flex",
-              gap: 18,
-              alignItems: "flex-start",
-              flex: 1,
-              overflow: "hidden",
-            }}
+            className="flex gap-4.5 items-start flex-1 overflow-hidden"
           >
             {/* SVG line */}
-            <div style={{ paddingTop: 4, flexShrink: 0 }}>
+            <div className="pt-1 shrink-0">
               <svg
                 width="16"
                 height={MRT_STATIONS.length * 20}
@@ -441,37 +326,22 @@ export default function AuthLayout() {
             </div>
 
             {/* Station names */}
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: 0,
-                flex: 1,
-              }}
-            >
+            <div className="flex flex-col flex-1">
               {MRT_STATIONS.map((station, i) => (
                 <motion.div
                   key={station}
                   initial={{ opacity: 0, x: -6 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.25, delay: 0.5 + i * 0.045 }}
-                  style={{
-                    height: 20,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    paddingRight: 4,
-                  }}
+                  className="h-5 flex items-center justify-between pr-1"
                 >
                   <span
+                    className="font-mono text-[10px] tracking-[0.05em]"
                     style={{
-                      fontFamily: "'JetBrains Mono', monospace",
-                      fontSize: 10,
                       color:
                         i === 0 || i === MRT_STATIONS.length - 1
                           ? p.terminalStation
                           : p.midStation,
-                      letterSpacing: "0.05em",
                       fontWeight:
                         i === 0 || i === MRT_STATIONS.length - 1 ? 600 : 400,
                     }}
@@ -479,15 +349,8 @@ export default function AuthLayout() {
                     {station.toUpperCase()}
                   </span>
                   <span
-                    style={{
-                      width: 4,
-                      height: 4,
-                      borderRadius: "50%",
-                      background: "#10b981",
-                      opacity: isDark ? 0.55 : 0.7,
-                      flexShrink: 0,
-                      boxShadow: "0 0 4px rgba(16,185,129,0.45)",
-                    }}
+                    className="w-1 h-1 rounded-full bg-[#10b981] shrink-0 shadow-[0_0_4px_rgba(16,185,129,0.45)]"
+                    style={{ opacity: isDark ? 0.55 : 0.7 }}
                   />
                 </motion.div>
               ))}
@@ -499,32 +362,18 @@ export default function AuthLayout() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.4, delay: 1.3 }}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              paddingTop: 20,
-              borderTop: `1px solid ${p.footerBorder}`,
-              marginTop: 16,
-            }}
+            className="flex items-center justify-between pt-5 mt-4"
+            style={{ borderTop: `1px solid ${p.footerBorder}` }}
           >
             <span
-              style={{
-                fontFamily: "'JetBrains Mono', monospace",
-                fontSize: 9,
-                color: p.footerText,
-                letterSpacing: "0.1em",
-              }}
+              className="font-mono text-[9px] tracking-widest"
+              style={{ color: p.footerText }}
             >
               JAKARTA MRT · N–S LINE · {new Date().getFullYear()}
             </span>
             <span
-              style={{
-                fontFamily: "'JetBrains Mono', monospace",
-                fontSize: 9,
-                color: p.footerVersion,
-                letterSpacing: "0.08em",
-              }}
+              className="font-mono text-[9px] tracking-[0.08em]"
+              style={{ color: p.footerVersion }}
             >
               v2.13.0
             </span>
@@ -533,51 +382,25 @@ export default function AuthLayout() {
       </div>
 
       {/* ── Right panel ── */}
-      <div
-        style={{
-          flex: 1,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          padding: "2.5rem 2rem",
-          background: "var(--color-background)",
-          position: "relative",
-        }}
-      >
+      <div className="flex-1 flex items-center justify-center px-8 py-10 bg-background relative">
         {/* Subtle center glow */}
         <div
+          className="absolute inset-0 pointer-events-none"
           style={{
-            position: "absolute",
-            inset: 0,
             background:
               "radial-gradient(ellipse 60% 50% at 50% 50%, rgba(29,111,232,0.04) 0%, transparent 70%)",
-            pointerEvents: "none",
           }}
         />
 
         {/* Theme toggle — top right (desktop only; mobile handled per-page) */}
-        <div
-          className="hidden lg:block"
-          style={{
-            position: "absolute",
-            top: 16,
-            right: 16,
-            zIndex: 10,
-            color: "var(--color-foreground)",
-          }}
-        >
+        <div className="hidden lg:block absolute top-4 right-4 z-10 text-foreground">
           <ThemeToggle />
         </div>
         <motion.div
           initial={{ opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, ease: "easeOut", delay: 0.15 }}
-          style={{
-            width: "100%",
-            maxWidth: 400,
-            position: "relative",
-            zIndex: 1,
-          }}
+          className="w-full max-w-[400px] relative z-[1]"
         >
           <Outlet />
         </motion.div>

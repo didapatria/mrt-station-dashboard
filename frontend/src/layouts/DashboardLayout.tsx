@@ -158,14 +158,8 @@ function NavItemLink({
       {({ isActive }) => (
         <>
           <Icon
-            style={{
-              width: 16,
-              height: 16,
-              flexShrink: 0,
-              color: isActive
-                ? "var(--color-primary)"
-                : "var(--color-muted-foreground)",
-            }}
+            className="w-4 h-4 shrink-0"
+            style={{ color: isActive ? "var(--color-primary)" : "var(--color-muted-foreground)" }}
           />
           {!collapsed && <span>{t(item.labelKey)}</span>}
         </>
@@ -204,35 +198,19 @@ export default function DashboardLayout() {
   const sidebarPl = collapsed ? "lg:pl-16" : "lg:pl-60";
 
   const sidebarNav = (onNavClick?: () => void) => (
-    <div className="flex flex-col h-full" style={{ position: "relative" }}>
+    <div className="flex flex-col h-full relative">
       {/* Dot grid texture overlay */}
       <div
+        className="absolute inset-0 pointer-events-none z-0 opacity-[0.025]"
         style={{
-          position: "absolute",
-          inset: 0,
-          pointerEvents: "none",
-          opacity: 0.025,
-          backgroundImage:
-            "radial-gradient(circle, rgba(59,130,246,0.8) 1px, transparent 1px)",
+          backgroundImage: "radial-gradient(circle, rgba(59,130,246,0.8) 1px, transparent 1px)",
           backgroundSize: "20px 20px",
-          zIndex: 0,
         }}
       />
 
       {/* Logo bar */}
       <div
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          alignItems: "center",
-          gap: "0.75rem",
-          padding: "0 1rem",
-          height: "3.5rem",
-          flexShrink: 0,
-          borderBottom: "1px solid rgba(59,130,246,0.2)",
-          position: "relative",
-          zIndex: 1,
-        }}
+        className="flex flex-row items-center gap-3 px-4 h-14 shrink-0 border-b border-[rgba(59,130,246,0.2)] relative z-[1]"
       >
         <div
           className="flex h-8 w-8 items-center justify-center rounded-lg shrink-0"
@@ -243,20 +221,14 @@ export default function DashboardLayout() {
               "0 0 10px color-mix(in oklch, var(--color-primary) 40%, transparent)",
           }}
         >
-          <Train
-            style={{
-              width: 15,
-              height: 15,
-              color: "var(--color-primary-foreground)",
-            }}
-          />
+          <Train className="w-[15px] h-[15px] text-primary-foreground" />
         </div>
         {!collapsed && (
-          <div style={{ display: "flex", flexDirection: "column", gap: "1px" }}>
-            <span className="font-display text-base" style={{ letterSpacing: "0.06em" }}>
+          <div className="flex flex-col gap-px">
+            <span className="font-display text-base tracking-[0.06em]">
               MRT JAKARTA
             </span>
-            <span className="sidebar-group-label" style={{ letterSpacing: "0.16em" }}>
+            <span className="sidebar-group-label tracking-[0.16em]">
               N-S LINE
             </span>
           </div>
@@ -264,15 +236,14 @@ export default function DashboardLayout() {
       </div>
 
       <nav
-        className="flex-1 overflow-y-auto px-3 py-3"
+        className="flex-1 overflow-y-auto px-3 py-3 relative z-[1]"
         data-tour="sidebar-nav"
-        style={{ position: "relative", zIndex: 1 }}
       >
         {visibleGroups.map((group) => (
           <div key={group.labelKey} className="mb-3">
             {!collapsed && (
               <div
-                style={{ display: "flex", alignItems: "center", gap: "6px", padding: "0 8px", marginBottom: "6px" }}
+                className="flex items-center gap-[6px] px-2 mb-[6px]"
               >
                 <span className="sidebar-group-label">{t(group.labelKey)}</span>
                 <span className="sidebar-sep-line" />
@@ -295,38 +266,13 @@ export default function DashboardLayout() {
 
       {!collapsed && (
         <div
-          style={{
-            borderTop: "1px solid rgba(255,255,255,0.04)",
-            padding: "10px 16px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            flexShrink: 0,
-            position: "relative",
-            zIndex: 1,
-          }}
+          className="border-t border-[rgba(255,255,255,0.04)] px-4 py-[10px] flex items-center justify-between shrink-0 relative z-[1]"
         >
-          <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-            <div
-              style={{
-                width: 5,
-                height: 5,
-                borderRadius: "50%",
-                background: "#22c55e",
-                boxShadow: "0 0 4px rgba(34,197,94,0.6)",
-                flexShrink: 0,
-              }}
-            />
+          <div className="flex items-center gap-[6px]">
+            <div className="w-[5px] h-[5px] rounded-full bg-[#22c55e] shadow-[0_0_4px_rgba(34,197,94,0.6)] shrink-0" />
             <span className="sidebar-sub-text">SYS ONLINE</span>
           </div>
-          <span
-            style={{
-              fontFamily: "'JetBrains Mono', monospace",
-              fontSize: "8px",
-              letterSpacing: "0.1em",
-              color: "rgba(29,111,232,0.3)",
-            }}
-          >
+          <span className="font-mono text-[8px] tracking-[0.1em] text-[rgba(29,111,232,0.3)]">
             v2.13.0
           </span>
         </div>
@@ -340,13 +286,10 @@ export default function DashboardLayout() {
       <FeedbackDialog open={feedbackOpen} onOpenChange={setFeedbackOpen} />
       <aside
         className={cn(
-          "fixed top-0 left-0 z-40 h-full border-r hidden lg:flex lg:flex-col transition-all duration-200",
+          "fixed top-0 left-0 z-40 h-full border-r hidden lg:flex lg:flex-col transition-all duration-200 bg-sidebar",
           collapsed ? "nav-collapsed" : "",
           sidebarWidth,
         )}
-        style={{
-          background: "var(--color-sidebar)",
-        }}
       >
         {sidebarNav()}
       </aside>
@@ -362,18 +305,8 @@ export default function DashboardLayout() {
 
       <div className={cn("transition-all duration-200", sidebarPl)}>
         <header
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
-            gap: "0.75rem",
-            height: "3.5rem",
-            padding: "0 1rem",
-            borderBottom: "1px solid var(--color-border)",
-            background:
-              "linear-gradient(180deg, var(--color-sidebar) 0%, color-mix(in oklch, var(--color-background) 85%, var(--color-sidebar) 15%) 100%)",
-          }}
-          className="sticky top-0 z-30 backdrop-blur-xl"
+          className="sticky top-0 z-30 backdrop-blur-xl flex flex-row items-center gap-3 h-14 px-4 border-b border-border"
+          style={{ background: "linear-gradient(180deg, var(--color-sidebar) 0%, color-mix(in oklch, var(--color-background) 85%, var(--color-sidebar) 15%) 100%)" }}
         >
           <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
             <SheetTrigger asChild>
@@ -409,16 +342,12 @@ export default function DashboardLayout() {
               )
             }
           >
-            <span
-              className="inline-flex items-center gap-2 text-xs"
-              style={{ fontFamily: "'JetBrains Mono', monospace" }}
-            >
-              <Search style={{ width: 14, height: 14 }} />
+            <span className="inline-flex items-center gap-2 text-xs font-mono">
+              <Search className="w-[14px] h-[14px]" />
               {t("common.search")}
             </span>
             <kbd
-              className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 text-[10px] font-medium text-muted-foreground"
-              style={{ fontFamily: "'JetBrains Mono', monospace" }}
+              className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 text-[10px] font-medium text-muted-foreground font-mono"
             >
               ⌘K
             </kbd>
