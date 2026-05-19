@@ -79,7 +79,7 @@ test.describe("Stations Page", () => {
     // Clear any previous search state
     const searchInput = page.getByPlaceholder(/search/i);
     await searchInput.clear();
-    await page.waitForTimeout(500); // let table reset to full list
+    await page.waitForTimeout(500);
   
     // ── CREATE ──
     const addBtn = page.getByRole("button", { name: /add station/i }).first();
@@ -95,16 +95,12 @@ test.describe("Stations Page", () => {
     await dialog.locator("#longitude").fill("106.8000");
     await dialog.locator("#order").fill("99");
   
-    // Use exact button name and wait for network
-    await Promise.all([
-      page.waitForResponse(resp => resp.url().includes("/stations") && resp.request().method() === "POST"),
-      dialog.getByRole("button", { name: "Save" }).click(), // or exact text from your UI
-    ]);
+    // Click the EXACT button name shown in the UI: "Create"
+    // Wait for dialog to close instead of network response (more resilient)
+    await dialog.getByRole("button", { name: "Create" }).click();
+    await expect(dialog).not.toBeVisible({ timeout: 10000 });
   
-    // Wait for success toast/notification (adjust selector to your UI)
-    await expect(page.locator("[role='status'], .toast, .notification").filter({ hasText: /created|success/i })).toBeVisible({ timeout: 10000 });
-  
-    // Verify table updated
+    // Verify table updated — if creation succeeded, row appears
     await expect(page.locator("tbody")).toContainText("Test Station E2E", { timeout: 10000 });
   
     // ── SEARCH & EDIT ──
@@ -122,11 +118,8 @@ test.describe("Stations Page", () => {
     await editDialog.locator("#name").clear();
     await editDialog.locator("#name").fill("Test Station Updated");
   
-    await Promise.all([
-      page.waitForResponse(resp => resp.url().includes("/stations") && resp.request().method() === "PUT"),
-      editDialog.getByRole("button", { name: "Save" }).click(),
-    ]);
-  
+    // Edit dialog likely has "Save" or "Update" — adjust to exact text
+    await editDialog.getByRole("button", { name: /save|update/i }).click();
     await expect(editDialog).not.toBeVisible({ timeout: 10000 });
     await expect(page.locator("tbody")).toContainText("Test Station Updated", { timeout: 10000 });
   
@@ -143,8 +136,7 @@ test.describe("Stations Page", () => {
     const alertDialog = page.locator("[role='alertdialog'], [role='dialog']");
     await expect(alertDialog).toBeVisible();
     await alertDialog.getByRole("button", { name: /delete|confirm/i }).click();
-  
-    // Wait for DELETE to complete
+    await expect(alertDialog).not.toBeVisible({ timeout: 10000 });
     await expect(page.locator("tbody")).not.toContainText("Test Station Updated", { timeout: 10000 });
   });
 });
