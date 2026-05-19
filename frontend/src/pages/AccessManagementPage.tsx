@@ -61,22 +61,8 @@ export default function AccessManagementPage() {
 
   if (isLoading) {
     return (
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          height: 256,
-        }}
-      >
-        <p
-          style={{
-            fontFamily: "'JetBrains Mono', monospace",
-            fontSize: 11,
-            letterSpacing: "0.1em",
-            color: "var(--color-muted-foreground)",
-          }}
-        >
+      <div className="flex items-center justify-center h-64">
+        <p className="font-mono text-[11px] tracking-widest text-muted-foreground">
           LOADING PERMISSIONS...
         </p>
       </div>
@@ -90,14 +76,13 @@ export default function AccessManagementPage() {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        style={{ display: "flex", flexDirection: "column", gap: 24 }}
+        className="flex flex-col gap-6"
       >
         {/* Role Summary Cards */}
         <div
+          className="grid gap-4"
           style={{
-            display: "grid",
             gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-            gap: 16,
           }}
         >
           {ROLES.map((role) => {
@@ -115,65 +100,29 @@ export default function AccessManagementPage() {
                 <div className="ops-accent-line" />
 
                 {/* Card header */}
-                <div style={{ padding: "18px 20px 14px" }}>
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "row",
-                      alignItems: "center",
-                      gap: 12,
-                    }}
-                  >
+                <div className="px-5 pt-4.5 pb-3.5">
+                  <div className="flex flex-row items-center gap-3">
                     <div
-                      style={{
-                        width: 40,
-                        height: 40,
-                        borderRadius: 8,
-                        background: cfg.bgColor,
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        flexShrink: 0,
-                      }}
+                      className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0"
+                      style={{ background: cfg.bgColor }}
                     >
                       {role === "ADMIN" ? (
                         <ShieldCheck
-                          style={{
-                            width: 20,
-                            height: 20,
-                            color: cfg.accentColor,
-                          }}
+                          className="w-5 h-5"
+                          style={{ color: cfg.accentColor }}
                         />
                       ) : (
                         <Shield
-                          style={{
-                            width: 20,
-                            height: 20,
-                            color: cfg.accentColor,
-                          }}
+                          className="w-5 h-5"
+                          style={{ color: cfg.accentColor }}
                         />
                       )}
                     </div>
                     <div>
-                      <p
-                        style={{
-                          fontFamily: "'Bebas Neue', sans-serif",
-                          fontSize: 18,
-                          letterSpacing: "0.06em",
-                          lineHeight: 1,
-                          margin: 0,
-                        }}
-                      >
+                      <p className="font-display text-[18px] tracking-[0.06em] leading-none m-0">
                         {role}
                       </p>
-                      <p
-                        style={{
-                          fontFamily: "'Sora', sans-serif",
-                          fontSize: 12,
-                          color: "var(--color-muted-foreground)",
-                          margin: "3px 0 0",
-                        }}
-                      >
+                      <p className="font-['Sora',sans-serif] text-[12px] text-muted-foreground mt-0.75 mb-0">
                         {cfg.description}
                       </p>
                     </div>
@@ -183,36 +132,23 @@ export default function AccessManagementPage() {
                 <Separator />
 
                 {/* Permissions list */}
-                <div style={{ padding: "14px 20px 18px" }}>
-                  <div style={{ display: "flex", flexWrap: "wrap", gap: 5 }}>
+                <div className="p-[14px_20px_18px]">
+                  <div className="flex flex-wrap gap-1.25">
                     {rolePerms.map((perm) => (
                       <span
                         key={perm}
+                        className="font-mono text-[9px] px-1.75 py-0.5 rounded-[3px] tracking-[0.08em] uppercase"
                         style={{
-                          background: `${cfg.bgColor}`,
+                          background: cfg.bgColor,
                           border: `1px solid ${cfg.accentColor}30`,
                           color: cfg.accentColor,
-                          fontFamily: "'JetBrains Mono', monospace",
-                          fontSize: 9,
-                          padding: "2px 7px",
-                          borderRadius: 3,
-                          letterSpacing: "0.08em",
-                          textTransform: "uppercase",
                         }}
                       >
                         {PERMISSION_LABELS[perm] ?? perm}
                       </span>
                     ))}
                   </div>
-                  <p
-                    style={{
-                      fontFamily: "'JetBrains Mono', monospace",
-                      fontSize: 10,
-                      color: "var(--color-muted-foreground)",
-                      marginTop: 10,
-                      opacity: 0.7,
-                    }}
-                  >
+                  <p className="font-mono text-[10px] text-muted-foreground mt-2.5 opacity-70">
                     {rolePerms.length} permissions assigned
                   </p>
                 </div>
@@ -224,25 +160,24 @@ export default function AccessManagementPage() {
         {/* Permission Matrix */}
         <div className="ops-card">
           <div className="ops-accent-line" />
-          <div
-            className="ops-card-header"
-            style={{ display: "flex", alignItems: "baseline", gap: 10 }}
-          >
+          <div className="ops-card-header flex items-baseline gap-2.5">
             <span className="ops-card-title">PERMISSION MATRIX</span>
-            <span className="ops-card-subtitle">Detailed comparison across modules</span>
+            <span className="ops-card-subtitle">
+              Detailed comparison across modules
+            </span>
           </div>
 
-          <div style={{ width: "100%", overflowX: "auto" }}>
-            <Table style={{ width: "100%", tableLayout: "fixed" }}>
+          <div className="w-full overflow-x-auto">
+            <Table className="w-full table-fixed">
               <colgroup>
-                <col style={{ width: "22%" }} />
-                <col style={{ width: "44%" }} />
+                <col className="w-[22%]" />
+                <col className="w-[44%]" />
                 {ROLES.map((role) => (
                   <col key={role} style={{ width: `${34 / ROLES.length}%` }} />
                 ))}
               </colgroup>
               <TableHeader>
-                <TableRow style={{ background: "rgba(0,0,0,0.02)" }}>
+                <TableRow className="bg-black/2">
                   <TableHead className="ops-table-head">Module</TableHead>
                   <TableHead className="ops-table-head">Permission</TableHead>
                   {ROLES.map((role) => {
@@ -250,28 +185,14 @@ export default function AccessManagementPage() {
                     return (
                       <TableHead
                         key={role}
-                        style={{
-                          textAlign: "center",
-                          fontFamily: "'JetBrains Mono', monospace",
-                          fontSize: 9.5,
-                          letterSpacing: "0.14em",
-                          textTransform: "uppercase",
-                          color: cfg.accentColor,
-                        }}
+                        className="text-center font-mono text-[9.5px] tracking-[0.14em] uppercase"
+                        style={{ color: cfg.accentColor }}
                       >
-                        <div
-                          style={{
-                            display: "flex",
-                            flexDirection: "row",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            gap: 6,
-                          }}
-                        >
+                        <div className="flex flex-row items-center justify-center gap-1.5">
                           {role === "ADMIN" ? (
-                            <ShieldCheck style={{ width: 12, height: 12 }} />
+                            <ShieldCheck className="w-3 h-3" />
                           ) : (
-                            <Shield style={{ width: 12, height: 12 }} />
+                            <Shield className="w-3 h-3" />
                           )}
                           {role}
                         </div>
@@ -303,49 +224,20 @@ export default function AccessManagementPage() {
                         {idx === 0 && (
                           <TableCell
                             rowSpan={group.permissions.length}
-                            style={{
-                              fontFamily: "'Bebas Neue', sans-serif",
-                              fontSize: 14,
-                              letterSpacing: "0.1em",
-                              textTransform: "uppercase",
-                              verticalAlign: "top",
-                              borderRight: "1px solid var(--color-border)",
-                              background: "rgba(0,0,0,0.015)",
-                              color: "var(--color-muted-foreground)",
-                            }}
+                            className="font-display text-[14px] tracking-widest uppercase align-top border-r border-border bg-black/1.5 text-muted-foreground"
                           >
                             {group.group}
                           </TableCell>
                         )}
-                        <TableCell
-                          style={{
-                            fontFamily: "'JetBrains Mono', monospace",
-                            fontSize: 11,
-                          }}
-                        >
+                        <TableCell className="font-mono text-[11px]">
                           {PERMISSION_LABELS[perm] ?? perm}
                         </TableCell>
                         {ROLES.map((role) => (
-                          <TableCell key={role} style={{ textAlign: "center" }}>
+                          <TableCell key={role} className="text-center">
                             {hasRole(role, perm) ? (
-                              <Check
-                                style={{
-                                  width: 15,
-                                  height: 15,
-                                  color: "#22c55e",
-                                  margin: "0 auto",
-                                }}
-                              />
+                              <Check className="w-3.75 h-3.75 text-[#22c55e] mx-auto" />
                             ) : (
-                              <X
-                                style={{
-                                  width: 15,
-                                  height: 15,
-                                  color: "#ef4444",
-                                  opacity: 0.35,
-                                  margin: "0 auto",
-                                }}
-                              />
+                              <X className="w-3.75 h-3.75 text-[#ef4444] opacity-35 mx-auto" />
                             )}
                           </TableCell>
                         ))}

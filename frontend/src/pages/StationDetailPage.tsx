@@ -53,7 +53,7 @@ export default function StationDetailPage() {
     );
   if (!station)
     return (
-      <p style={{ fontFamily: "'Sora', sans-serif", color: "var(--color-muted-foreground)" }}>
+      <p className="font-['Sora',sans-serif] text-muted-foreground">
         Station not found.
       </p>
     );
@@ -67,112 +67,82 @@ export default function StationDetailPage() {
         {t("stations.title")}
       </button>
 
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+      >
         {/* Page header */}
         <div>
-          <div style={{ display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap" }}>
-            <h1
-              style={{
-                fontFamily: "'Bebas Neue', sans-serif",
-                fontSize: 40,
-                letterSpacing: "0.04em",
-                lineHeight: 1,
-                color: "var(--color-foreground)",
-                margin: 0,
-              }}
-            >
+          <div className="flex items-center gap-3.5 flex-wrap">
+            <h1 className="font-display text-[40px] tracking-[0.04em] leading-none text-foreground m-0">
               {station.name}
             </h1>
-            <span
-              style={{
-                background: "rgba(29,111,232,0.12)",
-                border: "1px solid rgba(29,111,232,0.2)",
-                borderRadius: 4,
-                padding: "4px 12px",
-                fontFamily: "'Bebas Neue', sans-serif",
-                fontSize: 16,
-                letterSpacing: "0.1em",
-                color: "#60a5fa",
-                display: "inline-block",
-                boxShadow: "0 0 12px rgba(29,111,232,0.25)",
-              }}
-            >
+            <span className="bg-[rgba(29,111,232,0.12)] border border-[rgba(29,111,232,0.2)] rounded-lg px-3 py-1 font-display text-[16px] tracking-widest text-[#60a5fa] inline-block shadow-[0_0_12px_rgba(29,111,232,0.25)]">
               {station.code}
             </span>
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 8 }}>
+          <div className="flex items-center gap-2 mt-2">
             <div
-              style={{
-                width: 7,
-                height: 7,
-                borderRadius: "50%",
-                background: led.color,
-                boxShadow: led.shadow,
-                flexShrink: 0,
-              }}
+              className="w-1.75 h-1.75 rounded-full shrink-0"
+              style={{ background: led.color, boxShadow: led.shadow }}
             />
-            <span className="ops-mono-data" style={{ fontSize: 11, letterSpacing: "0.1em" }}>
+            <span className="ops-mono-data text-[11px] tracking-widest">
               {station.status}
             </span>
           </div>
-          <div className="ops-divider" style={{ marginTop: 12, marginBottom: 28 }} />
+          <div className="ops-divider mt-3 mb-7" />
         </div>
 
         <div className="grid gap-6 lg:grid-cols-[1fr_350px]">
           {/* Main */}
-          <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+          <div className="flex flex-col gap-6">
             {/* Info card */}
             <div className="ops-card">
               <div className="ops-accent-line" />
               <div className="ops-card-header">
-                <p className="ops-card-title" style={{ fontSize: 16 }}>STATION INFO</p>
-                <p className="ops-card-subtitle">Station details &amp; metadata</p>
+                <p className="ops-card-title text-[16px]">STATION INFO</p>
+                <p className="ops-card-subtitle">
+                  Station details &amp; metadata
+                </p>
               </div>
               <div
+                className="p-[20px_24px] grid gap-5"
                 style={{
-                  padding: "20px 24px",
-                  display: "grid",
                   gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))",
-                  gap: 20,
                 }}
               >
                 <StatCard>
-                  <p className="ops-stat-label">{t("stations.order").toUpperCase()}</p>
-                  <p className="ops-stat-value">{String(station.order).padStart(2, "0")}</p>
+                  <p className="ops-stat-label">
+                    {t("stations.order").toUpperCase()}
+                  </p>
+                  <p className="ops-stat-value">
+                    {String(station.order).padStart(2, "0")}
+                  </p>
                 </StatCard>
 
                 <StatCard>
                   <p className="ops-stat-label">LOCATION</p>
-                  <div style={{ display: "flex", alignItems: "flex-start", gap: 6 }}>
-                    <MapPin size={13} style={{ color: "var(--color-muted-foreground)", marginTop: 2, flexShrink: 0 }} />
-                    <p
-                      style={{
-                        fontFamily: "'Sora', sans-serif",
-                        fontSize: 13,
-                        color: "var(--color-foreground)",
-                        margin: 0,
-                        lineHeight: 1.4,
-                      }}
-                    >
+                  <div className="flex items-start gap-1.5">
+                    <MapPin
+                      size={13}
+                      className="text-muted-foreground mt-0.5 shrink-0"
+                    />
+                    <p className="font-['Sora',sans-serif] text-[13px] text-foreground m-0 leading-[1.4]">
                       {station.location}
                     </p>
                   </div>
                 </StatCard>
 
                 <StatCard>
-                  <p className="ops-stat-label">{t("stations.status").toUpperCase()}</p>
-                  <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  <p className="ops-stat-label">
+                    {t("stations.status").toUpperCase()}
+                  </p>
+                  <div className="flex items-center gap-2">
                     <div
-                      style={{
-                        width: 7,
-                        height: 7,
-                        borderRadius: "50%",
-                        background: led.color,
-                        boxShadow: led.shadow,
-                        flexShrink: 0,
-                      }}
+                      className="w-1.75 h-1.75 rounded-full shrink-0"
+                      style={{ background: led.color, boxShadow: led.shadow }}
                     />
-                    <span className="ops-mono-data" style={{ fontSize: 12, letterSpacing: "0.08em", color: "var(--color-foreground)" }}>
+                    <span className="ops-mono-data text-[12px] tracking-[0.08em] text-foreground">
                       {station.status}
                     </span>
                   </div>
@@ -180,28 +150,26 @@ export default function StationDetailPage() {
 
                 {station.latitude && station.longitude && (
                   <StatCard>
-                    <p className="ops-stat-label" style={{ marginBottom: 8 }}>COORDINATES</p>
-                    <div style={{ display: "flex", flexDirection: "column", gap: 4, marginBottom: 8 }}>
-                      <div style={{ display: "flex", alignItems: "baseline", gap: 6 }}>
-                        <span className="ops-coord-axis">
-                          LAT
-                        </span>
-                        <span className="ops-mono-data" style={{ fontSize: 11 }}>
+                    <p className="ops-stat-label mb-2">COORDINATES</p>
+                    <div className="flex flex-col gap-1 mb-2">
+                      <div className="flex items-baseline gap-1.5">
+                        <span className="ops-coord-axis">LAT</span>
+                        <span className="ops-mono-data text-[11px]">
                           {station.latitude.toFixed(6)}
                         </span>
                       </div>
-                      <div style={{ display: "flex", alignItems: "baseline", gap: 6 }}>
-                        <span className="ops-coord-axis">
-                          LNG
-                        </span>
-                        <span className="ops-mono-data" style={{ fontSize: 11 }}>
+                      <div className="flex items-baseline gap-1.5">
+                        <span className="ops-coord-axis">LNG</span>
+                        <span className="ops-mono-data text-[11px]">
                           {station.longitude.toFixed(6)}
                         </span>
                       </div>
                     </div>
                     <button
                       onClick={() => {
-                        navigator.clipboard.writeText(`${station.latitude}, ${station.longitude}`);
+                        navigator.clipboard.writeText(
+                          `${station.latitude}, ${station.longitude}`,
+                        );
                         toast.success("Coordinates copied");
                       }}
                       className="ops-copy-btn"
@@ -218,34 +186,34 @@ export default function StationDetailPage() {
             <div className="ops-card">
               <div className="ops-accent-line" />
               <div className="ops-card-header">
-                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <div className="flex items-center gap-2">
                   <Clock size={14} className="text-muted-foreground" />
-                  <p className="ops-card-title" style={{ fontSize: 16 }}>
+                  <p className="ops-card-title text-[16px]">
                     {t("schedules.title")}
                   </p>
-                  <span
-                    style={{
-                      fontFamily: "'JetBrains Mono', monospace",
-                      fontSize: 10,
-                      letterSpacing: "0.08em",
-                      color: "var(--color-muted-foreground)",
-                      background: "var(--color-muted)",
-                      borderRadius: 4,
-                      padding: "2px 7px",
-                    }}
-                  >
+                  <span className="font-mono text-[10px] tracking-[0.08em] text-muted-foreground bg-muted rounded-lg px-1.75 py-0.5">
                     {schedules.length}
                   </span>
                 </div>
-                <p className="ops-card-subtitle">Train schedules at this station</p>
+                <p className="ops-card-subtitle">
+                  Train schedules at this station
+                </p>
               </div>
               <Table>
                 <TableHeader>
-                  <TableRow style={{ background: "var(--color-muted)" }}>
-                    <TableHead className="ops-table-head">{t("schedules.trainNumber")}</TableHead>
-                    <TableHead className="ops-table-head">{t("schedules.route")}</TableHead>
-                    <TableHead className="ops-table-head">{t("schedules.time")}</TableHead>
-                    <TableHead className="ops-table-head">{t("stations.status")}</TableHead>
+                  <TableRow className="bg-muted">
+                    <TableHead className="ops-table-head">
+                      {t("schedules.trainNumber")}
+                    </TableHead>
+                    <TableHead className="ops-table-head">
+                      {t("schedules.route")}
+                    </TableHead>
+                    <TableHead className="ops-table-head">
+                      {t("schedules.time")}
+                    </TableHead>
+                    <TableHead className="ops-table-head">
+                      {t("stations.status")}
+                    </TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -253,8 +221,7 @@ export default function StationDetailPage() {
                     <TableRow>
                       <TableCell
                         colSpan={4}
-                        className="ops-mono-data text-center"
-                        style={{ padding: "32px 0", fontSize: 11, letterSpacing: "0.08em" }}
+                        className="ops-mono-data text-center py-8 text-[11px] tracking-[0.08em]"
                       >
                         NO SCHEDULES FOUND
                       </TableCell>
@@ -264,28 +231,26 @@ export default function StationDetailPage() {
                       const sled = scheduleStatusLED(s.status);
                       return (
                         <TableRow key={s.id}>
-                          <TableCell className="ops-mono-data" style={{ fontSize: 12, fontWeight: 600 }}>
+                          <TableCell className="ops-mono-data text-[12px] font-semibold">
                             {s.trainNumber}
                           </TableCell>
-                          <TableCell className="ops-mono-data" style={{ fontSize: 11 }}>
-                            {s.departureStation?.code} → {s.arrivalStation?.code}
+                          <TableCell className="ops-mono-data text-[11px]">
+                            {s.departureStation?.code} →{" "}
+                            {s.arrivalStation?.code}
                           </TableCell>
-                          <TableCell className="ops-mono-data" style={{ fontSize: 11 }}>
+                          <TableCell className="ops-mono-data text-[11px]">
                             {s.departureTime} — {s.arrivalTime}
                           </TableCell>
                           <TableCell>
-                            <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                            <div className="flex items-center gap-1.5">
                               <div
+                                className="w-1.75 h-1.75 rounded-full shrink-0"
                                 style={{
-                                  width: 7,
-                                  height: 7,
-                                  borderRadius: "50%",
                                   background: sled.color,
                                   boxShadow: sled.shadow,
-                                  flexShrink: 0,
                                 }}
                               />
-                              <span className="ops-mono-data" style={{ fontSize: 10, letterSpacing: "0.08em", color: "var(--color-foreground)" }}>
+                              <span className="ops-mono-data text-[10px] tracking-[0.08em] text-foreground">
                                 {s.status}
                               </span>
                             </div>
@@ -305,36 +270,25 @@ export default function StationDetailPage() {
               <div className="ops-card">
                 <div className="ops-accent-line" />
                 <div className="ops-card-header">
-                  <p className="ops-card-title" style={{ fontSize: 16 }}>MAP LOCATION</p>
+                  <p className="ops-card-title text-[16px]">MAP LOCATION</p>
                   <p className="ops-card-subtitle">
-                    {station.latitude.toFixed(4)}, {station.longitude.toFixed(4)}
+                    {station.latitude.toFixed(4)},{" "}
+                    {station.longitude.toFixed(4)}
                   </p>
                 </div>
-                <div style={{ height: 256 }}>
-                  <StationMap stations={[station]} selectedStationId={station.id} />
+                <div className="h-64">
+                  <StationMap
+                    stations={[station]}
+                    selectedStationId={station.id}
+                  />
                 </div>
-                <div style={{ padding: "12px 24px" }}>
+                <div className="px-6 py-3">
                   <button
                     onClick={() => {
                       navigator.clipboard.writeText(station.code);
                       toast.success(`Copied: ${station.code}`);
                     }}
-                    style={{
-                      width: "100%",
-                      background: "rgba(29,111,232,0.08)",
-                      border: "1px solid rgba(29,111,232,0.2)",
-                      borderRadius: 6,
-                      padding: "8px 16px",
-                      cursor: "pointer",
-                      fontFamily: "'JetBrains Mono', monospace",
-                      fontSize: 11,
-                      letterSpacing: "0.1em",
-                      color: "#60a5fa",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      gap: 6,
-                    }}
+                    className="w-full bg-[rgba(29,111,232,0.08)] border border-[rgba(29,111,232,0.2)] rounded-md py-2 px-4 cursor-pointer font-mono text-[11px] tracking-widest text-[#60a5fa] flex items-center justify-center gap-1.5"
                   >
                     <Navigation size={11} />
                     COPY STATION CODE — {station.code}

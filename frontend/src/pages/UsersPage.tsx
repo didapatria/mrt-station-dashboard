@@ -137,30 +137,9 @@ export default function UsersPage() {
       />
 
       {/* Filter Bar */}
-      <div
-        className="ops-card"
-        style={{
-          padding: "14px 18px",
-          marginBottom: 16,
-          display: "flex",
-          flexDirection: "row",
-          gap: 10,
-          alignItems: "center",
-          flexWrap: "wrap",
-        }}
-      >
-        <div style={{ position: "relative", flex: 1, minWidth: 180 }}>
-          <Search
-            style={{
-              position: "absolute",
-              left: 10,
-              top: "50%",
-              transform: "translateY(-50%)",
-              width: 14,
-              height: 14,
-              color: "var(--color-muted-foreground)",
-            }}
-          />
+      <div className="ops-card p-[14px_18px] mb-4 flex flex-row gap-2.5 items-center flex-wrap">
+        <div className="relative flex-1 min-w-45">
+          <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground" />
           <Input
             placeholder={t("common.search")}
             value={search}
@@ -190,19 +169,14 @@ export default function UsersPage() {
           <div className="ops-accent-line" />
 
           {/* Card Section Header */}
-          <div
-            className="ops-card-header"
-            style={{ display: "flex", alignItems: "baseline", gap: 10 }}
-          >
+          <div className="ops-card-header flex items-baseline gap-2.5">
             <span className="ops-card-title">REGISTRY</span>
-            <span className="ops-card-subtitle" style={{ marginTop: 0 }}>
-              All Accounts
-            </span>
+            <span className="ops-card-subtitle mt-0">All Accounts</span>
           </div>
 
           <Table>
             <TableHeader>
-              <TableRow style={{ background: "rgba(0,0,0,0.02)" }}>
+              <TableRow className="bg-black/2">
                 <SortableTableHead<User>
                   label="User"
                   sortKey="name"
@@ -275,13 +249,7 @@ export default function UsersPage() {
                         }}
                       >
                         <TableCell>
-                          <div
-                            style={{
-                              display: "flex",
-                              alignItems: "center",
-                              gap: 10,
-                            }}
-                          >
+                          <div className="flex items-center gap-2.5">
                             <Avatar className="h-9 w-9">
                               <AvatarImage
                                 src={
@@ -291,6 +259,7 @@ export default function UsersPage() {
                                 alt={user.name}
                               />
                               <AvatarFallback
+                                className="font-mono text-[13px] font-bold"
                                 style={{
                                   background:
                                     user.role === "ADMIN"
@@ -300,22 +269,13 @@ export default function UsersPage() {
                                     user.role === "ADMIN"
                                       ? "#10b981"
                                       : "#60a5fa",
-                                  fontFamily: "'JetBrains Mono', monospace",
-                                  fontSize: 13,
-                                  fontWeight: 700,
                                 }}
                               >
                                 {user.name.charAt(0).toUpperCase()}
                               </AvatarFallback>
                             </Avatar>
                             <div>
-                              <div
-                                style={{
-                                  display: "flex",
-                                  alignItems: "center",
-                                  gap: 6,
-                                }}
-                              >
+                              <div className="flex items-center gap-1.5">
                                 <p className="ops-user-name">{user.name}</p>
                                 {isProtected && (
                                   <span className="ops-badge-default">
@@ -323,10 +283,7 @@ export default function UsersPage() {
                                   </span>
                                 )}
                               </div>
-                              <p
-                                className="ops-mono-data sm:hidden"
-                                style={{ margin: 0 }}
-                              >
+                              <p className="ops-mono-data sm:hidden m-0">
                                 {user.email}
                               </p>
                             </div>

@@ -166,113 +166,46 @@ export default function DashboardPage() {
         initial={{ opacity: 0, y: -8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.45 }}
-        className="mb-8 relative overflow-hidden rounded-xl"
+        className="mb-8 relative overflow-hidden rounded-xl min-h-40"
         style={{
           background: isDark
             ? "linear-gradient(125deg, #050d1a 0%, #091a35 55%, #0a1628 100%)"
             : "linear-gradient(125deg, #0f2057 0%, #1d4ed8 55%, #2563eb 100%)",
-          minHeight: 160,
         }}
       >
         {/* Dot matrix background */}
         <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            opacity: isDark ? 0.08 : 0.12,
-            backgroundImage:
-              "radial-gradient(circle, rgba(255,255,255,0.7) 1px, transparent 1px)",
-            backgroundSize: "32px 32px",
-            pointerEvents: "none",
-          }}
+          className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle,rgba(255,255,255,0.7)_1px,transparent_1px)] bg-size-[32px_32px]"
+          style={{ opacity: isDark ? 0.08 : 0.12 }}
         />
         {/* Secondary pattern: diagonal lines */}
         <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            pointerEvents: "none",
-            opacity: isDark ? 0.03 : 0.04,
-            backgroundImage:
-              "repeating-linear-gradient(45deg, rgba(255,255,255,0.5) 0px, rgba(255,255,255,0.5) 1px, transparent 1px, transparent 24px)",
-          }}
+          className="absolute inset-0 pointer-events-none bg-[repeating-linear-gradient(45deg,rgba(255,255,255,0.5)_0px,rgba(255,255,255,0.5)_1px,transparent_1px,transparent_24px)]"
+          style={{ opacity: isDark ? 0.03 : 0.04 }}
         />
         {/* Right glow */}
         <div
+          className="absolute right-0 top-0 bottom-0 w-[40%] pointer-events-none"
           style={{
-            position: "absolute",
-            right: 0,
-            top: 0,
-            bottom: 0,
-            width: "40%",
             background: isDark
               ? "radial-gradient(ellipse at right, rgba(59,130,246,0.14) 0%, transparent 70%)"
               : "radial-gradient(ellipse at right, rgba(255,255,255,0.18) 0%, transparent 70%)",
-            pointerEvents: "none",
           }}
         />
         {/* Bottom edge line */}
-        <div
-          style={{
-            position: "absolute",
-            bottom: 0,
-            left: 0,
-            right: 0,
-            height: 1,
-            background:
-              "linear-gradient(90deg, rgba(59,130,246,0.6) 0%, rgba(59,130,246,0.1) 100%)",
-          }}
-        />
+        <div className="absolute bottom-0 left-0 right-0 h-px bg-[linear-gradient(90deg,rgba(59,130,246,0.6)_0%,rgba(59,130,246,0.1)_100%)]" />
 
         <div className="relative flex flex-row items-center justify-between px-8 py-7 gap-6">
           {/* Left: greeting */}
           <div className="flex-1 min-w-0">
-            <div
-              style={{
-                fontFamily: "'JetBrains Mono', monospace",
-                fontSize: 9.5,
-                letterSpacing: "0.2em",
-                color: "rgba(186,230,253,0.65)",
-                textTransform: "uppercase",
-                marginBottom: 8,
-                display: "flex",
-                alignItems: "center",
-                gap: 8,
-              }}
-            >
-              <span
-                style={{
-                  display: "inline-block",
-                  width: 6,
-                  height: 6,
-                  borderRadius: "50%",
-                  background: "#22c55e",
-                  boxShadow: "0 0 6px rgba(34,197,94,0.8)",
-                }}
-              />
+            <div className="font-mono text-[9.5px] tracking-[0.2em] text-[rgba(186,230,253,0.65)] uppercase mb-2 flex items-center gap-2">
+              <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#22c55e] shadow-[0_0_6px_rgba(34,197,94,0.8)]" />
               Operations Center · Live
             </div>
-            <div
-              style={{
-                fontFamily: "'Bebas Neue', sans-serif",
-                fontSize: "clamp(28px, 3.5vw, 44px)",
-                color: "white",
-                lineHeight: 1,
-                letterSpacing: "0.03em",
-                marginBottom: 8,
-              }}
-            >
-              {greeting}, <span style={{ color: "#93c5fd" }}>{firstName}</span>
+            <div className="font-display text-[clamp(28px,3.5vw,44px)] text-white leading-none tracking-[0.03em] mb-2">
+              {greeting}, <span className="text-[#93c5fd]">{firstName}</span>
             </div>
-            <p
-              style={{
-                fontFamily: "'Sora', sans-serif",
-                fontSize: 12.5,
-                color: "rgba(219,234,254,0.6)",
-                lineHeight: 1.5,
-                maxWidth: 380,
-              }}
-            >
+            <p className="font-['Sora',sans-serif] text-[12.5px] text-[rgba(219,234,254,0.6)] leading-normal max-w-95">
               {t("dashboard.subtitle")}
             </p>
           </div>
@@ -294,37 +227,19 @@ export default function DashboardPage() {
               ].map(({ n, label, color }, i) => (
                 <div
                   key={label}
+                  className="flex flex-col justify-center text-right px-7"
                   style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "center",
-                    textAlign: "right",
-                    padding: "0 28px",
                     borderLeft:
                       i > 0 ? "1px solid rgba(255,255,255,0.1)" : "none",
                   }}
                 >
                   <div
-                    style={{
-                      fontFamily: "'Bebas Neue', sans-serif",
-                      fontSize: 52,
-                      color,
-                      lineHeight: 1,
-                      letterSpacing: "0.02em",
-                    }}
+                    className="font-display text-[52px] leading-none tracking-[0.02em]"
+                    style={{ color }}
                   >
                     {n}
                   </div>
-                  <div
-                    style={{
-                      fontFamily: "'JetBrains Mono', monospace",
-                      fontSize: 8.5,
-                      color: "rgba(186,230,253,0.5)",
-                      letterSpacing: "0.14em",
-                      textTransform: "uppercase",
-                      marginTop: 3,
-                    }}
-                  >
+                  <div className="font-mono text-[8.5px] text-[rgba(186,230,253,0.5)] tracking-[0.14em] uppercase mt-0.75">
                     {label}
                   </div>
                 </div>
@@ -405,18 +320,13 @@ export default function DashboardPage() {
               <motion.div
                 key={stat.title}
                 variants={fadeUp}
+                className="bg-card relative p-[22px_24px] overflow-hidden cursor-default transition-[background] duration-150 ease-linear"
                 style={{
-                  background: "var(--color-card)",
-                  position: "relative",
-                  padding: "22px 24px",
-                  overflow: "hidden",
-                  cursor: "default",
                   borderRadius: isFirst
                     ? "11px 0 0 0"
                     : isLast
                       ? "0 0 11px 0"
                       : 0,
-                  transition: "background 0.15s ease",
                 }}
                 whileHover={{
                   backgroundColor: isDark
@@ -426,24 +336,13 @@ export default function DashboardPage() {
               >
                 {/* Left accent bar with pulse animation */}
                 <div
-                  style={{
-                    position: "absolute",
-                    left: 0,
-                    top: 0,
-                    bottom: 0,
-                    width: 3,
-                    background: stat.accent,
-                    animation: "pulse-bar 3s ease-in-out infinite",
-                  }}
+                  className="absolute left-0 top-0 bottom-0 w-0.75 animate-[pulse-bar_3s_ease-in-out_infinite]"
+                  style={{ background: stat.accent }}
                 />
                 {/* Ghost icon */}
                 <Icon
+                  className="absolute right-4 bottom-3 w-13 h-13"
                   style={{
-                    position: "absolute",
-                    right: 16,
-                    bottom: 12,
-                    width: 52,
-                    height: 52,
                     opacity: isDark ? 0.05 : 0.07,
                     color: stat.accent,
                   }}
@@ -455,14 +354,8 @@ export default function DashboardPage() {
                   </p>
                   {/* Accent underline */}
                   <div
-                    style={{
-                      height: 1.5,
-                      width: 28,
-                      background: stat.accent,
-                      marginTop: 10,
-                      opacity: 0.5,
-                      borderRadius: 1,
-                    }}
+                    className="h-[1.5px] w-7 mt-2.5 opacity-50 rounded-[1px]"
+                    style={{ background: stat.accent }}
                   />
                 </div>
               </motion.div>
@@ -503,7 +396,7 @@ export default function DashboardPage() {
                   {data.map((d, i) => (
                     <div key={d.name} className="flex items-center gap-1.25">
                       <div
-                        className="w-[7px] h-[7px] rounded-full shrink-0"
+                        className="w-1.75 h-1.75 rounded-full shrink-0"
                         style={{ background: colors[i] }}
                       />
                       <span className="font-mono text-[9.5px] text-muted-foreground tracking-[0.06em]">
@@ -552,14 +445,7 @@ export default function DashboardPage() {
           <div className="ops-card mb-8">
             {/* Top accent gradient line */}
             <div className="ops-accent-line" />
-            <div
-              className="ops-card-header"
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-              }}
-            >
+            <div className="ops-card-header flex items-center justify-between">
               <div>
                 <h3 className="ops-card-title mb-0.5">
                   {t("dashboard.weekdayDistribution")}
@@ -568,7 +454,7 @@ export default function DashboardPage() {
                   {t("dashboard.schedulesPerHour")}
                 </p>
               </div>
-              <div className="flex items-center gap-1.5 bg-muted rounded-md px-2.5 py-[5px]">
+              <div className="flex items-center gap-1.5 bg-muted rounded-md px-2.5 py-1.25">
                 <TrendingUp className="w-3 h-3 text-muted-foreground" />
                 <span className="font-mono text-[10.5px] text-muted-foreground tracking-[0.06em]">
                   {hourlyData.reduce((a, b) => a + b.count, 0)} total
@@ -648,11 +534,11 @@ export default function DashboardPage() {
           <div className="flex items-center justify-between mb-4">
             <TabsList>
               <TabsTrigger value="stations">
-                <MapPin className="w-[13px] h-[13px] mr-1.5" />
+                <MapPin className="w-3.25 h-3.25 mr-1.5" />
                 Stations
               </TabsTrigger>
               <TabsTrigger value="schedules">
-                <Clock className="w-[13px] h-[13px] mr-1.5" />
+                <Clock className="w-3.25 h-3.25 mr-1.5" />
                 Schedules
               </TabsTrigger>
             </TabsList>
@@ -682,7 +568,7 @@ export default function DashboardPage() {
                     {stations.slice(0, 10).map((station) => (
                       <TableRow key={station.id} className="hover:bg-muted/30">
                         <TableCell className="px-4 py-3">
-                          <div className="h-[30px] w-[30px] rounded-md bg-primary/10 flex items-center justify-center font-mono text-[10px] font-bold text-primary tracking-[-0.02em]">
+                          <div className="h-7.5 w-7.5 rounded-md bg-primary/10 flex items-center justify-center font-mono text-[10px] font-bold text-primary tracking-[-0.02em]">
                             {station.code}
                           </div>
                         </TableCell>

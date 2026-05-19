@@ -109,30 +109,21 @@ function StatusLED({ status }: { status: string }) {
       <style>
         {"@keyframes pulse-led { 0%,100%{opacity:1} 50%{opacity:0.5} }"}
       </style>
-      <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+      <div className="flex items-center gap-1.5">
         <span
+          className="w-1.75 h-1.75 rounded-full inline-block shrink-0"
           style={{
-            width: 7,
-            height: 7,
-            borderRadius: "50%",
             background: cfg.color,
             boxShadow: `0 0 6px ${cfg.glow}`,
             animation:
               status === "ACTIVE"
                 ? "pulse-led 2s ease-in-out infinite"
                 : undefined,
-            flexShrink: 0,
-            display: "inline-block",
           }}
         />
         <span
-          style={{
-            fontFamily: "'JetBrains Mono', monospace",
-            fontSize: 10,
-            letterSpacing: "0.1em",
-            textTransform: "uppercase",
-            color: cfg.color,
-          }}
+          className="font-mono text-[10px] tracking-widest uppercase"
+          style={{ color: cfg.color }}
         >
           {cfg.label}
         </span>
@@ -295,7 +286,7 @@ export default function SchedulesPage() {
         title={t("schedules.title")}
         subtitle={`N–S Line · Schedule Registry · ${totalCount} entries`}
         right={
-          <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+          <div className="flex gap-2 flex-wrap">
             <Button
               variant="outline"
               onClick={handleExport}
@@ -315,18 +306,8 @@ export default function SchedulesPage() {
       />
 
       {/* Filter Bar */}
-      <div
-        className="ops-card"
-        style={{
-          padding: "16px 20px",
-          marginBottom: 20,
-          display: "flex",
-          gap: 12,
-          flexWrap: "wrap",
-          alignItems: "center",
-        }}
-      >
-        <div style={{ position: "relative", flex: 1, minWidth: 200 }}>
+      <div className="ops-card p-[16px_20px] mb-5 flex gap-3 flex-wrap items-center">
+        <div className="relative flex-1 min-w-50">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             placeholder={t("common.search")}
@@ -472,13 +453,7 @@ export default function SchedulesPage() {
                               {schedule.trainNumber}
                             </TableCell>
                             <TableCell>
-                              <div
-                                style={{
-                                  display: "flex",
-                                  alignItems: "center",
-                                  gap: 6,
-                                }}
-                              >
+                              <div className="flex items-center gap-1.5">
                                 <span className="ops-station-ref">
                                   {schedule.departureStation?.code}
                                 </span>
@@ -489,12 +464,7 @@ export default function SchedulesPage() {
                               </div>
                               <p className="ops-route-sub">
                                 {schedule.departureStation?.name}
-                                <span
-                                  className="ops-route-arrow"
-                                  style={{ margin: "0 4px" }}
-                                >
-                                  →
-                                </span>
+                                <span className="ops-route-arrow mx-1">→</span>
                                 {schedule.arrivalStation?.name}
                               </p>
                             </TableCell>
@@ -515,13 +485,7 @@ export default function SchedulesPage() {
                             </TableCell>
                             {isAdmin && (
                               <TableCell className="text-right">
-                                <div
-                                  style={{
-                                    display: "flex",
-                                    justifyContent: "flex-end",
-                                    gap: 4,
-                                  }}
-                                >
+                                <div className="flex justify-end gap-1">
                                   <TooltipProvider>
                                     <Tooltip>
                                       <TooltipTrigger asChild>
@@ -772,14 +736,7 @@ export default function SchedulesPage() {
               </div>
             </div>
 
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "flex-end",
-                gap: 12,
-                paddingTop: 8,
-              }}
-            >
+            <div className="flex justify-end gap-3 pt-2">
               <Button
                 type="button"
                 variant="outline"

@@ -77,18 +77,15 @@ export default function RegisterPage() {
   return (
     <>
       {/* Mobile header */}
-      <div
-        className="lg:hidden"
-        style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 40 }}
-      >
+      <div className="lg:hidden flex items-center gap-2.5 mb-10">
         <div className="auth-mobile-logo">
-          <Train style={{ width: 14, height: 14, color: "white" }} />
+          <Train className="w-3.5 h-3.5 text-white" />
         </div>
         <span className="auth-brand-name">MRT JAKARTA</span>
       </div>
 
       {/* Heading */}
-      <div style={{ marginBottom: 36 }}>
+      <div className="mb-9">
         <div className="auth-heading">{t("auth.signUp")}</div>
         <p className="auth-subheading">{t("auth.registerDescription")}</p>
       </div>
@@ -96,18 +93,16 @@ export default function RegisterPage() {
       {/* Error banners */}
       {errorMessage && (
         <div
-          className="auth-error-banner"
+          className="auth-error-banner mb-5"
           onClick={() => registerMutation.reset()}
-          style={{ marginBottom: 20 }}
         >
           {errorMessage}
         </div>
       )}
       {googleError && (
         <div
-          className="auth-error-banner"
+          className="auth-error-banner mb-5"
           onClick={() => googleLoginMutation.reset()}
-          style={{ marginBottom: 20 }}
         >
           {googleError}
         </div>
@@ -115,7 +110,7 @@ export default function RegisterPage() {
 
       <form onSubmit={handleSubmit(onSubmit)}>
         {/* Name */}
-        <div style={{ marginBottom: 24 }}>
+        <div className="mb-6">
           <label className="auth-label" htmlFor="name">
             {t("auth.name")}
           </label>
@@ -131,7 +126,7 @@ export default function RegisterPage() {
         </div>
 
         {/* Email */}
-        <div style={{ marginBottom: 24 }}>
+        <div className="mb-6">
           <label className="auth-label" htmlFor="email">
             {t("auth.email")}
           </label>
@@ -148,17 +143,16 @@ export default function RegisterPage() {
         </div>
 
         {/* Password */}
-        <div style={{ marginBottom: 24 }}>
+        <div className="mb-6">
           <label className="auth-label" htmlFor="password">
             {t("auth.password")}
           </label>
-          <div style={{ position: "relative" }}>
+          <div className="relative">
             <input
               id="password"
               type={showPassword ? "text" : "password"}
               placeholder="Min. 6 characters"
-              className="auth-input"
-              style={{ paddingRight: 42 }}
+              className="auth-input pr-10.5"
               {...register("password")}
             />
             <button
@@ -176,7 +170,7 @@ export default function RegisterPage() {
         </div>
 
         {/* Confirm password */}
-        <div style={{ marginBottom: 36 }}>
+        <div className="mb-9">
           <label className="auth-label" htmlFor="confirmPassword">
             {t("auth.confirmPassword") || "Confirm Password"}
           </label>
@@ -204,13 +198,15 @@ export default function RegisterPage() {
       </form>
 
       {/* Divider */}
-      <div style={{ display: "flex", alignItems: "center", gap: 12, margin: "28px 0" }}>
+      <div className="flex items-center gap-3 my-7">
         <div className="auth-divider-line" />
-        <span className="auth-divider-label">{t("auth.orContinueWith").toUpperCase()}</span>
+        <span className="auth-divider-label">
+          {t("auth.orContinueWith").toUpperCase()}
+        </span>
         <div className="auth-divider-line" />
       </div>
 
-      <div style={{ display: "flex", justifyContent: "center", marginBottom: 24 }}>
+      <div className="flex justify-center mb-6">
         <GoogleLogin
           onSuccess={handleGoogleSuccess}
           onError={() => {}}
@@ -222,7 +218,9 @@ export default function RegisterPage() {
 
       <p className="auth-footer-text">
         {t("auth.hasAccount")}{" "}
-        <Link to="/login" className="auth-link">{t("auth.signIn")}</Link>
+        <Link to="/login" className="auth-link">
+          {t("auth.signIn")}
+        </Link>
       </p>
     </>
   );

@@ -67,37 +67,34 @@ export default function LoginPage() {
   return (
     <>
       {/* Mobile header */}
-      <div
-        className="lg:hidden"
-        style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 40 }}
-      >
+      <div className="lg:hidden flex items-center gap-2.5 mb-10">
         <div className="auth-mobile-logo">
-          <Train style={{ width: 14, height: 14, color: "white" }} />
+          <Train className="w-3.5 h-3.5 text-white" />
         </div>
         <span className="auth-brand-name">MRT JAKARTA</span>
       </div>
 
       {/* Heading */}
-      <div style={{ marginBottom: 40 }}>
+      <div className="mb-10">
         <div className="auth-heading">{t("auth.signIn")}</div>
-        <p className="auth-subheading">Enter credentials to access the system</p>
+        <p className="auth-subheading">
+          Enter credentials to access the system
+        </p>
       </div>
 
       {/* Error banners */}
       {errorMessage && (
         <div
-          className="auth-error-banner"
+          className="auth-error-banner mb-6"
           onClick={() => loginMutation.reset()}
-          style={{ marginBottom: 24 }}
         >
           {errorMessage}
         </div>
       )}
       {googleError && (
         <div
-          className="auth-error-banner"
+          className="auth-error-banner mb-6"
           onClick={() => googleLoginMutation.reset()}
-          style={{ marginBottom: 24 }}
         >
           {googleError}
         </div>
@@ -105,7 +102,7 @@ export default function LoginPage() {
 
       <form onSubmit={handleSubmit(onSubmit)}>
         {/* Email */}
-        <div style={{ marginBottom: 28 }}>
+        <div className="mb-7">
           <label className="auth-label" htmlFor="email">
             {t("auth.email")}
           </label>
@@ -122,17 +119,16 @@ export default function LoginPage() {
         </div>
 
         {/* Password */}
-        <div style={{ marginBottom: 36 }}>
+        <div className="mb-9">
           <label className="auth-label" htmlFor="password">
             {t("auth.password")}
           </label>
-          <div style={{ position: "relative" }}>
+          <div className="relative">
             <input
               id="password"
               type={showPassword ? "text" : "password"}
               placeholder="••••••••••"
-              className="auth-input"
-              style={{ paddingRight: 42 }}
+              className="auth-input pr-10.5"
               {...register("password")}
             />
             <button
@@ -160,13 +156,15 @@ export default function LoginPage() {
       </form>
 
       {/* Divider */}
-      <div style={{ display: "flex", alignItems: "center", gap: 12, margin: "28px 0" }}>
+      <div className="flex items-center gap-3 my-7">
         <div className="auth-divider-line" />
-        <span className="auth-divider-label">{t("auth.orContinueWith").toUpperCase()}</span>
+        <span className="auth-divider-label">
+          {t("auth.orContinueWith").toUpperCase()}
+        </span>
         <div className="auth-divider-line" />
       </div>
 
-      <div style={{ display: "flex", justifyContent: "center", marginBottom: 24 }}>
+      <div className="flex justify-center mb-6">
         <GoogleLogin
           onSuccess={handleGoogleSuccess}
           onError={() => {}}

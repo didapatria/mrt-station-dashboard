@@ -84,11 +84,8 @@ export default function AuthLayout() {
     <div className="min-h-screen flex bg-background">
       {/* ── Left panel ── */}
       <div
-        className="hidden lg:flex w-[48%] relative overflow-hidden flex-col transition-[background] duration-300"
-        style={{
-          background: p.bg,
-          borderRight: `1px solid rgba(29,111,232,0.12)`,
-        }}
+        className="hidden lg:flex w-[48%] relative overflow-hidden flex-col transition-[background] duration-300 border-r border-[rgba(29,111,232,0.12)]"
+        style={{ background: p.bg }}
       >
         {/* Grid overlay */}
         <div
@@ -385,11 +382,7 @@ export default function AuthLayout() {
       <div className="flex-1 flex items-center justify-center px-8 py-10 bg-background relative">
         {/* Subtle center glow */}
         <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            background:
-              "radial-gradient(ellipse 60% 50% at 50% 50%, rgba(29,111,232,0.04) 0%, transparent 70%)",
-          }}
+          className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_60%_50%_at_50%_50%,rgba(29,111,232,0.04)_0%,transparent_70%)]"
         />
 
         {/* Theme toggle — top right (desktop only; mobile handled per-page) */}
@@ -400,7 +393,7 @@ export default function AuthLayout() {
           initial={{ opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, ease: "easeOut", delay: 0.15 }}
-          className="w-full max-w-[400px] relative z-[1]"
+          className="w-full max-w-100 relative z-1"
         >
           <Outlet />
         </motion.div>

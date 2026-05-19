@@ -36,10 +36,12 @@ export default function SettingsPage() {
         className="settings-grid"
       >
         {/* Language */}
-        <OpsCard title="LANGUAGE" subtitle="Localization settings" icon={<Globe size={15} />}>
-          <div
-            className="ops-setting-row"
-          >
+        <OpsCard
+          title="LANGUAGE"
+          subtitle="Localization settings"
+          icon={<Globe size={15} />}
+        >
+          <div className="ops-setting-row">
             <span className="ops-mono-label">Active Language</span>
             <Select value={i18n.language} onValueChange={changeLanguage}>
               <SelectTrigger className="w-40 font-mono text-[11px]">
@@ -58,10 +60,12 @@ export default function SettingsPage() {
         </OpsCard>
 
         {/* Appearance */}
-        <OpsCard title="APPEARANCE" subtitle="Customize the look and feel" icon={<Palette size={15} />}>
-          <div
-            className="ops-setting-row"
-          >
+        <OpsCard
+          title="APPEARANCE"
+          subtitle="Customize the look and feel"
+          icon={<Palette size={15} />}
+        >
+          <div className="ops-setting-row">
             <span className="ops-mono-label">Color Theme</span>
             <Select value={theme} onValueChange={() => toggleTheme()}>
               <SelectTrigger className="w-40 font-mono text-[11px]">
@@ -85,15 +89,10 @@ export default function SettingsPage() {
           subtitle="Real-time notification preferences"
           icon={<Bell size={15} />}
         >
-          <div
-            className="ops-setting-row"
-          >
+          <div className="ops-setting-row">
             <div>
               <div className="ops-mono-label">Real-time Updates</div>
-              <div
-                className="text-muted-foreground"
-                className="font-['Sora',sans-serif] text-[11px] mt-0.5"
-              >
+              <div className="text-muted-foreground font-['Sora',sans-serif] text-[11px] mt-0.5">
                 Receive notifications via SSE when data changes
               </div>
             </div>
@@ -102,7 +101,11 @@ export default function SettingsPage() {
         </OpsCard>
 
         {/* About */}
-        <OpsCard title="ABOUT" subtitle="System information" icon={<Monitor size={15} />}>
+        <OpsCard
+          title="ABOUT"
+          subtitle="System information"
+          icon={<Monitor size={15} />}
+        >
           <div>
             {[
               { key: "VERSION", value: "2.13.0" },
@@ -112,10 +115,7 @@ export default function SettingsPage() {
               { key: "AUTH", value: "JWT + Google OAuth" },
               { key: "E2E TESTS", value: "112 Playwright tests" },
             ].map(({ key, value }) => (
-              <div
-                key={key}
-                className="ops-data-row"
-                  >
+              <div key={key} className="ops-data-row">
                 <span className="ops-mono-label">{key}</span>
                 <span className="ops-value-badge">{value}</span>
               </div>

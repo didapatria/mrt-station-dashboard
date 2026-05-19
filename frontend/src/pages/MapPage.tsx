@@ -40,29 +40,36 @@ export default function MapPage() {
   const withCoords = filteredStations.filter((s) => s.latitude && s.longitude);
   const statusCounts = {
     active: filteredStations.filter((s) => s.status === "ACTIVE").length,
-    maintenance: filteredStations.filter((s) => s.status === "MAINTENANCE").length,
+    maintenance: filteredStations.filter((s) => s.status === "MAINTENANCE")
+      .length,
     inactive: filteredStations.filter((s) => s.status === "INACTIVE").length,
   };
 
   const statusChips = (
-    <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
+    <div className="flex gap-2 flex-wrap items-center">
       {[
-        { label: t("map.active"), count: statusCounts.active, status: "ACTIVE" },
-        { label: t("map.maintenance"), count: statusCounts.maintenance, status: "MAINTENANCE" },
-        { label: t("map.inactive"), count: statusCounts.inactive, status: "INACTIVE" },
+        {
+          label: t("map.active"),
+          count: statusCounts.active,
+          status: "ACTIVE",
+        },
+        {
+          label: t("map.maintenance"),
+          count: statusCounts.maintenance,
+          status: "MAINTENANCE",
+        },
+        {
+          label: t("map.inactive"),
+          count: statusCounts.inactive,
+          status: "INACTIVE",
+        },
       ].map(({ label, count, status }) => {
         const led = statusLED(status);
         return (
           <div key={status} className="ops-status-chip">
             <div
-              style={{
-                width: 7,
-                height: 7,
-                borderRadius: "50%",
-                background: led.color,
-                boxShadow: led.shadow,
-                flexShrink: 0,
-              }}
+              className="w-1.75 h-1.75 rounded-full shrink-0"
+              style={{ background: led.color, boxShadow: led.shadow }}
             />
             <span className="ops-status-chip-count">{count}</span>
             <span className="ops-status-chip-label">{label}</span>
@@ -81,12 +88,8 @@ export default function MapPage() {
       />
 
       <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
-          gap: 20,
-          alignItems: "start",
-        }}
+        className="grid gap-5 items-start"
+        style={{ gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))" }}
       >
         {/* Map */}
         <motion.div
@@ -96,9 +99,9 @@ export default function MapPage() {
         >
           <div className="ops-card">
             {isLoading ? (
-              <Skeleton style={{ height: 500, width: "100%" }} />
+              <Skeleton className="h-125 w-full" />
             ) : (
-              <div style={{ height: 500 }}>
+              <div className="h-125">
                 <StationMap
                   stations={stations}
                   selectedStationId={selectedStation?.id}
@@ -114,71 +117,41 @@ export default function MapPage() {
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.3, delay: 0.1 }}
-          style={{ display: "flex", flexDirection: "column", gap: 16 }}
+          className="flex flex-col gap-4"
         >
           {/* Station list card */}
-          <div
-            className="ops-card"
-            style={{ display: "flex", flexDirection: "column", height: 500 }}
-          >
+          <div className="ops-card flex flex-col h-125">
             {/* Card header */}
-            <div
-              style={{
-                padding: "14px 16px 12px",
-                borderBottom: "1px solid var(--color-border)",
-                flexShrink: 0,
-              }}
-            >
-              <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                <Train size={13} style={{ color: "var(--color-muted-foreground)" }} />
-                <p
-                  style={{
-                    fontFamily: "'Bebas Neue', sans-serif",
-                    fontSize: 15,
-                    letterSpacing: "0.1em",
-                    color: "var(--color-foreground)",
-                    margin: 0,
-                  }}
-                >
+            <div className="p-[14px_16px_12px] border-b border-border shrink-0">
+              <div className="flex items-center gap-1.5">
+                <Train size={13} className="text-muted-foreground" />
+                <p className="font-display text-[15px] tracking-widest text-foreground m-0">
                   {t("map.routeOrder")}
                 </p>
               </div>
-              <p className="ops-mono-xs" style={{ margin: "3px 0 0" }}>
+              <p className="ops-mono-xs mt-0.75">
                 {withCoords.length} stations mapped
               </p>
             </div>
 
             {/* Search */}
-            <div
-              style={{
-                padding: "8px 12px",
-                borderBottom: "1px solid var(--color-border)",
-                flexShrink: 0,
-              }}
-            >
-              <div style={{ position: "relative" }}>
+            <div className="p-[8px_12px] border-b border-border shrink-0">
+              <div className="relative">
                 <Search
                   size={13}
-                  style={{
-                    position: "absolute",
-                    left: 10,
-                    top: "50%",
-                    transform: "translateY(-50%)",
-                    color: "var(--color-muted-foreground)",
-                  }}
+                  className="absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground"
                 />
                 <Input
                   placeholder={t("common.search")}
                   value={mapSearch}
                   onChange={(e) => setMapSearch(e.target.value)}
-                  className="font-mono text-[11px] tracking-[0.05em]"
-                  style={{ height: 32, paddingLeft: 30 }}
+                  className="font-mono text-[11px] tracking-[0.05em] h-8 pl-7.5"
                 />
               </div>
             </div>
 
             {/* List */}
-            <div style={{ flex: 1, overflowY: "auto" }}>
+            <div className="flex-1 overflow-y-auto">
               {filteredStations
                 .filter((s) => s.latitude && s.longitude)
                 .sort((a, b) => a.order - b.order)
@@ -189,40 +162,32 @@ export default function MapPage() {
                     <button
                       key={station.id}
                       onClick={() => setSelectedStation(station)}
+                      className="w-full text-left py-2.5 px-4 flex items-center gap-2.5 cursor-pointer transition-all duration-[0.12s] border-t-0 border-r-0 border-b border-b-border"
                       style={{
-                        width: "100%",
-                        textAlign: "left",
-                        padding: "10px 16px",
-                        background: isSelected ? "rgba(29,111,232,0.06)" : "transparent",
+                        background: isSelected
+                          ? "rgba(29,111,232,0.06)"
+                          : "transparent",
                         borderLeft: isSelected
                           ? "3px solid var(--color-primary)"
                           : "3px solid transparent",
-                        borderTop: "none",
-                        borderRight: "none",
-                        borderBottom: "1px solid var(--color-border)",
-                        cursor: "pointer",
-                        transition: "all 0.12s ease",
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 10,
                       }}
                     >
                       <div
-                        style={{
-                          width: 7,
-                          height: 7,
-                          borderRadius: "50%",
-                          background: led.color,
-                          boxShadow: led.shadow,
-                          flexShrink: 0,
-                        }}
+                        className="w-1.75 h-1.75 rounded-full shrink-0"
+                        style={{ background: led.color, boxShadow: led.shadow }}
                       />
-                      <div style={{ flex: 1, minWidth: 0 }}>
-                        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                          <span className="ops-map-station-code">{station.code}</span>
-                          <span className="ops-map-station-name">{station.name}</span>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-1.5">
+                          <span className="ops-map-station-code">
+                            {station.code}
+                          </span>
+                          <span className="ops-map-station-name">
+                            {station.name}
+                          </span>
                         </div>
-                        <p className="ops-map-station-location">{station.location}</p>
+                        <p className="ops-map-station-location">
+                          {station.location}
+                        </p>
                       </div>
                     </button>
                   );
@@ -238,41 +203,28 @@ export default function MapPage() {
             >
               <div className="ops-card">
                 <div className="ops-accent-line" />
-                <div
-                  style={{
-                    padding: "14px 16px 12px",
-                    borderBottom: "1px solid var(--color-border)",
-                  }}
-                >
-                  <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                    <span className="ops-code-badge">{selectedStation.code}</span>
-                    <p
-                      style={{
-                        fontFamily: "'Bebas Neue', sans-serif",
-                        fontSize: 16,
-                        letterSpacing: "0.05em",
-                        color: "var(--color-foreground)",
-                        margin: 0,
-                      }}
-                    >
+                <div className="p-[14px_16px_12px] border-b border-border">
+                  <div className="flex items-center gap-2">
+                    <span className="ops-code-badge">
+                      {selectedStation.code}
+                    </span>
+                    <p className="font-display text-[16px] tracking-[0.05em] text-foreground m-0">
                       {selectedStation.name}
                     </p>
                   </div>
-                  <div style={{ display: "flex", alignItems: "center", gap: 6, marginTop: 6 }}>
+                  <div className="flex items-center gap-1.5 mt-1.5">
                     {(() => {
                       const led = statusLED(selectedStation.status);
                       return (
                         <>
                           <div
+                            className="w-1.75 h-1.75 rounded-full"
                             style={{
-                              width: 7,
-                              height: 7,
-                              borderRadius: "50%",
                               background: led.color,
                               boxShadow: led.shadow,
                             }}
                           />
-                          <span className="ops-mono-data" style={{ fontSize: 10, letterSpacing: "0.1em" }}>
+                          <span className="ops-mono-data text-[10px] tracking-widest">
                             {selectedStation.status}
                           </span>
                         </>
@@ -280,37 +232,20 @@ export default function MapPage() {
                     })()}
                   </div>
                 </div>
-                <div
-                  style={{
-                    padding: "12px 16px",
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: 8,
-                  }}
-                >
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "flex-start",
-                      gap: 6,
-                      color: "var(--color-muted-foreground)",
-                    }}
-                  >
-                    <MapPin size={13} style={{ flexShrink: 0, marginTop: 1 }} />
-                    <span
-                      style={{
-                        fontFamily: "'Sora', sans-serif",
-                        fontSize: 12,
-                        color: "var(--color-foreground)",
-                      }}
-                    >
+                <div className="p-[12px_16px] flex flex-col gap-2">
+                  <div className="flex items-start gap-1.5 text-muted-foreground">
+                    <MapPin size={13} className="shrink-0 mt-px" />
+                    <span className="font-['Sora',sans-serif] text-[12px] text-foreground">
                       {selectedStation.location}
                     </span>
                   </div>
                   {selectedStation.latitude && selectedStation.longitude && (
-                    <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                      <Navigation size={13} style={{ color: "var(--color-muted-foreground)", flexShrink: 0 }} />
-                      <span className="ops-mono-data" style={{ fontSize: 10 }}>
+                    <div className="flex items-center gap-1.5">
+                      <Navigation
+                        size={13}
+                        className="text-muted-foreground shrink-0"
+                      />
+                      <span className="ops-mono-data text-[10px]">
                         {selectedStation.latitude.toFixed(6)},{" "}
                         {selectedStation.longitude.toFixed(6)}
                       </span>

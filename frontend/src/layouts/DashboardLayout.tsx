@@ -1,4 +1,10 @@
-import { Outlet, Navigate, NavLink, useNavigate, useLocation } from "react-router-dom";
+import {
+  Outlet,
+  Navigate,
+  NavLink,
+  useNavigate,
+  useLocation,
+} from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAuthStore } from "@/store/auth.store";
 import { useLogout } from "@/hooks/use-auth";
@@ -159,7 +165,11 @@ function NavItemLink({
         <>
           <Icon
             className="w-4 h-4 shrink-0"
-            style={{ color: isActive ? "var(--color-primary)" : "var(--color-muted-foreground)" }}
+            style={{
+              color: isActive
+                ? "var(--color-primary)"
+                : "var(--color-muted-foreground)",
+            }}
           />
           {!collapsed && <span>{t(item.labelKey)}</span>}
         </>
@@ -203,15 +213,14 @@ export default function DashboardLayout() {
       <div
         className="absolute inset-0 pointer-events-none z-0 opacity-[0.025]"
         style={{
-          backgroundImage: "radial-gradient(circle, rgba(59,130,246,0.8) 1px, transparent 1px)",
+          backgroundImage:
+            "radial-gradient(circle, rgba(59,130,246,0.8) 1px, transparent 1px)",
           backgroundSize: "20px 20px",
         }}
       />
 
       {/* Logo bar */}
-      <div
-        className="flex flex-row items-center gap-3 px-4 h-14 shrink-0 border-b border-[rgba(59,130,246,0.2)] relative z-[1]"
-      >
+      <div className="flex flex-row items-center gap-3 px-4 h-14 shrink-0 border-b border-[rgba(59,130,246,0.2)] relative z-1">
         <div
           className="flex h-8 w-8 items-center justify-center rounded-lg shrink-0"
           style={{
@@ -221,7 +230,7 @@ export default function DashboardLayout() {
               "0 0 10px color-mix(in oklch, var(--color-primary) 40%, transparent)",
           }}
         >
-          <Train className="w-[15px] h-[15px] text-primary-foreground" />
+          <Train className="w-3.75 h-3.75 text-primary-foreground" />
         </div>
         {!collapsed && (
           <div className="flex flex-col gap-px">
@@ -236,15 +245,13 @@ export default function DashboardLayout() {
       </div>
 
       <nav
-        className="flex-1 overflow-y-auto px-3 py-3 relative z-[1]"
+        className="flex-1 overflow-y-auto px-3 py-3 relative z-1"
         data-tour="sidebar-nav"
       >
         {visibleGroups.map((group) => (
           <div key={group.labelKey} className="mb-3">
             {!collapsed && (
-              <div
-                className="flex items-center gap-[6px] px-2 mb-[6px]"
-              >
+              <div className="flex items-center gap-1.5 px-2 mb-1.5">
                 <span className="sidebar-group-label">{t(group.labelKey)}</span>
                 <span className="sidebar-sep-line" />
               </div>
@@ -265,14 +272,12 @@ export default function DashboardLayout() {
       </nav>
 
       {!collapsed && (
-        <div
-          className="border-t border-[rgba(255,255,255,0.04)] px-4 py-[10px] flex items-center justify-between shrink-0 relative z-[1]"
-        >
-          <div className="flex items-center gap-[6px]">
-            <div className="w-[5px] h-[5px] rounded-full bg-[#22c55e] shadow-[0_0_4px_rgba(34,197,94,0.6)] shrink-0" />
+        <div className="border-t border-[rgba(255,255,255,0.04)] px-4 py-2.5 flex items-center justify-between shrink-0 relative z-1">
+          <div className="flex items-center gap-1.5">
+            <div className="w-1.25 h-1.25 rounded-full bg-[#22c55e] shadow-[0_0_4px_rgba(34,197,94,0.6)] shrink-0" />
             <span className="sidebar-sub-text">SYS ONLINE</span>
           </div>
-          <span className="font-mono text-[8px] tracking-[0.1em] text-[rgba(29,111,232,0.3)]">
+          <span className="font-mono text-[8px] tracking-widest text-[rgba(29,111,232,0.3)]">
             v2.13.0
           </span>
         </div>
@@ -306,7 +311,10 @@ export default function DashboardLayout() {
       <div className={cn("transition-all duration-200", sidebarPl)}>
         <header
           className="sticky top-0 z-30 backdrop-blur-xl flex flex-row items-center gap-3 h-14 px-4 border-b border-border"
-          style={{ background: "linear-gradient(180deg, var(--color-sidebar) 0%, color-mix(in oklch, var(--color-background) 85%, var(--color-sidebar) 15%) 100%)" }}
+          style={{
+            background:
+              "linear-gradient(180deg, var(--color-sidebar) 0%, color-mix(in oklch, var(--color-background) 85%, var(--color-sidebar) 15%) 100%)",
+          }}
         >
           <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
             <SheetTrigger asChild>
@@ -343,12 +351,10 @@ export default function DashboardLayout() {
             }
           >
             <span className="inline-flex items-center gap-2 text-xs font-mono">
-              <Search className="w-[14px] h-[14px]" />
+              <Search className="w-3.5 h-3.5" />
               {t("common.search")}
             </span>
-            <kbd
-              className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 text-[10px] font-medium text-muted-foreground font-mono"
-            >
+            <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 text-[10px] font-medium text-muted-foreground font-mono">
               ⌘K
             </kbd>
           </Button>

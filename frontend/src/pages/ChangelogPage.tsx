@@ -335,8 +335,8 @@ export default function ChangelogPage() {
             >
               {/* Version-typed accent line */}
               <div
+                className="h-0.5"
                 style={{
-                  height: 2,
                   background: `linear-gradient(90deg, ${accentColor} 0%, transparent 100%)`,
                 }}
               />

@@ -99,16 +99,7 @@ export default function ActivityLogPage() {
   };
 
   const filterExportRight = (
-    <div
-      className="ops-card"
-      style={{
-        padding: "10px 14px",
-        display: "flex",
-        flexDirection: "row",
-        gap: 8,
-        alignItems: "center",
-      }}
-    >
+    <div className="ops-card p-[10px_14px] flex flex-row gap-2 items-center">
       <Button
         variant="outline"
         size="sm"
@@ -166,37 +157,19 @@ export default function ActivityLogPage() {
           <div className="ops-accent-line" />
 
           {/* Card section header */}
-          <div
-            className="ops-card-header"
-            style={{ display: "flex", alignItems: "baseline", gap: 10 }}
-          >
+          <div className="ops-card-header flex items-baseline gap-2.5">
             <span className="ops-card-title">EVENTS</span>
-            <span className="ops-card-subtitle" style={{ marginTop: 0 }}>
-              Most Recent First
-            </span>
+            <span className="ops-card-subtitle mt-0">Most Recent First</span>
           </div>
 
           {isLoading ? (
             Array.from({ length: 5 }).map((_, i) => (
               <div
                 key={i}
-                style={{
-                  padding: "14px 20px 14px 24px",
-                  borderBottom: "1px solid var(--color-border)",
-                  display: "flex",
-                  alignItems: "flex-start",
-                  gap: 12,
-                }}
+                className="py-3.5 px-5 pl-6 border-b border-border flex items-start gap-3"
               >
                 <Skeleton className="h-9 w-9 rounded-full shrink-0" />
-                <div
-                  style={{
-                    flex: 1,
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: 6,
-                  }}
-                >
+                <div className="flex-1 flex flex-col gap-1.5">
                   <Skeleton className="h-4 w-64" />
                   <Skeleton className="h-3 w-40" />
                 </div>
@@ -205,20 +178,9 @@ export default function ActivityLogPage() {
             ))
           ) : (
             /* Timeline wrapper */
-            <div style={{ position: "relative" }}>
+            <div className="relative">
               {/* Vertical timeline connector */}
-              <div
-                style={{
-                  position: "absolute",
-                  left: 41,
-                  top: 0,
-                  bottom: 0,
-                  width: 1,
-                  background:
-                    "linear-gradient(180deg, rgba(59,130,246,0.2) 0%, rgba(59,130,246,0) 100%)",
-                  pointerEvents: "none",
-                }}
-              />
+              <div className="absolute left-10.25 top-0 bottom-0 w-px pointer-events-none bg-[linear-gradient(180deg,rgba(59,130,246,0.2)_0%,rgba(59,130,246,0)_100%)]" />
 
               {logs.map((log, idx) => {
                 const actionStyle = ACTION_STYLES[
@@ -239,73 +201,41 @@ export default function ActivityLogPage() {
                 return (
                   <div
                     key={log.id}
+                    className="py-3.5 px-5 pl-6 flex items-start gap-3"
                     style={{
-                      padding: "14px 20px 14px 24px",
                       borderBottom:
                         idx < logs.length - 1
                           ? "1px solid var(--color-border)"
                           : "none",
-                      display: "flex",
-                      alignItems: "flex-start",
-                      gap: 12,
                     }}
                   >
                     {/* Action icon circle */}
                     <div
-                      style={{
-                        width: 36,
-                        height: 36,
-                        borderRadius: "50%",
-                        background: bg,
-                        border: "1px solid rgba(255,255,255,0.06)",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        flexShrink: 0,
-                        position: "relative",
-                        zIndex: 1,
-                      }}
+                      className="w-9 h-9 rounded-full border border-[rgba(255,255,255,0.06)] flex items-center justify-center shrink-0 relative z-1"
+                      style={{ background: bg }}
                     >
-                      <ActionIcon style={{ width: 14, height: 14, color }} />
+                      <ActionIcon className="w-3.5 h-3.5" style={{ color }} />
                     </div>
 
                     {/* Content */}
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                      <div
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: 8,
-                          flexWrap: "wrap",
-                        }}
-                      >
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap">
                         <span className="text-[13px] font-medium">
                           {log.action.charAt(0) +
                             log.action.slice(1).toLowerCase()}
                           d a
                         </span>
                         <span className="ops-entity-chip">
-                          <EntityIcon style={{ width: 9, height: 9 }} />
+                          <EntityIcon className="w-2.25 h-2.25" />
                           {log.entity}
                         </span>
                       </div>
-                      <div
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: 6,
-                          marginTop: 3,
-                          flexWrap: "wrap",
-                        }}
-                      >
-                        <span className="ops-mono-label" style={{ fontSize: 11, textTransform: "none", letterSpacing: "0.04em" }}>
+                      <div className="flex items-center gap-1.5 mt-0.75 flex-wrap">
+                        <span className="ops-mono-label text-[11px] normal-case tracking-[0.04em]">
                           {log.user.name}
                         </span>
                         {log.details && (
-                          <span
-                            className="text-[11.5px] text-muted-foreground truncate"
-                            style={{ maxWidth: 280 }}
-                          >
+                          <span className="text-[11.5px] text-muted-foreground truncate max-w-70">
                             — {log.details}
                           </span>
                         )}
@@ -313,21 +243,12 @@ export default function ActivityLogPage() {
                     </div>
 
                     {/* Timestamp */}
-                    <div
-                      style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "flex-end",
-                        gap: 2,
-                        flexShrink: 0,
-                        marginTop: 2,
-                      }}
-                    >
-                      <span className="ops-mono-xs" style={{ opacity: 0.7, whiteSpace: "nowrap" }}>
+                    <div className="flex flex-col items-end gap-0.5 shrink-0 mt-0.5">
+                      <span className="ops-mono-xs opacity-70 whitespace-nowrap">
                         {relative ?? absolute}
                       </span>
                       {relative && (
-                        <span className="ops-mono-xs" style={{ fontSize: 9, opacity: 0.35, whiteSpace: "nowrap" }}>
+                        <span className="ops-mono-xs text-[9px] opacity-35 whitespace-nowrap">
                           {absolute}
                         </span>
                       )}

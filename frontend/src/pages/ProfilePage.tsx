@@ -48,7 +48,6 @@ const passwordSchema = z
 
 type PasswordFormData = z.infer<typeof passwordSchema>;
 
-
 export default function ProfilePage() {
   usePageMeta({ title: "Profile", path: "/profile" });
   const { t, i18n } = useTranslation();
@@ -204,21 +203,23 @@ export default function ProfilePage() {
 
   return (
     <div>
-      <PageHeader title="PROFILE" subtitle={`${user.role} · ${t("profile.subtitle")}`} />
+      <PageHeader
+        title="PROFILE"
+        subtitle={`${user.role} · ${t("profile.subtitle")}`}
+      />
 
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
       >
         <div
+          className="grid gap-6"
           style={{
-            display: "grid",
-            gap: 24,
             gridTemplateColumns: "repeat(auto-fit, minmax(340px, 1fr))",
           }}
         >
           {/* Left Column */}
-          <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+          <div className="flex flex-col gap-6">
             {/* Profile Info card with avatar gradient treatment */}
             <div
               className="ops-card"
@@ -231,18 +232,15 @@ export default function ProfilePage() {
               <div className="ops-accent-line" />
               <div>
                 <div
-                  className="ops-card-header"
+                  className="ops-card-header p-[20px_24px_16px]"
                   style={{
-                    padding: "20px 24px 16px",
                     background: isDark
                       ? "linear-gradient(135deg, rgba(59,130,246,0.06) 0%, rgba(59,130,246,0.02) 100%)"
                       : "linear-gradient(135deg, rgba(59,130,246,0.04) 0%, transparent 100%)",
                   }}
                 >
-                  <div
-                    style={{ display: "flex", alignItems: "center", gap: 16 }}
-                  >
-                    <div style={{ position: "relative", flexShrink: 0 }}>
+                  <div className="flex items-center gap-4">
+                    <div className="relative shrink-0">
                       <Avatar className="h-16 w-16">
                         <AvatarImage
                           src={
@@ -265,10 +263,10 @@ export default function ProfilePage() {
                         {updateAvatarMutation.isPending ? (
                           <Loader2
                             size={10}
-                            style={{ color: "white", animation: "spin 1s linear infinite" }}
+                            className="text-white animate-spin"
                           />
                         ) : (
-                          <Camera size={10} style={{ color: "white" }} />
+                          <Camera size={10} className="text-white" />
                         )}
                       </button>
                       <input
@@ -280,25 +278,10 @@ export default function ProfilePage() {
                       />
                     </div>
                     <div>
-                      <div
-                        style={{
-                          fontFamily: "'Bebas Neue', sans-serif",
-                          fontSize: 28,
-                          letterSpacing: "0.03em",
-                          lineHeight: 1.1,
-                          color: "var(--color-foreground)",
-                        }}
-                      >
+                      <div className="font-display text-[28px] tracking-[0.03em] leading-[1.1] text-foreground">
                         {user.name}
                       </div>
-                      <div
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: 8,
-                          marginTop: 4,
-                        }}
-                      >
+                      <div className="flex items-center gap-2 mt-1">
                         <Badge
                           variant={
                             user.role === "ADMIN" ? "default" : "secondary"
@@ -311,25 +294,16 @@ export default function ProfilePage() {
                     </div>
                   </div>
                 </div>
-                <div style={{ padding: "16px 24px 20px" }}>
+                <div className="p-[16px_24px_20px]">
                   {profileItems.map((item) => {
                     const Icon = item.icon;
                     return (
                       <div
                         key={item.label}
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: 12,
-                          padding: "8px 0",
-                          borderBottom: "1px solid var(--color-border)",
-                        }}
+                        className="flex items-center gap-3 py-2 border-b border-border"
                       >
                         <div className="ops-icon-box">
-                          <Icon
-                            size={15}
-                            className="text-muted-foreground"
-                          />
+                          <Icon size={15} className="text-muted-foreground" />
                         </div>
                         <div>
                           <div className="ops-mono-label">{item.label}</div>
@@ -346,36 +320,21 @@ export default function ProfilePage() {
             <div className="ops-card">
               <div className="ops-accent-line" />
               <div className="ops-card-header">
-                <div className="ops-card-title" style={{ display: "flex", alignItems: "center", gap: 8 }}>PREFERENCES</div>
+                <div className="ops-card-title">PREFERENCES</div>
                 <div className="ops-card-subtitle">
                   Current environment settings
                 </div>
               </div>
-              <div style={{ padding: "8px 0" }}>
+              <div className="py-2">
                 {preferencesItems.map((item) => {
                   const Icon = item.icon;
                   return (
                     <div
                       key={item.label}
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                        padding: "10px 24px",
-                        borderBottom: "1px solid var(--color-border)",
-                      }}
+                      className="flex items-center justify-between py-2.5 px-6 border-b border-border"
                     >
-                      <div
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: 10,
-                        }}
-                      >
-                        <Icon
-                          size={14}
-                          style={{ color: "var(--color-muted-foreground)" }}
-                        />
+                      <div className="flex items-center gap-2.5">
+                        <Icon size={14} className="text-muted-foreground" />
                         <span className="ops-station-ref">{item.label}</span>
                       </div>
                       <Badge variant="outline">{item.value}</Badge>
@@ -389,7 +348,7 @@ export default function ProfilePage() {
             <div className="ops-card">
               <div className="ops-accent-line" />
               <div className="ops-card-header">
-                <div className="ops-card-title" style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <div className="ops-card-title flex items-center gap-2">
                   <Shield size={15} />
                   PERMISSIONS
                 </div>
@@ -399,15 +358,17 @@ export default function ProfilePage() {
                     : "Loading permissions..."}
                 </div>
               </div>
-              <div style={{ padding: "16px 24px 20px" }}>
-                <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+              <div className="p-[16px_24px_20px]">
+                <div className="flex flex-wrap gap-1.5">
                   {permissions.map((perm) => (
-                    <span key={perm} className="ops-chip" style={{ fontSize: 9 }}>
+                    <span key={perm} className="ops-chip text-[9px]">
                       {perm}
                     </span>
                   ))}
                   {permissions.length === 0 && (
-                    <span className="ops-mono-data">Fetching permissions...</span>
+                    <span className="ops-mono-data">
+                      Fetching permissions...
+                    </span>
                   )}
                 </div>
               </div>
@@ -415,12 +376,12 @@ export default function ProfilePage() {
           </div>
 
           {/* Right Column */}
-          <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+          <div className="flex flex-col gap-6">
             {/* Change Password */}
             <div className="ops-card">
               <div className="ops-accent-line" />
               <div className="ops-card-header">
-                <div className="ops-card-title" style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <div className="ops-card-title flex items-center gap-2">
                   <Lock size={15} />
                   {t("profile.changePassword").toUpperCase()}
                 </div>
@@ -428,18 +389,16 @@ export default function ProfilePage() {
                   {t("profile.updatePassword")}
                 </div>
               </div>
-              <div style={{ padding: "20px 24px" }}>
+              <div className="p-[20px_24px]">
                 <form
                   onSubmit={handleSubmit(onPasswordChange)}
-                  style={{ display: "flex", flexDirection: "column", gap: 16 }}
+                  className="flex flex-col gap-4"
                 >
-                  <div
-                    style={{ display: "flex", flexDirection: "column", gap: 6 }}
-                  >
+                  <div className="flex flex-col gap-1.5">
                     <Label htmlFor="currentPassword" className="ops-form-label">
                       {t("profile.currentPassword")}
                     </Label>
-                    <div style={{ position: "relative" }}>
+                    <div className="relative">
                       <Input
                         id="currentPassword"
                         type={showCurrent ? "text" : "password"}
@@ -449,13 +408,7 @@ export default function ProfilePage() {
                         type="button"
                         variant="ghost"
                         size="icon"
-                        style={{
-                          position: "absolute",
-                          right: 0,
-                          top: 0,
-                          height: "100%",
-                          width: 40,
-                        }}
+                        className="absolute right-0 top-0 h-full w-10"
                         tabIndex={-1}
                         onClick={() => setShowCurrent(!showCurrent)}
                       >
@@ -463,16 +416,16 @@ export default function ProfilePage() {
                       </Button>
                     </div>
                     {errors.currentPassword && (
-                      <p className="ops-form-error">{errors.currentPassword.message}</p>
+                      <p className="ops-form-error">
+                        {errors.currentPassword.message}
+                      </p>
                     )}
                   </div>
-                  <div
-                    style={{ display: "flex", flexDirection: "column", gap: 6 }}
-                  >
+                  <div className="flex flex-col gap-1.5">
                     <Label htmlFor="newPassword" className="ops-form-label">
                       {t("profile.newPassword")}
                     </Label>
-                    <div style={{ position: "relative" }}>
+                    <div className="relative">
                       <Input
                         id="newPassword"
                         type={showNew ? "text" : "password"}
@@ -482,13 +435,7 @@ export default function ProfilePage() {
                         type="button"
                         variant="ghost"
                         size="icon"
-                        style={{
-                          position: "absolute",
-                          right: 0,
-                          top: 0,
-                          height: "100%",
-                          width: 40,
-                        }}
+                        className="absolute right-0 top-0 h-full w-10"
                         tabIndex={-1}
                         onClick={() => setShowNew(!showNew)}
                       >
@@ -496,12 +443,12 @@ export default function ProfilePage() {
                       </Button>
                     </div>
                     {errors.newPassword && (
-                      <p className="ops-form-error">{errors.newPassword.message}</p>
+                      <p className="ops-form-error">
+                        {errors.newPassword.message}
+                      </p>
                     )}
                   </div>
-                  <div
-                    style={{ display: "flex", flexDirection: "column", gap: 6 }}
-                  >
+                  <div className="flex flex-col gap-1.5">
                     <Label htmlFor="confirmPassword" className="ops-form-label">
                       {t("profile.confirmPassword")}
                     </Label>
@@ -511,7 +458,9 @@ export default function ProfilePage() {
                       {...register("confirmPassword")}
                     />
                     {errors.confirmPassword && (
-                      <p className="ops-form-error">{errors.confirmPassword.message}</p>
+                      <p className="ops-form-error">
+                        {errors.confirmPassword.message}
+                      </p>
                     )}
                   </div>
                   <Button
@@ -532,7 +481,9 @@ export default function ProfilePage() {
             <div className="ops-card">
               <div className="ops-accent-line" />
               <div className="ops-card-header">
-                <div className="ops-card-title" style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <div
+                  className="ops-card-title flex items-center gap-2"
+                >
                   {t("profile.techStack").toUpperCase()}
                 </div>
                 <div className="ops-card-subtitle">
@@ -543,52 +494,30 @@ export default function ProfilePage() {
                   technologies
                 </div>
               </div>
-              <div style={{ padding: "16px 24px 20px" }}>
+              <div className="p-[16px_24px_20px]">
                 <Tabs defaultValue="frontend">
-                  <TabsList
-                    style={{
-                      width: "100%",
-                      marginBottom: 16,
-                      fontFamily: "'JetBrains Mono', monospace",
-                    }}
-                  >
+                  <TabsList className="w-full mb-4 font-mono">
                     <TabsTrigger
                       value="frontend"
-                      style={{
-                        flex: 1,
-                        fontFamily: "'JetBrains Mono', monospace",
-                        fontSize: 10,
-                      }}
+                      className="flex-1 font-mono text-[10px]"
                     >
                       Frontend
                     </TabsTrigger>
                     <TabsTrigger
                       value="backend"
-                      style={{
-                        flex: 1,
-                        fontFamily: "'JetBrains Mono', monospace",
-                        fontSize: 10,
-                      }}
+                      className="flex-1 font-mono text-[10px]"
                     >
                       Backend
                     </TabsTrigger>
                     <TabsTrigger
                       value="infra"
-                      style={{
-                        flex: 1,
-                        fontFamily: "'JetBrains Mono', monospace",
-                        fontSize: 10,
-                      }}
+                      className="flex-1 font-mono text-[10px]"
                     >
                       Infra
                     </TabsTrigger>
                     <TabsTrigger
                       value="testing"
-                      style={{
-                        flex: 1,
-                        fontFamily: "'JetBrains Mono', monospace",
-                        fontSize: 10,
-                      }}
+                      className="flex-1 font-mono text-[10px]"
                     >
                       Testing
                     </TabsTrigger>
@@ -600,9 +529,7 @@ export default function ProfilePage() {
                     { value: "testing", stack: testingStack },
                   ].map(({ value, stack }) => (
                     <TabsContent key={value} value={value}>
-                      <div
-                        style={{ display: "flex", flexWrap: "wrap", gap: 6 }}
-                      >
+                      <div className="flex flex-wrap gap-1.5">
                         {stack.map((tech) => (
                           <span key={tech} className="ops-chip" title={tech}>
                             {tech}

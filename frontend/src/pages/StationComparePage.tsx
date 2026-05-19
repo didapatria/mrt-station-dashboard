@@ -23,7 +23,6 @@ const statusLED = (status: string) => {
   return { color: "#ef4444", shadow: "0 0 6px 2px rgba(239,68,68,0.4)" };
 };
 
-
 interface StationCardProps {
   station: Station | undefined;
   scheduleCount: number;
@@ -39,37 +38,11 @@ function StationCard({
     return (
       <div className="ops-card">
         <div className="ops-accent-line" />
-        <div
-          style={{
-            padding: "60px 24px",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: 12,
-          }}
-        >
-          <p
-            style={{
-              fontFamily: "'Bebas Neue', sans-serif",
-              fontSize: 18,
-              letterSpacing: "0.1em",
-              color: "var(--color-muted-foreground)",
-              margin: 0,
-            }}
-          >
+        <div className="p-[60px_24px] flex flex-col items-center justify-center gap-3">
+          <p className="font-display text-[18px] tracking-widest text-muted-foreground m-0">
             SELECT A STATION
           </p>
-          <p
-            style={{
-              fontFamily: "'JetBrains Mono', monospace",
-              fontSize: 10,
-              letterSpacing: "0.1em",
-              color: "var(--color-muted-foreground)",
-              margin: 0,
-              textTransform: "uppercase",
-            }}
-          >
+          <p className="font-mono text-[10px] tracking-widest text-muted-foreground m-0 uppercase">
             Choose from the dropdown above
           </p>
         </div>
@@ -87,14 +60,10 @@ function StationCard({
     highlight?: boolean;
   }[] = [
     {
-      icon: (
-        <Hash size={13} className="text-muted-foreground" />
-      ),
+      icon: <Hash size={13} className="text-muted-foreground" />,
       label: "ORDER",
       value: (
-        <span
-          style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 14 }}
-        >
+        <span className="font-mono text-[14px]">
           {String(station.order).padStart(2, "0")}
         </span>
       ),
@@ -102,42 +71,24 @@ function StationCard({
     {
       icon: (
         <div
-          style={{
-            width: 7,
-            height: 7,
-            borderRadius: "50%",
-            background: led.color,
-            boxShadow: led.shadow,
-            flexShrink: 0,
-          }}
+          className="w-1.75 h-1.75 rounded-full shrink-0"
+          style={{ background: led.color, boxShadow: led.shadow }}
         />
       ),
       label: "STATUS",
       value: (
-        <span
-          style={{
-            fontFamily: "'JetBrains Mono', monospace",
-            fontSize: 11,
-            letterSpacing: "0.08em",
-          }}
-        >
+        <span className="font-mono text-[11px] tracking-[0.08em]">
           {station.status}
         </span>
       ),
     },
     {
-      icon: (
-        <Calendar
-          size={13}
-          className="text-muted-foreground"
-        />
-      ),
+      icon: <Calendar size={13} className="text-muted-foreground" />,
       label: "SCHEDULES",
       value: (
         <span
+          className="font-mono text-[14px]"
           style={{
-            fontFamily: "'JetBrains Mono', monospace",
-            fontSize: 14,
             color: schedulesWin ? "#22c55e" : "var(--color-foreground)",
             fontWeight: schedulesWin ? 700 : 400,
           }}
@@ -148,28 +99,19 @@ function StationCard({
       highlight: schedulesWin,
     },
     {
-      icon: (
-        <MapPin size={13} className="text-muted-foreground" />
-      ),
+      icon: <MapPin size={13} className="text-muted-foreground" />,
       label: "LOCATION",
       value: (
-        <span style={{ fontFamily: "'Sora', sans-serif", fontSize: 12 }}>
+        <span className="font-['Sora',sans-serif] text-[12px]">
           {station.location}
         </span>
       ),
     },
     {
-      icon: (
-        <Navigation
-          size={13}
-          className="text-muted-foreground"
-        />
-      ),
+      icon: <Navigation size={13} className="text-muted-foreground" />,
       label: "COORDINATES",
       value: (
-        <span
-          style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10 }}
-        >
+        <span className="font-mono text-[10px]">
           {station.latitude?.toFixed(4)}, {station.longitude?.toFixed(4)}
         </span>
       ),
@@ -180,41 +122,20 @@ function StationCard({
     <div className="ops-card">
       <div className="ops-accent-line" />
       <div className="ops-card-header">
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+        <div className="flex items-center gap-2.5">
           <span className="ops-code-badge">{station.code}</span>
         </div>
-        <p
-          style={{
-            fontFamily: "'Bebas Neue', sans-serif",
-            fontSize: 22,
-            letterSpacing: "0.04em",
-            color: "var(--color-foreground)",
-            margin: "6px 0 0",
-            lineHeight: 1.1,
-          }}
-        >
+        <p className="font-display text-[22px] tracking-[0.04em] text-foreground mt-1.5 mb-0 leading-[1.1]">
           {station.name}
         </p>
-        <p className="ops-card-subtitle" style={{ margin: "4px 0 0" }}>
-          {station.location}
-        </p>
+        <p className="ops-card-subtitle mt-1">{station.location}</p>
       </div>
-      <div
-        style={{
-          padding: "16px 24px",
-          display: "flex",
-          flexDirection: "column",
-          gap: 0,
-        }}
-      >
+      <div className="p-[16px_24px] flex flex-col">
         {rows.map((row, i) => (
           <div
             key={i}
+            className="flex items-center gap-2.5 p-[12px_8px]"
             style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 10,
-              padding: "12px 8px",
               borderBottom:
                 i < rows.length - 1 ? "1px solid var(--color-border)" : "none",
               background: row.highlight
@@ -226,21 +147,11 @@ function StationCard({
               borderRadius: row.highlight ? 4 : 0,
             }}
           >
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 6,
-                width: 100,
-                flexShrink: 0,
-              }}
-            >
+            <div className="flex items-center gap-1.5 w-25 shrink-0">
               {row.icon}
               <span className="ops-table-head">{row.label}</span>
             </div>
-            <div style={{ flex: 1, color: "var(--color-foreground)" }}>
-              {row.value}
-            </div>
+            <div className="flex-1 text-foreground">{row.value}</div>
           </div>
         ))}
       </div>
@@ -272,28 +183,25 @@ export default function StationComparePage() {
 
   return (
     <div>
-      <PageHeader title="STATION COMPARE" subtitle="Side-by-side station analysis" />
+      <PageHeader
+        title="STATION COMPARE"
+        subtitle="Side-by-side station analysis"
+      />
 
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
       >
         {/* Selector area */}
-        <div className="ops-card" style={{ marginBottom: 24 }}>
+        <div className="ops-card mb-6">
           <div className="ops-accent-line" />
-          <div style={{ padding: "20px 24px" }}>
+          <div className="p-[20px_24px]">
             <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "1fr auto 1fr",
-                alignItems: "center",
-                gap: 16,
-              }}
+              className="grid items-center gap-4"
+              style={{ gridTemplateColumns: "1fr auto 1fr" }}
             >
               <div>
-                <p className="ops-table-head" style={{ margin: "0 0 8px" }}>
-                  Station A
-                </p>
+                <p className="ops-table-head mb-2">Station A</p>
                 <Select value={leftId} onValueChange={setLeftId}>
                   <SelectTrigger>
                     <SelectValue placeholder="Select station" />
@@ -308,46 +216,16 @@ export default function StationComparePage() {
                 </Select>
               </div>
 
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  gap: 4,
-                  flexShrink: 0,
-                  paddingTop: 20,
-                }}
-              >
-                <div
-                  style={{
-                    width: 1,
-                    height: 20,
-                    background: "rgba(59,130,246,0.3)",
-                  }}
-                />
-                <span
-                  style={{
-                    fontFamily: "'Bebas Neue', sans-serif",
-                    fontSize: 22,
-                    color: "rgba(148,163,184,0.4)",
-                    letterSpacing: "0.1em",
-                  }}
-                >
+              <div className="flex flex-col items-center gap-1 shrink-0 pt-5">
+                <div className="w-px h-5 bg-[rgba(59,130,246,0.3)]" />
+                <span className="font-display text-[22px] text-[rgba(148,163,184,0.4)] tracking-widest">
                   VS
                 </span>
-                <div
-                  style={{
-                    width: 1,
-                    height: 20,
-                    background: "rgba(59,130,246,0.3)",
-                  }}
-                />
+                <div className="w-px h-5 bg-[rgba(59,130,246,0.3)]" />
               </div>
 
               <div>
-                <p className="ops-table-head" style={{ margin: "0 0 8px" }}>
-                  Station B
-                </p>
+                <p className="ops-table-head mb-2">Station B</p>
                 <Select value={rightId} onValueChange={setRightId}>
                   <SelectTrigger>
                     <SelectValue placeholder="Select station" />
@@ -366,13 +244,7 @@ export default function StationComparePage() {
         </div>
 
         {/* Comparison cards */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr",
-            gap: 16,
-          }}
-        >
+        <div className="grid grid-cols-2 gap-4">
           <StationCard
             station={left}
             scheduleCount={leftCount}

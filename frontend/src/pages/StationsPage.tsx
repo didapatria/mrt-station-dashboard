@@ -307,12 +307,12 @@ export default function StationsPage() {
     order === 1 || order === (meta?.total ?? 0);
 
   return (
-    <div style={{ position: "relative" }}>
+    <div className="relative">
       <PageHeader
         title={t("stations.title")}
         subtitle={`N–S Line · Station Registry${meta ? ` · ${meta.total} entries` : ""}`}
         right={
-          <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
+          <div className="flex gap-2 flex-wrap items-center">
             <ColumnToggle
               columns={[
                 { key: "order", label: "Order" },
@@ -323,12 +323,22 @@ export default function StationsPage() {
               isVisible={columns.isVisible}
               toggle={columns.toggle}
             />
-            <Button variant="outline" size="sm" onClick={handleExport} className="ops-btn-mono">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleExport}
+              className="ops-btn-mono"
+            >
               <Download className="h-3.5 w-3.5 mr-1.5" />
               CSV
             </Button>
             {isAdmin && (
-              <Button variant="outline" size="sm" onClick={() => setCsvImportOpen(true)} className="ops-btn-mono">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setCsvImportOpen(true)}
+                className="ops-btn-mono"
+              >
                 Import
               </Button>
             )}
@@ -343,44 +353,19 @@ export default function StationsPage() {
       />
 
       {/* ── Filter strip ── */}
-      <div
-        style={{
-          display: "flex",
-          gap: 10,
-          marginBottom: 20,
-          flexWrap: "wrap",
-        }}
-      >
-        <div
-          style={{
-            position: "relative",
-            flex: 1,
-            minWidth: 200,
-          }}
-        >
-          <Search
-            style={{
-              position: "absolute",
-              left: 12,
-              top: "50%",
-              transform: "translateY(-50%)",
-              width: 13,
-              height: 13,
-              color: "var(--color-muted-foreground)",
-              opacity: 0.6,
-            }}
-          />
+      <div className="flex gap-2.5 mb-5 flex-wrap">
+        <div className="relative flex-1 min-w-50">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.25 h-3.25 text-muted-foreground opacity-60" />
           <Input
             placeholder={t("common.search")}
             value={search}
             onChange={(e) => handleSearchChange(e.target.value)}
-            className="font-['Sora'] text-[13px]"
-            style={{ paddingLeft: 34, height: 36 }}
+            className="font-['Sora'] text-[13px] pl-8.5 h-9"
           />
         </div>
 
         <Select value={statusFilter} onValueChange={handleStatusChange}>
-          <SelectTrigger className="ops-btn-mono" style={{ width: 148, height: 36 }}>
+          <SelectTrigger className="ops-btn-mono w-37 h-9">
             <SelectValue placeholder="Status" />
           </SelectTrigger>
           <SelectContent>
@@ -397,21 +382,18 @@ export default function StationsPage() {
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3 }}
-        className="ops-card"
-        style={{ marginBottom: 20 }}
+        className="ops-card mb-5"
       >
         <div className="ops-accent-line" />
         <div className="overflow-x-auto">
           <Table>
             <TableHeader>
               <TableRow
-                style={{
-                  background: thBg,
-                  borderBottom: "1px solid var(--color-border)",
-                }}
+                className="border-b border-border"
+                style={{ background: thBg }}
               >
                 {isAdmin && (
-                  <TableHead style={{ width: 44, padding: "0 16px" }}>
+                  <TableHead className="w-11 px-4">
                     <Checkbox
                       checked={
                         selectedIds.size === sortedStations.length &&
@@ -462,7 +444,7 @@ export default function StationsPage() {
                   />
                 )}
                 {isAdmin && (
-                  <TableHead className="ops-table-head text-right" style={{ padding: "0 16px" }}>
+                  <TableHead className="ops-table-head text-right px-4">
                     Actions
                   </TableHead>
                 )}
@@ -482,13 +464,7 @@ export default function StationsPage() {
                         <Skeleton className="h-6 w-6 rounded-full" />
                       </TableCell>
                       <TableCell>
-                        <div
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: 12,
-                          }}
-                        >
+                        <div className="flex items-center gap-3">
                           <Skeleton className="h-7 w-14 rounded-md" />
                           <Skeleton className="h-4 w-32" />
                         </div>
@@ -517,6 +493,7 @@ export default function StationsPage() {
                     return (
                       <TableRow
                         key={station.id}
+                        className="transition-[background,border-color] duration-[120ms] ease-linear"
                         style={{
                           borderLeft: isSelected
                             ? "3px solid var(--color-primary)"
@@ -526,12 +503,10 @@ export default function StationsPage() {
                               ? "rgba(29,111,232,0.06)"
                               : "rgba(29,111,232,0.04)"
                             : undefined,
-                          transition:
-                            "background 0.12s ease, border-color 0.12s ease",
                         }}
                       >
                         {isAdmin && (
-                          <TableCell style={{ padding: "0 16px", width: 44 }}>
+                          <TableCell className="px-4 w-11">
                             <Checkbox
                               checked={isSelected}
                               onCheckedChange={() => toggleSelect(station.id)}
@@ -542,31 +517,21 @@ export default function StationsPage() {
 
                         {/* Order: circle badge */}
                         {columns.isVisible("order") && (
-                          <TableCell
-                            style={{ padding: "12px 16px", width: 44 }}
-                          >
+                          <TableCell className="px-4 py-3 w-11">
                             <div
+                              className="rounded-full flex items-center justify-center font-mono text-[10px] font-bold tracking-[0] shrink-0"
                               style={{
                                 width: isTerminal ? 24 : 22,
                                 height: isTerminal ? 24 : 22,
-                                borderRadius: "50%",
                                 background: isTerminal
                                   ? "var(--color-primary)"
                                   : "transparent",
                                 border: isTerminal
                                   ? "none"
                                   : "1.5px solid var(--color-border)",
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                fontFamily: "'JetBrains Mono', monospace",
-                                fontSize: 10,
-                                fontWeight: 700,
                                 color: isTerminal
                                   ? "white"
                                   : "var(--color-muted-foreground)",
-                                letterSpacing: 0,
-                                flexShrink: 0,
                                 boxShadow: isTerminal
                                   ? "0 0 10px rgba(29,111,232,0.45)"
                                   : "none",
@@ -578,16 +543,12 @@ export default function StationsPage() {
                         )}
 
                         {/* Name + code */}
-                        <TableCell style={{ padding: "12px 16px" }}>
-                          <div
-                            style={{
-                              display: "flex",
-                              alignItems: "center",
-                              gap: 12,
-                            }}
-                          >
+                        <TableCell className="px-4 py-3">
+                          <div className="flex items-center gap-3">
                             {/* Code plate */}
-                            <div className="ops-station-code">{station.code}</div>
+                            <div className="ops-station-code">
+                              {station.code}
+                            </div>
                             <div>
                               <Link
                                 to={`/stations/${station.id}`}
@@ -595,10 +556,7 @@ export default function StationsPage() {
                               >
                                 {station.name}
                               </Link>
-                              <p
-                                className="ops-mono-data md:hidden"
-                                style={{ marginTop: 2 }}
-                              >
+                              <p className="ops-mono-data md:hidden mt-0.5">
                                 {station.location}
                               </p>
                             </div>
@@ -619,26 +577,8 @@ export default function StationsPage() {
                               <TooltipProvider>
                                 <Tooltip>
                                   <TooltipTrigger asChild>
-                                    <span
-                                      style={{
-                                        display: "inline-flex",
-                                        alignItems: "center",
-                                        gap: 4,
-                                        fontFamily:
-                                          "'JetBrains Mono', monospace",
-                                        fontSize: 10.5,
-                                        color: "var(--color-muted-foreground)",
-                                        cursor: "help",
-                                        letterSpacing: "0.02em",
-                                      }}
-                                    >
-                                      <MapPin
-                                        style={{
-                                          width: 10,
-                                          height: 10,
-                                          opacity: 0.5,
-                                        }}
-                                      />
+                                    <span className="inline-flex items-center gap-1 font-mono text-[10.5px] text-muted-foreground cursor-help tracking-[0.02em]">
+                                      <MapPin className="w-2.5 h-2.5 opacity-50" />
                                       {station.latitude.toFixed(4)},{" "}
                                       {station.longitude.toFixed(4)}
                                     </span>
@@ -650,14 +590,7 @@ export default function StationsPage() {
                                 </Tooltip>
                               </TooltipProvider>
                             ) : (
-                              <span
-                                style={{
-                                  fontFamily: "'JetBrains Mono', monospace",
-                                  fontSize: 11,
-                                  color: "var(--color-muted-foreground)",
-                                  opacity: 0.35,
-                                }}
-                              >
+                              <span className="font-mono text-[11px] text-muted-foreground opacity-35">
                                 —
                               </span>
                             )}
@@ -667,33 +600,15 @@ export default function StationsPage() {
                         {/* Status: LED dot */}
                         {columns.isVisible("status") && (
                           <TableCell>
-                            <div
-                              style={{
-                                display: "inline-flex",
-                                alignItems: "center",
-                                gap: 7,
-                              }}
-                            >
+                            <div className="inline-flex items-center gap-1.75">
                               <span
+                                className="inline-block w-1.75 h-1.75 rounded-full shrink-0"
                                 style={{
-                                  display: "inline-block",
-                                  width: 7,
-                                  height: 7,
-                                  borderRadius: "50%",
                                   background: dot.color,
                                   boxShadow: `0 0 8px ${dot.glow}`,
-                                  flexShrink: 0,
                                 }}
                               />
-                              <span
-                                style={{
-                                  fontFamily: "'JetBrains Mono', monospace",
-                                  fontSize: 10.5,
-                                  color: "var(--color-foreground)",
-                                  letterSpacing: "0.06em",
-                                  textTransform: "uppercase",
-                                }}
-                              >
+                              <span className="font-mono text-[10.5px] text-foreground tracking-[0.06em] uppercase">
                                 {dot.label}
                               </span>
                             </div>
@@ -702,16 +617,8 @@ export default function StationsPage() {
 
                         {/* Actions */}
                         {isAdmin && (
-                          <TableCell
-                            style={{ textAlign: "right", padding: "8px 16px" }}
-                          >
-                            <div
-                              style={{
-                                display: "flex",
-                                justifyContent: "flex-end",
-                                gap: 2,
-                              }}
-                            >
+                          <TableCell className="text-right px-4 py-2">
+                            <div className="flex justify-end gap-0.5">
                               <TooltipProvider>
                                 <Tooltip>
                                   <TooltipTrigger asChild>
@@ -795,96 +702,32 @@ export default function StationsPage() {
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 72, opacity: 0 }}
             transition={{ type: "spring", stiffness: 380, damping: 30 }}
+            className="fixed z-50 border border-border rounded-[10px] py-2.5 px-4 flex items-center gap-3.5 whitespace-nowrap"
             style={{
-              position: "fixed",
               bottom: 28,
               left: "50%",
               transform: "translateX(-50%)",
-              zIndex: 50,
               background: isDark ? "#0f172a" : "white",
-              border: "1px solid var(--color-border)",
-              borderRadius: 10,
-              padding: "10px 16px",
-              display: "flex",
-              alignItems: "center",
-              gap: 14,
               boxShadow:
                 "0 -4px 32px rgba(0,0,0,0.4), 0 0 0 1px rgba(59,130,246,0.1)",
-              whiteSpace: "nowrap",
             }}
           >
-            <span
-              style={{
-                fontFamily: "'JetBrains Mono', monospace",
-                fontSize: 11,
-                color: "var(--color-foreground)",
-                letterSpacing: "0.06em",
-              }}
-            >
+            <span className="font-mono text-[11px] text-foreground tracking-[0.06em]">
               {selectedIds.size} selected
             </span>
-            <div
-              style={{
-                width: 1,
-                height: 18,
-                background: "var(--color-border)",
-              }}
-            />
+            <div className="w-px h-4.5 bg-border" />
             <button
               onClick={() => setBulkDeleteOpen(true)}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 6,
-                background: "rgba(239,68,68,0.1)",
-                border: "1px solid rgba(239,68,68,0.25)",
-                borderRadius: 6,
-                padding: "5px 12px",
-                fontFamily: "'JetBrains Mono', monospace",
-                fontSize: 10.5,
-                fontWeight: 600,
-                color: "#ef4444",
-                letterSpacing: "0.1em",
-                cursor: "pointer",
-                transition: "background 0.12s ease",
-              }}
-              onMouseEnter={(e) =>
-                ((e.currentTarget as HTMLElement).style.background =
-                  "rgba(239,68,68,0.18)")
-              }
-              onMouseLeave={(e) =>
-                ((e.currentTarget as HTMLElement).style.background =
-                  "rgba(239,68,68,0.1)")
-              }
+              className="flex items-center gap-1.5 rounded-md py-1.25 px-3 font-mono text-[10.5px] font-semibold text-[#ef4444] tracking-widest cursor-pointer transition-[background] duration-[0.12s] border border-[rgba(239,68,68,0.25)] bg-[rgba(239,68,68,0.1)] hover:bg-[rgba(239,68,68,0.18)]"
             >
-              <Trash2 style={{ width: 11, height: 11 }} />
+              <Trash2 className="w-2.75 h-2.75" />
               Delete
             </button>
             <button
               onClick={() => setSelectedIds(new Set())}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                width: 26,
-                height: 26,
-                borderRadius: 6,
-                background: "transparent",
-                border: "1px solid var(--color-border)",
-                cursor: "pointer",
-                color: "var(--color-muted-foreground)",
-                transition: "background 0.12s ease",
-              }}
-              onMouseEnter={(e) =>
-                ((e.currentTarget as HTMLElement).style.background =
-                  "var(--color-accent)")
-              }
-              onMouseLeave={(e) =>
-                ((e.currentTarget as HTMLElement).style.background =
-                  "transparent")
-              }
+              className="flex items-center justify-center w-6.5 h-6.5 rounded-md border border-border cursor-pointer text-muted-foreground transition-[background] duration-[0.12s] bg-transparent hover:bg-accent"
             >
-              <X style={{ width: 12, height: 12 }} />
+              <X className="w-3 h-3" />
             </button>
           </motion.div>
         )}
@@ -894,25 +737,12 @@ export default function StationsPage() {
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle
-              style={{
-                fontFamily: "'Bebas Neue', sans-serif",
-                fontSize: 22,
-                letterSpacing: "0.06em",
-                fontWeight: 400,
-              }}
-            >
+            <DialogTitle className="font-display text-[22px] tracking-[0.06em] font-normal">
               {editingStation
                 ? t("stations.editStation")
                 : t("stations.addStation")}
             </DialogTitle>
-            <DialogDescription
-              style={{
-                fontFamily: "'JetBrains Mono', monospace",
-                fontSize: 10.5,
-                letterSpacing: "0.08em",
-              }}
-            >
+            <DialogDescription className="font-mono text-[10.5px] tracking-[0.08em]">
               {editingStation
                 ? "Update the station details below."
                 : "Fill in the details to create a new station."}

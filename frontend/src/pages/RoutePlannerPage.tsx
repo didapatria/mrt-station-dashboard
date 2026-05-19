@@ -31,7 +31,6 @@ const statusLED = (status: string) => {
   return { color: "#ef4444", shadow: "0 0 6px 2px rgba(239,68,68,0.4)" };
 };
 
-
 export default function RoutePlannerPage() {
   usePageMeta({ title: "Route Planner", path: "/route-planner" });
   const { t } = useTranslation();
@@ -55,70 +54,34 @@ export default function RoutePlannerPage() {
 
   return (
     <div>
-      <PageHeader title="ROUTE PLANNER" subtitle="Find available schedules between stations" />
+      <PageHeader
+        title="ROUTE PLANNER"
+        subtitle="Find available schedules between stations"
+      />
 
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
       >
         {/* Terminal-style form card */}
-        <div className="ops-card" style={{ marginBottom: 24 }}>
+        <div className="ops-card mb-6">
           <div className="ops-accent-line" />
           <div className="ops-card-header">
-            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-              <Train
-                size={14}
-                className="text-muted-foreground"
-              />
-              <p className="ops-card-title" style={{ margin: 0 }}>
-                PLAN YOUR ROUTE
-              </p>
+            <div className="flex items-center gap-2">
+              <Train size={14} className="text-muted-foreground" />
+              <p className="ops-card-title m-0">PLAN YOUR ROUTE</p>
             </div>
-            <p className="ops-card-subtitle" style={{ margin: "4px 0 0" }}>
+            <p className="ops-card-subtitle mt-1">
               Select origin and destination
             </p>
           </div>
 
-          <div
-            style={{
-              padding: "20px 24px",
-              background: "rgba(0,0,0,0.04)",
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "row" as const,
-                alignItems: "flex-end",
-                gap: 16,
-                flexWrap: "wrap" as const,
-              }}
-            >
+          <div className="p-[20px_24px] bg-black/4">
+            <div className="flex flex-row items-end gap-4 flex-wrap">
               {/* FROM */}
-              <div style={{ flex: 1, minWidth: 200 }}>
-                <div
-                  style={{
-                    fontFamily: "'JetBrains Mono', monospace",
-                    fontSize: 9.5,
-                    letterSpacing: "0.14em",
-                    textTransform: "uppercase" as const,
-                    color: "var(--color-muted-foreground)",
-                    marginBottom: 8,
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 6,
-                  }}
-                >
-                  <span
-                    style={{
-                      background: "rgba(29,111,232,0.12)",
-                      border: "1px solid rgba(29,111,232,0.2)",
-                      borderRadius: 3,
-                      padding: "1px 6px",
-                      color: "#60a5fa",
-                      fontSize: 9,
-                    }}
-                  >
+              <div className="flex-1 min-w-50">
+                <div className="font-mono text-[9.5px] tracking-[0.14em] uppercase text-muted-foreground mb-2 flex items-center gap-1.5">
+                  <span className="bg-[rgba(29,111,232,0.12)] border border-[rgba(29,111,232,0.2)] rounded-[3px] px-1.5 py-px text-[#60a5fa] text-[9px]">
                     FROM
                   </span>
                   {t("schedules.departureStation")}
@@ -138,68 +101,24 @@ export default function RoutePlannerPage() {
               </div>
 
               {/* Animated dotted connector */}
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  padding: "4px 0",
-                  paddingBottom: 10,
-                  flexShrink: 0,
-                }}
-              >
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    gap: 2,
-                  }}
-                >
+              <div className="flex items-center justify-center pt-1 pb-2.5 shrink-0">
+                <div className="flex flex-col items-center gap-0.5">
                   {Array.from({ length: 4 }).map((_, i) => (
                     <div
                       key={i}
-                      style={{
-                        width: 1,
-                        height: 4,
-                        background: "rgba(59,130,246,0.4)",
-                        borderRadius: 1,
-                      }}
+                      className="w-px h-1 bg-[rgba(59,130,246,0.4)] rounded-[1px]"
                     />
                   ))}
-                  <div
-                    style={{ color: "#3b82f6", fontSize: 10, lineHeight: 1 }}
-                  >
+                  <div className="text-[#3b82f6] text-[10px] leading-none">
                     ▼
                   </div>
                 </div>
               </div>
 
               {/* TO */}
-              <div style={{ flex: 1, minWidth: 200 }}>
-                <div
-                  style={{
-                    fontFamily: "'JetBrains Mono', monospace",
-                    fontSize: 9.5,
-                    letterSpacing: "0.14em",
-                    textTransform: "uppercase" as const,
-                    color: "var(--color-muted-foreground)",
-                    marginBottom: 8,
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 6,
-                  }}
-                >
-                  <span
-                    style={{
-                      background: "rgba(34,197,94,0.1)",
-                      border: "1px solid rgba(34,197,94,0.2)",
-                      borderRadius: 3,
-                      padding: "1px 6px",
-                      color: "#22c55e",
-                      fontSize: 9,
-                    }}
-                  >
+              <div className="flex-1 min-w-50">
+                <div className="font-mono text-[9.5px] tracking-[0.14em] uppercase text-muted-foreground mb-2 flex items-center gap-1.5">
+                  <span className="bg-[rgba(34,197,94,0.1)] border border-[rgba(34,197,94,0.2)] rounded-[3px] px-1.5 py-px text-[#22c55e] text-[9px]">
                     TO
                   </span>
                   {t("schedules.arrivalStation")}
@@ -221,69 +140,21 @@ export default function RoutePlannerPage() {
 
             {/* Route preview when both selected */}
             {fromStation && toStation && fromId !== toId && (
-              <div
-                style={{
-                  marginTop: 16,
-                  padding: "10px 16px",
-                  background: "rgba(29,111,232,0.06)",
-                  border: "1px solid rgba(29,111,232,0.15)",
-                  borderRadius: 8,
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 10,
-                }}
-              >
-                <span
-                  style={{
-                    fontFamily: "'Bebas Neue', sans-serif",
-                    fontSize: 14,
-                    letterSpacing: "0.1em",
-                    color: "#60a5fa",
-                  }}
-                >
+              <div className="mt-4 p-[10px_16px] bg-[rgba(29,111,232,0.06)] border border-[rgba(29,111,232,0.15)] rounded-lg flex items-center gap-2.5">
+                <span className="font-display text-[14px] tracking-widest text-[#60a5fa]">
                   {fromStation.code}
                 </span>
-                <span
-                  style={{
-                    fontFamily: "'JetBrains Mono', monospace",
-                    fontSize: 10,
-                    color: "var(--color-muted-foreground)",
-                  }}
-                >
+                <span className="font-mono text-[10px] text-muted-foreground">
                   ——————————————
                 </span>
-                <ArrowRight
-                  size={12}
-                  style={{ color: "var(--color-primary)" }}
-                />
-                <span
-                  style={{
-                    fontFamily: "'JetBrains Mono', monospace",
-                    fontSize: 10,
-                    color: "var(--color-muted-foreground)",
-                  }}
-                >
+                <ArrowRight size={12} className="text-primary" />
+                <span className="font-mono text-[10px] text-muted-foreground">
                   ——————————————
                 </span>
-                <span
-                  style={{
-                    fontFamily: "'Bebas Neue', sans-serif",
-                    fontSize: 14,
-                    letterSpacing: "0.1em",
-                    color: "#22c55e",
-                  }}
-                >
+                <span className="font-display text-[14px] tracking-widest text-[#22c55e]">
                   {toStation.code}
                 </span>
-                <span
-                  style={{
-                    marginLeft: "auto",
-                    fontFamily: "'JetBrains Mono', monospace",
-                    fontSize: 10,
-                    letterSpacing: "0.08em",
-                    color: "var(--color-muted-foreground)",
-                  }}
-                >
+                <span className="ml-auto font-mono text-[10px] tracking-[0.08em] text-muted-foreground">
                   {results.length} SCHEDULES
                 </span>
               </div>
@@ -296,85 +167,29 @@ export default function RoutePlannerPage() {
           <div className="ops-card">
             <div className="ops-accent-line" />
             <div className="ops-card-header">
-              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                <Clock
-                  size={14}
-                  className="text-muted-foreground"
-                />
-                <p
-                  className="ops-card-title"
-                  style={{ margin: 0, display: "flex", alignItems: "center", gap: 6 }}
-                >
+              <div className="flex items-center gap-2">
+                <Clock size={14} className="text-muted-foreground" />
+                <p className="ops-card-title m-0 flex items-center gap-1.5">
                   <span>{fromStation?.code}</span>
-                  <span
-                    style={{
-                      color: "#3b82f6",
-                      fontFamily: "'JetBrains Mono', monospace",
-                      fontSize: 13,
-                    }}
-                  >
+                  <span className="text-[#3b82f6] font-mono text-[13px]">
                     →
                   </span>
                   <span>{toStation?.code}</span>
                 </p>
-                <span
-                  style={{
-                    fontFamily: "'JetBrains Mono', monospace",
-                    fontSize: 10,
-                    letterSpacing: "0.08em",
-                    color: "var(--color-muted-foreground)",
-                    background: "var(--color-muted)",
-                    borderRadius: 4,
-                    padding: "2px 7px",
-                  }}
-                >
+                <span className="font-mono text-[10px] tracking-[0.08em] text-muted-foreground bg-muted rounded-lg px-1.75 py-0.5">
                   {results.length}
                 </span>
               </div>
-              <p className="ops-card-subtitle" style={{ margin: "4px 0 0" }}>
-                Direct schedule results
-              </p>
+              <p className="ops-card-subtitle mt-1">Direct schedule results</p>
             </div>
 
             {results.length === 0 ? (
-              <div
-                style={{
-                  padding: "60px 24px",
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  gap: 10,
-                }}
-              >
-                <Clock
-                  size={32}
-                  style={{
-                    color: "var(--color-muted-foreground)",
-                    opacity: 0.4,
-                  }}
-                />
-                <p
-                  style={{
-                    fontFamily: "'Bebas Neue', sans-serif",
-                    fontSize: 22,
-                    letterSpacing: "0.08em",
-                    color: "var(--color-muted-foreground)",
-                    margin: 0,
-                  }}
-                >
+              <div className="p-[60px_24px] flex flex-col items-center gap-2.5">
+                <Clock size={32} className="text-muted-foreground opacity-40" />
+                <p className="font-display text-[22px] tracking-[0.08em] text-muted-foreground m-0">
                   NO ROUTES FOUND
                 </p>
-                <p
-                  style={{
-                    fontFamily: "'JetBrains Mono', monospace",
-                    fontSize: 10,
-                    letterSpacing: "0.1em",
-                    color: "var(--color-muted-foreground)",
-                    textTransform: "uppercase",
-                    margin: 0,
-                    textAlign: "center",
-                  }}
-                >
+                <p className="font-mono text-[10px] tracking-widest text-muted-foreground uppercase m-0 text-center">
                   No direct schedules from {fromStation?.name} to{" "}
                   {toStation?.name}
                 </p>
@@ -382,7 +197,7 @@ export default function RoutePlannerPage() {
             ) : (
               <Table>
                 <TableHeader>
-                  <TableRow style={{ background: "var(--color-muted)" }}>
+                  <TableRow className="bg-muted">
                     <TableHead className="ops-table-head">
                       {t("schedules.trainNumber")}
                     </TableHead>
@@ -412,29 +227,15 @@ export default function RoutePlannerPage() {
                       const led = statusLED(s.status);
                       return (
                         <TableRow key={s.id}>
-                          <TableCell
-                            style={{
-                              fontFamily: "'JetBrains Mono', monospace",
-                              fontSize: 12,
-                              fontWeight: 600,
-                            }}
-                          >
+                          <TableCell className="ops-mono-data text-[12px] font-semibold">
                             {s.trainNumber}
                           </TableCell>
                           <TableCell>
-                            <div
-                              style={{ display: "flex", alignItems: "center" }}
-                            >
+                            <div className="flex items-center">
                               <span className="ops-station-ref">
                                 {fromStation?.name}
                               </span>
-                              <span
-                                style={{
-                                  color: "#3b82f6",
-                                  margin: "0 6px",
-                                  fontFamily: "'JetBrains Mono', monospace",
-                                }}
-                              >
+                              <span className="text-[#3b82f6] mx-1.5 font-mono">
                                 →
                               </span>
                               <span className="ops-station-ref">
@@ -452,30 +253,15 @@ export default function RoutePlannerPage() {
                             <Badge variant="secondary">{s.dayType}</Badge>
                           </TableCell>
                           <TableCell>
-                            <div
-                              style={{
-                                display: "flex",
-                                alignItems: "center",
-                                gap: 6,
-                              }}
-                            >
+                            <div className="flex items-center gap-1.5">
                               <div
+                                className="w-1.75 h-1.75 rounded-full shrink-0"
                                 style={{
-                                  width: 7,
-                                  height: 7,
-                                  borderRadius: "50%",
                                   background: led.color,
                                   boxShadow: led.shadow,
-                                  flexShrink: 0,
                                 }}
                               />
-                              <span
-                                style={{
-                                  fontFamily: "'JetBrains Mono', monospace",
-                                  fontSize: 10,
-                                  letterSpacing: "0.08em",
-                                }}
-                              >
+                              <span className="ops-mono-data text-[10px] tracking-[0.08em]">
                                 {s.status}
                               </span>
                             </div>

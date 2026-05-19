@@ -17,12 +17,8 @@ import { cn } from "@/lib/utils";
 function SkeletonBase({ className, style }: { className?: string; style?: React.CSSProperties }) {
   return (
     <div
-      className={cn("skeleton-shimmer", className)}
-      style={{
-        background: "var(--color-muted)",
-        borderRadius: 6,
-        ...style,
-      }}
+      className={cn("skeleton-shimmer bg-muted rounded-[6px]", className)}
+      style={style}
     />
   );
 }
@@ -54,7 +50,8 @@ export function SkeletonText({
 export function SkeletonAvatar({ size = 36 }: { size?: number }) {
   return (
     <SkeletonBase
-      style={{ width: size, height: size, borderRadius: "50%", flexShrink: 0 }}
+      className="rounded-full shrink-0"
+      style={{ width: size, height: size }}
     />
   );
 }
@@ -64,10 +61,10 @@ export function SkeletonAvatar({ size = 36 }: { size?: number }) {
 /** Dashboard stat card (number + label + icon) */
 export function SkeletonStatCard() {
   return (
-    <div className="skeleton-card" style={{ padding: "20px 24px" }}>
+    <div className="skeleton-card p-[20px_24px]">
       <SkeletonBase style={{ height: 2, marginBottom: 20, borderRadius: 0 }} />
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
-        <div style={{ flex: 1 }}>
+      <div className="flex justify-between items-start">
+        <div className="flex-1">
           <SkeletonBase style={{ height: 9, width: 80, marginBottom: 10 }} />
           <SkeletonBase style={{ height: 36, width: 64, marginBottom: 8 }} />
           <SkeletonBase style={{ height: 9, width: 100 }} />
@@ -82,17 +79,17 @@ export function SkeletonStatCard() {
 export function SkeletonRow({ columns = 5 }: { columns?: number }) {
   return (
     <tr>
-      <td style={{ padding: "12px 16px" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+      <td className="p-3 px-4">
+        <div className="flex items-center gap-2.5">
           <SkeletonAvatar size={32} />
-          <div style={{ flex: 1 }}>
+          <div className="flex-1">
             <SkeletonBase style={{ height: 11, width: 120, marginBottom: 5 }} />
             <SkeletonBase style={{ height: 9, width: 80 }} />
           </div>
         </div>
       </td>
       {Array.from({ length: columns - 1 }).map((_, i) => (
-        <td key={i} style={{ padding: "12px 16px" }}>
+        <td key={i} className="p-3 px-4">
           <SkeletonBase style={{ height: 11, width: i === 0 ? 90 : 60 }} />
         </td>
       ))}
@@ -105,30 +102,24 @@ export function SkeletonCard({ rows = 3 }: { rows?: number }) {
   return (
     <div className="skeleton-card">
       <SkeletonBase style={{ height: 2, borderRadius: 0 }} />
-      <div
-        className="skeleton-header"
-        style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}
-      >
+      <div className="skeleton-header flex justify-between items-center">
         <div>
           <SkeletonBase style={{ height: 16, width: 120, marginBottom: 6 }} />
           <SkeletonBase style={{ height: 9, width: 80 }} />
         </div>
         <SkeletonBase style={{ height: 28, width: 72, borderRadius: 6 }} />
       </div>
-      <div style={{ padding: "8px 0" }}>
+      <div className="py-2">
         {Array.from({ length: rows }).map((_, i) => (
           <div
             key={i}
+            className="flex items-center gap-3 p-[10px_24px]"
             style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 12,
-              padding: "10px 24px",
               borderBottom: i < rows - 1 ? "1px solid var(--color-border)" : "none",
             }}
           >
             <SkeletonBase style={{ width: 32, height: 32, borderRadius: 8 }} />
-            <div style={{ flex: 1 }}>
+            <div className="flex-1">
               <SkeletonBase style={{ height: 10, width: "60%", marginBottom: 5 }} />
               <SkeletonBase style={{ height: 9, width: "40%" }} />
             </div>
@@ -144,11 +135,11 @@ export function SkeletonCard({ rows = 3 }: { rows?: number }) {
 export function SkeletonTable({ rows = 6, columns = 5 }: { rows?: number; columns?: number }) {
   return (
     <div className="skeleton-card">
-      <table style={{ width: "100%", borderCollapse: "collapse" }}>
+      <table className="w-full border-collapse">
         <thead>
-          <tr style={{ borderBottom: "1px solid var(--color-border)" }}>
+          <tr className="border-b border-border">
             {Array.from({ length: columns }).map((_, i) => (
-              <th key={i} style={{ padding: "12px 16px", textAlign: "left" }}>
+              <th key={i} className="p-3 px-4 text-left">
                 <SkeletonBase style={{ height: 9, width: i === 0 ? 80 : 50 }} />
               </th>
             ))}
@@ -167,16 +158,9 @@ export function SkeletonTable({ rows = 6, columns = 5 }: { rows?: number; column
 /** Profile section skeleton */
 export function SkeletonProfile() {
   return (
-    <div
-      style={{
-        display: "flex",
-        alignItems: "center",
-        gap: 16,
-        padding: "20px 24px",
-      }}
-    >
+    <div className="flex items-center gap-4 p-[20px_24px]">
       <SkeletonAvatar size={64} />
-      <div style={{ flex: 1 }}>
+      <div className="flex-1">
         <SkeletonBase style={{ height: 22, width: 160, marginBottom: 8 }} />
         <SkeletonBase style={{ height: 10, width: 100, marginBottom: 6 }} />
         <SkeletonBase style={{ height: 18, width: 70, borderRadius: 4 }} />
