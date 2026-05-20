@@ -10,7 +10,7 @@ const MRT_STATIONS = [
   "Fatmawati Indomaret",
   "Cipete Raya TUKU",
   "Haji Nawi",
-  "Blok A Visa",
+  "Blok A",
   "Blok M BCA",
   "ASEAN Headquarters",
   "Senayan Mastercard",
