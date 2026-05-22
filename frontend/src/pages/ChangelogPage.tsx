@@ -587,7 +587,7 @@ export default function ChangelogPage() {
 
       <div className="relative">
         {/* Timeline vertical line */}
-        <div className="absolute left-3 top-6 bottom-6 w-px bg-gradient-to-b from-primary/30 via-border/50 to-transparent pointer-events-none" />
+        <div className="absolute left-3 top-6 bottom-6 w-px bg-linear-to-b from-primary/30 via-border/50 to-transparent pointer-events-none" />
 
         <motion.div
           initial="hidden"
@@ -615,10 +615,11 @@ export default function ChangelogPage() {
               >
                 {/* Timeline dot */}
                 <div
-                  className="absolute left-1 top-[1.125rem] w-4 h-4 rounded-full border-2 bg-background flex items-center justify-center"
+                  className="absolute left-1 top-4.5 w-4 h-4 rounded-full border-2 bg-background flex items-center justify-center"
                   style={{
                     borderColor: `${accentColor}80`,
-                    boxShadow: i === 0 ? `0 0 10px ${accentColor}60` : undefined,
+                    boxShadow:
+                      i === 0 ? `0 0 10px ${accentColor}60` : undefined,
                   }}
                 >
                   <div
@@ -639,7 +640,9 @@ export default function ChangelogPage() {
                   {/* Card Header */}
                   <div className="ops-card-header flex items-center justify-between flex-wrap gap-2">
                     <div className="flex items-center gap-3">
-                      <span className="changelog-version">v{release.version}</span>
+                      <span className="changelog-version">
+                        v{release.version}
+                      </span>
                       <span className="changelog-date">{release.date}</span>
                       {i === 0 && (
                         <span className="ops-badge-latest">LATEST</span>
