@@ -7,7 +7,7 @@
   <a href="https://didapatria.github.io/mrt-station-dashboard/">
     <img src="https://img.shields.io/badge/E2E%20Report-GitHub%20Pages-0969da?logo=github&logoColor=white" alt="E2E Report" />
   </a>
-  <img src="https://img.shields.io/badge/version-2.14.0-blue" />
+  <img src="https://img.shields.io/badge/version-2.15.0-blue" />
 </p>
 
 <p align="left">
@@ -41,6 +41,20 @@ Full-stack web application for managing MRT Jakarta stations and train schedules
 - 🧪 112 E2E Playwright tests — screenshots on every test, report on [GitHub Pages](https://didapatria.github.io/mrt-station-dashboard/)
 - 📦 Dockerized with GitHub Actions CI/CD (lint, typecheck, unit, E2E, deploy)
 - 🌐 Internationalization (EN/ID) + PWA + Real-time SSE notifications
+
+## What's New in v2.15.0
+
+| Area | Change |
+|------|--------|
+| **Public API** | `GET /api/public/stations` — no auth, `Cache-Control: public, max-age=300`, full Swagger docs |
+| **AuthLayout** | Live DB station data via `usePublicStations` hook — replaced hardcoded `ROUTE_STATIONS` array |
+| **Axios** | Interceptor skips 401 redirect when already on `/login` or `/register` — fixes infinite reload loop |
+| **Playwright CI** | `reducedMotion: "reduce"` context + `waitForSelector` before `fill` — eliminates animation race conditions |
+| **CI Artifacts** | `test-results` artifact (traces + videos, 7-day retention) + E2E job summary to `$GITHUB_STEP_SUMMARY` |
+| **Swagger** | `PublicStation` schema + `Public` tag added; version bumped to `2.15.0` |
+| **Changelog** | Timeline redesign — vertical border-l layout, `CategoryBadge`, `ReleaseSummary`, structured entries for v2.14.0+ |
+| **Docker** | Frontend healthcheck added; port mapping corrected (`80:3000`); `start_period` on backend |
+| **Logging** | Morgan uses `combined` format in production, `dev` in development |
 
 ## Tech Stack
 
