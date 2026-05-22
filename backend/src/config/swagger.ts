@@ -129,6 +129,20 @@ const options: swaggerJsdoc.Options = {
             totalUsers: { type: "integer" },
           },
         },
+        PublicStation: {
+          type: "object",
+          description: "Lightweight station data for public/unauthenticated use",
+          properties: {
+            id: { type: "string", format: "uuid" },
+            name: {
+              type: "string",
+              example: "Lebak Bulus Bank Syariah Indonesia",
+            },
+            code: { type: "string", example: "LBB" },
+            order: { type: "integer", example: 1 },
+            status: { type: "string", enum: ["ACTIVE"], example: "ACTIVE" },
+          },
+        },
         ApiResponse: {
           type: "object",
           properties: {

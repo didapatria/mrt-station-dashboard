@@ -185,8 +185,8 @@ React Page → TanStack Query Hook → API Service (axios) → Express Route →
 ### Option 1: Docker (Recommended)
 
 ```bash
-# Start all services
-docker-compose up -d
+# Start all services (postgres + backend + frontend)
+npm run docker:up
 
 # Run database migrations
 docker exec mrt-backend npx prisma migrate deploy --schema=prisma/schema.prisma
@@ -195,6 +195,9 @@ docker exec mrt-backend npx prisma migrate deploy --schema=prisma/schema.prisma
 docker exec mrt-backend node dist/prisma/seed.js
 
 # Open http://localhost
+
+# Stop all services
+npm run docker:down
 ```
 
 ### Option 2: Local Development
@@ -288,6 +291,11 @@ Operator: operator@mrtjakarta.co.id / operator123
 | GET | `/api/export/stations` | Export stations as CSV |
 | GET | `/api/export/schedules` | Export schedules as CSV |
 
+### Public (No Auth Required)
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/public/stations` | Active stations for route diagram — id, name, code, order, status only. `Cache-Control: public, max-age=300`. Safe to call from unauthenticated pages. |
+
 ### Documentation
 | URL | Description |
 |-----|-------------|
@@ -296,9 +304,11 @@ Operator: operator@mrtjakarta.co.id / operator123
 
 ## UI Screenshots
 
-Every Playwright test captures a screenshot (`screenshot: "on"`). After each CI run, the full HTML report — including all screenshots for every passing and failing test — is automatically deployed to **[GitHub Pages](https://didapatria.github.io/mrt-station-dashboard/)**.
+After every CI run the full Playwright HTML report is deployed to **[GitHub Pages](https://didapatria.github.io/mrt-station-dashboard/)**. The `ui-screenshots.spec.ts` suite captures full-page PNGs of all 13 pages; they appear inside the HTML report under that spec.
 
-Browse the report to see live UI screenshots of every page in the application.
+On test failure, screenshots and video traces are captured automatically (`screenshot: "only-on-failure"`, `video: "retain-on-failure"`, `trace: "retain-on-failure"`) and uploaded as GitHub Actions artifacts:
+- **`playwright-report`** — full HTML report (retained 30 days)
+- **`test-results`** — failure traces and videos (retained 7 days)
 
 ## E2E Testing (Playwright)
 
@@ -334,7 +344,17 @@ npx playwright test --debug
 
 # Show HTML report from last run
 npm run e2e:report
+
+# CI mode (list + HTML reporters, matches GitHub Actions output)
+npm run playwright:ci
 ```
+
+### CI Troubleshooting
+
+- **Login timeout in CI** — global-setup uses `waitForSelector("form")` + `waitForSelector("#email")` to wait for React hydration and Suspense resolution before touching inputs. Browser context has `reducedMotion: "reduce"` to avoid animation races.
+- **Never use `waitForLoadState("networkidle")`** — the SSE notification stream keeps connections open indefinitely, so `networkidle` never fires.
+- **Vite compilation lag** — CI waits 8s after Vite HTTP health check passes to allow initial ESM bundle compilation.
+- **Artifacts on failure** — screenshots/traces in the `test-results` artifact; global-setup failures save to `playwright-report/screenshots/global-setup-failure-<ts>.png`.
 
 ### Test Coverage (112 tests)
 | Spec File | Tests | What's Tested |
@@ -449,10 +469,11 @@ Or connect GitHub repo in [vercel.com](https://vercel.com) dashboard:
 
 ### CI/CD
 GitHub Actions runs on every push to `main`:
-- Frontend: lint, type check, unit tests (Vitest + RTL), build
-- Backend: unit tests (Supertest), build
-- E2E: Playwright (112 tests across 21 spec files, `screenshot: "on"` + `video: "retain-on-failure"`) against local services + postgres — HTML report with screenshots deployed to **[GitHub Pages](https://didapatria.github.io/mrt-station-dashboard/)**
-- Docker: `docker compose build` validation
+- **Frontend:** lint → type check → Vitest unit tests → build
+- **Backend:** Supertest unit tests → build
+- **E2E:** Playwright (112 tests, 21 spec files) against live services + postgres — `screenshot: "only-on-failure"`, `video: "retain-on-failure"`, `trace: "retain-on-failure"`. Artifacts: `playwright-report` (30 days) + `test-results` (7 days). HTML report deployed to **[GitHub Pages](https://didapatria.github.io/mrt-station-dashboard/)**.
+- **Deploy (main only):** Backend → Fly.io (after `flyctl auth whoami` token check), Frontend → Vercel
+- **Docker:** `docker compose build` validation
 
 ## License
 
