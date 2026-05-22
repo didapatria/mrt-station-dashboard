@@ -203,6 +203,11 @@ jobs:
 
       - uses: superfly/flyctl-actions/setup-flyctl@master
 
+      - name: Verify Fly Auth
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+        run: flyctl auth whoami
+
       - name: Deploy to Fly.io
         working-directory: backend
         env:
