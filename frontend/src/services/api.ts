@@ -18,7 +18,10 @@ api.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401) {
       const isAuthEndpoint = error.config?.url?.startsWith("/auth/");
-      if (!isAuthEndpoint) {
+      const isOnAuthPage = ["/login", "/register"].includes(
+        window.location.pathname,
+      );
+      if (!isAuthEndpoint && !isOnAuthPage) {
         localStorage.removeItem("token");
         localStorage.removeItem("user");
         window.location.href = "/login";
