@@ -1,4 +1,6 @@
 import { chromium, FullConfig, expect } from "@playwright/test";
+import fs from "fs";
+import path from "path";
 
 const ADMIN_EMAIL = "admin@mrtjakarta.co.id";
 const ADMIN_PASSWORD = "admin123";
@@ -17,47 +19,69 @@ async function loginAndSave(
   });
   const page = await context.newPage();
 
-  await page.goto(`${baseURL}/login`, { waitUntil: "domcontentloaded" });
+  page.on("console", (msg) => {
+    if (msg.type() === "error") console.error(`[browser] ${msg.text()}`);
+  });
+  page.on("pageerror", (err) => console.error(`[pageerror] ${err.message}`));
 
-  // Wait for the submit button as a reliable page-ready marker
-  await page
-    .getByRole("button", { name: /access system/i })
-    .waitFor({ state: "visible", timeout: 15000 });
+  try {
+    await page.goto(`${baseURL}/login`, { waitUntil: "domcontentloaded" });
 
-  const emailInput = page.locator("#email");
-  const passwordInput = page.locator("#password");
+    // Wait for React to mount and Suspense (lazy LoginPage) to resolve
+    await page.waitForSelector("form", { state: "visible", timeout: 30000 });
+    await page.waitForSelector("#email", { state: "visible", timeout: 30000 });
 
-  await expect(emailInput).toBeEditable({ timeout: 10000 });
-  await emailInput.click();
-  await emailInput.fill(email);
+    const emailInput = page.locator("#email");
+    const passwordInput = page.locator("#password");
 
-  await expect(passwordInput).toBeEditable({ timeout: 10000 });
-  await passwordInput.click();
-  await passwordInput.fill(password);
+    await expect(emailInput).toBeEditable({ timeout: 10000 });
+    await emailInput.click();
+    await emailInput.fill(email);
 
-  await page.getByRole("button", { name: /access system/i }).click();
-  await page.waitForURL(/dashboard/, { timeout: 30000 });
-  // Wait for permissions to be persisted to localStorage (non-empty array)
-  // so storageState won't trigger a fresh fetch on every test load
-  await page
-    .waitForFunction(
-      () => {
-        const p = localStorage.getItem("permissions");
-        if (!p) return false;
-        try {
-          return JSON.parse(p).length > 0;
-        } catch {
-          return false;
-        }
-      },
-      { timeout: 8000 },
-    )
-    .catch(async () => {
-      await page.waitForTimeout(2000);
-    });
+    await expect(passwordInput).toBeEditable({ timeout: 10000 });
+    await passwordInput.click();
+    await passwordInput.fill(password);
 
-  await context.storageState({ path: storagePath });
-  await browser.close();
+    await page.getByRole("button", { name: /access system/i }).click();
+    await page.waitForURL(/dashboard/, { timeout: 30000 });
+
+    // Wait for permissions to be persisted to localStorage (non-empty array)
+    // so storageState won't trigger a fresh fetch on every test load
+    await page
+      .waitForFunction(
+        () => {
+          const p = localStorage.getItem("permissions");
+          if (!p) return false;
+          try {
+            return JSON.parse(p).length > 0;
+          } catch {
+            return false;
+          }
+        },
+        { timeout: 8000 },
+      )
+      .catch(async () => {
+        await page.waitForTimeout(2000);
+      });
+
+    await context.storageState({ path: storagePath });
+  } catch (err) {
+    const screenshotDir = path.join(
+      process.cwd(),
+      "playwright-report",
+      "screenshots",
+    );
+    fs.mkdirSync(screenshotDir, { recursive: true });
+    await page
+      .screenshot({
+        path: path.join(screenshotDir, `global-setup-failure-${Date.now()}.png`),
+        fullPage: true,
+      })
+      .catch(() => {});
+    throw err;
+  } finally {
+    await browser.close();
+  }
 }
 
 async function globalSetup(config: FullConfig) {
