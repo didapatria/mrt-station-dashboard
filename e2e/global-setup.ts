@@ -1,4 +1,4 @@
-import { chromium, FullConfig } from "@playwright/test";
+import { chromium, FullConfig, expect } from "@playwright/test";
 
 const ADMIN_EMAIL = "admin@mrtjakarta.co.id";
 const ADMIN_PASSWORD = "admin123";
@@ -12,14 +12,30 @@ async function loginAndSave(
   baseURL: string,
 ) {
   const browser = await chromium.launch();
-  const context = await browser.newContext();
+  const context = await browser.newContext({
+    reducedMotion: "reduce",
+  });
   const page = await context.newPage();
 
-  await page.goto(`${baseURL}/login`);
-  await page.waitForLoadState("domcontentloaded");
-  await page.locator("#email").fill(email);
-  await page.locator("#password").fill(password);
-  await page.click("button[type='submit']");
+  await page.goto(`${baseURL}/login`, { waitUntil: "domcontentloaded" });
+
+  // Wait for the submit button as a reliable page-ready marker
+  await page
+    .getByRole("button", { name: /access system/i })
+    .waitFor({ state: "visible", timeout: 15000 });
+
+  const emailInput = page.locator("#email");
+  const passwordInput = page.locator("#password");
+
+  await expect(emailInput).toBeEditable({ timeout: 10000 });
+  await emailInput.click();
+  await emailInput.fill(email);
+
+  await expect(passwordInput).toBeEditable({ timeout: 10000 });
+  await passwordInput.click();
+  await passwordInput.fill(password);
+
+  await page.getByRole("button", { name: /access system/i }).click();
   await page.waitForURL(/dashboard/, { timeout: 30000 });
   // Wait for permissions to be persisted to localStorage (non-empty array)
   // so storageState won't trigger a fresh fetch on every test load
