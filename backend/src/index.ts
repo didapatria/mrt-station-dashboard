@@ -24,6 +24,7 @@ dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const isDev = process.env.NODE_ENV !== "production";
 
 // Middlewares
 app.use(helmet({ contentSecurityPolicy: false }));
@@ -35,11 +36,10 @@ app.use(
     credentials: true,
   }),
 );
-app.use(morgan("dev"));
+app.use(morgan(isDev ? "dev" : "combined"));
 app.use(express.json());
 
 // Rate limiting
-const isDev = process.env.NODE_ENV !== "production";
 const apiLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   limit: isDev ? 1000 : 100,
