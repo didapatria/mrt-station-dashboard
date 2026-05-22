@@ -140,6 +140,45 @@ React Page → TanStack Query Hook → API Service (axios) → Express Route →
 - E2E: use `navigateTo(page, "/path")` for SPA navigation (sidebar link clicks)
 - E2E: never use `waitForLoadState("networkidle")` — SSE connections prevent it
 
+## Public API Pattern
+
+`GET /api/public/stations` — no auth required, returns `{id, name, code, order, status}` for ACTIVE stations ordered by `order asc`. `Cache-Control: public, max-age=300`.
+
+Frontend consumes via a dedicated `publicApi` axios instance (no auth interceptor) in `frontend/src/services/public.service.ts`. Hook: `usePublicStations()` in `use-stations.ts` — `staleTime: 10min`, `retry: false`.
+
+**Rule:** Never call a protected endpoint from `AuthLayout` or any public route. `AuthLayout` only renders for unauthenticated users (redirects on token). Use `publicApi` client for any data needed on login/register pages.
+
+## Axios Interceptor Rules
+
+`frontend/src/services/api.ts` response interceptor:
+- On 401: remove `token`/`user` from localStorage and redirect to `/login`
+- **Exception:** skip redirect if `error.config.url` starts with `/auth/` OR `window.location.pathname` is `/login` or `/register` — prevents infinite reload loops when unauthenticated requests fire on public routes
+
+## Static Fallback Pattern
+
+If a page or layout needs data from a protected endpoint but may render without auth, use a static fallback rather than making the protected call. Example: `AuthLayout` uses a static station list when no public endpoint exists. Only replace with live data if a genuinely public endpoint is available.
+
+## QueryClient Defaults
+
+Defined in `App.tsx`:
+```ts
+{ staleTime: 1000 * 60 * 5, retry: 1, refetchOnWindowFocus: false }
+```
+Auth-sensitive queries (`usePublicStations`) override with `retry: false` to avoid 401 spam.
+
+## E2E Auth Stability (Playwright)
+
+`e2e/global-setup.ts` login pattern:
+1. `page.goto("/login", { waitUntil: "domcontentloaded" })` — never `networkidle` (SSE blocks it)
+2. `page.waitForSelector("form", { state: "visible", timeout: 30000 })` — waits for React mount + Suspense resolution
+3. `page.waitForSelector("#email", { state: "visible", timeout: 30000 })` — waits for specific input in DOM
+4. `expect(input).toBeEditable()` → `click()` → `fill()` — avoids animation race conditions
+5. Browser context uses `reducedMotion: "reduce"` — disables CSS transitions in headless Chromium
+
+On failure: screenshot saved to `playwright-report/screenshots/global-setup-failure-<ts>.png`.
+
+CI wait step adds `sleep 8` after Vite HTTP health check to allow initial ESM bundle compilation.
+
 <!-- rtk-instructions v2 -->
 # RTK (Rust Token Killer) - Token-Optimized Commands
 

@@ -8,6 +8,9 @@
     "e2e": "npx playwright test",
     "e2e:ui": "npx playwright test --ui",
     "e2e:headed": "npx playwright test --headed",
-    "e2e:report": "npx playwright show-report"
+    "e2e:report": "npx playwright show-report",
+    "playwright:ci": "npx playwright test --reporter=list,html",
+    "docker:up": "docker compose up -d",
+    "docker:down": "docker compose down"
   }
 }
