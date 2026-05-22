@@ -3,7 +3,127 @@ import { GitCommit } from "lucide-react";
 import { usePageMeta } from "@/hooks/use-page-meta";
 import { PageHeader } from "@/components/PageHeader";
 
-const changelog = [
+type ChangeCategory = "feat" | "fix" | "ci" | "refactor" | "docs" | "chore";
+
+interface ChangeEntry {
+  category: ChangeCategory;
+  text: string;
+}
+
+interface StructuredRelease {
+  version: string;
+  date: string;
+  commits: string[];
+  entries: ChangeEntry[];
+}
+
+interface LegacyRelease {
+  version: string;
+  date: string;
+  commits: string[];
+  items: string[];
+}
+
+type Release = StructuredRelease | LegacyRelease;
+
+function isStructured(r: Release): r is StructuredRelease {
+  return "entries" in r;
+}
+
+const CATEGORY_META: Record<ChangeCategory, { label: string; color: string }> =
+  {
+    feat: { label: "feat", color: "#3b82f6" },
+    fix: { label: "fix", color: "#f97316" },
+    ci: { label: "ci", color: "#a855f7" },
+    refactor: { label: "refactor", color: "#eab308" },
+    docs: { label: "docs", color: "#22c55e" },
+    chore: { label: "chore", color: "#6b7280" },
+  };
+
+const CATEGORY_ORDER: ChangeCategory[] = [
+  "feat",
+  "fix",
+  "ci",
+  "refactor",
+  "docs",
+  "chore",
+];
+
+const changelog: Release[] = [
+  {
+    version: "2.15.0",
+    date: "22 May 2026",
+    commits: [
+      "c047ff9",
+      "6177370",
+      "bde4995",
+      "50d42ac",
+      "6141961",
+      "7c05bc5",
+      "e5850d1",
+      "3d13c91",
+      "c17e842",
+      "931eebf",
+    ],
+    entries: [
+      {
+        category: "feat",
+        text: "Public /api/public/stations endpoint — no auth, Cache-Control 5min, full Swagger documentation",
+      },
+      {
+        category: "feat",
+        text: "AuthLayout live station data — usePublicStations hook replaces hardcoded ROUTE_STATIONS array",
+      },
+      {
+        category: "feat",
+        text: "publicApi axios instance — dedicated client without auth interceptor for public routes",
+      },
+      {
+        category: "fix",
+        text: "Axios 401 redirect loop — interceptor skips redirect when already on /login or /register",
+      },
+      {
+        category: "fix",
+        text: "Playwright global-setup race — reducedMotion context eliminates Framer Motion timing issues in CI",
+      },
+      {
+        category: "fix",
+        text: "MRT favicon and icon colors — correct inline SVG for all display contexts",
+      },
+      {
+        category: "fix",
+        text: "Station name correction — 'Blok A Visa' renamed to 'Blok A'",
+      },
+      {
+        category: "ci",
+        text: "Fly.io auth verify — flyctl auth whoami step before deploy for early token detection",
+      },
+      {
+        category: "ci",
+        text: "Vite compilation buffer — sleep 8 after health check ensures ESM bundle ready in CI",
+      },
+      {
+        category: "ci",
+        text: "test-results artifact — Playwright traces and videos uploaded with 7-day retention",
+      },
+      {
+        category: "ci",
+        text: "E2E job summary — test results and artifact links written to $GITHUB_STEP_SUMMARY",
+      },
+      {
+        category: "docs",
+        text: "Swagger PublicStation schema + Public tag — v2.15.0 with full JSDoc annotations on new endpoint",
+      },
+      {
+        category: "docs",
+        text: "CLAUDE.md + README — Public API pattern, axios interceptor rules, CI troubleshooting, E2E auth stability",
+      },
+      {
+        category: "chore",
+        text: "Root package.json — playwright:ci, docker:up, docker:down scripts + version bump to v2.15.0",
+      },
+    ],
+  },
   {
     version: "2.14.0",
     date: "19 May 2026",
@@ -41,25 +161,79 @@ const changelog = [
       "fcc11af",
       "0539b1a",
     ],
-    items: [
-      "Avatar upload — ProfilePage file picker with 2MB validation, preview, and PATCH /auth/avatar backend endpoint",
-      "AnimatePresence page transitions — exit animation on route change with motion variants library",
-      "Stagger animation on changelog cards — sequential fade-in with framer-motion staggerChildren",
-      "Design system motion variants + design tokens — reusable animation presets across all pages",
-      "usePageMeta hook — dynamic <title>, Open Graph, and Twitter card per route",
-      "SEO meta tags wired to all 12 pages — canonical URL, OG image, description per page",
-      "Open Graph + Twitter card in index.html — og:title, og:image, twitter:card for social sharing",
-      "Skeleton component system — SkeletonStatCard, SkeletonTable, SkeletonCard, SkeletonProfile, SkeletonText, SkeletonAvatar",
-      "Skeleton shimmer keyframe + prefers-reduced-motion override in index.css",
-      "Design system utilities + new Shadcn components (Badge, Separator, Tooltip, ToggleGroup)",
-      "Auth left panel light/dark mode — theme-aware color palette for both modes",
-      "Permissions empty state onboarding guidance — contextual message when no permissions assigned",
-      "9 UI/UX fixes — RoutePlanner station order, ActivityLog timeline, DashboardPage stat card layout",
-      "SettingsPage mobile 1-column layout + UsersPage avatar image display",
-      "Backend: sync model_has_roles on role change and user creation (Spatie RBAC consistency)",
-      "Tailwind inline style refactor — replaced static inline styles with utility classes across all 14 pages, AuthLayout, DashboardLayout, and Skeleton component",
-      "E2E station tests refactored — clearer selectors, precise assertions, split into focused per-action specs (112 tests total)",
-      "CI: cancel in-progress runs on new push to same branch (GitHub Actions concurrency)",
+    entries: [
+      {
+        category: "feat",
+        text: "Avatar upload — ProfilePage file picker with 2MB validation, preview, and PATCH /auth/avatar backend endpoint",
+      },
+      {
+        category: "feat",
+        text: "AnimatePresence page transitions — exit animation on route change with motion variants library",
+      },
+      {
+        category: "feat",
+        text: "Stagger animation on changelog cards — sequential fade-in with framer-motion staggerChildren",
+      },
+      {
+        category: "feat",
+        text: "Design system motion variants + design tokens — reusable animation presets across all pages",
+      },
+      {
+        category: "feat",
+        text: "usePageMeta hook — dynamic <title>, Open Graph, and Twitter card per route",
+      },
+      {
+        category: "feat",
+        text: "SEO meta tags wired to all 12 pages — canonical URL, OG image, description per page",
+      },
+      {
+        category: "feat",
+        text: "Open Graph + Twitter card in index.html — og:title, og:image, twitter:card for social sharing",
+      },
+      {
+        category: "feat",
+        text: "Skeleton component system — SkeletonStatCard, SkeletonTable, SkeletonCard, SkeletonProfile, SkeletonText, SkeletonAvatar",
+      },
+      {
+        category: "feat",
+        text: "Skeleton shimmer keyframe + prefers-reduced-motion override in index.css",
+      },
+      {
+        category: "feat",
+        text: "Design system utilities + new Shadcn components (Badge, Separator, Tooltip, ToggleGroup)",
+      },
+      {
+        category: "feat",
+        text: "Auth left panel light/dark mode — theme-aware color palette for both modes",
+      },
+      {
+        category: "feat",
+        text: "Permissions empty state onboarding guidance — contextual message when no permissions assigned",
+      },
+      {
+        category: "fix",
+        text: "9 UI/UX fixes — RoutePlanner station order, ActivityLog timeline, DashboardPage stat card layout",
+      },
+      {
+        category: "fix",
+        text: "SettingsPage mobile 1-column layout + UsersPage avatar image display",
+      },
+      {
+        category: "fix",
+        text: "Backend: sync model_has_roles on role change and user creation (Spatie RBAC consistency)",
+      },
+      {
+        category: "refactor",
+        text: "Tailwind inline style refactor — replaced static inline styles with utility classes across all 14 pages, AuthLayout, DashboardLayout, and Skeleton component",
+      },
+      {
+        category: "refactor",
+        text: "E2E station tests refactored — clearer selectors, precise assertions, split into focused per-action specs (112 tests total)",
+      },
+      {
+        category: "ci",
+        text: "Cancel in-progress runs on new push to same branch (GitHub Actions concurrency)",
+      },
     ],
   },
   {
@@ -361,8 +535,48 @@ function getVersionAccentColor(version: string): string {
   return "rgba(148,163,184,0.3)";
 }
 
+function CategoryBadge({ category }: { category: ChangeCategory }) {
+  const meta = CATEGORY_META[category];
+  return (
+    <span
+      className="font-mono text-[10px] px-1.5 py-0.5 rounded border shrink-0 leading-tight"
+      style={{
+        color: meta.color,
+        borderColor: `${meta.color}50`,
+        background: `${meta.color}18`,
+      }}
+    >
+      {meta.label}
+    </span>
+  );
+}
+
+function ReleaseSummary({ entries }: { entries: ChangeEntry[] }) {
+  const counts = entries.reduce(
+    (acc, e) => {
+      acc[e.category] = (acc[e.category] ?? 0) + 1;
+      return acc;
+    },
+    {} as Partial<Record<ChangeCategory, number>>,
+  );
+
+  const ordered = CATEGORY_ORDER.filter((cat) => counts[cat]);
+
+  return (
+    <div className="flex items-center gap-3 px-6 pb-3 flex-wrap">
+      {ordered.map((cat) => (
+        <span key={cat} className="flex items-center gap-1.5">
+          <CategoryBadge category={cat} />
+          <span className="text-xs text-muted-foreground">{counts[cat]}</span>
+        </span>
+      ))}
+    </div>
+  );
+}
+
 export default function ChangelogPage() {
   usePageMeta({ title: "Changelog", path: "/changelog" });
+
   return (
     <div>
       <PageHeader title="CHANGELOG" subtitle="Release History · MRT Jakarta" />
@@ -371,74 +585,116 @@ export default function ChangelogPage() {
         {"@keyframes pulse-led { 0%,100%{opacity:1} 50%{opacity:0.6} }"}
       </style>
 
-      <motion.div
-        initial="hidden"
-        animate="visible"
-        variants={{
-          hidden: {},
-          visible: { transition: { staggerChildren: 0.06 } },
-        }}
-        className="flex flex-col gap-5"
-      >
-        {changelog.map((release, i) => {
-          const accentColor = getVersionAccentColor(release.version);
-          return (
-            <motion.div
-              key={release.version}
-              variants={{
-                hidden: { opacity: 0, y: 16 },
-                visible: { opacity: 1, y: 0, transition: { duration: 0.3 } },
-              }}
-              className="ops-card"
-            >
-              {/* Version-typed accent line */}
-              <div
-                className="h-0.5"
-                style={{
-                  background: `linear-gradient(90deg, ${accentColor} 0%, transparent 100%)`,
+      <div className="relative">
+        {/* Timeline vertical line */}
+        <div className="absolute left-3 top-6 bottom-6 w-px bg-gradient-to-b from-primary/30 via-border/50 to-transparent pointer-events-none" />
+
+        <motion.div
+          initial="hidden"
+          animate="visible"
+          variants={{
+            hidden: {},
+            visible: { transition: { staggerChildren: 0.06 } },
+          }}
+          className="flex flex-col gap-5"
+        >
+          {changelog.map((release, i) => {
+            const accentColor = getVersionAccentColor(release.version);
+            return (
+              <motion.div
+                key={release.version}
+                variants={{
+                  hidden: { opacity: 0, y: 16 },
+                  visible: {
+                    opacity: 1,
+                    y: 0,
+                    transition: { duration: 0.3 },
+                  },
                 }}
-              />
-
-              {/* Card Header */}
-              <div className="ops-card-header flex items-center justify-between flex-wrap gap-2">
-                <div className="flex items-center gap-3">
-                  <span className="changelog-version">v{release.version}</span>
-                  <span className="changelog-date">{release.date}</span>
-                  {i === 0 && (
-                    <span className="ops-badge-latest">LATEST</span>
-                  )}
+                className="relative pl-10"
+              >
+                {/* Timeline dot */}
+                <div
+                  className="absolute left-1 top-[1.125rem] w-4 h-4 rounded-full border-2 bg-background flex items-center justify-center"
+                  style={{
+                    borderColor: `${accentColor}80`,
+                    boxShadow: i === 0 ? `0 0 10px ${accentColor}60` : undefined,
+                  }}
+                >
+                  <div
+                    className="w-2 h-2 rounded-full"
+                    style={{ background: accentColor }}
+                  />
                 </div>
-                {release.commits.length > 0 && (
-                  <div className="flex flex-wrap gap-1">
-                    {release.commits.map((hash) => (
-                      <a
-                        key={hash}
-                        href={`https://github.com/didapatria/mrt-station-dashboard/commit/${hash}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="commit-chip"
-                      >
-                        <GitCommit size={10} />
-                        {hash}
-                      </a>
-                    ))}
-                  </div>
-                )}
-              </div>
 
-              {/* Change list */}
-              <div className="px-6 pt-4 pb-5 flex flex-col gap-2">
-                {release.items.map((item) => (
-                  <div key={item} className="flex items-start gap-2.5">
-                    <div className="changelog-dot" />
-                    <span className="changelog-item-text">{item}</span>
+                <div className="ops-card">
+                  {/* Version-typed accent line */}
+                  <div
+                    className="h-0.5"
+                    style={{
+                      background: `linear-gradient(90deg, ${accentColor} 0%, transparent 100%)`,
+                    }}
+                  />
+
+                  {/* Card Header */}
+                  <div className="ops-card-header flex items-center justify-between flex-wrap gap-2">
+                    <div className="flex items-center gap-3">
+                      <span className="changelog-version">v{release.version}</span>
+                      <span className="changelog-date">{release.date}</span>
+                      {i === 0 && (
+                        <span className="ops-badge-latest">LATEST</span>
+                      )}
+                    </div>
+                    {release.commits.length > 0 && (
+                      <div className="flex flex-wrap gap-1">
+                        {release.commits.map((hash) => (
+                          <a
+                            key={hash}
+                            href={`https://github.com/didapatria/mrt-station-dashboard/commit/${hash}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="commit-chip"
+                          >
+                            <GitCommit size={10} />
+                            {hash}
+                          </a>
+                        ))}
+                      </div>
+                    )}
                   </div>
-                ))}
-              </div>
-            </motion.div>
-          );
-        })}
-      </motion.div>
+
+                  {/* Category summary (structured releases only) */}
+                  {isStructured(release) && (
+                    <ReleaseSummary entries={release.entries} />
+                  )}
+
+                  {/* Change list */}
+                  <div className="px-6 pt-2 pb-5 flex flex-col gap-2">
+                    {isStructured(release)
+                      ? release.entries.map((entry) => (
+                          <div
+                            key={entry.text}
+                            className="flex items-start gap-2.5"
+                          >
+                            <CategoryBadge category={entry.category} />
+                            <span className="changelog-item-text">
+                              {entry.text}
+                            </span>
+                          </div>
+                        ))
+                      : release.items.map((item) => (
+                          <div key={item} className="flex items-start gap-2.5">
+                            <div className="changelog-dot" />
+                            <span className="changelog-item-text">{item}</span>
+                          </div>
+                        ))}
+                  </div>
+                </div>
+              </motion.div>
+            );
+          })}
+        </motion.div>
+      </div>
     </div>
   );
 }
