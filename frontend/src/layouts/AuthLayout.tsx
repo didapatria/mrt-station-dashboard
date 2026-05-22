@@ -4,31 +4,17 @@ import { useThemeStore } from "@/store/theme.store";
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { usePublicStations } from "@/hooks/use-stations";
 
 const ACCENT = "#1d6fe8";
-
-// Static list — station endpoint requires auth and this layout is public-only
-const ROUTE_STATIONS = [
-  "Lebak Bulus Bank Syariah Indonesia",
-  "Fatmawati Indomaret",
-  "Cipete Raya Tuku",
-  "Haji Nawi",
-  "Blok A",
-  "Blok M BCA",
-  "ASEAN Headquarters",
-  "Senayan Mastercard",
-  "Istora Mandiri",
-  "Bendungan Hilir",
-  "Setiabudi Astra",
-  "Dukuh Atas BNI",
-  "Bundaran HI Bank Jakarta",
-];
 
 export default function AuthLayout() {
   const { token } = useAuthStore();
   const { theme } = useThemeStore();
   const isDark = theme === "dark";
   const [time, setTime] = useState(new Date());
+
+  const { data: routeStations = [], isLoading } = usePublicStations();
 
   useEffect(() => {
     const t = setInterval(() => setTime(new Date()), 1000);
@@ -233,7 +219,7 @@ export default function AuthLayout() {
                 className="font-mono text-[9.5px] tracking-[0.14em] uppercase"
                 style={{ color: p.subtitleText }}
               >
-                North–South Line · {ROUTE_STATIONS.length} Stations
+                North–South Line · {isLoading ? "…" : `${routeStations.length} Stations`}
               </span>
             </div>
           </motion.div>
@@ -246,7 +232,7 @@ export default function AuthLayout() {
             className="flex gap-2 mb-6 mt-5 flex-wrap"
           >
             {[
-              { label: "STATIONS", value: String(ROUTE_STATIONS.length) },
+              { label: "STATIONS", value: isLoading ? "…" : String(routeStations.length) },
               { label: "STATUS", value: "ACTIVE" },
               { label: "LINE", value: "N–S" },
             ].map(({ label, value }) => (
@@ -285,14 +271,14 @@ export default function AuthLayout() {
             <div className="pt-1 shrink-0">
               <svg
                 width="16"
-                height={ROUTE_STATIONS.length * 20}
-                viewBox={`0 0 16 ${ROUTE_STATIONS.length * 20}`}
+                height={Math.max(routeStations.length, 13) * 20}
+                viewBox={`0 0 16 ${Math.max(routeStations.length, 13) * 20}`}
               >
                 <line
                   x1="8"
                   y1="6"
                   x2="8"
-                  y2={ROUTE_STATIONS.length * 20 - 6}
+                  y2={Math.max(routeStations.length, 13) * 20 - 6}
                   stroke={p.svgBgLine}
                   strokeWidth="2"
                 />
@@ -301,19 +287,19 @@ export default function AuthLayout() {
                   x1="8"
                   y1="6"
                   x2="8"
-                  y2={ROUTE_STATIONS.length * 20 - 6}
+                  y2={Math.max(routeStations.length, 13) * 20 - 6}
                   stroke={ACCENT}
                   strokeWidth="2"
                   strokeLinecap="round"
                 />
-                {ROUTE_STATIONS.map((_, i) => (
+                {routeStations.map((_, i) => (
                   <circle
                     key={i}
                     cx="8"
                     cy={6 + i * 20}
-                    r={i === 0 || i === ROUTE_STATIONS.length - 1 ? 4.5 : 3}
+                    r={i === 0 || i === routeStations.length - 1 ? 4.5 : 3}
                     fill={
-                      i === 0 || i === ROUTE_STATIONS.length - 1 ? ACCENT : p.bg
+                      i === 0 || i === routeStations.length - 1 ? ACCENT : p.bg
                     }
                     stroke={ACCENT}
                     strokeWidth="2"
@@ -325,33 +311,49 @@ export default function AuthLayout() {
 
             {/* Station names */}
             <div className="flex flex-col flex-1">
-              {ROUTE_STATIONS.map((name, i) => (
-                <motion.div
-                  key={name}
-                  initial={{ opacity: 0, x: -6 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.25, delay: 0.5 + i * 0.045 }}
-                  className="h-5 flex items-center justify-between pr-1"
-                >
-                  <span
-                    className="font-mono text-[10px] tracking-[0.05em]"
-                    style={{
-                      color:
-                        i === 0 || i === ROUTE_STATIONS.length - 1
-                          ? p.terminalStation
-                          : p.midStation,
-                      fontWeight:
-                        i === 0 || i === ROUTE_STATIONS.length - 1 ? 600 : 400,
-                    }}
-                  >
-                    {name.toUpperCase()}
-                  </span>
-                  <span
-                    className="w-1 h-1 rounded-full bg-[#10b981] shrink-0 shadow-[0_0_4px_rgba(16,185,129,0.45)]"
-                    style={{ opacity: isDark ? 0.55 : 0.7 }}
-                  />
-                </motion.div>
-              ))}
+              {isLoading
+                ? Array.from({ length: 13 }).map((_, i) => (
+                    <div key={i} className="h-5 flex items-center pr-1">
+                      <div
+                        className="h-2 rounded"
+                        style={{
+                          width: `${50 + (i % 5) * 10}%`,
+                          background: isDark
+                            ? "rgba(148,163,184,0.1)"
+                            : "rgba(51,65,85,0.08)",
+                        }}
+                      />
+                    </div>
+                  ))
+                : routeStations.map((station, i) => (
+                    <motion.div
+                      key={station.id}
+                      initial={{ opacity: 0, x: -6 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.25, delay: 0.5 + i * 0.045 }}
+                      className="h-5 flex items-center justify-between pr-1"
+                    >
+                      <span
+                        className="font-mono text-[10px] tracking-[0.05em]"
+                        style={{
+                          color:
+                            i === 0 || i === routeStations.length - 1
+                              ? p.terminalStation
+                              : p.midStation,
+                          fontWeight:
+                            i === 0 || i === routeStations.length - 1
+                              ? 600
+                              : 400,
+                        }}
+                      >
+                        {station.name.toUpperCase()}
+                      </span>
+                      <span
+                        className="w-1 h-1 rounded-full bg-[#10b981] shrink-0 shadow-[0_0_4px_rgba(16,185,129,0.45)]"
+                        style={{ opacity: isDark ? 0.55 : 0.7 }}
+                      />
+                    </motion.div>
+                  ))}
             </div>
           </motion.div>
 

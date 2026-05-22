@@ -15,6 +15,7 @@ import { userRouter } from "./routes/user.routes";
 import { activityLogRouter } from "./routes/activity-log.routes";
 import { feedbackRouter } from "./routes/feedback.routes";
 import { permissionRouter } from "./routes/permission.routes";
+import { publicRouter } from "./routes/public.routes";
 import { sseService } from "./services/sse.service";
 import { authMiddleware } from "./middlewares/auth.middleware";
 import { errorHandler } from "./middlewares/error.middleware";
@@ -111,6 +112,7 @@ app.get("/api/system/status", authMiddleware, (_req, res) => {
   });
 });
 
+app.use("/api/public", publicRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/stations", stationRouter);
 app.use("/api/schedules", scheduleRouter);

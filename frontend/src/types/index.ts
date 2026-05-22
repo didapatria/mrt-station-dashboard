@@ -35,6 +35,8 @@ export interface Schedule {
   arrivalStation?: Pick<Station, "id" | "name" | "code">;
 }
 
+export type PublicStation = Pick<Station, "id" | "name" | "code" | "order" | "status">;
+
 export interface ApiResponse<T = unknown> {
   success: boolean;
   data?: T;

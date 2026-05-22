@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { stationService } from "@/services/station.service";
-import type { Station } from "@/types";
+import { publicStationService } from "@/services/public.service";
+import type { Station, PublicStation } from "@/types";
 
 interface StationFilters {
   page?: number;
@@ -69,5 +70,14 @@ export function useDeleteStation() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: stationKeys.lists() });
     },
+  });
+}
+
+export function usePublicStations() {
+  return useQuery<PublicStation[]>({
+    queryKey: ["public-stations"],
+    queryFn: () => publicStationService.getAll(),
+    staleTime: 1000 * 60 * 10,
+    retry: false,
   });
 }
