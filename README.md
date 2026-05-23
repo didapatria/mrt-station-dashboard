@@ -7,7 +7,7 @@
   <a href="https://didapatria.github.io/mrt-station-dashboard/">
     <img src="https://img.shields.io/badge/E2E%20Report-GitHub%20Pages-0969da?logo=github&logoColor=white" alt="E2E Report" />
   </a>
-  <img src="https://img.shields.io/badge/version-2.16.0-blue" />
+  <img src="https://img.shields.io/badge/version-2.17.0-blue" />
 </p>
 
 <p align="left">
@@ -41,6 +41,16 @@ Full-stack web application for managing MRT Jakarta stations and train schedules
 - 🧪 112 E2E Playwright tests — screenshots on every test, report on [GitHub Pages](https://didapatria.github.io/mrt-station-dashboard/)
 - 📦 Dockerized with GitHub Actions CI/CD (lint, typecheck, unit, E2E, deploy)
 - 🌐 Internationalization (EN/ID) + PWA + Real-time SSE notifications
+
+## What's New in v2.17.0
+
+| Area | Change |
+|------|--------|
+| **Command Center** | New `/command` page — full-screen ops control room with system status, 13-station LED grid, live activity feed |
+| **Station Grid** | LED tiles for all 13 stations — color-coded ACTIVE/MAINTENANCE/INACTIVE with glow, stagger animation |
+| **Activity Feed** | Rolling SSE event display — Zustand store fed from existing `useRealtimeNotifications` (no extra connection) |
+| **Nav** | "Command Center" entry in Operations sidebar group with `Monitor` icon (EN + ID i18n) |
+| **E2E** | `command-center.spec.ts` — 5 tests (page, grid, status, feed, live indicator) |
 
 ## What's New in v2.16.0
 

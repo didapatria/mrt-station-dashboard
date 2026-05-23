@@ -51,6 +51,45 @@ const CATEGORY_ORDER: ChangeCategory[] = [
 
 const changelog: Release[] = [
   {
+    version: "2.17.0",
+    date: "23 May 2026",
+    commits: [],
+    entries: [
+      {
+        category: "feat",
+        text: "CommandCenterPage — full-screen /command page with 3-panel layout: system status, station LED grid, activity feed",
+      },
+      {
+        category: "feat",
+        text: "StationTile — LED dot with glow, station code badge, status label; staggered reveal animation",
+      },
+      {
+        category: "feat",
+        text: "SystemStatusPanel — ACTIVE/DEGRADED/INCIDENT pulsing LED, stations operational count, maintenance + cancelled stats",
+      },
+      {
+        category: "feat",
+        text: "ActivityFeed — rolling display of last 30 SSE activity events with relative timestamps",
+      },
+      {
+        category: "feat",
+        text: "Activity feed Zustand store — shared rolling buffer populated from useRealtimeNotifications (no extra SSE connection)",
+      },
+      {
+        category: "feat",
+        text: "Live clock in Command Center header — second-precision HH:MM:SS display",
+      },
+      {
+        category: "feat",
+        text: "Command Center nav item — Monitor icon in Operations group, i18n keys for EN + ID",
+      },
+      {
+        category: "ci",
+        text: "command-center.spec.ts — 5 E2E tests: page render, station grid, system status, activity feed, live indicator",
+      },
+    ],
+  },
+  {
     version: "2.16.0",
     date: "23 May 2026",
     commits: [
