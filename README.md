@@ -57,41 +57,25 @@ v2.18.0 adds a full Incident Management System to the MRT Jakarta operations das
 | **Permissions** | 5 new permissions — `incidents.view/create/edit/resolve/delete` seeded for ADMIN and OPERATOR |
 | **E2E** | `incidents.spec.ts` — 6 tests (page render, create, edit, resolve, delete, severity filter) |
 
-## What's New in v2.17.0
+## Release History
 
-| Area | Change |
-|------|--------|
-| **Command Center** | New `/command` page — full-screen ops control room with system status, 13-station LED grid, live activity feed |
-| **Station Grid** | LED tiles for all 13 stations — color-coded ACTIVE/MAINTENANCE/INACTIVE with glow, stagger animation |
-| **Activity Feed** | Rolling SSE event display — Zustand store fed from existing `useRealtimeNotifications` (no extra connection) |
-| **Nav** | "Command Center" entry in Operations sidebar group with `Monitor` icon (EN + ID i18n) |
-| **E2E** | `command-center.spec.ts` — 5 tests (page, grid, status, feed, live indicator) |
+| Version | Date | Summary |
+|---------|------|---------|
+| v2.17.0 | 23 May 2026 | Command Center — full-screen ops control room, 13-station LED grid, live activity feed |
+| v2.16.0 | 23 May 2026 | Live Operations Center — typed SSE events, system-status endpoint, ops banner |
+| v2.15.0 | 22 May 2026 | Public stations API, AuthLayout live data, CI artifacts, Playwright stability fixes |
+| v2.14.0 | 19 May 2026 | Avatar upload, page transitions, skeleton system, SEO meta, Tailwind refactor |
+| v2.13.0 | 18 May 2026 | Google OAuth avatar, theme-aware auth pages, E2E theme tests |
+| v2.12.0 | 18 May 2026 | APEX SIGNAL design elevation, Operations Terminal system, auth redesign |
+| v2.11.0 | 17 May 2026 | Playwright fixes, global-setup stability, dark map tiles, permission matrix |
+| v2.10.0 | 17 May 2026 | Dark mode overhaul, sidebar transit-line indicator, table row hover accent |
+| v2.9.0  | 17 May 2026 | Frontend design overhaul — Sora + Bebas Neue + JetBrains Mono, auth panel redesign |
+| v2.8.0  | 17 May 2026 | Mobile E2E tests (15 tests, Pixel 7), live deployment links |
+| v2.7.0  | 14 May 2026 | Spatie-style 5-table RBAC, Playwright screenshots, GitHub Pages E2E report |
+| v2.6.0  | 13 May 2026 | Fly.io + Supabase + Vercel migration, feedback system, map location picker |
+| ≤ v2.5.0 | April 2026 | Google OAuth, Access Management, E2E automation, Route Planner, SSE, i18n, PWA, CRUD |
 
-## What's New in v2.16.0
-
-| Area | Change |
-|------|--------|
-| **Live Ops Center** | Dashboard shows real-time SSE status dot (green/amber/grey) + last-activity timestamp in welcome banner |
-| **System Status** | `GET /api/public/system-status` — ACTIVE/DEGRADED/INCIDENT derived from live DB ratios |
-| **Ops Banner** | `OperationsStatusBanner` — animated LED dot, contextual label, maintenance/cancelled counts |
-| **SSE Auth** | `/api/events` token-verified via `?token=<jwt>`; `useRealtimeNotifications` with exponential backoff reconnect |
-| **Simulator** | Dev-only station/schedule mutation loop every 15–45s; `simulated: true` flag suppresses UI noise |
-| **Typed Events** | `SseEventType` union — `activity`, `station.updated`, `schedule.updated`, `ping` heartbeat |
-| **E2E** | `realtime-dashboard.spec.ts` — 4 tests covering SSE indicator, notification bell, ops banner, welcome label |
-
-## What's New in v2.15.0
-
-| Area | Change |
-|------|--------|
-| **Public API** | `GET /api/public/stations` — no auth, `Cache-Control: public, max-age=300`, full Swagger docs |
-| **AuthLayout** | Live DB station data via `usePublicStations` hook — replaced hardcoded `ROUTE_STATIONS` array |
-| **Axios** | Interceptor skips 401 redirect when already on `/login` or `/register` — fixes infinite reload loop |
-| **Playwright CI** | `reducedMotion: "reduce"` context + `waitForSelector` before `fill` — eliminates animation race conditions |
-| **CI Artifacts** | `test-results` artifact (traces + videos, 7-day retention) + E2E job summary to `$GITHUB_STEP_SUMMARY` |
-| **Swagger** | `PublicStation` schema + `Public` tag added; version bumped to `2.15.0` |
-| **Changelog** | Timeline redesign — vertical border-l layout, `CategoryBadge`, `ReleaseSummary`, structured entries for v2.14.0+ |
-| **Docker** | Frontend healthcheck added; port mapping corrected (`80:3000`); `start_period` on backend |
-| **Logging** | Morgan uses `combined` format in production, `dev` in development |
+> Full changelog: [ChangelogPage](https://mrt-station-dashboard.vercel.app/changelog)
 
 ## Tech Stack
 
@@ -210,7 +194,7 @@ React Page → TanStack Query Hook → API Service (axios) → Express Route →
 - **Role-Based Access Control** - Spatie-style 5-table RBAC (`roles`, `permissions`, `model_has_roles`, `model_has_permissions`, `role_has_permissions`), `GET /api/permissions/me` returns user permissions on login, stored in Zustand, no hardcoded frontend config
 - **CI/CD** - GitHub Actions pipeline with lint, type check, test, and build
 - **Unit Testing** - Vitest + React Testing Library + Supertest
-- **E2E Testing** - Playwright (112 tests across 21 spec files, including mobile viewport, UI design, theme toggle, and full-page UI screenshot capture)
+- **E2E Testing** - Playwright (127 tests across 22 spec files, including mobile viewport, UI design, theme toggle, and full-page UI screenshot capture)
 - **Real-time Notifications** - Server-Sent Events with notification center
 - **i18n** - English and Indonesian language support
 - **Route Planner** - Find schedules between stations
@@ -523,7 +507,7 @@ Or connect GitHub repo in [vercel.com](https://vercel.com) dashboard:
 GitHub Actions runs on every push to `main`:
 - **Frontend:** lint → type check → Vitest unit tests → build
 - **Backend:** Supertest unit tests → build
-- **E2E:** Playwright (112 tests, 21 spec files) against live services + postgres — `screenshot: "only-on-failure"`, `video: "retain-on-failure"`, `trace: "retain-on-failure"`. Artifacts: `playwright-report` (30 days) + `test-results` (7 days). HTML report deployed to **[GitHub Pages](https://didapatria.github.io/mrt-station-dashboard/)**.
+- **E2E:** Playwright (127 tests, 22 spec files) against live services + postgres — `screenshot: "only-on-failure"`, `video: "retain-on-failure"`, `trace: "retain-on-failure"`. Artifacts: `playwright-report` (30 days) + `test-results` (7 days). HTML report deployed to **[GitHub Pages](https://didapatria.github.io/mrt-station-dashboard/)**.
 - **Deploy (main only):** Backend → Fly.io (after `flyctl auth whoami` token check), Frontend → Vercel
 - **Docker:** `docker compose build` validation
 
