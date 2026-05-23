@@ -7,7 +7,7 @@
   <a href="https://didapatria.github.io/mrt-station-dashboard/">
     <img src="https://img.shields.io/badge/E2E%20Report-GitHub%20Pages-0969da?logo=github&logoColor=white" alt="E2E Report" />
   </a>
-  <img src="https://img.shields.io/badge/version-2.15.0-blue" />
+  <img src="https://img.shields.io/badge/version-2.16.0-blue" />
 </p>
 
 <p align="left">
@@ -41,6 +41,18 @@ Full-stack web application for managing MRT Jakarta stations and train schedules
 - 🧪 112 E2E Playwright tests — screenshots on every test, report on [GitHub Pages](https://didapatria.github.io/mrt-station-dashboard/)
 - 📦 Dockerized with GitHub Actions CI/CD (lint, typecheck, unit, E2E, deploy)
 - 🌐 Internationalization (EN/ID) + PWA + Real-time SSE notifications
+
+## What's New in v2.16.0
+
+| Area | Change |
+|------|--------|
+| **Live Ops Center** | Dashboard shows real-time SSE status dot (green/amber/grey) + last-activity timestamp in welcome banner |
+| **System Status** | `GET /api/public/system-status` — ACTIVE/DEGRADED/INCIDENT derived from live DB ratios |
+| **Ops Banner** | `OperationsStatusBanner` — animated LED dot, contextual label, maintenance/cancelled counts |
+| **SSE Auth** | `/api/events` token-verified via `?token=<jwt>`; `useRealtimeNotifications` with exponential backoff reconnect |
+| **Simulator** | Dev-only station/schedule mutation loop every 15–45s; `simulated: true` flag suppresses UI noise |
+| **Typed Events** | `SseEventType` union — `activity`, `station.updated`, `schedule.updated`, `ping` heartbeat |
+| **E2E** | `realtime-dashboard.spec.ts` — 4 tests covering SSE indicator, notification bell, ops banner, welcome label |
 
 ## What's New in v2.15.0
 

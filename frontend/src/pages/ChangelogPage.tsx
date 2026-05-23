@@ -51,6 +51,53 @@ const CATEGORY_ORDER: ChangeCategory[] = [
 
 const changelog: Release[] = [
   {
+    version: "2.16.0",
+    date: "23 May 2026",
+    commits: [],
+    entries: [
+      {
+        category: "feat",
+        text: "Live Operations Center — typed SSE events (station.updated, schedule.updated, ping heartbeat), token auth on /api/events",
+      },
+      {
+        category: "feat",
+        text: "/api/public/system-status endpoint — ACTIVE/DEGRADED/INCIDENT derived from live DB ratios, Cache-Control 60s",
+      },
+      {
+        category: "feat",
+        text: "OperationsStatusBanner — animated LED dot, contextual status label and counts, rendered above Dashboard stats",
+      },
+      {
+        category: "feat",
+        text: "Dashboard live mode — SSE status dot (green/amber/grey) + last-activity timestamp in welcome banner",
+      },
+      {
+        category: "feat",
+        text: "useRealtimeNotifications — token-authenticated EventSource, exponential backoff reconnect (1s→30s), connection state",
+      },
+      {
+        category: "feat",
+        text: "useSystemStatus hook — polls /public/system-status every 60s, SSE-triggered invalidation on data changes",
+      },
+      {
+        category: "feat",
+        text: "Dev-only simulator — random station/schedule mutations every 15–45s with simulated:true flag to suppress UI noise",
+      },
+      {
+        category: "fix",
+        text: "NotificationCenter — token-authenticated SSE URL, skips simulated events from dev simulator",
+      },
+      {
+        category: "ci",
+        text: "realtime-dashboard.spec.ts — 4 E2E tests: SSE indicator, notification bell, ops status banner, welcome banner label",
+      },
+      {
+        category: "docs",
+        text: "Swagger v2.16.0 — Realtime tag, SystemStatus schema, /public/system-status documented",
+      },
+    ],
+  },
+  {
     version: "2.15.0",
     date: "22 May 2026",
     commits: [
