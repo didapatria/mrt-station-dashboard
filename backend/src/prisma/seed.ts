@@ -272,22 +272,29 @@ async function main() {
     { title: "Track inspection — North segment", severity: "HIGH" as const, status: "OPEN" as const, stationCode: null },
   ];
 
+  let incidentCount = 0;
   for (const inc of incidentSeedData) {
     const station = inc.stationCode
       ? await prisma.station.findUnique({ where: { code: inc.stationCode } })
       : null;
-    await prisma.incident.create({
-      data: {
-        title: inc.title,
-        severity: inc.severity,
-        status: inc.status,
-        stationId: station?.id ?? null,
-        reportedById: admin.id,
-        resolvedAt: inc.status === "RESOLVED" ? new Date() : null,
-      },
+    const existing = await prisma.incident.findFirst({
+      where: { title: inc.title },
     });
+    if (!existing) {
+      await prisma.incident.create({
+        data: {
+          title: inc.title,
+          severity: inc.severity,
+          status: inc.status,
+          stationId: station?.id ?? null,
+          reportedById: admin.id,
+          resolvedAt: inc.status === "RESOLVED" ? new Date() : null,
+        },
+      });
+      incidentCount++;
+    }
   }
-  console.log("Seeded incidents:", incidentSeedData.length);
+  console.log("Seeded incidents:", incidentCount);
 
   // Seed permissions
   const permissionsData = [
