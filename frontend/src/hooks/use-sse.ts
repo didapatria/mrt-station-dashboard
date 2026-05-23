@@ -2,6 +2,7 @@ import { useEffect, useCallback, useRef, useState } from "react";
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
 import { useAuthStore } from "@/store/auth.store";
+import { useActivityFeedStore } from "@/store/activity-feed.store";
 import type { SseStatus } from "@/types";
 
 export type { SseStatus };
@@ -40,6 +41,10 @@ export function useRealtimeNotifications(): RealtimeResult {
           `${data.user.name} ${data.action.toLowerCase()}d a ${data.entity}`,
           { description: data.details },
         );
+        useActivityFeedStore.getState().push({
+          message: `${data.user.name} ${data.action.toLowerCase()}d a ${data.entity}`,
+          detail: data.details,
+        });
       }
       setLastActivityAt(new Date());
       queryClient.invalidateQueries({ queryKey: ["stations"] });
