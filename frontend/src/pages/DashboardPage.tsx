@@ -39,11 +39,14 @@ import {
 import { useStations } from "@/hooks/use-stations";
 import { useSchedules } from "@/hooks/use-schedules";
 import { useDashboardStats, useSchedulesByHour } from "@/hooks/use-dashboard";
+import { useRealtimeNotifications } from "@/hooks/use-sse";
+import { useSystemStatus } from "@/hooks/use-system-status";
 import { dashboardService } from "@/services/dashboard.service";
 import { useAuthStore } from "@/store/auth.store";
 import { useThemeStore } from "@/store/theme.store";
 import { exportDashboardPDF } from "@/lib/export-pdf";
 import { usePageMeta } from "@/hooks/use-page-meta";
+import { OperationsStatusBanner } from "@/components/OperationsStatusBanner";
 
 const stagger = {
   hidden: { opacity: 0 },
@@ -53,6 +56,13 @@ const fadeUp = {
   hidden: { opacity: 0, y: 14 },
   show: { opacity: 1, y: 0, transition: { duration: 0.35 } },
 };
+
+function formatRelative(d: Date): string {
+  const s = Math.floor((Date.now() - d.getTime()) / 1000);
+  if (s < 60) return "just now";
+  if (s < 3600) return `${Math.floor(s / 60)}m ago`;
+  return `${Math.floor(s / 3600)}h ago`;
+}
 
 const ACCENT_COLORS = [
   "#3b82f6",
@@ -73,6 +83,8 @@ export default function DashboardPage() {
   const { data: schedulesData } = useSchedules({ limit: 10 });
   const { data: stats, isLoading: statsLoading } = useDashboardStats();
   const { data: hourlyData = [] } = useSchedulesByHour();
+  const { status: sseStatus, lastActivityAt } = useRealtimeNotifications();
+  const { data: systemStatus, isLoading: systemStatusLoading } = useSystemStatus();
 
   const stations = stationsData?.stations ?? [];
   const schedules = schedulesData?.schedules ?? [];
@@ -199,8 +211,27 @@ export default function DashboardPage() {
           {/* Left: greeting */}
           <div className="flex-1 min-w-0">
             <div className="font-mono text-[9.5px] tracking-[0.2em] text-[rgba(186,230,253,0.65)] uppercase mb-2 flex items-center gap-2">
-              <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#22c55e] shadow-[0_0_6px_rgba(34,197,94,0.8)]" />
-              Operations Center · Live
+              <span
+                className="inline-block w-1.5 h-1.5 rounded-full"
+                style={
+                  sseStatus === "connected"
+                    ? { background: "#22c55e", boxShadow: "0 0 6px rgba(34,197,94,0.8)" }
+                    : sseStatus === "reconnecting"
+                      ? { background: "#f59e0b", boxShadow: "0 0 6px rgba(245,158,11,0.8)" }
+                      : { background: "#6b7280" }
+                }
+              />
+              Operations Center ·{" "}
+              {sseStatus === "connected"
+                ? "Live"
+                : sseStatus === "reconnecting"
+                  ? "Reconnecting…"
+                  : "Offline"}
+              {lastActivityAt && (
+                <span className="opacity-50 normal-case">
+                  · updated {formatRelative(lastActivityAt)}
+                </span>
+              )}
             </div>
             <div className="font-display text-[clamp(28px,3.5vw,44px)] text-white leading-none tracking-[0.03em] mb-2">
               {greeting}, <span className="text-[#93c5fd]">{firstName}</span>
@@ -248,6 +279,13 @@ export default function DashboardPage() {
           )}
         </div>
       </motion.div>
+
+      {/* ── Operations Status Banner ── */}
+      <OperationsStatusBanner
+        status={systemStatus?.status}
+        data={systemStatus}
+        isLoading={systemStatusLoading}
+      />
 
       {/* ── Page header + export actions ── */}
       <div className="flex flex-row items-end justify-between gap-4 mb-8 flex-wrap">
