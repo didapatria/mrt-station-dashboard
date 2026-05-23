@@ -22,6 +22,8 @@ const pathToKey: Record<string, string> = {
   changelog: "nav.changelog",
   access: "nav.accessManagement",
   profile: "nav.profile",
+  command: "nav.commandCenter",
+  incidents: "nav.incidents",
 };
 
 export function PageBreadcrumb() {
