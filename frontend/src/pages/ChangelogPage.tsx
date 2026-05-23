@@ -53,7 +53,34 @@ const changelog: Release[] = [
   {
     version: "2.18.0",
     date: "23 May 2026",
-    commits: [],
+    commits: [
+      "96bef49",
+      "0747b7e",
+      "00cf5da",
+      "fa60283",
+      "2ed21a0",
+      "a557aec",
+      "cf7c3d0",
+      "58f3560",
+      "241d800",
+      "38de3bd",
+      "91167ae",
+      "0918cd3",
+      "000e90d",
+      "ba53a52",
+      "b4ef398",
+      "5c54af9",
+      "dd1cc77",
+      "b17baa0",
+      "f7061dc",
+      "29b8412",
+      "84a6dde",
+      "7dc2f64",
+      "569aace",
+      "2fae5db",
+      "0576689",
+      "b28480d",
+    ],
     entries: [
       {
         category: "feat",
@@ -78,6 +105,10 @@ const changelog: Release[] = [
       {
         category: "feat",
         text: "Incident permissions — incidents.view/create/edit/resolve/delete seeded for ADMIN and OPERATOR roles",
+      },
+      {
+        category: "ci",
+        text: "incidents.spec.ts — 6 E2E tests: page render, create, edit, resolve, delete, severity filter",
       },
       {
         category: "chore",
