@@ -53,7 +53,21 @@ const changelog: Release[] = [
   {
     version: "2.17.0",
     date: "23 May 2026",
-    commits: [],
+    commits: [
+      "6496840",
+      "7752d51",
+      "bd115c4",
+      "bf0f407",
+      "e009ecb",
+      "549bfdc",
+      "b88683c",
+      "ab5ebdb",
+      "fc61578",
+      "6c89f9f",
+      "34e04ec",
+      "0074dd2",
+      "3b05246",
+    ],
     entries: [
       {
         category: "feat",
