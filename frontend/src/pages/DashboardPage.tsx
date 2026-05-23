@@ -145,6 +145,12 @@ export default function DashboardPage() {
           icon: BarChart3,
           accent: ACCENT_COLORS[5],
         },
+        {
+          title: t("dashboard.openIncidents"),
+          value: stats.openIncidents,
+          icon: AlertTriangle,
+          accent: stats.openIncidents > 0 ? "#ef4444" : ACCENT_COLORS[0],
+        },
       ]
     : [];
 
@@ -336,7 +342,7 @@ export default function DashboardPage() {
       {/* ── Stat blocks ── */}
       {statsLoading ? (
         <div className="grid gap-px md:grid-cols-2 lg:grid-cols-3 mb-8">
-          {Array.from({ length: 6 }).map((_, i) => (
+          {Array.from({ length: 7 }).map((_, i) => (
             <Skeleton
               key={i}
               className="h-28 rounded-none first:rounded-tl-xl last:rounded-br-xl"
@@ -387,9 +393,23 @@ export default function DashboardPage() {
                 />
                 <div className="pl-3.5">
                   <p className="ops-table-head mb-1.5">{stat.title}</p>
-                  <p className="font-display text-[52px] leading-none tracking-[0.02em]">
-                    {stat.value}
-                  </p>
+                  <div className="flex items-center gap-2">
+                    <p className="font-display text-[52px] leading-none tracking-[0.02em]">
+                      {stat.value}
+                    </p>
+                    {stat.title === t("dashboard.openIncidents") && stats && stats.openIncidents > 0 && (
+                      <span className="relative flex h-2.5 w-2.5 shrink-0">
+                        <span
+                          className="absolute inline-flex h-full w-full rounded-full animate-ping opacity-75"
+                          style={{ background: "#ef4444" }}
+                        />
+                        <span
+                          className="relative inline-flex h-2.5 w-2.5 rounded-full"
+                          style={{ background: "#ef4444" }}
+                        />
+                      </span>
+                    )}
+                  </div>
                   {/* Accent underline */}
                   <div
                     className="h-[1.5px] w-7 mt-2.5 opacity-50 rounded-[1px]"
