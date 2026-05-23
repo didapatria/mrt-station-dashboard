@@ -11,6 +11,7 @@
     "routePlanner": "Route Planner",
     "compare": "Compare",
     "commandCenter": "Command Center",
+    "incidents": "Incidents",
     "settings": "Settings",
     "changelog": "Changelog",
     "menu": "Menu",
@@ -62,7 +63,8 @@
     "schedulesPerHour": "Number of active schedules per hour",
     "exportStations": "Export Stations",
     "exportSchedules": "Export Schedules",
-    "recentSchedules": "Recent Schedules"
+    "recentSchedules": "Recent Schedules",
+    "openIncidents": "Open Incidents"
   },
   "stations": {
     "title": "Stations",
@@ -153,6 +155,28 @@
     "submit": "Send Feedback",
     "success": "Feedback sent! Thank you.",
     "error": "Failed to send feedback."
+  },
+  "incidents": {
+    "title": "Incidents",
+    "subtitle": "Operational incident tracking",
+    "reportIncident": "Report Incident",
+    "searchPlaceholder": "Search incidents...",
+    "editIncident": "Edit Incident",
+    "createIncident": "Report Incident",
+    "noIncidents": "No incidents found",
+    "confirmResolve": "Resolve Incident",
+    "resolveWarning": "This will mark the incident as resolved and record the timestamp.",
+    "resolved": "Incident resolved",
+    "created": "Incident reported",
+    "updated": "Incident updated",
+    "deleted": "Incident deleted",
+    "confirmDelete": "Delete Incident",
+    "deleteWarning": "This will permanently delete the incident record.",
+    "severity": "Severity",
+    "status": "Status",
+    "station": "Station",
+    "systemWide": "System-wide",
+    "reporter": "Reporter"
   },
   "activity": {
     "title": "Activity Log",

@@ -11,6 +11,7 @@
     "routePlanner": "Pencarian Rute",
     "compare": "Bandingkan",
     "commandCenter": "Pusat Komando",
+    "incidents": "Insiden",
     "settings": "Pengaturan",
     "changelog": "Riwayat Perubahan",
     "menu": "Menu",
@@ -62,7 +63,8 @@
     "schedulesPerHour": "Jumlah jadwal aktif per jam",
     "exportStations": "Ekspor Stasiun",
     "exportSchedules": "Ekspor Jadwal",
-    "recentSchedules": "Jadwal Terbaru"
+    "recentSchedules": "Jadwal Terbaru",
+    "openIncidents": "Insiden Terbuka"
   },
   "stations": {
     "title": "Stasiun",
@@ -153,6 +155,28 @@
     "submit": "Kirim Masukan",
     "success": "Masukan terkirim! Terima kasih.",
     "error": "Gagal mengirim masukan."
+  },
+  "incidents": {
+    "title": "Insiden",
+    "subtitle": "Pelacakan insiden operasional",
+    "reportIncident": "Laporkan Insiden",
+    "searchPlaceholder": "Cari insiden...",
+    "editIncident": "Edit Insiden",
+    "createIncident": "Laporkan Insiden",
+    "noIncidents": "Tidak ada insiden",
+    "confirmResolve": "Selesaikan Insiden",
+    "resolveWarning": "Ini akan menandai insiden sebagai selesai dan mencatat waktu penyelesaian.",
+    "resolved": "Insiden diselesaikan",
+    "created": "Insiden dilaporkan",
+    "updated": "Insiden diperbarui",
+    "deleted": "Insiden dihapus",
+    "confirmDelete": "Hapus Insiden",
+    "deleteWarning": "Ini akan menghapus catatan insiden secara permanen.",
+    "severity": "Tingkat Keparahan",
+    "status": "Status",
+    "station": "Stasiun",
+    "systemWide": "Seluruh Sistem",
+    "reporter": "Pelapor"
   },
   "activity": {
     "title": "Log Aktivitas",

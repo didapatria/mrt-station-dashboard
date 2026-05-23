@@ -31,6 +31,7 @@ import {
   KeyRound,
   MessageSquare,
   Monitor,
+  AlertTriangle,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -92,6 +93,7 @@ const navGroups: NavGroup[] = [
       { to: "/route-planner", icon: Navigation, labelKey: "nav.routePlanner" },
       { to: "/compare", icon: LayoutDashboard, labelKey: "nav.compare" },
       { to: "/command", icon: Monitor, labelKey: "nav.commandCenter" },
+      { to: "/incidents", icon: AlertTriangle, labelKey: "nav.incidents" },
     ],
   },
   {

@@ -11,6 +11,7 @@ export interface DashboardStats {
   delayedSchedules: number;
   cancelledSchedules: number;
   totalUsers: number;
+  openIncidents: number;
 }
 
 export interface HourlySchedule {

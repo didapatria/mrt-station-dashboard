@@ -60,7 +60,26 @@ export interface SystemStatusData {
   totalStations: number;
   cancelledSchedules: number;
   totalSchedules: number;
+  openIncidents: number;
   checkedAt: string;
+}
+
+export type IncidentSeverity = "CRITICAL" | "HIGH" | "MEDIUM" | "LOW";
+export type IncidentStatus = "OPEN" | "MONITORING" | "RESOLVED";
+
+export interface Incident {
+  id: string;
+  title: string;
+  description?: string | null;
+  severity: IncidentSeverity;
+  status: IncidentStatus;
+  stationId?: string | null;
+  reportedById: string;
+  resolvedAt?: string | null;
+  createdAt: string;
+  updatedAt: string;
+  station?: { id: string; name: string; code: string } | null;
+  reportedBy: { id: string; name: string };
 }
 
 export interface LoginForm {
