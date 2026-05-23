@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { motion, AnimatePresence } from "framer-motion";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Plus, AlertTriangle, CheckCircle, Pencil, Trash2 } from "lucide-react";
@@ -20,9 +20,7 @@ import {
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
-import {
-  Form, FormControl, FormField, FormItem, FormLabel, FormMessage,
-} from "@/components/ui/form";
+import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { PageHeader } from "@/components/PageHeader";
 import { OpsCard } from "@/components/OpsCard";
@@ -201,7 +199,7 @@ export default function IncidentsPage() {
       <PageHeader
         title={t("incidents.title")}
         subtitle={t("incidents.subtitle")}
-        action={
+        right={
           <Button onClick={() => setCreateOpen(true)} size="sm">
             <Plus className="h-4 w-4 mr-1.5" />
             {t("incidents.reportIncident")}
@@ -365,56 +363,60 @@ export default function IncidentsPage() {
           <DialogHeader>
             <DialogTitle>{t("incidents.createIncident")}</DialogTitle>
           </DialogHeader>
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(handleCreate)} className="space-y-4">
-              <FormField control={form.control} name="title" render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Title *</FormLabel>
-                  <FormControl><Input {...field} /></FormControl>
-                  <FormMessage />
-                </FormItem>
-              )} />
-              <FormField control={form.control} name="description" render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Description</FormLabel>
-                  <FormControl><Textarea {...field} rows={3} /></FormControl>
-                  <FormMessage />
-                </FormItem>
-              )} />
-              <FormField control={form.control} name="severity" render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t("incidents.severity")} *</FormLabel>
-                  <Select value={field.value} onValueChange={field.onChange}>
-                    <FormControl>
+          <form onSubmit={form.handleSubmit(handleCreate)} className="space-y-4">
+              <div className="space-y-1.5">
+                <Label htmlFor="create-title">Title *</Label>
+                <Input id="create-title" {...form.register("title")} />
+                {form.formState.errors.title && (
+                  <p className="text-xs text-destructive">{form.formState.errors.title.message}</p>
+                )}
+              </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="create-description">Description</Label>
+                <Textarea id="create-description" {...form.register("description")} rows={3} />
+                {form.formState.errors.description && (
+                  <p className="text-xs text-destructive">{form.formState.errors.description.message}</p>
+                )}
+              </div>
+              <div className="space-y-1.5">
+                <Label>{t("incidents.severity")} *</Label>
+                <Controller
+                  control={form.control}
+                  name="severity"
+                  render={({ field }) => (
+                    <Select value={field.value} onValueChange={field.onChange}>
                       <SelectTrigger><SelectValue /></SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value="CRITICAL">CRITICAL</SelectItem>
-                      <SelectItem value="HIGH">HIGH</SelectItem>
-                      <SelectItem value="MEDIUM">MEDIUM</SelectItem>
-                      <SelectItem value="LOW">LOW</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )} />
-              <FormField control={form.control} name="stationId" render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t("incidents.station")}</FormLabel>
-                  <Select value={field.value ?? ""} onValueChange={field.onChange}>
-                    <FormControl>
+                      <SelectContent>
+                        <SelectItem value="CRITICAL">CRITICAL</SelectItem>
+                        <SelectItem value="HIGH">HIGH</SelectItem>
+                        <SelectItem value="MEDIUM">MEDIUM</SelectItem>
+                        <SelectItem value="LOW">LOW</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
+                {form.formState.errors.severity && (
+                  <p className="text-xs text-destructive">{form.formState.errors.severity.message}</p>
+                )}
+              </div>
+              <div className="space-y-1.5">
+                <Label>{t("incidents.station")}</Label>
+                <Controller
+                  control={form.control}
+                  name="stationId"
+                  render={({ field }) => (
+                    <Select value={field.value ?? ""} onValueChange={field.onChange}>
                       <SelectTrigger><SelectValue placeholder={t("incidents.systemWide")} /></SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value="">{t("incidents.systemWide")}</SelectItem>
-                      {stations.map((s) => (
-                        <SelectItem key={s.id} value={s.id}>{s.code} — {s.name}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )} />
+                      <SelectContent>
+                        <SelectItem value="">{t("incidents.systemWide")}</SelectItem>
+                        {stations.map((s) => (
+                          <SelectItem key={s.id} value={s.id}>{s.code} — {s.name}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
+              </div>
               <DialogFooter>
                 <Button type="button" variant="outline" onClick={() => setCreateOpen(false)}>Cancel</Button>
                 <Button type="submit" disabled={createMutation.isPending}>
@@ -422,7 +424,6 @@ export default function IncidentsPage() {
                 </Button>
               </DialogFooter>
             </form>
-          </Form>
         </DialogContent>
       </Dialog>
 
@@ -432,56 +433,60 @@ export default function IncidentsPage() {
           <DialogHeader>
             <DialogTitle>{t("incidents.editIncident")}</DialogTitle>
           </DialogHeader>
-          <Form {...editForm}>
-            <form onSubmit={editForm.handleSubmit(handleEdit)} className="space-y-4">
-              <FormField control={editForm.control} name="title" render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Title *</FormLabel>
-                  <FormControl><Input {...field} /></FormControl>
-                  <FormMessage />
-                </FormItem>
-              )} />
-              <FormField control={editForm.control} name="description" render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Description</FormLabel>
-                  <FormControl><Textarea {...field} rows={3} /></FormControl>
-                  <FormMessage />
-                </FormItem>
-              )} />
-              <FormField control={editForm.control} name="severity" render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t("incidents.severity")} *</FormLabel>
-                  <Select value={field.value} onValueChange={field.onChange}>
-                    <FormControl>
+          <form onSubmit={editForm.handleSubmit(handleEdit)} className="space-y-4">
+              <div className="space-y-1.5">
+                <Label htmlFor="edit-title">Title *</Label>
+                <Input id="edit-title" {...editForm.register("title")} />
+                {editForm.formState.errors.title && (
+                  <p className="text-xs text-destructive">{editForm.formState.errors.title.message}</p>
+                )}
+              </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="edit-description">Description</Label>
+                <Textarea id="edit-description" {...editForm.register("description")} rows={3} />
+                {editForm.formState.errors.description && (
+                  <p className="text-xs text-destructive">{editForm.formState.errors.description.message}</p>
+                )}
+              </div>
+              <div className="space-y-1.5">
+                <Label>{t("incidents.severity")} *</Label>
+                <Controller
+                  control={editForm.control}
+                  name="severity"
+                  render={({ field }) => (
+                    <Select value={field.value} onValueChange={field.onChange}>
                       <SelectTrigger><SelectValue /></SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value="CRITICAL">CRITICAL</SelectItem>
-                      <SelectItem value="HIGH">HIGH</SelectItem>
-                      <SelectItem value="MEDIUM">MEDIUM</SelectItem>
-                      <SelectItem value="LOW">LOW</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )} />
-              <FormField control={editForm.control} name="stationId" render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t("incidents.station")}</FormLabel>
-                  <Select value={field.value ?? ""} onValueChange={field.onChange}>
-                    <FormControl>
+                      <SelectContent>
+                        <SelectItem value="CRITICAL">CRITICAL</SelectItem>
+                        <SelectItem value="HIGH">HIGH</SelectItem>
+                        <SelectItem value="MEDIUM">MEDIUM</SelectItem>
+                        <SelectItem value="LOW">LOW</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
+                {editForm.formState.errors.severity && (
+                  <p className="text-xs text-destructive">{editForm.formState.errors.severity.message}</p>
+                )}
+              </div>
+              <div className="space-y-1.5">
+                <Label>{t("incidents.station")}</Label>
+                <Controller
+                  control={editForm.control}
+                  name="stationId"
+                  render={({ field }) => (
+                    <Select value={field.value ?? ""} onValueChange={field.onChange}>
                       <SelectTrigger><SelectValue placeholder={t("incidents.systemWide")} /></SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value="">{t("incidents.systemWide")}</SelectItem>
-                      {stations.map((s) => (
-                        <SelectItem key={s.id} value={s.id}>{s.code} — {s.name}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )} />
+                      <SelectContent>
+                        <SelectItem value="">{t("incidents.systemWide")}</SelectItem>
+                        {stations.map((s) => (
+                          <SelectItem key={s.id} value={s.id}>{s.code} — {s.name}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
+              </div>
               <DialogFooter>
                 <Button type="button" variant="outline" onClick={() => setEditTarget(null)}>Cancel</Button>
                 <Button type="submit" disabled={updateMutation.isPending}>
@@ -489,7 +494,6 @@ export default function IncidentsPage() {
                 </Button>
               </DialogFooter>
             </form>
-          </Form>
         </DialogContent>
       </Dialog>
 
