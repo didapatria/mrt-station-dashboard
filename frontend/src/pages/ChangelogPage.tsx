@@ -51,6 +51,41 @@ const CATEGORY_ORDER: ChangeCategory[] = [
 
 const changelog: Release[] = [
   {
+    version: "2.18.0",
+    date: "23 May 2026",
+    commits: [],
+    entries: [
+      {
+        category: "feat",
+        text: "Incident Management System — full CRUD with severity (CRITICAL/HIGH/MEDIUM/LOW) and status (OPEN/MONITORING/RESOLVED) lifecycle",
+      },
+      {
+        category: "feat",
+        text: "IncidentsPage — filterable table with severity/status badges, stagger animation, create/edit/resolve/delete dialogs",
+      },
+      {
+        category: "feat",
+        text: "SSE events — incident.created, incident.updated, incident.resolved broadcast on mutations",
+      },
+      {
+        category: "feat",
+        text: "Dashboard stat card — Open Incidents with pulsing red LED dot when count > 0",
+      },
+      {
+        category: "feat",
+        text: "OperationsStatusBanner — CRITICAL incident overrides status to INCIDENT; open incident count shown in metadata",
+      },
+      {
+        category: "feat",
+        text: "Incident permissions — incidents.view/create/edit/resolve/delete seeded for ADMIN and OPERATOR roles",
+      },
+      {
+        category: "chore",
+        text: "Version bump to v2.18.0 — swagger, package.json frontend + backend",
+      },
+    ],
+  },
+  {
     version: "2.17.0",
     date: "23 May 2026",
     commits: [
