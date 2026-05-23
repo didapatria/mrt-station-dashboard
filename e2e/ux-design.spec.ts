@@ -35,9 +35,12 @@ test.describe("Design — Auth Page", () => {
     await page.goto("/login");
     await page.waitForLoadState("domcontentloaded");
 
-    // Partial names — stable across sponsor branding changes
-    await expect(page.locator("text=LEBAK BULUS").first()).toBeVisible({ timeout: 8000 });
-    await expect(page.locator("text=BUNDARAN HI").first()).toBeVisible({ timeout: 8000 });
+    // Structural selector — stable regardless of seed status (ACTIVE/MAINTENANCE varies)
+    const stationNames = page
+      .locator("span.font-mono")
+      .filter({ hasText: /[A-Z]{4,}/ });
+    await expect(stationNames.first()).toBeVisible({ timeout: 8000 });
+    await expect(stationNames.nth(2)).toBeVisible({ timeout: 8000 });
   });
 
   test("left panel should contain SVG rail line diagram", async ({ page }) => {
@@ -54,7 +57,7 @@ test.describe("Design — Auth Page", () => {
     await page.goto("/login");
     await page.waitForLoadState("domcontentloaded");
 
-    const stationText = page.locator("text=LEBAK BULUS").first();
+    const stationText = page.locator("text=BUNDARAN HI").first();
     const isVisible = await stationText.isVisible().catch(() => false);
     expect(isVisible).toBeFalsy();
   });
