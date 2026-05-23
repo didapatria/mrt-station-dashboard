@@ -30,6 +30,19 @@ enum DayType {
   HOLIDAY
 }
 
+enum IncidentSeverity {
+  CRITICAL
+  HIGH
+  MEDIUM
+  LOW
+}
+
+enum IncidentStatus {
+  OPEN
+  MONITORING
+  RESOLVED
+}
+
 model User {
   id        String   @id @default(uuid())
   name      String
@@ -44,6 +57,7 @@ model User {
   feedbacks        Feedback[]
   modelRoles       ModelHasRole[]
   modelPermissions ModelHasPermission[]
+  incidents        Incident[]
 
   @@map("users")
 }
@@ -62,6 +76,7 @@ model Station {
 
   departureSchedules Schedule[] @relation("DepartureStation")
   arrivalSchedules   Schedule[] @relation("ArrivalStation")
+  incidents          Incident[]
 
   @@map("stations")
 }
@@ -106,9 +121,33 @@ model ActivityLog {
   details   String?
   createdAt DateTime @default(now()) @map("created_at")
 
-  user User @relation(fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  @@index([entity, entityId])
+  @@index([userId])
+  @@index([createdAt])
   @@map("activity_logs")
+}
+
+model Incident {
+  id           String           @id @default(uuid())
+  title        String
+  description  String?
+  severity     IncidentSeverity
+  status       IncidentStatus   @default(OPEN)
+  stationId    String?          @map("station_id")
+  reportedById String           @map("reported_by_id")
+  resolvedAt   DateTime?        @map("resolved_at")
+  createdAt    DateTime         @default(now()) @map("created_at")
+  updatedAt    DateTime         @updatedAt @map("updated_at")
+
+  station    Station? @relation(fields: [stationId], references: [id], onDelete: SetNull)
+  reportedBy User     @relation(fields: [reportedById], references: [id])
+
+  @@index([status])
+  @@index([severity])
+  @@index([stationId])
+  @@map("incidents")
 }
 
 model Permission {
