@@ -6,9 +6,9 @@ const options: swaggerJsdoc.Options = {
     openapi: "3.0.0",
     info: {
       title: "MRT Jakarta - Station Management API",
-      version: "2.17.0",
+      version: "2.18.0",
       description:
-        "REST API for managing MRT Jakarta stations and train schedules. Features JWT authentication, Spatie-style 5-table RBAC (roles, permissions, model_has_roles, model_has_permissions, role_has_permissions), activity logging, real-time SSE notifications, CSV/PDF export, and rate limiting. Built with Express.js 5, TypeScript, Prisma ORM, and PostgreSQL. Frontend: React 19 + Vite 8, Operations Terminal design system (Bebas Neue + JetBrains Mono + Sora), 14 pages, 112 E2E tests.",
+        "REST API for managing MRT Jakarta stations and train schedules. Features JWT authentication, Spatie-style 5-table RBAC (roles, permissions, model_has_roles, model_has_permissions, role_has_permissions), activity logging, incident tracking, real-time SSE notifications, CSV/PDF export, and rate limiting. Built with Express.js 5, TypeScript, Prisma ORM, and PostgreSQL. Frontend: React 19 + Vite 8, Operations Terminal design system (Bebas Neue + JetBrains Mono + Sora), 15 pages, 121 E2E tests.",
       contact: {
         name: "Dida",
         email: "didapatria3@gmail.com",
@@ -22,6 +22,7 @@ const options: swaggerJsdoc.Options = {
       { name: "Users", description: "User management (Admin only)" },
       { name: "Permissions", description: "RBAC permission management" },
       { name: "Feedback", description: "User feedback" },
+      { name: "Incidents", description: "Incident management" },
       { name: "Activity Logs", description: "Audit trail" },
       { name: "Export", description: "CSV/PDF export" },
       {
@@ -131,6 +132,7 @@ const options: swaggerJsdoc.Options = {
             delayedSchedules: { type: "integer" },
             cancelledSchedules: { type: "integer" },
             totalUsers: { type: "integer" },
+            openIncidents: { type: "integer", example: 2 },
           },
         },
         PublicStation: {
@@ -160,6 +162,7 @@ const options: swaggerJsdoc.Options = {
             totalStations: { type: "integer", example: 13 },
             cancelledSchedules: { type: "integer", example: 0 },
             totalSchedules: { type: "integer", example: 24 },
+            openIncidents: { type: "integer", example: 2 },
             checkedAt: { type: "string", format: "date-time" },
           },
         },
@@ -277,6 +280,65 @@ const options: swaggerJsdoc.Options = {
               example: "general",
             },
             message: { type: "string", example: "Great dashboard!" },
+          },
+        },
+        IncidentSeverity: {
+          type: "string",
+          enum: ["CRITICAL", "HIGH", "MEDIUM", "LOW"],
+        },
+        IncidentStatus: {
+          type: "string",
+          enum: ["OPEN", "MONITORING", "RESOLVED"],
+        },
+        Incident: {
+          type: "object",
+          properties: {
+            id: { type: "string", format: "uuid" },
+            title: { type: "string", example: "Signal failure at Bundaran HI" },
+            description: { type: "string", nullable: true },
+            severity: { $ref: "#/components/schemas/IncidentSeverity" },
+            status: { $ref: "#/components/schemas/IncidentStatus" },
+            stationId: { type: "string", format: "uuid", nullable: true },
+            reportedById: { type: "string", format: "uuid" },
+            resolvedAt: { type: "string", format: "date-time", nullable: true },
+            createdAt: { type: "string", format: "date-time" },
+            updatedAt: { type: "string", format: "date-time" },
+            station: {
+              nullable: true,
+              type: "object",
+              properties: {
+                id: { type: "string", format: "uuid" },
+                name: { type: "string" },
+                code: { type: "string" },
+              },
+            },
+            reportedBy: {
+              type: "object",
+              properties: {
+                id: { type: "string", format: "uuid" },
+                name: { type: "string" },
+              },
+            },
+          },
+        },
+        CreateIncidentRequest: {
+          type: "object",
+          required: ["title", "severity"],
+          properties: {
+            title: { type: "string", example: "Platform overcrowding" },
+            description: { type: "string" },
+            severity: { $ref: "#/components/schemas/IncidentSeverity" },
+            stationId: { type: "string", format: "uuid", nullable: true },
+          },
+        },
+        UpdateIncidentRequest: {
+          type: "object",
+          properties: {
+            title: { type: "string" },
+            description: { type: "string" },
+            severity: { $ref: "#/components/schemas/IncidentSeverity" },
+            status: { type: "string", enum: ["OPEN", "MONITORING"] },
+            stationId: { type: "string", format: "uuid", nullable: true },
           },
         },
         ActivityLog: {
