@@ -14,8 +14,8 @@ test.describe("Changelog Page", () => {
   }) => {
     await navigateTo(page, "/changelog");
     await expect(page.locator("text=/latest/i").first()).toBeVisible();
-    // v2.10.0 should be at top
-    await expect(page.locator("text=/2\.10\.0/").first()).toBeVisible();
+    // v2.18.0 should be at top
+    await expect(page.locator("text=/2\.18\.0/").first()).toBeVisible();
   });
 
   test("should show commit hash links", async ({ adminPage: page }) => {

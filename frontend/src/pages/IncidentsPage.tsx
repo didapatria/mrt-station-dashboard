@@ -8,17 +8,36 @@ import { Plus, AlertTriangle, CheckCircle, Pencil, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
-  Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
 } from "@/components/ui/table";
 import {
-  Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter,
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
 } from "@/components/ui/dialog";
 import {
-  AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogTitle,
-  AlertDialogDescription, AlertDialogFooter, AlertDialogCancel, AlertDialogAction,
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogCancel,
+  AlertDialogAction,
 } from "@/components/ui/alert-dialog";
 import {
-  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -38,19 +57,51 @@ import {
 import type { Incident } from "@/types";
 
 const SEVERITY_COLORS = {
-  CRITICAL: { text: "#ef4444", bg: "rgba(239,68,68,0.1)", border: "rgba(239,68,68,0.3)" },
-  HIGH:     { text: "#f97316", bg: "rgba(249,115,22,0.1)", border: "rgba(249,115,22,0.3)" },
-  MEDIUM:   { text: "#eab308", bg: "rgba(234,179,8,0.1)",  border: "rgba(234,179,8,0.3)" },
-  LOW:      { text: "#22c55e", bg: "rgba(34,197,94,0.1)",  border: "rgba(34,197,94,0.3)" },
+  CRITICAL: {
+    text: "#ef4444",
+    bg: "rgba(239,68,68,0.1)",
+    border: "rgba(239,68,68,0.3)",
+  },
+  HIGH: {
+    text: "#f97316",
+    bg: "rgba(249,115,22,0.1)",
+    border: "rgba(249,115,22,0.3)",
+  },
+  MEDIUM: {
+    text: "#eab308",
+    bg: "rgba(234,179,8,0.1)",
+    border: "rgba(234,179,8,0.3)",
+  },
+  LOW: {
+    text: "#22c55e",
+    bg: "rgba(34,197,94,0.1)",
+    border: "rgba(34,197,94,0.3)",
+  },
 } as const;
 
 const STATUS_COLORS = {
-  OPEN:       { text: "#ef4444", bg: "rgba(239,68,68,0.1)",   border: "rgba(239,68,68,0.3)" },
-  MONITORING: { text: "#f59e0b", bg: "rgba(245,158,11,0.1)",  border: "rgba(245,158,11,0.3)" },
-  RESOLVED:   { text: "#6b7280", bg: "rgba(107,114,128,0.1)", border: "rgba(107,114,128,0.3)" },
+  OPEN: {
+    text: "#ef4444",
+    bg: "rgba(239,68,68,0.1)",
+    border: "rgba(239,68,68,0.3)",
+  },
+  MONITORING: {
+    text: "#f59e0b",
+    bg: "rgba(245,158,11,0.1)",
+    border: "rgba(245,158,11,0.3)",
+  },
+  RESOLVED: {
+    text: "#6b7280",
+    bg: "rgba(107,114,128,0.1)",
+    border: "rgba(107,114,128,0.3)",
+  },
 } as const;
 
-function SeverityBadge({ severity }: { severity: keyof typeof SEVERITY_COLORS }) {
+function SeverityBadge({
+  severity,
+}: {
+  severity: keyof typeof SEVERITY_COLORS;
+}) {
   const c = SEVERITY_COLORS[severity];
   return (
     <span
@@ -135,12 +186,22 @@ export default function IncidentsPage() {
 
   const form = useForm<FormValues>({
     resolver: zodResolver(createSchema),
-    defaultValues: { title: "", description: "", severity: "MEDIUM", stationId: "" },
+    defaultValues: {
+      title: "",
+      description: "",
+      severity: "MEDIUM",
+      stationId: "",
+    },
   });
 
   const editForm = useForm<FormValues>({
     resolver: zodResolver(createSchema),
-    defaultValues: { title: "", description: "", severity: "MEDIUM", stationId: "" },
+    defaultValues: {
+      title: "",
+      description: "",
+      severity: "MEDIUM",
+      stationId: "",
+    },
   });
 
   function openEdit(incident: Incident) {
@@ -209,7 +270,13 @@ export default function IncidentsPage() {
 
       {/* Filters */}
       <div className="flex flex-wrap items-center gap-2">
-        <Select value={severityFilter} onValueChange={(v) => { setSeverityFilter(v === "ALL" ? "" : v); setPage(1); }}>
+        <Select
+          value={severityFilter}
+          onValueChange={(v) => {
+            setSeverityFilter(v === "ALL" ? "" : v);
+            setPage(1);
+          }}
+        >
           <SelectTrigger className="w-36 h-8 text-xs font-mono">
             <SelectValue placeholder={t("incidents.severity")} />
           </SelectTrigger>
@@ -222,7 +289,13 @@ export default function IncidentsPage() {
           </SelectContent>
         </Select>
 
-        <Select value={statusFilter} onValueChange={(v) => { setStatusFilter(v === "ALL" ? "" : v); setPage(1); }}>
+        <Select
+          value={statusFilter}
+          onValueChange={(v) => {
+            setStatusFilter(v === "ALL" ? "" : v);
+            setPage(1);
+          }}
+        >
           <SelectTrigger className="w-36 h-8 text-xs font-mono">
             <SelectValue placeholder={t("incidents.status")} />
           </SelectTrigger>
@@ -238,7 +311,10 @@ export default function IncidentsPage() {
           className="w-52 h-8 text-xs"
           placeholder={t("incidents.searchPlaceholder")}
           value={search}
-          onChange={(e) => { setSearch(e.target.value); setPage(1); }}
+          onChange={(e) => {
+            setSearch(e.target.value);
+            setPage(1);
+          }}
         />
 
         {(search || statusFilter || severityFilter) && (
@@ -246,7 +322,12 @@ export default function IncidentsPage() {
             variant="ghost"
             size="sm"
             className="h-8 text-xs"
-            onClick={() => { setSearch(""); setStatusFilter(""); setSeverityFilter(""); setPage(1); }}
+            onClick={() => {
+              setSearch("");
+              setStatusFilter("");
+              setSeverityFilter("");
+              setPage(1);
+            }}
           >
             Reset
           </Button>
@@ -266,13 +347,27 @@ export default function IncidentsPage() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="font-mono text-[10px] uppercase tracking-widest w-24">{t("incidents.severity")}</TableHead>
-                <TableHead className="font-mono text-[10px] uppercase tracking-widest">Title</TableHead>
-                <TableHead className="font-mono text-[10px] uppercase tracking-widest w-32">{t("incidents.station")}</TableHead>
-                <TableHead className="font-mono text-[10px] uppercase tracking-widest w-28">{t("incidents.status")}</TableHead>
-                <TableHead className="font-mono text-[10px] uppercase tracking-widest w-28">{t("incidents.reporter")}</TableHead>
-                <TableHead className="font-mono text-[10px] uppercase tracking-widest w-24">Time</TableHead>
-                <TableHead className="font-mono text-[10px] uppercase tracking-widest w-24 text-right">Actions</TableHead>
+                <TableHead className="font-mono text-[10px] uppercase tracking-widest w-24">
+                  {t("incidents.severity")}
+                </TableHead>
+                <TableHead className="font-mono text-[10px] uppercase tracking-widest">
+                  Title
+                </TableHead>
+                <TableHead className="font-mono text-[10px] uppercase tracking-widest w-32">
+                  {t("incidents.station")}
+                </TableHead>
+                <TableHead className="font-mono text-[10px] uppercase tracking-widest w-28">
+                  {t("incidents.status")}
+                </TableHead>
+                <TableHead className="font-mono text-[10px] uppercase tracking-widest w-28">
+                  {t("incidents.reporter")}
+                </TableHead>
+                <TableHead className="font-mono text-[10px] uppercase tracking-widest w-24">
+                  Time
+                </TableHead>
+                <TableHead className="font-mono text-[10px] uppercase tracking-widest w-24 text-right">
+                  Actions
+                </TableHead>
               </TableRow>
             </TableHeader>
             <MotionTableBody variants={stagger} initial="hidden" animate="show">
@@ -283,33 +378,46 @@ export default function IncidentsPage() {
                     variants={row}
                     className="border-b transition-colors hover:bg-muted/30"
                   >
-                    <TableCell><SeverityBadge severity={incident.severity} /></TableCell>
-                    <TableCell className="max-w-[240px] truncate text-sm">{incident.title}</TableCell>
+                    <TableCell>
+                      <SeverityBadge severity={incident.severity} />
+                    </TableCell>
+                    <TableCell className="max-w-60 truncate text-sm">
+                      {incident.title}
+                    </TableCell>
                     <TableCell>
                       {incident.station ? (
                         <span className="font-mono text-xs bg-muted px-1.5 py-0.5 rounded">
                           {incident.station.code}
                         </span>
                       ) : (
-                        <span className="text-xs text-muted-foreground">{t("incidents.systemWide")}</span>
+                        <span className="text-xs text-muted-foreground">
+                          {t("incidents.systemWide")}
+                        </span>
                       )}
                     </TableCell>
-                    <TableCell><StatusBadge status={incident.status} /></TableCell>
-                    <TableCell className="text-xs text-muted-foreground">{incident.reportedBy.name}</TableCell>
-                    <TableCell className="font-mono text-xs text-muted-foreground">{formatRelative(incident.createdAt)}</TableCell>
+                    <TableCell>
+                      <StatusBadge status={incident.status} />
+                    </TableCell>
+                    <TableCell className="text-xs text-muted-foreground">
+                      {incident.reportedBy.name}
+                    </TableCell>
+                    <TableCell className="font-mono text-xs text-muted-foreground">
+                      {formatRelative(incident.createdAt)}
+                    </TableCell>
                     <TableCell>
                       <div className="flex items-center justify-end gap-1">
-                        {can("incidents.resolve") && incident.status !== "RESOLVED" && (
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-7 w-7"
-                            title="Resolve"
-                            onClick={() => setResolveTarget(incident)}
-                          >
-                            <CheckCircle className="h-3.5 w-3.5 text-green-500" />
-                          </Button>
-                        )}
+                        {can("incidents.resolve") &&
+                          incident.status !== "RESOLVED" && (
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-7 w-7"
+                              title="Resolve"
+                              onClick={() => setResolveTarget(incident)}
+                            >
+                              <CheckCircle className="h-3.5 w-3.5 text-green-500" />
+                            </Button>
+                          )}
                         {can("incidents.edit") && (
                           <Button
                             variant="ghost"
@@ -344,12 +452,24 @@ export default function IncidentsPage() {
         {/* Pagination */}
         {totalPages > 1 && (
           <div className="flex items-center justify-between px-4 py-3 border-t text-xs text-muted-foreground">
-            <span>Page {page} of {totalPages}</span>
+            <span>
+              Page {page} of {totalPages}
+            </span>
             <div className="flex gap-2">
-              <Button variant="outline" size="sm" disabled={page <= 1} onClick={() => setPage(p => p - 1)}>
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={page <= 1}
+                onClick={() => setPage((p) => p - 1)}
+              >
                 Previous
               </Button>
-              <Button variant="outline" size="sm" disabled={page >= totalPages} onClick={() => setPage(p => p + 1)}>
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={page >= totalPages}
+                onClick={() => setPage((p) => p + 1)}
+              >
                 Next
               </Button>
             </div>
@@ -363,150 +483,223 @@ export default function IncidentsPage() {
           <DialogHeader>
             <DialogTitle>{t("incidents.createIncident")}</DialogTitle>
           </DialogHeader>
-          <form onSubmit={form.handleSubmit(handleCreate)} className="space-y-4">
-              <div className="space-y-1.5">
-                <Label htmlFor="create-title">Title *</Label>
-                <Input id="create-title" {...form.register("title")} />
-                {form.formState.errors.title && (
-                  <p className="text-xs text-destructive">{form.formState.errors.title.message}</p>
+          <form
+            onSubmit={form.handleSubmit(handleCreate)}
+            className="space-y-4"
+          >
+            <div className="space-y-1.5">
+              <Label htmlFor="create-title">Title *</Label>
+              <Input id="create-title" {...form.register("title")} />
+              {form.formState.errors.title && (
+                <p className="text-xs text-destructive">
+                  {form.formState.errors.title.message}
+                </p>
+              )}
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="create-description">Description</Label>
+              <Textarea
+                id="create-description"
+                {...form.register("description")}
+                rows={3}
+              />
+              {form.formState.errors.description && (
+                <p className="text-xs text-destructive">
+                  {form.formState.errors.description.message}
+                </p>
+              )}
+            </div>
+            <div className="space-y-1.5">
+              <Label>{t("incidents.severity")} *</Label>
+              <Controller
+                control={form.control}
+                name="severity"
+                render={({ field }) => (
+                  <Select value={field.value} onValueChange={field.onChange}>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="CRITICAL">CRITICAL</SelectItem>
+                      <SelectItem value="HIGH">HIGH</SelectItem>
+                      <SelectItem value="MEDIUM">MEDIUM</SelectItem>
+                      <SelectItem value="LOW">LOW</SelectItem>
+                    </SelectContent>
+                  </Select>
                 )}
-              </div>
-              <div className="space-y-1.5">
-                <Label htmlFor="create-description">Description</Label>
-                <Textarea id="create-description" {...form.register("description")} rows={3} />
-                {form.formState.errors.description && (
-                  <p className="text-xs text-destructive">{form.formState.errors.description.message}</p>
+              />
+              {form.formState.errors.severity && (
+                <p className="text-xs text-destructive">
+                  {form.formState.errors.severity.message}
+                </p>
+              )}
+            </div>
+            <div className="space-y-1.5">
+              <Label>{t("incidents.station")}</Label>
+              <Controller
+                control={form.control}
+                name="stationId"
+                render={({ field }) => (
+                  <Select
+                    value={field.value ?? ""}
+                    onValueChange={field.onChange}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder={t("incidents.systemWide")} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="">
+                        {t("incidents.systemWide")}
+                      </SelectItem>
+                      {stations.map((s) => (
+                        <SelectItem key={s.id} value={s.id}>
+                          {s.code} — {s.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 )}
-              </div>
-              <div className="space-y-1.5">
-                <Label>{t("incidents.severity")} *</Label>
-                <Controller
-                  control={form.control}
-                  name="severity"
-                  render={({ field }) => (
-                    <Select value={field.value} onValueChange={field.onChange}>
-                      <SelectTrigger><SelectValue /></SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="CRITICAL">CRITICAL</SelectItem>
-                        <SelectItem value="HIGH">HIGH</SelectItem>
-                        <SelectItem value="MEDIUM">MEDIUM</SelectItem>
-                        <SelectItem value="LOW">LOW</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  )}
-                />
-                {form.formState.errors.severity && (
-                  <p className="text-xs text-destructive">{form.formState.errors.severity.message}</p>
-                )}
-              </div>
-              <div className="space-y-1.5">
-                <Label>{t("incidents.station")}</Label>
-                <Controller
-                  control={form.control}
-                  name="stationId"
-                  render={({ field }) => (
-                    <Select value={field.value ?? ""} onValueChange={field.onChange}>
-                      <SelectTrigger><SelectValue placeholder={t("incidents.systemWide")} /></SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="">{t("incidents.systemWide")}</SelectItem>
-                        {stations.map((s) => (
-                          <SelectItem key={s.id} value={s.id}>{s.code} — {s.name}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  )}
-                />
-              </div>
-              <DialogFooter>
-                <Button type="button" variant="outline" onClick={() => setCreateOpen(false)}>Cancel</Button>
-                <Button type="submit" disabled={createMutation.isPending}>
-                  {createMutation.isPending ? "Reporting..." : t("incidents.reportIncident")}
-                </Button>
-              </DialogFooter>
-            </form>
+              />
+            </div>
+            <DialogFooter>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setCreateOpen(false)}
+              >
+                Cancel
+              </Button>
+              <Button type="submit" disabled={createMutation.isPending}>
+                {createMutation.isPending
+                  ? "Reporting..."
+                  : t("incidents.reportIncident")}
+              </Button>
+            </DialogFooter>
+          </form>
         </DialogContent>
       </Dialog>
 
       {/* Edit Dialog */}
-      <Dialog open={!!editTarget} onOpenChange={(open) => !open && setEditTarget(null)}>
+      <Dialog
+        open={!!editTarget}
+        onOpenChange={(open) => !open && setEditTarget(null)}
+      >
         <DialogContent>
           <DialogHeader>
             <DialogTitle>{t("incidents.editIncident")}</DialogTitle>
           </DialogHeader>
-          <form onSubmit={editForm.handleSubmit(handleEdit)} className="space-y-4">
-              <div className="space-y-1.5">
-                <Label htmlFor="edit-title">Title *</Label>
-                <Input id="edit-title" {...editForm.register("title")} />
-                {editForm.formState.errors.title && (
-                  <p className="text-xs text-destructive">{editForm.formState.errors.title.message}</p>
+          <form
+            onSubmit={editForm.handleSubmit(handleEdit)}
+            className="space-y-4"
+          >
+            <div className="space-y-1.5">
+              <Label htmlFor="edit-title">Title *</Label>
+              <Input id="edit-title" {...editForm.register("title")} />
+              {editForm.formState.errors.title && (
+                <p className="text-xs text-destructive">
+                  {editForm.formState.errors.title.message}
+                </p>
+              )}
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="edit-description">Description</Label>
+              <Textarea
+                id="edit-description"
+                {...editForm.register("description")}
+                rows={3}
+              />
+              {editForm.formState.errors.description && (
+                <p className="text-xs text-destructive">
+                  {editForm.formState.errors.description.message}
+                </p>
+              )}
+            </div>
+            <div className="space-y-1.5">
+              <Label>{t("incidents.severity")} *</Label>
+              <Controller
+                control={editForm.control}
+                name="severity"
+                render={({ field }) => (
+                  <Select value={field.value} onValueChange={field.onChange}>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="CRITICAL">CRITICAL</SelectItem>
+                      <SelectItem value="HIGH">HIGH</SelectItem>
+                      <SelectItem value="MEDIUM">MEDIUM</SelectItem>
+                      <SelectItem value="LOW">LOW</SelectItem>
+                    </SelectContent>
+                  </Select>
                 )}
-              </div>
-              <div className="space-y-1.5">
-                <Label htmlFor="edit-description">Description</Label>
-                <Textarea id="edit-description" {...editForm.register("description")} rows={3} />
-                {editForm.formState.errors.description && (
-                  <p className="text-xs text-destructive">{editForm.formState.errors.description.message}</p>
+              />
+              {editForm.formState.errors.severity && (
+                <p className="text-xs text-destructive">
+                  {editForm.formState.errors.severity.message}
+                </p>
+              )}
+            </div>
+            <div className="space-y-1.5">
+              <Label>{t("incidents.station")}</Label>
+              <Controller
+                control={editForm.control}
+                name="stationId"
+                render={({ field }) => (
+                  <Select
+                    value={field.value ?? ""}
+                    onValueChange={field.onChange}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder={t("incidents.systemWide")} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="">
+                        {t("incidents.systemWide")}
+                      </SelectItem>
+                      {stations.map((s) => (
+                        <SelectItem key={s.id} value={s.id}>
+                          {s.code} — {s.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 )}
-              </div>
-              <div className="space-y-1.5">
-                <Label>{t("incidents.severity")} *</Label>
-                <Controller
-                  control={editForm.control}
-                  name="severity"
-                  render={({ field }) => (
-                    <Select value={field.value} onValueChange={field.onChange}>
-                      <SelectTrigger><SelectValue /></SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="CRITICAL">CRITICAL</SelectItem>
-                        <SelectItem value="HIGH">HIGH</SelectItem>
-                        <SelectItem value="MEDIUM">MEDIUM</SelectItem>
-                        <SelectItem value="LOW">LOW</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  )}
-                />
-                {editForm.formState.errors.severity && (
-                  <p className="text-xs text-destructive">{editForm.formState.errors.severity.message}</p>
-                )}
-              </div>
-              <div className="space-y-1.5">
-                <Label>{t("incidents.station")}</Label>
-                <Controller
-                  control={editForm.control}
-                  name="stationId"
-                  render={({ field }) => (
-                    <Select value={field.value ?? ""} onValueChange={field.onChange}>
-                      <SelectTrigger><SelectValue placeholder={t("incidents.systemWide")} /></SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="">{t("incidents.systemWide")}</SelectItem>
-                        {stations.map((s) => (
-                          <SelectItem key={s.id} value={s.id}>{s.code} — {s.name}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  )}
-                />
-              </div>
-              <DialogFooter>
-                <Button type="button" variant="outline" onClick={() => setEditTarget(null)}>Cancel</Button>
-                <Button type="submit" disabled={updateMutation.isPending}>
-                  {updateMutation.isPending ? "Saving..." : "Save Changes"}
-                </Button>
-              </DialogFooter>
-            </form>
+              />
+            </div>
+            <DialogFooter>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setEditTarget(null)}
+              >
+                Cancel
+              </Button>
+              <Button type="submit" disabled={updateMutation.isPending}>
+                {updateMutation.isPending ? "Saving..." : "Save Changes"}
+              </Button>
+            </DialogFooter>
+          </form>
         </DialogContent>
       </Dialog>
 
       {/* Resolve AlertDialog */}
-      <AlertDialog open={!!resolveTarget} onOpenChange={(open) => !open && setResolveTarget(null)}>
+      <AlertDialog
+        open={!!resolveTarget}
+        onOpenChange={(open) => !open && setResolveTarget(null)}
+      >
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>{t("incidents.confirmResolve")}</AlertDialogTitle>
-            <AlertDialogDescription>{t("incidents.resolveWarning")}</AlertDialogDescription>
+            <AlertDialogDescription>
+              {t("incidents.resolveWarning")}
+            </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={handleResolve} disabled={resolveMutation.isPending}>
+            <AlertDialogAction
+              onClick={handleResolve}
+              disabled={resolveMutation.isPending}
+            >
               {resolveMutation.isPending ? "Resolving..." : "Resolve"}
             </AlertDialogAction>
           </AlertDialogFooter>
@@ -514,11 +707,16 @@ export default function IncidentsPage() {
       </AlertDialog>
 
       {/* Delete AlertDialog */}
-      <AlertDialog open={!!deleteTarget} onOpenChange={(open) => !open && setDeleteTarget(null)}>
+      <AlertDialog
+        open={!!deleteTarget}
+        onOpenChange={(open) => !open && setDeleteTarget(null)}
+      >
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>{t("incidents.confirmDelete")}</AlertDialogTitle>
-            <AlertDialogDescription>{t("incidents.deleteWarning")}</AlertDialogDescription>
+            <AlertDialogDescription>
+              {t("incidents.deleteWarning")}
+            </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>

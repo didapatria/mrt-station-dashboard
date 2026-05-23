@@ -7,7 +7,7 @@
   <a href="https://didapatria.github.io/mrt-station-dashboard/">
     <img src="https://img.shields.io/badge/E2E%20Report-GitHub%20Pages-0969da?logo=github&logoColor=white" alt="E2E Report" />
   </a>
-  <img src="https://img.shields.io/badge/version-2.17.0-blue" />
+  <img src="https://img.shields.io/badge/version-2.18.0-blue" />
 </p>
 
 <p align="left">
@@ -34,13 +34,28 @@ Full-stack web application for managing MRT Jakarta stations and train schedules
 
 ## Highlights
 
-- 🚉 Full-stack enterprise dashboard — 14 pages, 40+ features, 120+ commits
+- 🚉 Full-stack enterprise dashboard — 15 pages, 40+ features, 120+ commits
 - 🎨 **Operations Terminal** design system — Bebas Neue + JetBrains Mono + Sora, LED status dots, editorial cards
 - 🔐 JWT Authentication + Google OAuth + Spatie-style 5-table RBAC
 - 🗺 Interactive map with Leaflet (station markers + location picker)
-- 🧪 112 E2E Playwright tests — screenshots on every test, report on [GitHub Pages](https://didapatria.github.io/mrt-station-dashboard/)
+- 🚨 Incident Management — full CRUD lifecycle (OPEN → MONITORING → RESOLVED), SSE broadcast, dashboard stat card
+- 🧪 127 E2E Playwright tests — screenshots on every test, report on [GitHub Pages](https://didapatria.github.io/mrt-station-dashboard/)
 - 📦 Dockerized with GitHub Actions CI/CD (lint, typecheck, unit, E2E, deploy)
 - 🌐 Internationalization (EN/ID) + PWA + Real-time SSE notifications
+
+## What's New in v2.18.0
+
+v2.18.0 adds a full Incident Management System to the MRT Jakarta operations dashboard. Operators can report incidents with severity levels (CRITICAL, HIGH, MEDIUM, LOW) and track their lifecycle through OPEN, MONITORING, and RESOLVED states. The system broadcasts real-time SSE events on all mutations, driving live invalidation of the dashboard and system-status endpoints. A new Open Incidents stat card on the Dashboard pulses red when active incidents exist, and the OperationsStatusBanner automatically elevates to INCIDENT status when any CRITICAL-severity incident is open. Six new Playwright E2E tests cover the full workflow from page render through create, edit, resolve, and delete.
+
+| Area | Change |
+|------|--------|
+| **Incident CRUD** | `GET/POST /api/incidents`, `PATCH /:id`, `PATCH /:id/resolve`, `DELETE /:id` — paginated, filterable by status + severity |
+| **SSE Events** | `incident.created`, `incident.updated`, `incident.resolved` broadcast on all mutations |
+| **IncidentsPage** | `/incidents` — filterable table with severity/status badges, create/edit dialog, resolve + delete with AlertDialog confirm |
+| **Dashboard** | 7th stat card "Open Incidents" with pulsing red LED when count > 0 |
+| **Ops Banner** | CRITICAL incident forces system status to INCIDENT regardless of schedule/station ratios |
+| **Permissions** | 5 new permissions — `incidents.view/create/edit/resolve/delete` seeded for ADMIN and OPERATOR |
+| **E2E** | `incidents.spec.ts` — 6 tests (page render, create, edit, resolve, delete, severity filter) |
 
 ## What's New in v2.17.0
 
@@ -392,11 +407,12 @@ npm run playwright:ci
 - **Vite compilation lag** — CI waits 8s after Vite HTTP health check passes to allow initial ESM bundle compilation.
 - **Artifacts on failure** — screenshots/traces in the `test-results` artifact; global-setup failures save to `playwright-report/screenshots/global-setup-failure-<ts>.png`.
 
-### Test Coverage (112 tests)
+### Test Coverage (127 tests)
 | Spec File | Tests | What's Tested |
 |-----------|-------|---------------|
 | `auth.spec.ts` | 13 | Login, register, Google OAuth, validation, auth guard, 404 |
 | `dashboard.spec.ts` | 3 | Stats, charts, tabs, export buttons, operator RBAC |
+| `incidents.spec.ts` | 6 | Page render, create, edit, resolve, delete, severity filter |
 | `stations.spec.ts` | 3 | List, search, sort, pagination, detail, CRUD, map picker |
 | `schedules.spec.ts` | 2 | List, search, timeline, CRUD, time picker |
 | `feedback.spec.ts` | 4 | Star rating, submit, disabled state, bug category, operator submit |
@@ -415,7 +431,7 @@ npm run playwright:ci
 | `mobile.spec.ts` | 15 | Viewport overflow, sidebar toggle, nav, auth, map, profile, changelog — Pixel 7 |
 | `ux-design.spec.ts` | 6 | Auth panel branding, rail line SVG, mobile hidden check, dashboard banner, stat cards |
 | `theme.spec.ts` | 6 | ThemeToggle visibility, dark/light toggle, localStorage persistence, cross-page persistence |
-| `ui-screenshots.spec.ts` | 13 | Full-page UI screenshots of all 13 pages (Dashboard→404) — appear in GitHub Pages report |
+| `ui-screenshots.spec.ts` | 13 | Full-page UI screenshots of all 14 pages (Dashboard→404) — appear in GitHub Pages report |
 
 > **UI Screenshots**: Every test captures a screenshot (`screenshot: "on"`). `ui-screenshots.spec.ts` additionally saves full-page PNGs to `playwright-report/screenshots/`. After CI passes, the full HTML report with all screenshots is deployed to **[GitHub Pages](https://didapatria.github.io/mrt-station-dashboard/)**.
 

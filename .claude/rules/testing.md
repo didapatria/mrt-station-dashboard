@@ -35,7 +35,8 @@ paths:
 - Mobile overflow check pattern: `document.body.scrollWidth <= window.innerWidth + 10`
 - `screenshot: "on"` captures every test — visible in GitHub Pages report at https://didapatria.github.io/mrt-station-dashboard/
 - `video: "retain-on-failure"` records video for failing tests
-- 121 total tests across 23 spec files (as of v2.17.0 — 23 May 2026)
+- 127 total tests across 24 spec files (as of v2.18.0 — 23 May 2026)
+- Incident tests in `incidents.spec.ts` — page render, create, edit, resolve, delete, severity filter; run in admin-tests project only
 - Design tests in `ux-design.spec.ts` — auth panel, dashboard banner, stat card structure; run in admin-tests project only
 - Theme tests in `theme.spec.ts` — ThemeToggle visibility, dark/light toggle, localStorage persistence, cross-page navigation persistence
-- UI screenshot tests in `ui-screenshots.spec.ts` — captures full-page screenshots of all 13 pages; screenshots saved to `playwright-report/screenshots/`
+- UI screenshot tests in `ui-screenshots.spec.ts` — captures full-page screenshots of all 14 pages; screenshots saved to `playwright-report/screenshots/`
