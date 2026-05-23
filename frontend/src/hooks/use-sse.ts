@@ -105,6 +105,30 @@ export function useRealtimeNotifications(): RealtimeResult {
         setLastActivityAt(new Date());
       });
 
+      es.addEventListener("incident.created", () => {
+        if (!state.active) return;
+        queryClient.invalidateQueries({ queryKey: ["incidents"] });
+        queryClient.invalidateQueries({ queryKey: ["dashboard"] });
+        queryClient.invalidateQueries({ queryKey: ["system-status"] });
+        setLastActivityAt(new Date());
+      });
+
+      es.addEventListener("incident.updated", () => {
+        if (!state.active) return;
+        queryClient.invalidateQueries({ queryKey: ["incidents"] });
+        queryClient.invalidateQueries({ queryKey: ["dashboard"] });
+        queryClient.invalidateQueries({ queryKey: ["system-status"] });
+        setLastActivityAt(new Date());
+      });
+
+      es.addEventListener("incident.resolved", () => {
+        if (!state.active) return;
+        queryClient.invalidateQueries({ queryKey: ["incidents"] });
+        queryClient.invalidateQueries({ queryKey: ["dashboard"] });
+        queryClient.invalidateQueries({ queryKey: ["system-status"] });
+        setLastActivityAt(new Date());
+      });
+
       // Heartbeat — confirms stream is alive; no action needed
       es.addEventListener("ping", () => {
         /* keep-alive */
