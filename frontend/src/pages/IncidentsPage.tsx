@@ -101,6 +101,9 @@ const row = {
   show: { opacity: 1, x: 0, transition: { duration: 0.18 } },
 };
 
+const MotionTableBody = motion(TableBody);
+const MotionTableRow = motion(TableRow);
+
 export default function IncidentsPage() {
   usePageMeta({ title: "Incidents", path: "/incidents" });
   const { t } = useTranslation();
@@ -274,10 +277,10 @@ export default function IncidentsPage() {
                 <TableHead className="font-mono text-[10px] uppercase tracking-widest w-24 text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
-            <motion.tbody variants={stagger} initial="hidden" animate="show">
+            <MotionTableBody variants={stagger} initial="hidden" animate="show">
               <AnimatePresence>
                 {incidents.map((incident) => (
-                  <motion.tr
+                  <MotionTableRow
                     key={incident.id}
                     variants={row}
                     className="border-b transition-colors hover:bg-muted/30"
@@ -333,10 +336,10 @@ export default function IncidentsPage() {
                         )}
                       </div>
                     </TableCell>
-                  </motion.tr>
+                  </MotionTableRow>
                 ))}
               </AnimatePresence>
-            </motion.tbody>
+            </MotionTableBody>
           </Table>
         )}
 
