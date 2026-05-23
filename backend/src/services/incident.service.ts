@@ -33,7 +33,10 @@ export const incidentService = {
 
     const where: Record<string, unknown> = {};
     if (params.search) {
-      where.title = { contains: params.search, mode: "insensitive" };
+      where.OR = [
+        { title: { contains: params.search, mode: "insensitive" } },
+        { description: { contains: params.search, mode: "insensitive" } },
+      ];
     }
     if (params.status) where.status = params.status;
     if (params.severity) where.severity = params.severity;
