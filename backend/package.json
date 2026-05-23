@@ -1,6 +1,6 @@
 {
   "name": "mrt-station-dashboard-backend",
-  "version": "1.0.0",
+  "version": "2.18.0",
   "main": "dist/index.js",
   "scripts": {
     "dev": "tsx watch src/index.ts",
