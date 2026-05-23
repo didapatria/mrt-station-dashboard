@@ -17,6 +17,7 @@ import { activityLogRouter } from "./routes/activity-log.routes";
 import { feedbackRouter } from "./routes/feedback.routes";
 import { permissionRouter } from "./routes/permission.routes";
 import { publicRouter } from "./routes/public.routes";
+import { incidentRouter } from "./routes/incident.routes";
 import { sseService } from "./services/sse.service";
 import { startSimulator } from "./services/simulator.service";
 import { authMiddleware } from "./middlewares/auth.middleware";
@@ -124,6 +125,7 @@ app.use("/api/users", userRouter);
 app.use("/api/activity-logs", activityLogRouter);
 app.use("/api/feedback", feedbackRouter);
 app.use("/api/permissions", permissionRouter);
+app.use("/api/incidents", incidentRouter);
 
 /**
  * @swagger
