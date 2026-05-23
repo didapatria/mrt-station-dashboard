@@ -18,6 +18,7 @@ import { feedbackRouter } from "./routes/feedback.routes";
 import { permissionRouter } from "./routes/permission.routes";
 import { publicRouter } from "./routes/public.routes";
 import { sseService } from "./services/sse.service";
+import { startSimulator } from "./services/simulator.service";
 import { authMiddleware } from "./middlewares/auth.middleware";
 import { errorHandler } from "./middlewares/error.middleware";
 
@@ -190,6 +191,7 @@ if (process.env.NODE_ENV !== "test") {
   app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
     console.log(`Swagger UI: http://localhost:${PORT}/api/docs`);
+    startSimulator();
   });
 }
 
