@@ -76,6 +76,12 @@ export function OperationsStatusBanner({ status, data, isLoading }: Props) {
       </div>
 
       <div className="flex items-center gap-4 font-mono text-[10.5px] text-muted-foreground tracking-wide">
+        {data.openIncidents > 0 && (
+          <span>
+            <span className="text-[#ef4444] font-semibold">{data.openIncidents}</span>{" "}
+            incident{data.openIncidents !== 1 ? "s" : ""}
+          </span>
+        )}
         {data.maintenanceStations > 0 && (
           <span>
             <span className="text-[#f59e0b] font-semibold">
