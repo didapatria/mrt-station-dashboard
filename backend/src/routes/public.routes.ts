@@ -152,9 +152,21 @@ publicRouter.get("/system-status", async (_req, res) => {
     const maintenanceRatio = totalStations > 0 ? maintenanceStations / totalStations : 0;
     const cancelledRatio = totalSchedules > 0 ? cancelledSchedules / totalSchedules : 0;
 
+    const [criticalOpen, anyOpen] = await Promise.all([
+      prisma.incident.count({
+        where: { status: { in: ["OPEN", "MONITORING"] }, severity: "CRITICAL" },
+      }),
+      prisma.incident.count({
+        where: { status: { in: ["OPEN", "MONITORING"] } },
+      }),
+    ]);
+
     let status: OperationsStatus = "ACTIVE";
-    if (cancelledRatio > 0.3) status = "INCIDENT";
-    else if (maintenanceRatio > 0.2 || cancelledRatio > 0.1) status = "DEGRADED";
+    if (criticalOpen > 0) {
+      status = "INCIDENT";
+    } else if (anyOpen > 0 || cancelledRatio > 0.3 || maintenanceRatio > 0.2 || cancelledRatio > 0.1) {
+      status = "DEGRADED";
+    }
 
     res.set("Cache-Control", "public, max-age=60");
     res.json({
@@ -165,6 +177,7 @@ publicRouter.get("/system-status", async (_req, res) => {
         totalStations,
         cancelledSchedules,
         totalSchedules,
+        openIncidents: anyOpen,
         checkedAt: new Date().toISOString(),
       },
     });

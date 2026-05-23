@@ -14,6 +14,7 @@ export const dashboardService = {
       delayedSchedules,
       cancelledSchedules,
       totalUsers,
+      openIncidents,
     ] = await Promise.all([
       prisma.station.count(),
       prisma.station.count({ where: { status: "ACTIVE" } }),
@@ -24,6 +25,7 @@ export const dashboardService = {
       prisma.schedule.count({ where: { status: "DELAYED" } }),
       prisma.schedule.count({ where: { status: "CANCELLED" } }),
       prisma.user.count(),
+      prisma.incident.count({ where: { status: { in: ["OPEN", "MONITORING"] } } }),
     ]);
 
     return {
@@ -36,6 +38,7 @@ export const dashboardService = {
       delayedSchedules,
       cancelledSchedules,
       totalUsers,
+      openIncidents,
     };
   },
 
