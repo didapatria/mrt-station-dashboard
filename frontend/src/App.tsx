@@ -27,6 +27,7 @@ const StationComparePage = lazy(() => import("@/pages/StationComparePage"));
 const SettingsPage = lazy(() => import("@/pages/SettingsPage"));
 const ChangelogPage = lazy(() => import("@/pages/ChangelogPage"));
 const AccessManagementPage = lazy(() => import("@/pages/AccessManagementPage"));
+const CommandCenterPage = lazy(() => import("@/pages/CommandCenterPage"));
 const NotFoundPage = lazy(() => import("@/pages/NotFoundPage"));
 
 const queryClient = new QueryClient({
@@ -107,6 +108,7 @@ function App() {
                   <Route path="/activity" element={<ActivityLogPage />} />
                   <Route path="/settings" element={<SettingsPage />} />
                   <Route path="/changelog" element={<ChangelogPage />} />
+                  <Route path="/command" element={<CommandCenterPage />} />
                   <Route path="/profile" element={<ProfilePage />} />
                 </Route>
 

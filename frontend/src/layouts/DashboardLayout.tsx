@@ -30,6 +30,7 @@ import {
   Navigation,
   KeyRound,
   MessageSquare,
+  Monitor,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -90,6 +91,7 @@ const navGroups: NavGroup[] = [
       { to: "/map", icon: Map, labelKey: "nav.stationMap" },
       { to: "/route-planner", icon: Navigation, labelKey: "nav.routePlanner" },
       { to: "/compare", icon: LayoutDashboard, labelKey: "nav.compare" },
+      { to: "/command", icon: Monitor, labelKey: "nav.commandCenter" },
     ],
   },
   {
@@ -278,7 +280,7 @@ export default function DashboardLayout() {
             <span className="sidebar-sub-text">SYS ONLINE</span>
           </div>
           <span className="font-mono text-[8px] tracking-widest text-[rgba(29,111,232,0.3)]">
-            v2.16.0
+            v2.17.0
           </span>
         </div>
       )}
