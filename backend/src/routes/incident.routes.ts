@@ -77,6 +77,27 @@ incidentRouter.post("/", validate(createIncidentSchema), incidentController.crea
 
 /**
  * @swagger
+ * /incidents/{id}/resolve:
+ *   patch:
+ *     tags: [Incidents]
+ *     summary: Resolve an incident (admin only)
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema: { type: string, format: uuid }
+ *     responses:
+ *       200:
+ *         description: Incident resolved
+ *       404:
+ *         description: Incident not found
+ */
+incidentRouter.patch("/:id/resolve", adminMiddleware, incidentController.resolve);
+
+/**
+ * @swagger
  * /incidents/{id}:
  *   patch:
  *     tags: [Incidents]
@@ -100,27 +121,6 @@ incidentRouter.post("/", validate(createIncidentSchema), incidentController.crea
  *         description: Incident not found
  */
 incidentRouter.patch("/:id", adminMiddleware, validate(updateIncidentSchema), incidentController.update);
-
-/**
- * @swagger
- * /incidents/{id}/resolve:
- *   patch:
- *     tags: [Incidents]
- *     summary: Resolve an incident (admin only)
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema: { type: string, format: uuid }
- *     responses:
- *       200:
- *         description: Incident resolved
- *       404:
- *         description: Incident not found
- */
-incidentRouter.patch("/:id/resolve", adminMiddleware, incidentController.resolve);
 
 /**
  * @swagger
