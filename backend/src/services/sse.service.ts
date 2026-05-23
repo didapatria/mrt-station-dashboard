@@ -4,6 +4,9 @@ export type SseEventType =
   | "activity"
   | "station.updated"
   | "schedule.updated"
+  | "incident.created"
+  | "incident.updated"
+  | "incident.resolved"
   | "ping";
 
 const clients: Set<Response> = new Set();

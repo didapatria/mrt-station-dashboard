@@ -33,8 +33,7 @@ export const incidentController = {
         incident.id,
         `Reported incident: ${incident.title}`,
       );
-      // TODO: remove 'as any' after Task 3 adds these SSE event types
-      sseService.broadcast("incident.created" as any, incident);
+      sseService.broadcast("incident.created", incident);
       res.status(201).json({ success: true, message: "Incident reported", data: incident });
     } catch (error) {
       const message = error instanceof Error ? error.message : "Failed to create incident";
@@ -52,8 +51,7 @@ export const incidentController = {
         incident.id,
         `Updated incident: ${incident.title}`,
       );
-      // TODO: remove 'as any' after Task 3 adds these SSE event types
-      sseService.broadcast("incident.updated" as any, incident);
+      sseService.broadcast("incident.updated", incident);
       res.json({ success: true, message: "Incident updated", data: incident });
     } catch (error) {
       const message = error instanceof Error ? error.message : "Failed to update incident";
@@ -72,8 +70,7 @@ export const incidentController = {
         incident.id,
         `Resolved incident: ${incident.title}`,
       );
-      // TODO: remove 'as any' after Task 3 adds these SSE event types
-      sseService.broadcast("incident.resolved" as any, incident);
+      sseService.broadcast("incident.resolved", incident);
       res.json({ success: true, message: "Incident resolved", data: incident });
     } catch (error) {
       const message = error instanceof Error ? error.message : "Failed to resolve incident";
@@ -93,8 +90,7 @@ export const incidentController = {
         id,
         `Deleted incident`,
       );
-      // TODO: remove 'as any' after Task 3 adds these SSE event types
-      sseService.broadcast("incident.updated" as any, { id, action: "DELETE" });
+      sseService.broadcast("incident.updated", { id, action: "DELETE" });
       res.json({ success: true, message: "Incident deleted" });
     } catch (error) {
       const message = error instanceof Error ? error.message : "Failed to delete incident";
