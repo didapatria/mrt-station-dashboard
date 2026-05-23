@@ -87,6 +87,8 @@ jobs:
     name: E2E Tests
     runs-on: ubuntu-latest
     needs: [frontend, backend]
+    outputs:
+      report-found: ${{ steps.report-check.outputs.found }}
 
     services:
       postgres:
@@ -225,7 +227,7 @@ jobs:
     name: Deploy Playwright Report to GitHub Pages
     runs-on: ubuntu-latest
     needs: [e2e]
-    if: github.ref == 'refs/heads/main'
+    if: always() && github.ref == 'refs/heads/main' && needs.e2e.outputs.report-found == 'true'
     permissions:
       pages: write
       id-token: write
