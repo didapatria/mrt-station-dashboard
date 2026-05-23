@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { stationService } from "../services/station.service";
 import { activityLogService } from "../services/activity-log.service";
+import { sseService } from "../services/sse.service";
 import { AuthRequest } from "../types";
 
 export const stationController = {
@@ -43,6 +44,13 @@ export const stationController = {
         station.id,
         `Created station ${station.name} (${station.code})`,
       );
+      sseService.broadcast("station.updated", {
+        id: station.id,
+        name: station.name,
+        code: station.code,
+        status: station.status,
+        action: "CREATE",
+      });
       res.status(201).json({
         success: true,
         message: "Station created successfully",
@@ -69,6 +77,13 @@ export const stationController = {
         station.id,
         `Updated station ${station.name} (${station.code})`,
       );
+      sseService.broadcast("station.updated", {
+        id: station.id,
+        name: station.name,
+        code: station.code,
+        status: station.status,
+        action: "UPDATE",
+      });
       res.json({
         success: true,
         message: "Station updated successfully",
@@ -94,6 +109,7 @@ export const stationController = {
         id,
         `Deleted station ${station.name} (${station.code})`,
       );
+      sseService.broadcast("station.updated", { id, action: "DELETE" });
       res.json({ success: true, message: "Station deleted successfully" });
     } catch (error) {
       const message =

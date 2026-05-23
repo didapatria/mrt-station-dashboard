@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { scheduleService } from "../services/schedule.service";
 import { activityLogService } from "../services/activity-log.service";
+import { sseService } from "../services/sse.service";
 import { AuthRequest } from "../types";
 
 export const scheduleController = {
@@ -45,6 +46,12 @@ export const scheduleController = {
         schedule.id,
         `Created schedule ${schedule.trainNumber}`,
       );
+      sseService.broadcast("schedule.updated", {
+        id: schedule.id,
+        trainNumber: schedule.trainNumber,
+        status: schedule.status,
+        action: "CREATE",
+      });
       res.status(201).json({
         success: true,
         message: "Schedule created successfully",
@@ -70,6 +77,12 @@ export const scheduleController = {
         schedule.id,
         `Updated schedule ${schedule.trainNumber}`,
       );
+      sseService.broadcast("schedule.updated", {
+        id: schedule.id,
+        trainNumber: schedule.trainNumber,
+        status: schedule.status,
+        action: "UPDATE",
+      });
       res.json({
         success: true,
         message: "Schedule updated successfully",
