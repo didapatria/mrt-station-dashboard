@@ -899,7 +899,25 @@ const changelog: Release[] = [
   {
     version: "2.1.0",
     date: "15 April 2026",
-    commits: [],
+    commits: [
+      "5e3d25c",
+      "0f81fdc",
+      "6cdfb26",
+      "1310e44",
+      "215ebfe",
+      "32a5f06",
+      "19d3f80",
+      "151e70e",
+      "f6fa6e2",
+      "ff479cd",
+      "2d108f6",
+      "87e44f5",
+      "a8ce713",
+      "4c3a087",
+      "942e9d6",
+      "40a0d9c",
+      "0f1b0ec",
+    ],
     entries: [
       {
         category: "feat",
@@ -950,7 +968,19 @@ const changelog: Release[] = [
   {
     version: "2.0.0",
     date: "April 2026",
-    commits: [],
+    commits: [
+      "80a463b",
+      "8038e4d",
+      "83e2e4b",
+      "e78fb94",
+      "cbd789b",
+      "e923ecc",
+      "f7293a2",
+      "9f392b4",
+      "5223081",
+      "affc19f",
+      "bb98ebf",
+    ],
     entries: [
       {
         category: "feat",
@@ -993,7 +1023,15 @@ const changelog: Release[] = [
   {
     version: "1.5.0",
     date: "April 2026",
-    commits: [],
+    commits: [
+      "4a4c1e1",
+      "433c5ee",
+      "7630cd2",
+      "9b99ac6",
+      "7d1eefb",
+      "799db08",
+      "daf938c",
+    ],
     entries: [
       {
         category: "feat",
@@ -1028,7 +1066,22 @@ const changelog: Release[] = [
   {
     version: "1.0.0",
     date: "April 2026",
-    commits: [],
+    commits: [
+      "a37a860",
+      "4976df5",
+      "d14bf92",
+      "3bc2098",
+      "13f8c0a",
+      "662c8a6",
+      "3116152",
+      "65aa5da",
+      "5010b2a",
+      "31e2a81",
+      "f932000",
+      "60cfc6d",
+      "d1d1c2f",
+      "c94f795",
+    ],
     entries: [
       {
         category: "feat",
@@ -1075,7 +1128,30 @@ const changelog: Release[] = [
   {
     version: "0.1.0",
     date: "April 2026",
-    commits: [],
+    commits: [
+      "174e44c",
+      "34f959b",
+      "140fa32",
+      "ddd5cbb",
+      "bfe8ccd",
+      "b02a132",
+      "c3e865d",
+      "7fff2fd",
+      "52b961b",
+      "0c6646c",
+      "cacd84d",
+      "abaf21c",
+      "554156d",
+      "6ce37bd",
+      "911a5dc",
+      "54db5bd",
+      "4b6a96e",
+      "082609f",
+      "cf4f10c",
+      "3a61a15",
+      "fd35698",
+      "15e5896",
+    ],
     entries: [
       {
         category: "feat",
