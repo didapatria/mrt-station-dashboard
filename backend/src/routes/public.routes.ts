@@ -164,7 +164,7 @@ publicRouter.get("/system-status", async (_req, res) => {
     let status: OperationsStatus = "ACTIVE";
     if (criticalOpen > 0) {
       status = "INCIDENT";
-    } else if (anyOpen > 0 || cancelledRatio > 0.3 || maintenanceRatio > 0.2 || cancelledRatio > 0.1) {
+    } else if (anyOpen > 0 || maintenanceRatio > 0.2 || cancelledRatio > 0.1) {
       status = "DEGRADED";
     }
 
