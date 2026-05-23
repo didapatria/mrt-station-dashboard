@@ -53,7 +53,18 @@ const changelog: Release[] = [
   {
     version: "2.16.0",
     date: "23 May 2026",
-    commits: [],
+    commits: [
+      "c97db8f",
+      "df7837b",
+      "97c79b9",
+      "b56461e",
+      "e9c0150",
+      "e71f237",
+      "38f96ef",
+      "feb66ea",
+      "0fc7c8f",
+      "d85619f",
+    ],
     entries: [
       {
         category: "feat",
@@ -94,6 +105,14 @@ const changelog: Release[] = [
       {
         category: "docs",
         text: "Swagger v2.16.0 — Realtime tag, SystemStatus schema, /public/system-status documented",
+      },
+      {
+        category: "docs",
+        text: "README v2.16.0 — version badge, release summary table, What's New section",
+      },
+      {
+        category: "chore",
+        text: "Version labels bumped to v2.16.0 across AuthLayout, DashboardLayout, testing rules",
       },
     ],
   },
@@ -610,7 +629,7 @@ function ReleaseSummary({ entries }: { entries: ChangeEntry[] }) {
   const ordered = CATEGORY_ORDER.filter((cat) => counts[cat]);
 
   return (
-    <div className="flex items-center gap-3 px-6 pb-3 flex-wrap">
+    <div className="flex items-center gap-3 px-6 pt-3 pb-3 flex-wrap">
       {ordered.map((cat) => (
         <span key={cat} className="flex items-center gap-1.5">
           <CategoryBadge category={cat} />
