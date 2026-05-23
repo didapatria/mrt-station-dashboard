@@ -7,6 +7,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Separator } from "@/components/ui/separator";
+import { useAuthStore } from "@/store/auth.store";
 
 interface Notification {
   id: string;
@@ -16,6 +17,7 @@ interface Notification {
 }
 
 export function NotificationCenter() {
+  const token = useAuthStore((s) => s.token);
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [unread, setUnread] = useState(0);
 
@@ -31,11 +33,19 @@ export function NotificationCenter() {
   }, []);
 
   useEffect(() => {
+    if (!token) return;
     const baseUrl = import.meta.env.VITE_API_URL || "/api";
-    const es = new EventSource(`${baseUrl}/events`);
+    const es = new EventSource(`${baseUrl}/events?token=${token}`);
     es.addEventListener("activity", (e) => {
       try {
-        const data = JSON.parse(e.data);
+        const data = JSON.parse(e.data) as {
+          action: string;
+          entity: string;
+          details: string;
+          user: { name: string };
+          simulated?: boolean;
+        };
+        if (data.simulated) return;
         addNotification(
           `${data.user.name} ${data.action.toLowerCase()}d a ${data.entity}`,
           data.details,
@@ -46,7 +56,7 @@ export function NotificationCenter() {
     });
     es.onerror = () => es.close();
     return () => es.close();
-  }, [addNotification]);
+  }, [token, addNotification]);
 
   const markRead = () => setUnread(0);
   const [now, setNow] = useState(() => Date.now());

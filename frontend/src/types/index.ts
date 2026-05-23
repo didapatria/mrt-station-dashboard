@@ -50,6 +50,19 @@ export interface ApiResponse<T = unknown> {
   };
 }
 
+export type SseStatus = "connected" | "disconnected" | "reconnecting";
+
+export type OperationsStatus = "ACTIVE" | "DEGRADED" | "INCIDENT";
+
+export interface SystemStatusData {
+  status: OperationsStatus;
+  maintenanceStations: number;
+  totalStations: number;
+  cancelledSchedules: number;
+  totalSchedules: number;
+  checkedAt: string;
+}
+
 export interface LoginForm {
   email: string;
   password: string;
