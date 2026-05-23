@@ -263,6 +263,32 @@ async function main() {
   }
   console.log(`Created ${scheduleCount} schedules`);
 
+  // Seed incidents
+  const incidentSeedData = [
+    { title: "Signal failure at Bundaran HI", severity: "CRITICAL" as const, status: "OPEN" as const, stationCode: "BHI" },
+    { title: "Platform overcrowding — weekend peak", severity: "HIGH" as const, status: "MONITORING" as const, stationCode: "IST" },
+    { title: "Escalator maintenance delay", severity: "MEDIUM" as const, status: "MONITORING" as const, stationCode: "BLM" },
+    { title: "Ticketing system slowdown", severity: "LOW" as const, status: "RESOLVED" as const, stationCode: null },
+    { title: "Track inspection — North segment", severity: "HIGH" as const, status: "OPEN" as const, stationCode: null },
+  ];
+
+  for (const inc of incidentSeedData) {
+    const station = inc.stationCode
+      ? await prisma.station.findUnique({ where: { code: inc.stationCode } })
+      : null;
+    await prisma.incident.create({
+      data: {
+        title: inc.title,
+        severity: inc.severity,
+        status: inc.status,
+        stationId: station?.id ?? null,
+        reportedById: admin.id,
+        resolvedAt: inc.status === "RESOLVED" ? new Date() : null,
+      },
+    });
+  }
+  console.log("Seeded incidents:", incidentSeedData.length);
+
   // Seed permissions
   const permissionsData = [
     { name: "dashboard.view", label: "View Dashboard", group: "Dashboard" },
@@ -290,6 +316,11 @@ async function main() {
     { name: "map.view", label: "View Station Map", group: "Map" },
     { name: "settings.view", label: "View Settings", group: "Settings" },
     { name: "settings.edit", label: "Change Settings", group: "Settings" },
+    { name: "incidents.view",    label: "View Incidents",    group: "Incidents" },
+    { name: "incidents.create",  label: "Create Incidents",  group: "Incidents" },
+    { name: "incidents.edit",    label: "Edit Incidents",    group: "Incidents" },
+    { name: "incidents.resolve", label: "Resolve Incidents", group: "Incidents" },
+    { name: "incidents.delete",  label: "Delete Incidents",  group: "Incidents" },
   ];
 
   for (const perm of permissionsData) {
@@ -331,6 +362,8 @@ async function main() {
     "map.view",
     "settings.view",
     "settings.edit",
+    "incidents.view",
+    "incidents.create",
   ];
 
   if (adminRole) {
