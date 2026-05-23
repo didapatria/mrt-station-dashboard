@@ -190,7 +190,7 @@ export default function IncidentsPage() {
       title: "",
       description: "",
       severity: "MEDIUM",
-      stationId: "",
+      stationId: "none",
     },
   });
 
@@ -200,7 +200,7 @@ export default function IncidentsPage() {
       title: "",
       description: "",
       severity: "MEDIUM",
-      stationId: "",
+      stationId: "none",
     },
   });
 
@@ -210,7 +210,7 @@ export default function IncidentsPage() {
       title: incident.title,
       description: incident.description ?? "",
       severity: incident.severity,
-      stationId: incident.stationId ?? "",
+      stationId: incident.stationId ?? "none",
     });
   }
 
@@ -219,7 +219,10 @@ export default function IncidentsPage() {
       title: values.title,
       description: values.description || undefined,
       severity: values.severity,
-      stationId: values.stationId || null,
+      stationId:
+        values.stationId && values.stationId !== "none"
+          ? values.stationId
+          : null,
     });
     setCreateOpen(false);
     form.reset();
@@ -233,7 +236,10 @@ export default function IncidentsPage() {
         title: values.title,
         description: values.description || undefined,
         severity: values.severity,
-        stationId: values.stationId || null,
+        stationId:
+          values.stationId && values.stationId !== "none"
+            ? values.stationId
+            : null,
       },
     });
     setEditTarget(null);
@@ -541,14 +547,14 @@ export default function IncidentsPage() {
                 name="stationId"
                 render={({ field }) => (
                   <Select
-                    value={field.value ?? ""}
+                    value={field.value ?? "none"}
                     onValueChange={field.onChange}
                   >
                     <SelectTrigger>
                       <SelectValue placeholder={t("incidents.systemWide")} />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="">
+                      <SelectItem value="none">
                         {t("incidents.systemWide")}
                       </SelectItem>
                       {stations.map((s) => (
@@ -646,14 +652,14 @@ export default function IncidentsPage() {
                 name="stationId"
                 render={({ field }) => (
                   <Select
-                    value={field.value ?? ""}
+                    value={field.value ?? "none"}
                     onValueChange={field.onChange}
                   >
                     <SelectTrigger>
                       <SelectValue placeholder={t("incidents.systemWide")} />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="">
+                      <SelectItem value="none">
                         {t("incidents.systemWide")}
                       </SelectItem>
                       {stations.map((s) => (
