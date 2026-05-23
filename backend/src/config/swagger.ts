@@ -6,7 +6,7 @@ const options: swaggerJsdoc.Options = {
     openapi: "3.0.0",
     info: {
       title: "MRT Jakarta - Station Management API",
-      version: "2.15.0",
+      version: "2.16.0",
       description:
         "REST API for managing MRT Jakarta stations and train schedules. Features JWT authentication, Spatie-style 5-table RBAC (roles, permissions, model_has_roles, model_has_permissions, role_has_permissions), activity logging, real-time SSE notifications, CSV/PDF export, and rate limiting. Built with Express.js 5, TypeScript, Prisma ORM, and PostgreSQL. Frontend: React 19 + Vite 8, Operations Terminal design system (Bebas Neue + JetBrains Mono + Sora), 14 pages, 112 E2E tests.",
       contact: {
@@ -27,6 +27,10 @@ const options: swaggerJsdoc.Options = {
       {
         name: "Public",
         description: "Public endpoints — no authentication required",
+      },
+      {
+        name: "Realtime",
+        description: "SSE stream and system status endpoints",
       },
     ],
     servers: [
@@ -141,6 +145,22 @@ const options: swaggerJsdoc.Options = {
             code: { type: "string", example: "LBB" },
             order: { type: "integer", example: 1 },
             status: { type: "string", enum: ["ACTIVE"], example: "ACTIVE" },
+          },
+        },
+        SystemStatus: {
+          type: "object",
+          description: "Current operational status derived from live DB stats",
+          properties: {
+            status: {
+              type: "string",
+              enum: ["ACTIVE", "DEGRADED", "INCIDENT"],
+              example: "ACTIVE",
+            },
+            maintenanceStations: { type: "integer", example: 1 },
+            totalStations: { type: "integer", example: 13 },
+            cancelledSchedules: { type: "integer", example: 0 },
+            totalSchedules: { type: "integer", example: 24 },
+            checkedAt: { type: "string", format: "date-time" },
           },
         },
         ApiResponse: {

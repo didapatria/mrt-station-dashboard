@@ -4,6 +4,8 @@ import { PrismaClient } from "@prisma/client";
 const publicRouter = Router();
 const prisma = new PrismaClient();
 
+type OperationsStatus = "ACTIVE" | "DEGRADED" | "INCIDENT";
+
 /**
  * @swagger
  * /public/stations:
@@ -86,6 +88,88 @@ publicRouter.get("/stations", async (_req, res) => {
     res
       .status(500)
       .json({ success: false, error: "Failed to fetch stations" });
+  }
+});
+
+/**
+ * @swagger
+ * /public/system-status:
+ *   get:
+ *     tags: [Public, Realtime]
+ *     summary: Current operational status (no auth)
+ *     description: |
+ *       Returns system status derived from live DB stats.
+ *       - **ACTIVE** — normal operations
+ *       - **DEGRADED** — >20% stations in maintenance OR >10% schedules cancelled
+ *       - **INCIDENT** — >30% schedules cancelled
+ *
+ *       **Cache:** `Cache-Control: public, max-age=60`
+ *     security: []
+ *     responses:
+ *       200:
+ *         description: System status
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   $ref: '#/components/schemas/SystemStatus'
+ *             example:
+ *               success: true
+ *               data:
+ *                 status: ACTIVE
+ *                 maintenanceStations: 1
+ *                 totalStations: 13
+ *                 cancelledSchedules: 0
+ *                 totalSchedules: 24
+ *                 checkedAt: "2026-05-23T10:00:00.000Z"
+ *       500:
+ *         description: Internal server error
+ */
+publicRouter.get("/system-status", async (_req, res) => {
+  try {
+    const [stationGroups, scheduleGroups] = await Promise.all([
+      prisma.station.groupBy({ by: ["status"], _count: { status: true } }),
+      prisma.schedule.groupBy({ by: ["status"], _count: { status: true } }),
+    ]);
+
+    const stationMap = Object.fromEntries(
+      stationGroups.map((g) => [g.status, g._count.status]),
+    );
+    const scheduleMap = Object.fromEntries(
+      scheduleGroups.map((g) => [g.status, g._count.status]),
+    );
+
+    const totalStations = Object.values(stationMap).reduce((a, b) => a + b, 0);
+    const maintenanceStations = stationMap["MAINTENANCE"] ?? 0;
+    const totalSchedules = Object.values(scheduleMap).reduce((a, b) => a + b, 0);
+    const cancelledSchedules = scheduleMap["CANCELLED"] ?? 0;
+
+    const maintenanceRatio = totalStations > 0 ? maintenanceStations / totalStations : 0;
+    const cancelledRatio = totalSchedules > 0 ? cancelledSchedules / totalSchedules : 0;
+
+    let status: OperationsStatus = "ACTIVE";
+    if (cancelledRatio > 0.3) status = "INCIDENT";
+    else if (maintenanceRatio > 0.2 || cancelledRatio > 0.1) status = "DEGRADED";
+
+    res.set("Cache-Control", "public, max-age=60");
+    res.json({
+      success: true,
+      data: {
+        status,
+        maintenanceStations,
+        totalStations,
+        cancelledSchedules,
+        totalSchedules,
+        checkedAt: new Date().toISOString(),
+      },
+    });
+  } catch {
+    res.status(500).json({ success: false, error: "Failed to fetch system status" });
   }
 });
 

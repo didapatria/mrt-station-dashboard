@@ -1,5 +1,11 @@
 import { Response } from "express";
 
+export type SseEventType =
+  | "activity"
+  | "station.updated"
+  | "schedule.updated"
+  | "ping";
+
 const clients: Set<Response> = new Set();
 
 export const sseService = {
@@ -17,14 +23,21 @@ export const sseService = {
     });
   },
 
-  broadcast(event: string, data: unknown) {
+  broadcast(event: SseEventType, data: unknown) {
     const message = `event: ${event}\ndata: ${JSON.stringify(data)}\n\n`;
-    clients.forEach((client) => {
+    for (const client of clients) {
       client.write(message);
-    });
+    }
   },
 
   getClientCount() {
     return clients.size;
   },
 };
+
+// Heartbeat — keeps connections alive, lets clients detect stale streams
+setInterval(() => {
+  if (clients.size > 0) {
+    sseService.broadcast("ping", { ts: Date.now() });
+  }
+}, 30_000);

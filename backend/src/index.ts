@@ -3,6 +3,7 @@ import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
 import rateLimit from "express-rate-limit";
+import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import swaggerUi from "swagger-ui-express";
 import { swaggerSpec } from "./config/swagger";
@@ -123,8 +124,57 @@ app.use("/api/activity-logs", activityLogRouter);
 app.use("/api/feedback", feedbackRouter);
 app.use("/api/permissions", permissionRouter);
 
-// SSE endpoint for real-time notifications
-app.get("/api/events", (_req, res) => {
+/**
+ * @swagger
+ * /events:
+ *   get:
+ *     tags: [Realtime]
+ *     summary: SSE stream — realtime events (requires JWT via ?token query param)
+ *     description: |
+ *       Server-Sent Events stream. Pass the JWT token as a query parameter since
+ *       the browser's native EventSource API does not support custom headers.
+ *
+ *       **Events emitted:**
+ *       - `activity` — station/schedule/user CUD operations
+ *       - `station.updated` — station create/update/delete
+ *       - `schedule.updated` — schedule create/update
+ *       - `ping` — heartbeat every 30s (for stale connection detection)
+ *     security: []
+ *     parameters:
+ *       - name: token
+ *         in: query
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: JWT token from /auth/login or /auth/register
+ *         example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+ *     responses:
+ *       200:
+ *         description: SSE stream opened
+ *         content:
+ *           text/event-stream:
+ *             schema:
+ *               type: string
+ *               example: "event: ping\ndata: {\"ts\":1716451200000}\n\n"
+ *       401:
+ *         description: Missing or invalid token
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiResponse'
+ */
+app.get("/api/events", (req, res) => {
+  const token = req.query.token as string | undefined;
+  if (!token) {
+    res.status(401).json({ success: false, error: "Token required" });
+    return;
+  }
+  try {
+    jwt.verify(token, process.env.JWT_SECRET || "fallback-secret");
+  } catch {
+    res.status(401).json({ success: false, error: "Invalid or expired token" });
+    return;
+  }
   sseService.addClient(res);
 });
 
